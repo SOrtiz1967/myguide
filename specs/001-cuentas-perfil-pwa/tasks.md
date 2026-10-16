@@ -67,8 +67,8 @@ description: "Lista de tareas de la spec 001: cuentas, perfil y base de la PWA"
 - [ ] T017 [P] Textos en español centralizados en `app/src/copy/es.ts` y mapeador de errores en `app/src/lib/errors.ts` con pruebas en `app/tests/unit/errors.test.ts`: los errores de credenciales y de recuperación usan **un único mensaje uniforme** que no revela si un correo existe (FR-005)
 - [ ] T018 Proveedores y tabla de rutas de `contracts/ui-routes.md` (React Router, TanStack Query) en `app/src/main.tsx` y `app/src/routes/index.tsx`, con páginas provisionales para cada ruta
 - [X] T019 Ayudantes pgTAP en `supabase/seed.sql` (esquema `tests`, solo local; `supabase test db` ejecutaría como prueba cualquier .sql dentro de `supabase/tests/`): crear dos usuarios de prueba (A y B) con perfil, suplantar a cada uno y fijar `last_active_at`
-- [ ] T020 [P] Escribir primero `supabase/functions/_shared/log.test.ts`: el registrador **elimina** correos, tokens y contraseñas de cualquier mensaje o campo (Principio IX); verificar que falla
-- [ ] T021 [P] Implementar `supabase/functions/_shared/log.ts` (registro estructurado sin datos personales), y las utilidades compartidas `supabase/functions/_shared/cors.ts`, `supabase/functions/_shared/admin.ts` (cliente con clave de servicio, solo servidor) y `supabase/functions/_shared/mail.ts` (envío por SMTP configurado con variables de entorno)
+- [X] T020 [P] Escribir primero `supabase/functions/_shared/log.test.ts`: el registrador **elimina** correos, tokens y contraseñas de cualquier mensaje o campo (Principio IX); verificar que falla
+- [X] T021 [P] Implementar `supabase/functions/_shared/log.ts` (registro estructurado sin datos personales), y las utilidades compartidas `supabase/functions/_shared/cors.ts`, `supabase/functions/_shared/admin.ts` (cliente con clave de servicio, solo servidor) (el envío por SMTP, `supabase/functions/_shared/mail.ts`, se implementa junto con su primera prueba en T024/T029)
 
 **Checkpoint**: base lista. Las historias pueden comenzar.
 
