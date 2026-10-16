@@ -4,5 +4,13 @@
     "@supabase/supabase-js": "jsr:@supabase/supabase-js@2",
     "@std/assert": "jsr:@std/assert@1"
   },
-  "fmt": { "semiColons": false, "singleQuote": true, "lineWidth": 100 }
+  "fmt": {
+    "semiColons": false,
+    "singleQuote": true,
+    "lineWidth": 100
+  },
+  "tasks": {
+    "test": "deno test --allow-env=ALLOWED_ORIGINS",
+    "check": "deno check */*.ts _shared/*.ts"
+  }
 }

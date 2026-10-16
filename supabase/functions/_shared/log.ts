@@ -51,3 +51,6 @@ export function log(level: LogLevel, event: string, fields: Record<string, unkno
   else if (level === 'warn') console.warn(line)
   else console.log(line)
 }
+
+/** Firma del registrador que reciben los manejadores (se inyecta en las pruebas). */
+export type LogFn = (level: LogLevel, event: string, fields?: Record<string, unknown>) => void
