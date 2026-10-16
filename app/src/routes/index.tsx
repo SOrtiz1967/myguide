@@ -1,24 +1,37 @@
 import type { RouteObject } from 'react-router'
+import { EmailConfirmedPage, EmailLinkInvalidPage } from '../features/auth/pages/EmailLinkPages'
+import { LoginPage } from '../features/auth/pages/LoginPage'
+import { RecoverPage } from '../features/auth/pages/RecoverPage'
+import { RegisterPage } from '../features/auth/pages/RegisterPage'
+import { ResetPage } from '../features/auth/pages/ResetPage'
+import { ProfilePage } from '../features/profile/ProfilePage'
 import { AppLayout } from './AppLayout'
+import { HomePage } from './HomePage'
 import { Placeholder } from './Placeholder'
+import { RequireAuth } from './RequireAuth'
 
 /**
- * Tabla de rutas de contracts/ui-routes.md. Las pantallas provisionales las reemplaza cada historia;
- * las rutas privadas se protegen con la guarda de la historia 2 (T049).
+ * Tabla de rutas de contracts/ui-routes.md. Las rutas privadas pasan por RequireAuth (FR-012);
+ * `/sin-conexion` es provisional hasta la historia 4.
  */
 export const routes: RouteObject[] = [
   {
     element: <AppLayout />,
     children: [
-      { path: '/', element: <Placeholder title="Inicio" /> },
-      { path: '/perfil', element: <Placeholder title="Perfil" /> },
-      { path: '/registro', element: <Placeholder title="Crear cuenta" /> },
-      { path: '/ingresar', element: <Placeholder title="Ingresar" /> },
-      { path: '/recuperar', element: <Placeholder title="Recuperar contraseña" /> },
-      { path: '/restablecer', element: <Placeholder title="Nueva contraseña" /> },
-      { path: '/correo-confirmado', element: <Placeholder title="Correo confirmado" /> },
-      { path: '/correo-no-valido', element: <Placeholder title="Enlace no válido" /> },
+      { path: '/registro', element: <RegisterPage /> },
+      { path: '/ingresar', element: <LoginPage /> },
+      { path: '/recuperar', element: <RecoverPage /> },
+      { path: '/restablecer', element: <ResetPage /> },
+      { path: '/correo-confirmado', element: <EmailConfirmedPage /> },
+      { path: '/correo-no-valido', element: <EmailLinkInvalidPage /> },
       { path: '/sin-conexion', element: <Placeholder title="Sin conexión" /> },
+      {
+        element: <RequireAuth />,
+        children: [
+          { path: '/', element: <HomePage /> },
+          { path: '/perfil', element: <ProfilePage /> },
+        ],
+      },
     ],
   },
 ]
