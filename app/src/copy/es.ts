@@ -98,6 +98,8 @@ export const es = {
     notInformed: 'No informado',
     save: 'Guardar perfil',
     saved: 'Perfil guardado',
+    draftRestored: 'Recuperamos lo que estabas escribiendo.',
+    draftDiscard: 'Descartar borrador',
     loading: 'Cargando tu perfil',
     loadError: 'No pudimos cargar tu perfil.',
     chooseTimezone: 'Elige tu zona horaria',
@@ -116,5 +118,13 @@ export const es = {
     emptyBody:
       'Necesitamos tu fecha de nacimiento, tu altura y tu zona horaria para las estimaciones y para interpretar bien las fechas.',
     emptyAction: 'Completar perfil',
+  },
+  offline: {
+    banner:
+      'Sin conexión. MyGuide necesita internet para guardar y mostrar tus datos: no se guardará nada hasta que vuelva la conexión.',
+    pageTitle: 'Sin conexión',
+    pageBody:
+      'MyGuide necesita conexión a internet para funcionar. Cuando vuelva, podrás seguir donde estabas.',
+    reload: 'Reintentar',
   },
 } as const

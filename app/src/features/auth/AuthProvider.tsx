@@ -1,5 +1,6 @@
 import type { Session } from '@supabase/supabase-js'
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
+import { purgeAllDrafts } from '../../lib/drafts'
 import { supabase } from '../../lib/supabase'
 import { AuthContext, type AuthState } from './authContext'
 
@@ -23,6 +24,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const markActivity = useCallback(async (): Promise<boolean> => {
     const { error } = await supabase.rpc('touch_session')
     if (error && SESSION_EXPIRED.test(error.message)) {
+      purgeAllDrafts() // FR-022: no queda nada privado en el dispositivo
       setSnapshot({ status: 'signedOut', session: null, expired: true })
       await supabase.auth.signOut()
       return false
@@ -48,6 +50,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session: Session | null) => {
       if (event === 'SIGNED_OUT') {
+        purgeAllDrafts() // también cubre cierres hechos desde otra pestaña o por cambio de contraseña
         setSnapshot((prev) => ({ status: 'signedOut', session: null, expired: prev.expired }))
       } else if (event === 'TOKEN_REFRESHED' && session) {
         setSnapshot({ status: 'signedIn', session, expired: false })
@@ -64,6 +67,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [markActivity])
 
   const signOut = useCallback(async () => {
+    purgeAllDrafts() // FR-022
     await supabase.auth.signOut()
   }, [])
 

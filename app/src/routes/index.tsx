@@ -7,7 +7,7 @@ import { ResetPage } from '../features/auth/pages/ResetPage'
 import { ProfilePage } from '../features/profile/ProfilePage'
 import { AppLayout } from './AppLayout'
 import { HomePage } from './HomePage'
-import { Placeholder } from './Placeholder'
+import { OfflinePage } from './OfflinePage'
 import { RequireAuth } from './RequireAuth'
 
 /**
@@ -24,7 +24,7 @@ export const routes: RouteObject[] = [
       { path: '/restablecer', element: <ResetPage /> },
       { path: '/correo-confirmado', element: <EmailConfirmedPage /> },
       { path: '/correo-no-valido', element: <EmailLinkInvalidPage /> },
-      { path: '/sin-conexion', element: <Placeholder title="Sin conexión" /> },
+      { path: '/sin-conexion', element: <OfflinePage /> },
       {
         element: <RequireAuth />,
         children: [

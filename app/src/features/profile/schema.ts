@@ -58,3 +58,11 @@ export const profileFormSchema = z
   }))
 
 export type ProfileFormInput = z.input<typeof profileFormSchema>
+
+/** Forma de un borrador: solo texto, sin reglas de negocio (puede estar a medio escribir). */
+export const profileDraftSchema = z.object({
+  birthDate: z.string(),
+  sex: z.enum(['', 'female', 'male']),
+  heightCm: z.string(),
+  timezone: z.string(),
+})

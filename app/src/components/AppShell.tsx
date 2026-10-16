@@ -2,6 +2,7 @@ import { useContext, type ReactNode } from 'react'
 import { Link } from 'react-router'
 import { es } from '../copy/es'
 import { AuthContext } from '../features/auth/authContext'
+import { OfflineNotice } from './OfflineNotice'
 
 /** Estructura común: enlace para saltar al contenido, cabecera y un único landmark `main`. */
 export function AppShell({ children }: { children: ReactNode }) {
@@ -13,6 +14,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <a href="#contenido" className="skip-link">
         {es.common.skipToContent}
       </a>
+      <OfflineNotice />
       <header className="border-b border-line bg-surface">
         <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-3">
           <Link to="/" className="text-lg font-semibold tracking-tight">

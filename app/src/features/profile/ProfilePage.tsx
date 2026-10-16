@@ -1,6 +1,7 @@
 import { ErrorState } from '../../components/ErrorState'
 import { LoadingState } from '../../components/LoadingState'
 import { es } from '../../copy/es'
+import { discardDraft } from '../../lib/drafts'
 import { detectDeviceTimezone, isValidTimezone } from '../../lib/timezone'
 import { ChangePasswordForm } from '../auth/ChangePasswordForm'
 import { ProfileForm } from './ProfileForm'
@@ -12,7 +13,10 @@ import { useUpdateProfile } from './useUpdateProfile'
 
 export function ProfilePage() {
   const { data: profile, isLoading, isError, refetch } = useProfile()
-  const update = useUpdateProfile()
+  // Al aceptar la zona horaria el perfil cambia por fuera del formulario: el borrador ya no aplica.
+  const update = useUpdateProfile({
+    onSaved: () => profile && discardDraft(profile.user_id, 'profile'),
+  })
 
   if (isLoading) return <LoadingState label={es.profile.loading} />
   if (isError || !profile) {

@@ -39,6 +39,15 @@ function Probe() {
   )
 }
 
+function SignOutButton() {
+  const { signOut } = useAuth()
+  return (
+    <button type="button" onClick={() => void signOut()}>
+      salir
+    </button>
+  )
+}
+
 function renderProvider() {
   return render(
     <AuthProvider>
@@ -106,5 +115,49 @@ describe('AuthProvider', () => {
     await screen.findByText(/estado:signedOut/)
     unmount()
     expect(unsubscribe).toHaveBeenCalled()
+  })
+})
+
+describe('AuthProvider: borradores locales (FR-022)', () => {
+  const KEY = 'draft:v1:u1:profile'
+
+  beforeEach(() => {
+    localStorage.clear()
+    localStorage.setItem(KEY, JSON.stringify({ savedAt: 1, values: {} }))
+    localStorage.setItem('tema', 'oscuro')
+  })
+
+  it('FR-022: al vencer la sesión por inactividad elimina todos los borradores', async () => {
+    auth.getSession.mockResolvedValue({ data: { session: SESSION } })
+    rpc.mockResolvedValue({ error: { message: 'session_expired: vencida' } })
+    renderProvider()
+    await screen.findByText(/estado:signedOut vencida:true/)
+    expect(localStorage.getItem(KEY)).toBeNull()
+    expect(localStorage.getItem('tema')).toBe('oscuro')
+  })
+
+  it('FR-022: al cerrar sesión elimina todos los borradores', async () => {
+    auth.getSession.mockResolvedValue({ data: { session: SESSION } })
+    renderProvider()
+    await screen.findByText(/estado:signedIn/)
+    await act(async () => {
+      authListener('SIGNED_OUT', null)
+    })
+    await waitFor(() => expect(localStorage.getItem(KEY)).toBeNull())
+  })
+
+  it('FR-022: el cierre de sesión explícito purga antes de cerrar', async () => {
+    auth.getSession.mockResolvedValue({ data: { session: SESSION } })
+    render(
+      <AuthProvider>
+        <SignOutButton />
+      </AuthProvider>,
+    )
+    await waitFor(() => expect(rpc).toHaveBeenCalled())
+    await act(async () => {
+      screen.getByRole('button', { name: 'salir' }).click()
+    })
+    expect(localStorage.getItem(KEY)).toBeNull()
+    expect(auth.signOut).toHaveBeenCalled()
   })
 })

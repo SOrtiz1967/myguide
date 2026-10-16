@@ -179,19 +179,19 @@ description: "Lista de tareas de la spec 001: cuentas, perfil y base de la PWA"
 
 ### Tests for User Story 4 ⚠️ (escribir primero y verificar que FALLAN)
 
-- [ ] T062 [P] [US4] Pruebas unitarias en `app/tests/unit/drafts.test.ts`: clave `draft:v1:<userId>:<formId>`, restauración validada con Zod, datos inválidos descartados, descarte al confirmar el servidor, purga de todo `draft:*` (FR-021, FR-022)
-- [ ] T063 [P] [US4] Pruebas de componentes en `app/tests/component/useDraft.test.tsx`: el formulario recupera el borrador, muestra "Recuperamos lo que estabas escribiendo" y permite descartarlo
+- [X] T062 [P] [US4] Pruebas unitarias en `app/tests/unit/drafts.test.ts`: clave `draft:v1:<userId>:<formId>`, restauración validada con Zod, datos inválidos descartados, descarte al confirmar el servidor, purga de todo `draft:*` (FR-021, FR-022)
+- [X] T063 [P] [US4] Pruebas de componentes en `app/tests/component/useDraft.test.tsx`: el formulario recupera el borrador, muestra "Recuperamos lo que estabas escribiendo" y permite descartarlo
 - [ ] T064 [P] [US4] Prueba de extremo a extremo en `app/tests/e2e/pwa-offline.spec.ts`: sin conexión se muestra el mensaje de no disponible; guardar sin conexión muestra error y no éxito; recargar conserva el borrador; cerrar sesión no deja `draft:*` (escenarios 12 a 14, FR-019 a FR-022)
 - [ ] T065 [P] [US4] Prueba en `app/tests/e2e/pwa-install.spec.ts`: el manifiesto, los íconos y el service worker cumplen los requisitos de instalación (FR-018, SC-008)
 
 ### Implementation for User Story 4
 
-- [ ] T066 [US4] Módulo de borradores en `app/src/lib/drafts.ts` (guardar, restaurar, descartar, purgar todo)
-- [ ] T067 [US4] Hook `useDraft` en `app/src/lib/useDraft.ts` e integrarlo en `app/src/features/profile/ProfileForm.tsx`
-- [ ] T068 [US4] Purgar borradores al cerrar sesión y ante `session_expired` en `app/src/features/auth/AuthProvider.tsx` (modifica el archivo de US1)
+- [X] T066 [US4] Módulo de borradores en `app/src/lib/drafts.ts` (guardar, restaurar, descartar, purgar todo)
+- [X] T067 [US4] Hook `useDraft` en `app/src/lib/useDraft.ts` e integrarlo en `app/src/features/profile/ProfileForm.tsx`
+- [X] T068 [US4] Purgar borradores al cerrar sesión y ante `session_expired` en `app/src/features/auth/AuthProvider.tsx` (modifica el archivo de US1)
 - [ ] T069 [US4] Configurar `vite-plugin-pwa` en `app/vite.config.ts`: precachear **solo la carcasa**, `navigateFallback` a `/sin-conexion`, **sin** caché en tiempo de ejecución ni cola de sincronización; manifiesto e íconos en `app/public/`
-- [ ] T070 [US4] Página `/sin-conexion` en `app/src/routes/OfflinePage.tsx` y componente `OfflineNotice` en `app/src/components/OfflineNotice.tsx`
-- [ ] T071 [US4] Envoltorio de mutaciones en `app/src/lib/mutation.ts` que convierte los fallos de red en error visible y garantiza que ningún dato se muestre como guardado sin respuesta del servidor (FR-020)
+- [X] T070 [US4] Página `/sin-conexion` en `app/src/routes/OfflinePage.tsx` y componente `OfflineNotice` en `app/src/components/OfflineNotice.tsx`
+- [X] T071 [US4] Envoltorio de mutaciones en `app/src/lib/mutation.ts` que convierte los fallos de red en error visible y garantiza que ningún dato se muestre como guardado sin respuesta del servidor (FR-020)
 
 **Checkpoint**: la PWA se instala, avisa sin conexión y no pierde borradores. Pasan T062 a T065.
 

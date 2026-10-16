@@ -1,30 +1,54 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMemo, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useEffect, useMemo, useState } from 'react'
+import { useForm, useWatch } from 'react-hook-form'
 import { ErrorState } from '../../components/ErrorState'
 import { Field } from '../../components/Field'
 import { SuccessMessage } from '../../components/SuccessMessage'
 import { es } from '../../copy/es'
-import { isNetworkError, toUserMessage } from '../../lib/errors'
+import { discardDraft } from '../../lib/drafts'
+import { saveRemotely, WriteError } from '../../lib/mutation'
 import { listTimezones } from '../../lib/timezone'
+import { useDraft } from '../../lib/useDraft'
 import type { Profile, ProfileUpdate } from './api'
 import { toFormValues } from './profileValues'
-import { profileFormSchema, type ProfileFormInput } from './schema'
+import { profileDraftSchema, profileFormSchema, type ProfileFormInput } from './schema'
 import { useUpdateProfile } from './useUpdateProfile'
 
+const FORM_ID = 'profile'
+
 export function ProfileForm({ profile }: { profile: Profile }) {
-  const update = useUpdateProfile()
+  // El borrador se elimina antes de que la pantalla se monte con el perfil confirmado (FR-021).
+  const update = useUpdateProfile({ onSaved: () => discardDraft(profile.user_id, FORM_ID) })
+  const draft = useDraft({ userId: profile.user_id, formId: FORM_ID, schema: profileDraftSchema })
+  const saved = toFormValues(profile)
+
   const [error, setError] = useState<string | null>(null)
-  const [saved, setSaved] = useState(false)
+  const [confirmed, setConfirmed] = useState(false)
 
   const {
     register,
     handleSubmit,
+    reset,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<ProfileFormInput, unknown, ProfileUpdate>({
     resolver: zodResolver(profileFormSchema),
-    defaultValues: toFormValues(profile),
+    defaultValues: draft.initial ?? saved,
   })
+
+  // Cada cambio se guarda como borrador local; si vuelve a coincidir con lo guardado, no queda un
+  // borrador obsoleto. Nunca incluye contraseñas (ver lib/drafts.ts).
+  const values = useWatch({ control })
+  const saveDraft = draft.save
+  useEffect(() => {
+    const current = profileDraftSchema.safeParse(values)
+    if (!current.success) return
+    if (JSON.stringify(current.data) === JSON.stringify(toFormValues(profile))) {
+      discardDraft(profile.user_id, FORM_ID)
+    } else {
+      saveDraft(current.data)
+    }
+  }, [values, saveDraft, profile])
 
   // Si la zona guardada no figura en la lista (un alias), se agrega para no perderla.
   const timezones = useMemo(() => {
@@ -36,19 +60,40 @@ export function ProfileForm({ profile }: { profile: Profile }) {
 
   const submit = handleSubmit(async (values) => {
     setError(null)
-    setSaved(false)
+    setConfirmed(false)
     try {
-      await update.mutateAsync(values)
-      setSaved(true)
+      await saveRemotely(() => update.mutateAsync(values))
+      setConfirmed(true)
     } catch (e) {
-      // FR-020: nada se muestra como guardado si no llegó al servidor; lo escrito se conserva.
-      setError(toUserMessage({ network: isNetworkError(e) }))
+      // FR-020: nada se muestra como guardado si no llegó al servidor; lo escrito y el borrador quedan.
+      setError(e instanceof WriteError ? e.message : es.errors.generic)
     }
   })
 
   return (
     <form onSubmit={submit} noValidate className="flex flex-col gap-4">
       <h2 className="text-lg font-semibold">{es.profile.formTitle}</h2>
+
+      {draft.restored ? (
+        <div
+          role="status"
+          className="flex flex-col gap-2 rounded-md border border-line bg-surface p-3"
+        >
+          <p>{es.profile.draftRestored}</p>
+          <div>
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={() => {
+                reset(saved)
+                draft.discard()
+              }}
+            >
+              {es.profile.draftDiscard}
+            </button>
+          </div>
+        </div>
+      ) : null}
 
       <Field
         label={es.profile.labels.birthDate}
@@ -104,7 +149,7 @@ export function ProfileForm({ profile }: { profile: Profile }) {
       </div>
 
       {error ? <ErrorState message={error} /> : null}
-      {saved ? <SuccessMessage>{es.profile.saved}</SuccessMessage> : null}
+      {confirmed ? <SuccessMessage>{es.profile.saved}</SuccessMessage> : null}
 
       <button type="submit" className="btn-primary" disabled={isSubmitting}>
         {es.profile.save}
