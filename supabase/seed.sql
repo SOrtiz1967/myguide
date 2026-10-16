@@ -25,13 +25,24 @@ end;
 $$;
 
 -- Actua como el usuario indicado (rol `authenticated` con su JWT simulado).
-create or replace function tests.authenticate_as(p_user_id uuid) returns void
+-- p_amr_ts: hora (epoch) del inicio de sesion con contrasena que simula el claim `amr` del JWT.
+create or replace function tests.authenticate_as(p_user_id uuid, p_amr_ts bigint default null)
+returns void
 language plpgsql
 as $$
 begin
   perform set_config(
     'request.jwt.claims',
-    json_build_object('sub', p_user_id, 'role', 'authenticated')::text,
+    (
+      jsonb_build_object('sub', p_user_id, 'role', 'authenticated')
+      || case
+        when p_amr_ts is null then '{}'::jsonb
+        else jsonb_build_object(
+          'amr',
+          jsonb_build_array(jsonb_build_object('method', 'password', 'timestamp', p_amr_ts))
+        )
+      end
+    )::text,
     true
   );
   perform set_config('request.jwt.claim.sub', p_user_id::text, true);
