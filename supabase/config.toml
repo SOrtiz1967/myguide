@@ -421,3 +421,18 @@ enabled = true
 # - minimum_password_length = 10 (FR-002).
 # - sign_in_sign_ups = 10 por IP cada 5 min: unico limite de intentos (FR-006); no hay bloqueo por cuenta en el MVP.
 # - secure_password_change = true: refuerzo para el cambio de contrasena (FR-028).
+
+# --- Edge Functions (spec 001) ---
+# register, request-password-reset y confirm-email son publicas por diseno: se abren sin sesion
+# (alta, recuperacion y enlace de un correo). send-verification exige sesion.
+[functions.register]
+verify_jwt = false
+
+[functions.request-password-reset]
+verify_jwt = false
+
+[functions.confirm-email]
+verify_jwt = false
+
+[functions.send-verification]
+verify_jwt = true

@@ -1,7 +1,7 @@
 -- Soporte de las Edge Functions (T089): límite por IP, tokens de confirmación y búsqueda de cuenta.
 -- Todas las funciones son exclusivas del rol de servicio: ni anon ni authenticated pueden llamarlas.
 begin;
-select plan(15);
+select plan(17);
 
 select tests.create_user('soporte@test.local') as uid \gset
 
@@ -58,6 +58,10 @@ select is(
   0::bigint,
   'FR-005: una cuenta inexistente no devuelve filas'
 );
+
+-- aviso de privacidad vigente ----------------------------------------------------------------
+select is(public.is_privacy_notice_current('2026-10-16'), true, 'FR-029: la version vigente se acepta');
+select is(public.is_privacy_notice_current('1999-01-01'), false, 'FR-029: una version desconocida se rechaza');
 
 -- permisos ---------------------------------------------------------------------------------------
 select tests.authenticate_as(:'uid');
