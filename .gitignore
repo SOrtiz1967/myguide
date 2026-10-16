@@ -1,1 +1,11 @@
 .claude/settings.local.json
+app/.env.local
+app/.env
+supabase/.env
+supabase/.branches/
+supabase/.temp/
+node_modules/
+dist/
+playwright-report/
+test-results/
+coverage/

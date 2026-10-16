@@ -31,12 +31,12 @@ description: "Lista de tareas de la spec 001: cuentas, perfil y base de la PWA"
 
 **Purpose**: estructura del proyecto y herramientas
 
-- [ ] T001 Crear el proyecto Vite + React + TypeScript en `app/` con `strict: true` en `app/tsconfig.json`
-- [ ] T002 [P] Instalar dependencias de ejecución en `app/package.json`: `react-router`, `@tanstack/react-query`, `react-hook-form`, `zod`, `@hookform/resolvers`, `@supabase/supabase-js`, `tailwindcss`, `vite-plugin-pwa` (fijar versiones y confirmar `app/package-lock.json`)
-- [ ] T003 [P] Instalar dependencias de desarrollo en `app/package.json`: `vitest`, `@testing-library/react`, `@testing-library/jest-dom`, `@playwright/test`, `@axe-core/playwright`, `eslint`, `prettier`
-- [ ] T004 [P] Configurar ESLint y Prettier en `app/eslint.config.js` y `app/.prettierrc`, y los scripts `format:check`, `lint`, `typecheck`, `test`, `e2e` en `app/package.json` (comandos documentados en `quickstart.md`)
-- [ ] T005 Inicializar Supabase con `npx supabase init` y configurar `supabase/config.toml` según `contracts/backend-api.md`: confirmación nativa de correo desactivada, registro nativo desactivado (`enable_signup = false`), captcha nativo desactivado (Turnstile se verifica en las Edge Functions), contraseña mínima de 10 caracteres y límite de intentos de inicio de sesión **por IP** en el valor más estricto razonable (sin bloqueo por cuenta, FR-006); anotar los valores elegidos en `supabase/README.md`
-- [ ] T006 [P] Crear `app/.env.example` solo con variables públicas (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_TURNSTILE_SITE_KEY`) y ampliar `.gitignore` con `app/.env.local`, `supabase/.env`, `node_modules/`, `dist/`
+- [X] T001 Crear el proyecto Vite + React + TypeScript en `app/` con `strict: true` en `app/tsconfig.json`
+- [X] T002 [P] Instalar dependencias de ejecución en `app/package.json`: `react-router`, `@tanstack/react-query`, `react-hook-form`, `zod`, `@hookform/resolvers`, `@supabase/supabase-js`, `tailwindcss`, `vite-plugin-pwa` (fijar versiones y confirmar `app/package-lock.json`)
+- [X] T003 [P] Instalar dependencias de desarrollo en `app/package.json` (lint con `oxlint`, incluido por la plantilla de Vite en lugar de ESLint): `vitest`, `@testing-library/react`, `@testing-library/jest-dom`, `@playwright/test`, `@axe-core/playwright`, `eslint`, `prettier`
+- [X] T004 [P] Configurar ESLint y Prettier en `app/eslint.config.js` y `app/.prettierrc`, y los scripts `format:check`, `lint`, `typecheck`, `test`, `e2e` en `app/package.json` (comandos documentados en `quickstart.md`)
+- [X] T005 Inicializar Supabase con `npx supabase init` y configurar `supabase/config.toml` según `contracts/backend-api.md`: confirmación nativa de correo desactivada, registro nativo desactivado (`enable_signup = false`), captcha nativo desactivado (Turnstile se verifica en las Edge Functions), contraseña mínima de 10 caracteres y límite de intentos de inicio de sesión **por IP** en el valor más estricto razonable (sin bloqueo por cuenta, FR-006); anotar los valores elegidos en `supabase/README.md`
+- [X] T006 [P] Crear `app/.env.example` solo con variables públicas (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_TURNSTILE_SITE_KEY`) y ampliar `.gitignore` con `app/.env.local`, `supabase/.env`, `node_modules/`, `dist/`
 
 ---
 
