@@ -60,12 +60,12 @@ description: "Lista de tareas de la spec 001: cuentas, perfil y base de la PWA"
 
 ### Base del frontend
 
-- [ ] T013 Cliente único de Supabase en `app/src/lib/supabase.ts` que valida con Zod las variables `VITE_*` al arrancar y falla con un mensaje claro si falta alguna
-- [ ] T014 [P] Escribir primero las pruebas de componentes de estados en `app/tests/component/states.test.tsx` (carga, vacío, éxito, error con roles y etiquetas accesibles, FR-023); verificar que fallan
-- [ ] T015 [P] Implementar `LoadingState`, `EmptyState`, `SuccessMessage` y `ErrorState` en `app/src/components/` para que pasen las pruebas de T014
-- [ ] T016 [P] Layout mobile-first y tokens de diseño (paleta, tipografía, espaciado) en `app/src/components/AppShell.tsx` y la configuración de Tailwind, aplicando la skill `frontend-design`; foco visible y respeto de `prefers-reduced-motion`
-- [ ] T017 [P] Textos en español centralizados en `app/src/copy/es.ts` y mapeador de errores en `app/src/lib/errors.ts` con pruebas en `app/tests/unit/errors.test.ts`: los errores de credenciales y de recuperación usan **un único mensaje uniforme** que no revela si un correo existe (FR-005)
-- [ ] T018 Proveedores y tabla de rutas de `contracts/ui-routes.md` (React Router, TanStack Query) en `app/src/main.tsx` y `app/src/routes/index.tsx`, con páginas provisionales para cada ruta
+- [X] T013 Cliente único de Supabase en `app/src/lib/supabase.ts` que valida con Zod las variables `VITE_*` al arrancar y falla con un mensaje claro si falta alguna
+- [X] T014 [P] Escribir primero las pruebas de componentes de estados en `app/tests/component/states.test.tsx` (carga, vacío, éxito, error con roles y etiquetas accesibles, FR-023); verificar que fallan
+- [X] T015 [P] Implementar `LoadingState`, `EmptyState`, `SuccessMessage` y `ErrorState` en `app/src/components/` para que pasen las pruebas de T014
+- [X] T016 [P] Layout mobile-first y tokens de diseño (paleta, tipografía, espaciado) en `app/src/components/AppShell.tsx` y la configuración de Tailwind, aplicando la skill `frontend-design`; foco visible y respeto de `prefers-reduced-motion`
+- [X] T017 [P] Textos en español centralizados en `app/src/copy/es.ts` y mapeador de errores en `app/src/lib/errors.ts` con pruebas en `app/tests/unit/errors.test.ts`: los errores de credenciales y de recuperación usan **un único mensaje uniforme** que no revela si un correo existe (FR-005)
+- [X] T018 Proveedores y tabla de rutas de `contracts/ui-routes.md` (React Router, TanStack Query) en `app/src/main.tsx` y `app/src/routes/index.tsx`, con páginas provisionales para cada ruta
 - [X] T019 Ayudantes pgTAP en `supabase/seed.sql` (esquema `tests`, solo local; `supabase test db` ejecutaría como prueba cualquier .sql dentro de `supabase/tests/`): crear dos usuarios de prueba (A y B) con perfil, suplantar a cada uno y fijar `last_active_at`
 - [X] T020 [P] Escribir primero `supabase/functions/_shared/log.test.ts`: el registrador **elimina** correos, tokens y contraseñas de cualquier mensaje o campo (Principio IX); verificar que falla
 - [X] T021 [P] Implementar `supabase/functions/_shared/log.ts` (registro estructurado sin datos personales), y las utilidades compartidas `supabase/functions/_shared/cors.ts`, `supabase/functions/_shared/admin.ts` (cliente con clave de servicio, solo servidor) (el envío por SMTP, `supabase/functions/_shared/mail.ts`, se implementa junto con su primera prueba en T024/T029)
