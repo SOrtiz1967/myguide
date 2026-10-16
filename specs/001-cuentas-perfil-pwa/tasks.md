@@ -152,20 +152,20 @@ description: "Lista de tareas de la spec 001: cuentas, perfil y base de la PWA"
 
 ### Tests for User Story 3 ⚠️ (escribir primero y verificar que FALLAN)
 
-- [ ] T051 [P] [US3] Pruebas unitarias en `app/tests/unit/profileSchema.test.ts`: fecha de nacimiento no futura y no anterior a 120 años atrás, altura entre 50 y 250, sexo `female`, `male` o nulo, zona horaria IANA válida (FR-014)
+- [X] T051 [P] [US3] Pruebas unitarias en `app/tests/unit/profileSchema.test.ts`: fecha de nacimiento no futura y no anterior a 120 años atrás, altura entre 50 y 250, sexo `female`, `male` o nulo, zona horaria IANA válida (FR-014)
 - [X] T052 [P] [US3] Prueba pgTAP en `supabase/tests/profiles_constraints.test.sql`: se rechazan los valores fuera de rango y `unit_system` distinto de `metric`
-- [ ] T053 [P] [US3] Pruebas de componentes en `app/tests/component/ProfileForm.test.tsx`: altura mostrada con "cm", sexo opcional con la opción "Prefiero no indicarlo", dato sin informar mostrado como "No informado" y nunca con valor supuesto (FR-017), la zona horaria del dispositivo se sugiere pero no se aplica sola (FR-016), la fecha de nacimiento se muestra e ingresa en formato regional día/mes/año (FR-031)
+- [X] T053 [P] [US3] Pruebas de componentes en `app/tests/component/ProfileForm.test.tsx`: altura mostrada con "cm", sexo opcional con la opción "Prefiero no indicarlo", dato sin informar mostrado como "No informado" y nunca con valor supuesto (FR-017), la zona horaria del dispositivo se sugiere pero no se aplica sola (FR-016), la fecha de nacimiento se muestra e ingresa en formato regional día/mes/año (FR-031)
 - [ ] T054 [P] [US3] Prueba de extremo a extremo en `app/tests/e2e/profile.spec.ts`: completar el perfil, recargar y ver los valores persistidos con su unidad (escenarios 9 a 11)
 
 ### Implementation for User Story 3
 
 - [X] T055 [US3] Migración `supabase/migrations/20261016000800_profiles_constraints.sql` con las restricciones literales: `birth_date` no futura y no anterior a 120 años atrás; `sex` en (`female`, `male`) o nulo; `height_cm` entre 50 y 250; `timezone` nombre IANA válido; `unit_system = 'metric'`
-- [ ] T056 [P] [US3] Esquema Zod del perfil en `app/src/features/profile/schema.ts` con las mismas reglas que T055
-- [ ] T057 [P] [US3] API del perfil con TanStack Query en `app/src/features/profile/api.ts` (leer y actualizar el propio perfil)
-- [ ] T058 [P] [US3] Utilidad de zona horaria en `app/src/lib/timezone.ts`: detectar la del dispositivo y validar nombres IANA
-- [ ] T059 [US3] `ProfileForm` y `ProfilePage` en `app/src/features/profile/ProfileForm.tsx` y `app/src/features/profile/ProfilePage.tsx`, con estados de carga, vacío (perfil sin completar), éxito y error, e integración del `ChangePasswordForm`
-- [ ] T060 [US3] Inicio en `app/src/routes/HomePage.tsx` que guía a completar el perfil si faltan fecha de nacimiento, altura o zona horaria
-- [ ] T061 [US3] Aviso para cambiar la zona horaria cuando la del dispositivo difiere de la guardada, sin cambiarla sin confirmación, en `app/src/features/profile/TimezoneNotice.tsx`
+- [X] T056 [P] [US3] Esquema Zod del perfil en `app/src/features/profile/schema.ts` con las mismas reglas que T055
+- [X] T057 [P] [US3] API del perfil con TanStack Query en `app/src/features/profile/api.ts` (leer y actualizar el propio perfil)
+- [X] T058 [P] [US3] Utilidad de zona horaria en `app/src/lib/timezone.ts`: detectar la del dispositivo y validar nombres IANA
+- [X] T059 [US3] `ProfileForm` y `ProfilePage` en `app/src/features/profile/ProfileForm.tsx` y `app/src/features/profile/ProfilePage.tsx`, con estados de carga, vacío (perfil sin completar), éxito y error, e integración del `ChangePasswordForm`
+- [X] T060 [US3] Inicio en `app/src/routes/HomePage.tsx` que guía a completar el perfil si faltan fecha de nacimiento, altura o zona horaria
+- [X] T061 [US3] Aviso para cambiar la zona horaria cuando la del dispositivo difiere de la guardada, sin cambiarla sin confirmación, en `app/src/features/profile/TimezoneNotice.tsx`
 
 **Checkpoint**: el perfil se completa, se edita y persiste. Pasan T051 a T054.
 

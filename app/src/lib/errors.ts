@@ -39,3 +39,11 @@ export function toUserMessage(error: AppErrorInput): string {
   }
   return es.errors.generic
 }
+
+/** El pedido no llegó al servidor (sin conexión, DNS, corte de red). */
+export function isNetworkError(error: unknown): boolean {
+  if (typeof navigator !== 'undefined' && navigator.onLine === false) return true
+  if (error instanceof TypeError) return true
+  const message = (error as { message?: string } | null)?.message ?? ''
+  return /failed to fetch|networkerror|network request failed|load failed/i.test(message)
+}
