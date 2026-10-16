@@ -39,7 +39,7 @@ Datos verificados el 2026-10-16 en fuentes públicas; **confirmar en las página
 - **Decisión**: mantener la confirmación de Supabase **desactivada** e implementar la confirmación propia:
   - Tabla `email_verification_tokens` (solo accesible con la clave de servicio) y columna `profiles.email_verified_at`.
   - Edge Function `send-verification` (autenticada, con límite de frecuencia por usuario) y Edge Function `confirm-email` (abierta, valida el token de un solo uso y que no venció).
-  - Bloqueo de recuperación para correos sin confirmar (FR-027): se intenta con un **Auth Hook de envío de correo** que descarte el correo de recuperación si `email_verified_at` es nulo. Si el plan gratuito no lo permite, el respaldo es una Edge Function `request-password-reset` que la interfaz usa en lugar del endpoint directo.
+  - Bloqueo de recuperación para correos sin confirmar (FR-027): la interfaz usa siempre la Edge Function `request-password-reset` (ver Decisión 6). Como refuerzo opcional, se evalúa un **Auth Hook de envío de correo** que descarte la recuperación si `email_verified_at` es nulo, para cubrir también las llamadas directas al endpoint nativo.
 - **Residual aceptado**: sin el hook, quien llame directamente a la API de Supabase podría pedir un correo de recuperación para una cuenta no confirmada. El correo llega al dueño real de esa dirección, no a quien lo pidió, por lo que no abre acceso; solo contradice el texto de FR-027. Queda documentado y se verifica en el prototipo.
 - **Alternativa evaluada**: usar la confirmación bloqueante nativa (mucho menos código). Se descartó porque contradice la decisión explícita del autor. Si el costo de la lógica propia resulta alto en la implementación, esta es la alternativa a reconsiderar con el autor.
 
@@ -61,8 +61,10 @@ Datos verificados el 2026-10-16 en fuentes públicas; **confirmar en las página
 ## Decisión 6: Contraseñas, intentos y abuso (FR-002, FR-006, FR-008)
 
 - **Contraseñas**: mínimo **10 caracteres**, sin reglas de composición obligatorias (criterio vigente del NIST), máximo 72. Validación en el cliente y configuración equivalente en Auth.
-- **Intentos fallidos**: límites por IP y por cuenta del propio Auth; se ajustan los valores por defecto a algo conservador y se documentan.
-- **Registro abierto**: **Cloudflare Turnstile** (gratuito) activado en registro, inicio de sesión y recuperación, integrado con Supabase. El registro se limita por IP.
+- **Intentos fallidos (FR-006)**: solo el **límite por IP nativo de Auth**, ajustado al valor más estricto razonable (valor concreto fijado y documentado en `supabase/config.toml` en la tarea T005). **No hay bloqueo por cuenta**: el endpoint de autenticación de Supabase es público y la clave `anon` va en el bundle, por lo que cualquier contador propio se podría evitar llamando al endpoint directo. El bloqueo por cuenta nativo (hook de verificación de contraseña) es de plan de pago; queda como mejora futura. Decisión del autor tras evaluar tres opciones (solo IP, contraseña con pepper, contador de mejor esfuerzo).
+- **Captcha (FR-008)**: **Cloudflare Turnstile** (gratuito) **solo en registro y recuperación**; el inicio de sesión no lo usa para no depender de un servicio externo (FR-025). El captcha nativo de Supabase se activa en todos los endpoints a la vez (a confirmar en el prototipo T007), por lo que se deja **desactivado** y el token se verifica en las Edge Functions `register` y `request-password-reset`. Si Turnstile no responde, la operación se bloquea con un aviso claro (el inicio de sesión no se afecta).
+- **Registro por función**: con el registro nativo desactivado (`enable_signup = false`), `register` valida Turnstile, rechaza versiones del aviso de privacidad no vigentes, detecta el correo repetido (`409` con mensaje claro, Decisión 10) y crea la cuenta con la API de administración (`email_confirm: true`, porque la confirmación propia no es bloqueante). El cliente inicia sesión después con la contraseña.
+- **Recuperación por función**: `request-password-reset` valida Turnstile, comprueba que el correo esté confirmado y recién entonces dispara la recuperación de Auth; responde siempre igual. **Residual**: el endpoint nativo `/recover` sigue accesible con la clave pública; queda protegido solo por el límite por IP y el correo llega al dueño real de la cuenta. Se documenta y se evalúa con el Auth Hook de envío (T008).
 - **Aviso**: la verificación contra contraseñas filtradas es una función de pago; no se usa. Se acepta la limitación.
 
 ## Decisión 7: Frontend
@@ -86,12 +88,28 @@ Datos verificados el 2026-10-16 en fuentes públicas; **confirmar en las página
 ## Decisión 10: Registro duplicado y enumeración de correos (FR-005)
 
 - **Hallazgo**: como la cuenta se puede usar de inmediato, el registro con un correo ya existente tiene que responder algo distinto del éxito; esto permite deducir qué correos tienen cuenta. Es inherente a cualquier alta con acceso inmediato.
-- **Decisión**: respuesta neutral ("Si ese correo ya tiene cuenta, inicia sesión o recupera tu contraseña") y mitigación con Turnstile y límites por IP. **Residual aceptado** para el MVP; coherente con reevaluar la confirmación obligatoria antes de publicar.
-- **Inicio de sesión y recuperación** sí cumplen FR-005 completamente (mensajes uniformes).
+- **Decisión del autor**: mensaje claro "Ya existe una cuenta con ese correo. Inicia sesión o recupera tu contraseña" (respuesta `409` de `register`). Revela que el correo existe. **Residual aceptado** para el MVP, mitigado por Turnstile y límite por IP; coherente con reevaluar la confirmación obligatoria antes de publicar.
+- **Inicio de sesión y recuperación** sí cumplen FR-005 completamente (mensajes uniformes). El registro es la única excepción, documentada en la spec.
 
 ## Decisión 11: Idempotencia de alta (FR-007)
 
-- **Decisión**: la unicidad del correo la garantiza Auth; la interfaz deshabilita el envío mientras hay una solicitud en curso, y los reintentos de red sobre un alta ya hecha se resuelven por la respuesta neutral de la Decisión 10. La creación de `profiles` es idempotente (`ON CONFLICT DO NOTHING` en el disparador).
+- **Decisión**: la unicidad del correo la garantiza Auth; la interfaz deshabilita el envío mientras hay una solicitud en curso, y un reintento de red sobre un alta ya hecha recibe el `409` de la Decisión 10 (la cuenta sigue siendo una sola). La creación de `profiles` es idempotente (`ON CONFLICT DO NOTHING` en el disparador).
+
+## Decisión 12: Fallos de servicios externos (Principio VII)
+
+- **Correo (SMTP)**: si el envío falla, la cuenta se crea igual y es utilizable; la interfaz informa que el correo no pudo enviarse y ofrece reintentar. El fallo se registra con causa técnica (`smtp_timeout`, `smtp_rejected`, etc.) sin correos ni tokens. Hay un tiempo de espera explícito y un máximo de reintentos por solicitud.
+- **Turnstile**: si no responde o devuelve un error del servicio (no un rechazo del usuario), registro y recuperación se bloquean con un aviso claro para reintentar. El inicio de sesión no se afecta.
+- **Límite de cuota del SMTP gratuito**: se trata como un fallo del proveedor; se informa y se registra, sin descartar la operación principal.
+- **Pruebas**: simulacros de cada fallo (tiempo de espera, rechazo, respuesta malformada) en las pruebas de las Edge Functions.
+
+## Decisión 13: El correo no se puede cambiar (FR-028)
+
+- **Hallazgo**: no está verificado que Supabase permita deshabilitar `updateUser({ email })` por configuración.
+- **Decisión**: no confiar en un interruptor. Se agrega una **barrera en la base de datos** (disparador `before update` sobre `auth.users` que rechaza cambios de `email` hechos por roles distintos del administrador) y una prueba pgTAP que intenta el cambio como usuario autenticado. Se confirma en el prototipo T007.
+
+## Decisión 14: Versión del aviso de privacidad (FR-029)
+
+- **Decisión**: las versiones vigentes viven en una tabla de solo lectura `private.privacy_notice_versions`; `register` y el disparador de alta rechazan cualquier versión que no figure como vigente.
 
 ## Preguntas abiertas para fases posteriores
 

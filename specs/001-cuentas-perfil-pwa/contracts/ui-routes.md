@@ -9,8 +9,8 @@ Toda la interfaz está en español. Cada pantalla define sus cuatro estados (FR-
 | Ruta | Acceso | Propósito | Historia |
 |---|---|---|---|
 | `/registro` | pública | crear cuenta: correo, contraseña, aviso de privacidad con casilla obligatoria, Turnstile | 1 |
-| `/ingresar` | pública | iniciar sesión | 1 |
-| `/recuperar` | pública | solicitar recuperación (respuesta neutral) | 1 |
+| `/ingresar` | pública | iniciar sesión (sin captcha, FR-008) | 1 |
+| `/recuperar` | pública | solicitar recuperación con Turnstile (respuesta neutral) | 1 |
 | `/restablecer` | enlace de recuperación | fijar contraseña nueva | 1 |
 | `/correo-confirmado` | pública | resultado de confirmar el correo | 1 |
 | `/correo-no-valido` | pública | enlace vencido o usado; ofrece reenviar si hay sesión | 1 |
@@ -24,7 +24,7 @@ Una ruta privada sin sesión redirige a `/ingresar` sin cargar datos. Una sesió
 
 | Pantalla | Carga | Vacío | Éxito | Error |
 |---|---|---|---|---|
-| Registro / Ingreso / Recuperar | botón deshabilitado con indicador | n/a | entra a la app, o mensaje neutral de recuperación | mensaje claro por campo; error uniforme de credenciales; límite de intentos |
+| Registro / Ingreso / Recuperar | botón deshabilitado con indicador | n/a | entra a la app, o mensaje neutral de recuperación | mensaje claro por campo; error uniforme de credenciales; "ya existe una cuenta" en el registro (409); aviso de espera si se supera el límite por IP; aviso de reintentar si el captcha no está disponible (solo registro y recuperación); aviso de que el correo no pudo enviarse, con opción de reintentar |
 | Perfil | esqueleto de carga | perfil sin completar, con explicación de qué falta | "Perfil guardado" | errores de validación por campo; fallo de red con el borrador conservado |
 | Cambio de contraseña | botón deshabilitado | n/a | "Contraseña actualizada; cerramos tus otras sesiones" | contraseña actual incorrecta; contraseña nueva inválida |
 | Recordatorio de correo sin confirmar | n/a | se oculta cuando está confirmado | "Te enviamos el enlace" | límite de reenvío alcanzado |

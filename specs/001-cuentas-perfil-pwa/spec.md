@@ -18,6 +18,13 @@
 - Q: Al cambiar o recuperar la contraseña, ¿se cierran las sesiones abiertas en otros dispositivos? → A: Sí, se cierran todas las demás; la sesión actual se mantiene cuando el cambio se hace desde dentro de la aplicación.
 - Q: ¿Por cuánto tiempo se mantiene abierta la sesión si la persona no usa la aplicación? → A: 30 días de inactividad; la sesión se renueva con cada uso y vence tras 30 días sin abrir la aplicación.
 
+### Session 2026-10-16 (resolución del análisis de consistencia)
+
+- Q: ¿Dónde se usa el captcha? → A: Solo en registro y recuperación de contraseña. El inicio de sesión no depende de ningún servicio externo y se protege con límites de intentos.
+- Q: ¿Qué límite de intentos fallidos de inicio de sesión se aplica? → A: Solo el límite por IP que ofrece la plataforma, ajustado al valor más estricto razonable, más una contraseña mínima de 10 caracteres. El bloqueo por cuenta (por ejemplo, 5 intentos en 15 minutos) no es aplicable de forma real en el plan gratuito, porque el endpoint de autenticación es público; queda como mejora para el plan de pago.
+- Q: Si el captcha no responde en registro o recuperación, ¿qué hace la aplicación? → A: Bloquea la operación con un aviso claro y la persona puede reintentar más tarde; sin captcha no se crean cuentas ni se piden recuperaciones. El inicio de sesión no se ve afectado.
+- Q: Al registrarse con un correo que ya tiene cuenta, ¿qué mensaje se muestra? → A: Un mensaje claro ("Ya existe una cuenta con ese correo. Inicia sesión o recupera tu contraseña"). Revela que el correo existe; se acepta como residual del MVP, mitigado por captcha y límites por IP.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Crear una cuenta e iniciar sesión (Priority: P1)
@@ -39,6 +46,8 @@ Una persona crea su cuenta con correo electrónico y contraseña, inicia sesión
 7. **Given** credenciales incorrectas, **When** intenta iniciar sesión, **Then** recibe un mensaje de error claro que no revela si el correo existe.
 8. **Given** una persona con sesión iniciada, **When** ingresa su contraseña actual y una contraseña nueva válida, **Then** la contraseña se actualiza y se cierran las sesiones abiertas en otros dispositivos; si la contraseña actual es incorrecta, el cambio se rechaza con un mensaje claro.
 9. **Given** una persona con sesiones abiertas en dos dispositivos, **When** recupera su contraseña desde un enlace de recuperación, **Then** todas sus sesiones anteriores se cierran y debe iniciar sesión con la contraseña nueva.
+10. **Given** un correo que ya tiene cuenta, **When** alguien intenta registrarse con él, **Then** ve el mensaje "Ya existe una cuenta con ese correo. Inicia sesión o recupera tu contraseña" y no se crea una cuenta nueva.
+11. **Given** una IP que supera el límite de intentos de inicio de sesión fallidos, **When** intenta ingresar de nuevo, **Then** el intento se rechaza temporalmente con un aviso de que debe esperar, sin revelar si el correo existe; pasado el período de espera puede intentarlo otra vez.
 
 ---
 
@@ -96,7 +105,10 @@ La persona puede instalar la aplicación en su teléfono o computadora como una 
 
 ### Edge Cases
 
-- ¿Qué pasa si se intenta registrar un correo que ya tiene cuenta? Se informa de forma que no facilite averiguar qué correos existen.
+- ¿Qué pasa si se intenta registrar un correo que ya tiene cuenta? Se muestra un mensaje claro de que ya existe (decisión del autor); esto revela que el correo está registrado y se acepta como residual del MVP, mitigado por captcha y límite por IP.
+- ¿Qué pasa si el captcha no responde al registrarse o pedir una recuperación? La operación se bloquea con un aviso claro para reintentar más tarde; el inicio de sesión sigue funcionando.
+- ¿Qué pasa si el proveedor de correo falla al enviar la confirmación o la recuperación? La cuenta se crea igual y se puede usar; se informa que el correo no pudo enviarse y se ofrece reintentar. El fallo queda registrado con su causa técnica y sin datos personales.
+- ¿Qué pasa si alguien intenta adivinar contraseñas repetidamente? Al superar el límite de intentos por IP, los intentos siguientes se rechazan temporalmente; el aviso no revela si el correo existe. No hay bloqueo por cuenta en el MVP.
 - ¿Qué pasa si la persona nunca confirma su correo? La cuenta sigue usable, pero sin recuperación de contraseña; si olvida la contraseña, no podrá recuperar el acceso por este medio.
 - ¿Qué pasa si el enlace de confirmación venció? Se ofrece reenviar uno nuevo.
 - ¿Qué pasa si la contraseña es débil o demasiado corta? Se rechaza con una indicación clara de los requisitos.
@@ -119,18 +131,18 @@ La persona puede instalar la aplicación en su teléfono o computadora como una 
 - **FR-002**: El sistema MUST validar el formato del correo y exigir una contraseña que cumpla requisitos mínimos de seguridad, informándolos claramente.
 - **FR-003**: El sistema MUST permitir iniciar y cerrar sesión, y mantener la sesión abierta entre visitas; la sesión MUST renovarse con cada uso y vencer tras 30 días sin actividad, pidiendo iniciar sesión de nuevo.
 - **FR-004**: El sistema MUST permitir recuperar el acceso mediante un enlace temporal y de un solo uso enviado al correo de la cuenta, siempre que ese correo esté confirmado (ver FR-026).
-- **FR-005**: Los mensajes de error de autenticación y de recuperación MUST NOT revelar si un correo tiene cuenta.
-- **FR-006**: El sistema MUST aplicar límites a los intentos fallidos repetidos de inicio de sesión para dificultar el abuso.
+- **FR-005**: Los mensajes de error de inicio de sesión y de recuperación MUST NOT revelar si un correo tiene cuenta. La única excepción aceptada es el registro con un correo ya existente (ver Edge Cases).
+- **FR-006**: El sistema MUST aplicar un límite de intentos de inicio de sesión por IP, con el valor más estricto razonable que permita la plataforma (valor concreto documentado en el plan), y MUST rechazar temporalmente los intentos que lo superen sin revelar si el correo existe. El bloqueo por cuenta queda fuera del MVP.
 - **FR-007**: La creación de cuenta y la solicitud de recuperación MUST ser idempotentes ante dobles envíos o reintentos de red.
-- **FR-008**: El registro de cuentas MUST estar abierto a cualquier persona con un correo válido, y el sistema MUST incluir protecciones contra registros automatizados o abusivos.
+- **FR-008**: El registro de cuentas MUST estar abierto a cualquier persona con un correo válido, y el sistema MUST incluir protecciones contra registros automatizados o abusivos: un captcha en el registro y en la solicitud de recuperación, y un límite de solicitudes por IP. Si el captcha no está disponible, la operación MUST bloquearse con un aviso claro para reintentar más tarde. El inicio de sesión MUST NOT usar captcha.
 
-- **FR-026**: Tras el registro, el sistema MUST enviar un enlace de confirmación del correo. La cuenta MUST poder usarse sin confirmarlo, pero MUST mostrar un recordatorio visible con la opción de reenviar el enlace hasta que se confirme.
+- **FR-026**: Tras el registro, el sistema MUST enviar un enlace de confirmación del correo. La cuenta MUST poder usarse sin confirmarlo, pero MUST mostrar un recordatorio visible con la opción de reenviar el enlace hasta que se confirme. Si el proveedor de correo falla, la cuenta MUST crearse igual, la persona MUST ser informada de que el correo no pudo enviarse con la opción de reintentar, y el fallo MUST registrarse con su causa técnica sin datos personales.
 - **FR-027**: Si el correo no está confirmado, la solicitud de recuperación de contraseña MUST NOT enviar el enlace de recuperación, y MUST informar que primero debe confirmarse el correo.
 
 - **FR-028**: Con sesión iniciada, el usuario MUST poder cambiar su contraseña ingresando la contraseña actual y una nueva que cumpla los requisitos de FR-002. El correo de la cuenta MUST NOT poder modificarse en el MVP.
 - **FR-030**: Al cambiar la contraseña, el sistema MUST cerrar todas las demás sesiones de la cuenta y mantener la sesión actual. Al restablecerla mediante un enlace de recuperación, el sistema MUST cerrar todas las sesiones de la cuenta.
 
-- **FR-029**: El registro MUST mostrar un aviso de privacidad breve, en español, que indique qué datos se guardan y cómo se protegen, y MUST exigir que la persona marque que lo leyó para crear la cuenta. La cuenta MUST guardar qué versión del aviso aceptó y cuándo.
+- **FR-029**: El registro MUST mostrar un aviso de privacidad breve, en español, que indique qué datos se guardan y cómo se protegen, y MUST exigir que la persona marque que lo leyó para crear la cuenta. La cuenta MUST guardar qué versión del aviso aceptó y cuándo, y el sistema MUST rechazar versiones del aviso que no estén vigentes.
 
 **Propiedad y acceso a los datos**
 
@@ -146,6 +158,7 @@ La persona puede instalar la aplicación en su teléfono o computadora como una 
 - **FR-015**: El sistema MUST usar el sistema métrico en todo valor mostrado, indicando siempre su unidad.
 - **FR-016**: El sistema MUST proponer la zona horaria del dispositivo, pero solo cambiar la guardada con confirmación del usuario.
 - **FR-017**: Un dato de perfil no informado MUST mostrarse como no informado y MUST NOT reemplazarse con valores supuestos.
+- **FR-031**: Las fechas del perfil MUST mostrarse e ingresarse con el formato de la configuración regional del usuario (por ejemplo, día/mes/año en español de Argentina).
 
 **PWA, conexión y borradores**
 
@@ -159,7 +172,7 @@ La persona puede instalar la aplicación en su teléfono o computadora como una 
 
 - **FR-023**: Cada pantalla principal MUST tener estados de carga, vacío, éxito y error definidos.
 - **FR-024**: La interfaz MUST estar en español, con controles con etiquetas accesibles, navegación por teclado y errores comprensibles.
-- **FR-025**: La aplicación MUST NOT depender de una integración externa para el registro, el inicio de sesión ni la edición del perfil, más allá del envío de los correos de confirmación y de recuperación.
+- **FR-025**: La aplicación MUST NOT depender de una integración externa para el inicio de sesión ni la edición del perfil. El registro y la recuperación solo dependen del envío de correos y del captcha (ver FR-008); una caída de estos servicios MUST NOT impedir iniciar sesión ni usar la aplicación.
 
 ### Key Entities *(include if feature involves data)*
 
@@ -186,7 +199,7 @@ La persona puede instalar la aplicación en su teléfono o computadora como una 
 ## Assumptions
 
 - Las personas usuarias inician sesión con correo y contraseña. Otros métodos (por ejemplo, cuentas de terceros) quedan fuera de esta spec.
-- La confirmación y la recuperación usan el correo de la cuenta; el envío de correos es la única dependencia externa aceptada en esta spec.
+- Las dependencias externas aceptadas en esta spec son el envío de correos (confirmación y recuperación) y el captcha (registro y recuperación). El inicio de sesión no depende de ninguna.
 - El aviso de privacidad es un resumen breve, no una política legal completa ni términos de uso; su redacción final y la política completa se definen en la spec 011. Qué ocurre cuando cambia la versión del aviso (volver a pedir aceptación) queda fuera de esta spec.
 - El correo de la cuenta no se puede cambiar en el MVP; un correo mal escrito exige crear una cuenta nueva. Cambiar el correo queda para una spec posterior.
 - La confirmación del correo no es bloqueante solo por ser un MVP. Antes de publicar para otras personas debe reevaluarse si pasa a ser obligatoria.
@@ -196,5 +209,6 @@ La persona puede instalar la aplicación en su teléfono o computadora como una 
 - Solo se ofrece el sistema métrico (kg, cm, g, ml, kcal), según la Constitution.
 - Las políticas de exportación, eliminación completa de cuenta y retención de copias de seguridad se definen en la spec 011 y no forman parte de esta spec.
 - Las decisiones técnicas (framework, backend, autenticación, base de datos, almacenamiento) se resuelven en el plan de esta spec, no aquí.
-- Los requisitos de contraseña y los límites de intentos se concretan en el plan, dentro de las prácticas habituales de seguridad.
+- Los requisitos concretos de la contraseña (longitud mínima y máxima) se fijan en el plan. Los límites de intentos de inicio de sesión ya están definidos en FR-006.
+- El plazo de retención de los registros técnicos (logs) generados por esta spec se define en la spec 011 (Constitution, Principio IX); hasta entonces rige el plazo por defecto del proveedor y se documenta como deuda.
 - El MVP lo usa una sola persona, pero el registro es abierto (decisión del autor) y esta spec implementa la autenticación y el aislamiento entre cuentas por tratarse de datos de salud accesibles por internet (Principio I). Con registro abierto, la spec 011 (privacidad y ciclo de vida de los datos) es obligatoria antes de publicar.

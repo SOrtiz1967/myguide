@@ -53,7 +53,13 @@ npm run e2e --prefix app       # flujos de punta a punta y modo sin conexión
 | 15 | Simular 31 días de inactividad (ajustando `last_active_at`) | 1, 2 | La sesión no da acceso a datos y pide ingresar de nuevo |
 | 16 | Doble clic en "Crear cuenta" | 1 | Una sola cuenta |
 | 17 | Revisar el bundle del frontend y el repositorio | — | Sin secretos (clave de servicio, SMTP, secreto de Turnstile) |
+| 18 | Registrarse con un correo que ya tiene cuenta | 1 | Mensaje "Ya existe una cuenta con ese correo. Inicia sesión o recupera tu contraseña"; no se crea otra cuenta |
+| 19 | Simular que Turnstile no responde al registrarse y al pedir recuperación | 1 | La operación se bloquea con aviso para reintentar; el inicio de sesión sigue funcionando |
+| 20 | Simular que el proveedor de correo falla al registrarse | 1 | La cuenta se crea y se usa; aviso de que el correo no salió, con opción de reintentar; el fallo se registra sin datos personales |
+| 21 | Intentar cambiar el correo con `updateUser({ email })` estando autenticado | 1 | Rechazado; el correo no cambia |
+| 22 | Superar el límite de intentos de inicio de sesión desde una IP | 1 | Los intentos siguientes se rechazan temporalmente con el mismo mensaje uniforme |
+| 23 | Registrarse con una versión del aviso de privacidad no vigente | 1 | Rechazado |
 
 ## Criterio de terminado
 
-Todos los comandos de verificación pasan y los 17 escenarios se cumplen. Las pruebas automatizadas referencian el requisito o escenario que verifican (Principio VIII).
+Todos los comandos de verificación pasan y los 23 escenarios se cumplen. Las pruebas automatizadas referencian el requisito o escenario que verifican (Principio VIII).

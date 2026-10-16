@@ -37,7 +37,7 @@ Relación 1 a 1 con la cuenta.
 | `last_active_at` | timestamptz, no nulo | actualizado por `touch_session()`; base del vencimiento de 30 días (FR-003) |
 | `created_at`, `updated_at` | timestamptz | `updated_at` por disparador |
 
-- **Creación**: un disparador sobre `auth.users` crea el perfil con `privacy_notice_version` tomado de los metadatos del alta. **Si falta, el alta falla**, por lo que no se puede crear una cuenta sin haber aceptado el aviso (FR-029). Idempotente (`on conflict do nothing`).
+- **Creación**: un disparador sobre `auth.users` crea el perfil con `privacy_notice_version` tomado de los metadatos del alta. **Si falta o no figura como vigente en `private.privacy_notice_versions`, el alta falla**, por lo que no se puede crear una cuenta sin haber aceptado el aviso vigente (FR-029). Idempotente (`on conflict do nothing`).
 - **Acceso del cliente**: `select` y `update` del propio perfil. **Sin** `insert` ni `delete` desde el cliente. Las columnas `user_id`, `email_verified_at`, `privacy_notice_*`, `last_active_at` MUST NOT ser modificables por el cliente (privilegios por columna o disparador de protección).
 - **Completitud**: el perfil se considera completo cuando `birth_date`, `height_cm` y `timezone` están informados; `sex` es opcional. La completitud se deriva, no se guarda.
 
@@ -54,6 +54,20 @@ Relación 1 a 1 con la cuenta.
 
 - **Acceso**: esquema `private`, sin acceso para `anon` ni `authenticated`; solo las Edge Functions con la clave de servicio.
 - **Estados**: emitido → usado, o emitido → vencido. Emitir uno nuevo invalida los anteriores pendientes.
+
+### Versiones del aviso de privacidad (`private.privacy_notice_versions`)
+
+| Columna | Tipo | Reglas |
+|---|---|---|
+| `version` | text, PK | identificador de la versión (por ejemplo `2026-10-16`) |
+| `is_current` | boolean, no nulo | solo las versiones vigentes se aceptan al registrarse |
+| `published_at` | timestamptz, no nulo | |
+
+- **Acceso**: esquema `private`, sin acceso para `anon` ni `authenticated`. Se consulta desde `register` y el disparador de alta, que rechazan cualquier versión no vigente (FR-029).
+
+### Barrera de correo inmutable (`auth.users`)
+
+Un disparador `before update` sobre `auth.users` rechaza cambios de `email` hechos por cualquier rol distinto del administrador, para que el cliente no pueda modificar el correo (FR-028). Se prueba con pgTAP (ver `research.md`, Decisión 13).
 
 ### Sesión (`auth.sessions`, gestionada por Supabase Auth)
 

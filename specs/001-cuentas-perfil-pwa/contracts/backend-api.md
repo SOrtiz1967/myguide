@@ -8,23 +8,31 @@ Define lo que el frontend puede pedirle al backend. Las operaciones de autentica
 
 | Operación | Entrada | Resultado | Requisitos |
 |---|---|---|---|
-| Registrar | correo, contraseña, token Turnstile, metadato `privacy_notice_version` | sesión iniciada; perfil creado | FR-001, FR-002, FR-008, FR-029. Falla si falta `privacy_notice_version`. |
-| Iniciar sesión | correo, contraseña, token Turnstile | sesión | FR-003, FR-005, FR-006. Error uniforme ante credenciales inválidas. Tras iniciar, el cliente llama a `start_session()`. |
+| Registrar | Edge Function `register` (ver sección 2): correo, contraseña, token Turnstile, versión del aviso | cuenta y perfil creados; el cliente inicia sesión a continuación | FR-001, FR-002, FR-007, FR-008, FR-029. `409` con mensaje claro si el correo ya existe. |
+| Iniciar sesión | correo, contraseña (directo contra Auth, **sin captcha**) | sesión | FR-003, FR-005, FR-006, FR-025. Error uniforme ante credenciales inválidas. Tras iniciar, el cliente llama a `start_session()`. |
 | Cerrar sesión | — | sesión terminada; el cliente borra `draft:*` | FR-003, FR-022 |
 | Cambiar contraseña | contraseña actual, contraseña nueva | contraseña actualizada; las demás sesiones se cierran | FR-028, FR-030. Rechaza si la actual es incorrecta. |
-| Solicitar recuperación | correo, token Turnstile | respuesta siempre neutral | FR-004, FR-005, FR-027 (no se envía si el correo no está confirmado) |
+| Solicitar recuperación | Edge Function `request-password-reset` (ver sección 2): correo, token Turnstile | respuesta siempre neutral | FR-004, FR-005, FR-008, FR-027 (no se envía si el correo no está confirmado) |
 | Restablecer contraseña | enlace de recuperación, contraseña nueva | contraseña actualizada; **todas** las sesiones se cierran | FR-004, FR-030 |
 
-**Configuración obligatoria de Auth**: confirmación nativa de correo **desactivada**; longitud mínima de contraseña 10; Turnstile activado; límites de intentos conservadores; cambio de correo **deshabilitado** para clientes.
+**Configuración obligatoria de Auth**: confirmación nativa de correo **desactivada**; registro nativo **desactivado** (`enable_signup = false`; las cuentas se crean solo con `register`); captcha nativo **desactivado** (el token de Turnstile se verifica en las funciones); longitud mínima de contraseña 10; límite de intentos de inicio de sesión **por IP** en el valor más estricto razonable (sin bloqueo por cuenta, ver `research.md`, Decisión 6); el correo no es modificable por el cliente (barrera en la base de datos, `research.md`, Decisión 13).
 
 ## 2. Edge Functions
+
+### `POST /functions/v1/register`
+
+- **Auth**: ninguna; exige token Turnstile.
+- **Entrada**: `{ "email": string, "password": string, "turnstileToken": string, "privacyNoticeVersion": string }`
+- **Efecto**: verifica Turnstile; valida correo, contraseña (10 a 72 caracteres) y que la versión del aviso figure como vigente; crea la cuenta con la API de administración (`email_confirm: true`); el disparador crea el perfil. Dispara el envío de la confirmación sin hacer fallar el alta si el correo no sale.
+- **Respuestas**: `201` creada; `400` datos inválidos; `409` correo ya registrado (mensaje claro, decisión del autor); `403` Turnstile rechazó la verificación; `503` Turnstile no disponible (aviso para reintentar); `429` límite por IP.
+- **Requisitos**: FR-001, FR-002, FR-007, FR-008, FR-025, FR-026, FR-029.
 
 ### `POST /functions/v1/send-verification`
 
 - **Auth**: requiere sesión válida.
 - **Entrada**: ninguna (usa la identidad de la sesión).
 - **Efecto**: invalida tokens pendientes, crea uno nuevo (24 h) y envía el enlace por correo.
-- **Respuestas**: `204` enviado; `429` si se pidió hace menos de 60 segundos o se superó el máximo diario; `409` si el correo ya está confirmado.
+- **Respuestas**: `204` enviado; `429` si se pidió hace menos de 60 segundos o se superó el máximo diario; `409` si el correo ya está confirmado; `502` si el proveedor de correo falló o agotó el tiempo (la interfaz ofrece reintentar; el fallo se registra con su causa y sin datos personales).
 - **Requisitos**: FR-026.
 
 ### `GET /functions/v1/confirm-email?token=<token>`
@@ -34,13 +42,14 @@ Define lo que el frontend puede pedirle al backend. Las operaciones de autentica
 - **Respuestas**: redirige a `/correo-confirmado` si es válido, o a `/correo-no-valido` si venció, ya se usó o no existe (sin distinguir causas).
 - **Requisitos**: FR-026.
 
-### `POST /functions/v1/request-password-reset` *(solo si el Auth Hook de correo no está disponible; ver `research.md`, Decisión 3)*
+### `POST /functions/v1/request-password-reset`
 
 - **Auth**: ninguna; exige token Turnstile.
-- **Entrada**: `{ "email": string }`
-- **Efecto**: si la cuenta existe y su correo está confirmado, dispara la recuperación de Auth. En cualquier caso responde igual.
-- **Respuesta**: `202` siempre, con el mismo cuerpo y tiempo de respuesta aproximado.
-- **Requisitos**: FR-004, FR-005, FR-027.
+- **Entrada**: `{ "email": string, "turnstileToken": string }`
+- **Efecto**: verifica Turnstile; si la cuenta existe y su correo está confirmado, dispara la recuperación de Auth. En cualquier caso responde igual.
+- **Respuestas**: `202` siempre, con el mismo cuerpo y tiempo de respuesta aproximado, tanto si existe como si no, y tanto si está confirmado como si no (la interfaz explica la regla de confirmación de forma general); `403` Turnstile rechazó la verificación; `503` Turnstile no disponible; `429` límite por IP. Un fallo del proveedor de correo se registra y no cambia la respuesta `202`.
+- **Requisitos**: FR-004, FR-005, FR-008, FR-025, FR-027.
+- **Nota**: el endpoint nativo de recuperación sigue accesible con la clave pública; queda cubierto solo por el límite por IP (residual documentado en `research.md`, Decisión 6).
 
 ## 3. Funciones RPC de Postgres
 

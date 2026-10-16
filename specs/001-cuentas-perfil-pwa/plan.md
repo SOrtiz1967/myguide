@@ -101,7 +101,8 @@ supabase/                         # Backend como código
 ├── functions/
 │   ├── send-verification/
 │   ├── confirm-email/
-│   └── request-password-reset/   # Solo si el Auth Hook de correo no está disponible
+│   ├── register/                 # Alta con Turnstile, aviso vigente y correo repetido (409)
+│   └── request-password-reset/   # Recuperación con Turnstile y solo para correo confirmado
 └── tests/                        # Pruebas pgTAP (aislamiento entre cuentas, sesión fresca)
 ```
 
@@ -113,15 +114,18 @@ supabase/                         # Backend como código
 
 | Desviación | Por qué hace falta | Alternativa más simple descartada porque |
 |---|---|---|
-| Confirmación de correo propia (tabla de tokens + 2 Edge Functions + hook o función de recuperación) | FR-026 y FR-027: la persona entra de inmediato y la recuperación exige correo confirmado | La confirmación nativa de Supabase es bloqueante y contradice la decisión explícita del autor. **Si el costo resulta alto, es la alternativa a reconsiderar con el autor.** |
+| Alta y recuperación por Edge Functions propias (`register`, `request-password-reset`) con Turnstile verificado en el servidor | FR-008 y FR-025: captcha solo en registro y recuperación, no en el inicio de sesión; el captcha nativo de Supabase aplica a todos los endpoints a la vez | Activar el captcha nativo haría depender el inicio de sesión de un servicio externo y contradice FR-025. |
+| Confirmación de correo propia (tabla de tokens + 2 Edge Functions + refuerzo opcional por hook) | FR-026 y FR-027: la persona entra de inmediato y la recuperación exige correo confirmado | La confirmación nativa de Supabase es bloqueante y contradice la decisión explícita del autor. **Si el costo resulta alto, es la alternativa a reconsiderar con el autor.** |
 | Vencimiento de sesión por inactividad a medida (`last_active_at`, `touch_session`, `start_session`, `is_session_fresh`) | FR-003: 30 días de inactividad, función de pago en Supabase | Dejar la sesión sin vencer contradice la spec; aplicarlo solo en el cliente es evadible. **Riesgo técnico #1: se prototipa primero**; el respaldo es la aplicación solo en el cliente, documentando la limitación. |
 
 ## Riesgos y verificaciones previas a implementar
 
 1. `amr` en el JWT y renovación de tokens (Decisión 4).
-2. Disponibilidad del Auth Hook de correo en el plan gratuito (Decisión 3).
+2. Disponibilidad del Auth Hook de correo en el plan gratuito, como refuerzo opcional de FR-027 (Decisión 3), y si el captcha nativo de Supabase se puede acotar por endpoint (Decisión 6).
 3. Cuota y entregabilidad del SMTP gratuito (Decisión 5).
 4. Pausa del proyecto gratuito tras 1 semana sin actividad (Decisión 2).
-5. Enumeración de correos en el alta con acceso inmediato (Decisión 10): residual aceptado para el MVP.
+5. Enumeración de correos en el alta (Decisión 10): el mensaje claro de "ya existe una cuenta" revela correos registrados. Residual aceptado por el autor para el MVP.
+6. Sin bloqueo por cuenta en el inicio de sesión (Decisión 6): solo límite por IP. Residual aceptado por el autor; mejora posible con el plan de pago.
+7. `updateUser({ email })` desde el cliente (Decisión 13): se cubre con una barrera en la base de datos que se prueba en el prototipo T007.
 
 Los tres primeros se convierten en tareas de prototipo al inicio de `tasks.md`.
