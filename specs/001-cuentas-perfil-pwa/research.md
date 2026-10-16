@@ -117,3 +117,31 @@ Datos verificados el 2026-10-16 en fuentes públicas; **confirmar en las página
 - Confirmar `amr` en el JWT y el comportamiento de renovación (Decisión 4).
 - Confirmar cuota y entregabilidad del SMTP gratuito (Decisión 5).
 - Cómo se evita que Supabase Free pause el proyecto si el uso baja (Decisión 2).
+
+## Resultados de prototipos (T007 y T008, 2026-10-16)
+
+Ejecutados contra Supabase local (CLI 2.121.0). Los scripts eran descartables y no forman parte del repositorio.
+
+### T007: sesión, cambio de correo y configuración de Auth
+
+| Comprobación | Resultado | Consecuencia |
+|---|---|---|
+| El JWT de un inicio de sesión con contraseña incluye `amr` | Sí: `[{"method":"password","timestamp":<epoch>}]` | La Decisión 4 es viable. |
+| `amr` tras renovar el token (`refreshSession`) | Se conserva **idéntico** (misma `timestamp` original, misma `session_id`) | `start_session()` puede exigir que `amr.timestamp` sea de los últimos minutos: un token renovado de una sesión vieja no sirve para reiniciar el contador. |
+| Registro nativo directo (`signUp`) con `enable_signup = false` | Rechazado: "Signups not allowed for this instance" | Cierra el alta fuera de la función `register`. |
+| Alta con la API de administración (`createUser`, `email_confirm: true`) | Funciona aun con el registro nativo desactivado | `register` es viable como se diseñó. |
+| Contraseña de menos de 10 caracteres | Rechazada: "Password should be at least 10 characters." | FR-002 cubierto por la configuración de Auth. |
+| `updateUser({ email })` desde un cliente autenticado | **Aceptado**: guarda el correo pendiente (`email_change`) y envía 2 correos de confirmación (doble confirmación) | Confirma el riesgo S1: sin barrera, el cliente puede iniciar el cambio. |
+| Barrera con disparador `before update` en `auth.users` que rechaza que `email_change` pase a tener valor | El cliente queda rechazado ("Error sending email change email"); el cambio de contraseña sigue funcionando; el administrador puede cambiar el correo | **Decisión 13 confirmada y acotada**: la barrera debe mirar solo `email_change`, no el rol. Una versión que además filtraba por rol rompía operaciones del administrador. |
+
+**Hallazgo de configuración**: `[auth.email] enable_signup = false` deshabilita **también el inicio de sesión con correo** ("Email logins are disabled"). El registro nativo se cierra solo con `[auth] enable_signup = false`; `[auth.email] enable_signup` debe quedar en `true`. Ya está corregido en `supabase/config.toml`.
+
+**Hallazgo del entorno local**: el contenedor de analíticas (Logflare) no arranca en esta máquina y aborta todo `supabase start`. Se desactiva con `[analytics] enabled = false`, sin efecto sobre la aplicación.
+
+**Captcha nativo por endpoint**: no se probó. No cambia el diseño, porque el captcha nativo queda desactivado y Turnstile se verifica en las funciones.
+
+### T008: Auth Hook de envío de correo
+
+- **Send Email hook**: la documentación oficial de Supabase lo lista como disponible en los planes **Free y Pro**. Es viable como refuerzo opcional de FR-027 (tarea T031): descartaría el correo de recuperación de una cuenta sin confirmar incluso ante llamadas directas al endpoint nativo. No se ejecutó localmente; se valida al implementar T031.
+- **Password Verification Attempt hook** (bloqueo por cuenta): la documentación lo lista solo para planes **Teams y Enterprise**, no para Pro. Corrige lo anotado antes ("plan de pago"): el bloqueo por cuenta no estará al alcance al subir a Pro, solo en un plan superior. Sigue fuera del MVP.
+- Fuentes: <https://supabase.com/docs/guides/auth/auth-hooks> y <https://supabase.com/docs/guides/auth/auth-hooks/password-verification-hook>. Confirmar en la documentación vigente antes de depender de ello.
