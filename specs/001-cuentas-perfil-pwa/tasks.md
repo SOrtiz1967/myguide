@@ -127,16 +127,16 @@ description: "Lista de tareas de la spec 001: cuentas, perfil y base de la PWA"
 
 ### Tests for User Story 2 ⚠️ (escribir primero y verificar que FALLAN)
 
-- [ ] T042 [P] [US2] Prueba pgTAP en `supabase/tests/profiles_rls.test.sql`: B no lee ni modifica el perfil de A; `anon` no accede; el cliente no puede `insert` ni `delete`; no puede modificar `user_id`, `email_verified_at`, `privacy_notice_*` ni `last_active_at`; una fila ajena se ve como inexistente (FR-009 a FR-011)
-- [ ] T043 [P] [US2] Prueba pgTAP en `supabase/tests/rls_session_fresh.test.sql`: con `last_active_at` de hace 31 días, `select` y `update` sobre el propio perfil devuelven cero filas (FR-003, FR-010)
-- [ ] T044 [P] [US2] Prueba pgTAP en `supabase/tests/private_tokens.test.sql`: `anon` y `authenticated` no pueden leer ni escribir `private.email_verification_tokens`
-- [ ] T045 [P] [US2] Prueba pgTAP guardiana en `supabase/tests/rls_guardrail.test.sql`: falla si alguna tabla del esquema `public` no tiene RLS activado o carece de políticas basadas en `user_id = auth.uid()`; protege a las specs 002 a 011
+- [X] T042 [P] [US2] Prueba pgTAP en `supabase/tests/profiles_rls.test.sql`: B no lee ni modifica el perfil de A; `anon` no accede; el cliente no puede `insert` ni `delete`; no puede modificar `user_id`, `email_verified_at`, `privacy_notice_*` ni `last_active_at`; una fila ajena se ve como inexistente (FR-009 a FR-011)
+- [X] T043 [P] [US2] Prueba pgTAP en `supabase/tests/rls_session_fresh.test.sql`: con `last_active_at` de hace 31 días, `select` y `update` sobre el propio perfil devuelven cero filas (FR-003, FR-010)
+- [X] T044 [P] [US2] Prueba pgTAP en `supabase/tests/private_tokens.test.sql`: `anon` y `authenticated` no pueden leer ni escribir `private.email_verification_tokens`
+- [X] T045 [P] [US2] Prueba pgTAP guardiana en `supabase/tests/rls_guardrail.test.sql`: falla si alguna tabla del esquema `public` no tiene RLS activado o carece de políticas basadas en `user_id = auth.uid()`; protege a las specs 002 a 011
 - [ ] T046 [P] [US2] Pruebas en `app/tests/component/RequireAuth.test.tsx` y `app/tests/e2e/access.spec.ts`: una ruta privada sin sesión redirige a `/ingresar` sin pedir datos (FR-012)
 
 ### Implementation for User Story 2
 
-- [ ] T047 [US2] Migración `supabase/migrations/20261016000500_profiles_rls.sql`: políticas `select` y `update` del propio perfil con `user_id = auth.uid()` y `private.is_session_fresh()`; privilegios por columna para que el cliente solo actualice `birth_date`, `sex`, `height_cm` y `timezone`; sin políticas de `insert` ni `delete`
-- [ ] T048 [US2] Migración `supabase/migrations/20261016000510_private_schema_grants.sql`: revocar a `anon` y `authenticated` el acceso al esquema `private` y a sus objetos, y otorgar solo lo necesario a las funciones públicas
+- [X] T047 [US2] Migración `supabase/migrations/20261016000700_profiles_rls.sql`: políticas `select` y `update` del propio perfil con `user_id = auth.uid()` y `private.is_session_fresh()`; privilegios por columna para que el cliente solo actualice `birth_date`, `sex`, `height_cm` y `timezone`; sin políticas de `insert` ni `delete`
+- [X] T048 [US2] Migración `supabase/migrations/20261016000510_private_schema_grants.sql`: revocar a `anon` y `authenticated` el acceso al esquema `private` y a sus objetos, y otorgar solo lo necesario a las funciones públicas (cubierto por las migraciones 000200 y 000400, verificado por `private_tokens.test.sql`; no hizo falta una migración nueva)
 - [ ] T049 [US2] Guarda de rutas privadas en `app/src/routes/RequireAuth.tsx` y aplicarla en `app/src/routes/index.tsx`
 - [ ] T050 [US2] Documentar la convención de propiedad (checklist de nueva tabla, plantilla de políticas y de pruebas) en `supabase/README.md`, enlazando `data-model.md`, para las specs 002 a 011
 
@@ -153,13 +153,13 @@ description: "Lista de tareas de la spec 001: cuentas, perfil y base de la PWA"
 ### Tests for User Story 3 ⚠️ (escribir primero y verificar que FALLAN)
 
 - [ ] T051 [P] [US3] Pruebas unitarias en `app/tests/unit/profileSchema.test.ts`: fecha de nacimiento no futura y no anterior a 120 años atrás, altura entre 50 y 250, sexo `female`, `male` o nulo, zona horaria IANA válida (FR-014)
-- [ ] T052 [P] [US3] Prueba pgTAP en `supabase/tests/profiles_constraints.test.sql`: se rechazan los valores fuera de rango y `unit_system` distinto de `metric`
+- [X] T052 [P] [US3] Prueba pgTAP en `supabase/tests/profiles_constraints.test.sql`: se rechazan los valores fuera de rango y `unit_system` distinto de `metric`
 - [ ] T053 [P] [US3] Pruebas de componentes en `app/tests/component/ProfileForm.test.tsx`: altura mostrada con "cm", sexo opcional con la opción "Prefiero no indicarlo", dato sin informar mostrado como "No informado" y nunca con valor supuesto (FR-017), la zona horaria del dispositivo se sugiere pero no se aplica sola (FR-016), la fecha de nacimiento se muestra e ingresa en formato regional día/mes/año (FR-031)
 - [ ] T054 [P] [US3] Prueba de extremo a extremo en `app/tests/e2e/profile.spec.ts`: completar el perfil, recargar y ver los valores persistidos con su unidad (escenarios 9 a 11)
 
 ### Implementation for User Story 3
 
-- [ ] T055 [US3] Migración `supabase/migrations/20261016000600_profiles_constraints.sql` con las restricciones literales: `birth_date` no futura y no anterior a 120 años atrás; `sex` en (`female`, `male`) o nulo; `height_cm` entre 50 y 250; `timezone` nombre IANA válido; `unit_system = 'metric'`
+- [X] T055 [US3] Migración `supabase/migrations/20261016000800_profiles_constraints.sql` con las restricciones literales: `birth_date` no futura y no anterior a 120 años atrás; `sex` en (`female`, `male`) o nulo; `height_cm` entre 50 y 250; `timezone` nombre IANA válido; `unit_system = 'metric'`
 - [ ] T056 [P] [US3] Esquema Zod del perfil en `app/src/features/profile/schema.ts` con las mismas reglas que T055
 - [ ] T057 [P] [US3] API del perfil con TanStack Query en `app/src/features/profile/api.ts` (leer y actualizar el propio perfil)
 - [ ] T058 [P] [US3] Utilidad de zona horaria en `app/src/lib/timezone.ts`: detectar la del dispositivo y validar nombres IANA
