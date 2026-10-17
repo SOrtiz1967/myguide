@@ -8,6 +8,14 @@
 
 **Input**: User description: "Catálogo de alimentos de MyGuide (spec 002 del roadmap). La persona puede buscar alimentos genéricos y de marca (con foco en productos que se consiguen en Argentina) en un catálogo propio de la aplicación, y ver sus calorías, proteínas, carbohidratos, grasas y otros valores por 100 g o 100 ml con la porción de consumo como dato aparte. Cada alimento muestra su procedencia y los valores que faltan se muestran como faltantes, nunca como cero. La persona puede crear sus propios alimentos y crear una copia editable propia de un alimento del catálogo sin alterar el original. El catálogo es una copia local importada de fuentes con licencia compatible y atribución documentada, con nombres en español revisables; buscar y consultar no depende de ningún servicio de terceros. Los alimentos propios son privados de cada cuenta; el catálogo importado es de solo lectura y común a todas las cuentas. Editar o eliminar un alimento no puede alterar registros pasados. Fuera de alcance: registrar comidas, objetivos calóricos, lectura de código de barras con la cámara y estimaciones con IA."
 
+## Clarifications
+
+### Session 2026-10-17
+
+- Q: ¿Qué alcance geográfico tiene el catálogo inicial? → A: Productos de marca vendidos en Argentina más una base de alimentos genéricos. Otros países se pueden agregar después como cargas adicionales, sin cambios en la aplicación.
+- Q: ¿Se necesitan filtros o categorías además de la búsqueda de texto? → A: Búsqueda de texto más un filtro de origen (pestañas "Todos", "Del catálogo" y "Mis alimentos"). Las categorías por tipo de alimento quedan fuera de esta spec.
+- Q: ¿Un alimento puede tener varias porciones de consumo o solo una? → A: Varias. Cada porción tiene un nombre y una cantidad en gramos o mililitros; en los alimentos propios (y sus copias) se pueden agregar, editar y quitar. Los alimentos importados traen las que informe la fuente (puede no haber ninguna).
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Buscar un alimento y ver sus valores (Priority: P1)
@@ -27,6 +35,7 @@ La persona escribe el nombre de un alimento o de una marca y obtiene una lista d
 5. **Given** un alimento del catálogo, **When** lo abre, **Then** ve su procedencia: nombre de la fuente, identificador de origen, fecha de importación y que es un alimento importado.
 6. **Given** una búsqueda sin coincidencias, **When** la ejecuta, **Then** ve un mensaje claro de que no hay resultados y la opción de crear su propio alimento con lo que escribió.
 7. **Given** una búsqueda, **When** hay más resultados que los que entran en pantalla, **Then** puede ver más sin perder los anteriores.
+8. **Given** una búsqueda con resultados, **When** elige la pestaña "Del catálogo" o "Mis alimentos", **Then** ve solo los alimentos de ese origen; "Todos" los muestra juntos, claramente diferenciados.
 
 ---
 
@@ -41,12 +50,13 @@ Cuando un alimento no está en el catálogo, la persona lo crea con su nombre, u
 **Acceptance Scenarios**:
 
 1. **Given** el formulario de nuevo alimento, **When** completa nombre, base de referencia (100 g o 100 ml) y energía, **Then** el alimento se guarda; los demás valores quedan como "sin dato".
-2. **Given** el formulario, **When** completa también macronutrientes y una porción (nombre y cantidad, por ejemplo "1 vaso (200 ml)"), **Then** el alimento se guarda y muestra esa porción aparte de los valores por 100.
-3. **Given** valores imposibles (negativos, o proteínas + carbohidratos + grasas que superan 100 g en 100 g), **When** intenta guardar, **Then** se rechaza con un mensaje que explica qué corregir.
-4. **Given** una energía que no coincide con la que resultaría de los macronutrientes, **When** guarda, **Then** se guarda igual y se le muestra un aviso informativo con la diferencia aproximada.
-5. **Given** que usa coma decimal ("12,5"), **When** guarda, **Then** el valor se interpreta correctamente.
-6. **Given** un alimento propio, **When** otra cuenta busca, **Then** no lo encuentra ni puede acceder a él.
-7. **Given** un doble clic en "Guardar" o un reintento de red, **When** se envía, **Then** se crea un solo alimento.
+2. **Given** el formulario, **When** completa también macronutrientes y una o más porciones (nombre y cantidad, por ejemplo "1 vaso (200 ml)" y "1 cucharada (15 ml)"), **Then** el alimento se guarda y muestra esas porciones aparte de los valores por 100.
+3. **Given** un alimento propio con porciones, **When** agrega, edita o quita una porción y guarda, **Then** el detalle refleja la lista actualizada.
+4. **Given** valores imposibles (negativos, o proteínas + carbohidratos + grasas que superan 100 g en 100 g), **When** intenta guardar, **Then** se rechaza con un mensaje que explica qué corregir.
+5. **Given** una energía que no coincide con la que resultaría de los macronutrientes, **When** guarda, **Then** se guarda igual y se le muestra un aviso informativo con la diferencia aproximada.
+6. **Given** que usa coma decimal ("12,5"), **When** guarda, **Then** el valor se interpreta correctamente.
+7. **Given** un alimento propio, **When** otra cuenta busca, **Then** no lo encuentra ni puede acceder a él.
+8. **Given** un doble clic en "Guardar" o un reintento de red, **When** se envía, **Then** se crea un solo alimento.
 
 ---
 
@@ -148,7 +158,7 @@ La persona puede consultar de dónde salen los datos del catálogo y bajo qué l
 - **FR-004**: Cada resultado MUST mostrar nombre, marca (si tiene), la base de referencia (100 g o 100 ml), la energía y una marca visible de si es del catálogo o propio.
 - **FR-005**: El detalle de un alimento MUST mostrar: energía (kcal), proteínas, carbohidratos (con azúcares), grasas (con saturadas), fibra y sodio, cada valor con su unidad y su base de referencia.
 - **FR-006**: Un valor que falta MUST mostrarse como "sin dato" y MUST NOT mostrarse como cero ni completarse con supuestos.
-- **FR-007**: La porción de consumo MUST mostrarse como un dato separado de los valores por 100 g o 100 ml, con su nombre y su cantidad.
+- **FR-007**: Un alimento MUST poder tener varias porciones de consumo, que MUST mostrarse como datos separados de los valores por 100 g o 100 ml, cada una con su nombre y su cantidad en gramos o mililitros. Un alimento sin porciones es válido y se muestra como "sin porciones".
 - **FR-008**: La búsqueda y la consulta MUST funcionar sin acceso a servicios de terceros.
 - **FR-009**: Una búsqueda sin resultados MUST mostrar un estado vacío claro con la opción de crear un alimento propio; el catálogo vacío MUST informarse como tal.
 - **FR-010**: Los estados de carga, vacío, éxito y error MUST estar definidos en la búsqueda, el detalle y los formularios.
@@ -162,7 +172,7 @@ La persona puede consultar de dónde salen los datos del catálogo y bajo qué l
 
 **Alimentos propios y copias**
 
-- **FR-015**: La persona MUST poder crear alimentos propios con nombre, marca opcional, base de referencia (100 g o 100 ml), valores nutricionales opcionales salvo la energía, y una porción opcional.
+- **FR-015**: La persona MUST poder crear alimentos propios con nombre, marca opcional, base de referencia (100 g o 100 ml), valores nutricionales opcionales salvo la energía, y porciones opcionales (cero, una o varias).
 - **FR-016**: Los alimentos propios MUST ser privados: cada uno pertenece a una única cuenta y ninguna otra puede verlo, buscarlo ni modificarlo.
 - **FR-017**: El sistema MUST validar los valores: no negativos, dentro de rangos físicamente posibles, y con proteínas + carbohidratos + grasas no mayores a 100 g por cada 100 g (o 100 ml). Los valores inválidos MUST rechazarse con un mensaje que indique qué corregir.
 - **FR-018**: Si la energía declarada difiere notablemente de la derivada de los macronutrientes, el sistema MUST avisarlo de forma informativa y MUST permitir guardar.
@@ -179,18 +189,19 @@ La persona puede consultar de dónde salen los datos del catálogo y bajo qué l
 - **FR-026**: La carga MUST ser repetible: ejecutarla de nuevo con los mismos datos no crea duplicados, y con datos cambiados actualiza solo los alimentos importados.
 - **FR-027**: Una nueva importación MUST NOT modificar los alimentos propios ni las copias de las personas.
 - **FR-028**: La carga MUST conservar como faltante todo dato que la fuente no informe, y MUST omitir, con un informe, los registros que no se puedan interpretar o tengan valores imposibles, sin detener el resto.
-- **FR-029**: Los valores importados MUST normalizarse a una base de 100 g o 100 ml con sus unidades, y la porción, si la fuente la informa, MUST guardarse aparte.
+- **FR-029**: Los valores importados MUST normalizarse a una base de 100 g o 100 ml con sus unidades, y las porciones, si la fuente las informa, MUST guardarse aparte.
 
 **Experiencia y accesibilidad**
 
 - **FR-030**: Las pantallas MUST ser responsive, estar en español, con etiquetas accesibles, navegación por teclado y errores comprensibles, y cada valor numérico MUST indicar su unidad.
 - **FR-031**: Un guardado que no llegó al servidor MUST informarse como tal, y los formularios MUST conservar su borrador local hasta la confirmación del servidor (según la spec 001).
 - **FR-032**: Las búsquedas MUST exigir al menos 2 caracteres.
+- **FR-033**: La búsqueda MUST ofrecer un filtro de origen con tres opciones: todos, solo del catálogo y solo propios (incluidas las copias). El filtro MUST conservarse mientras la persona navega entre resultados y detalle.
 
 ### Key Entities *(include if feature involves data)*
 
 - **Alimento**: lo que la persona busca y consulta. Atributos: nombre en español, marca opcional, base de referencia (100 g o 100 ml), valores nutricionales (energía, proteínas, carbohidratos, azúcares, grasas, grasas saturadas, fibra, sodio; cada uno puede faltar), tipo de origen (importado o propio) y estado del nombre (original, traducido sin revisar, revisado).
-- **Porción**: forma habitual de consumir un alimento, separada de los valores por 100. Atributos: nombre y cantidad (en gramos o mililitros).
+- **Porción**: forma habitual de consumir un alimento, separada de los valores por 100. Un alimento puede tener varias. Atributos: nombre y cantidad (en gramos o mililitros, la misma base del alimento).
 - **Fuente**: de dónde se importan los alimentos. Atributos: nombre, licencia, texto de atribución, dirección de la fuente y fecha de la última importación.
 - **Procedencia**: vínculo de un alimento importado con su fuente. Atributos: identificador de origen y fecha de importación. Una copia propia guarda además el alimento del que se basa.
 - **Informe de carga**: resultado de cada importación. Atributos: fecha, fuente, alimentos creados, actualizados y omitidos, y el motivo de cada omisión.
@@ -223,3 +234,5 @@ La persona puede consultar de dónde salen los datos del catálogo y bajo qué l
 - Fuera del alcance de esta spec: registrar comidas (spec 003), objetivos calóricos (spec 004), lectura de código de barras con la cámara, estimaciones con IA (spec 009) y fotos de alimentos.
 - Los registros históricos que usarán estos alimentos (spec 003) guardarán su propio *snapshot* de valores; esta spec garantiza que editar o eliminar un alimento nunca altera el pasado, y la prueba completa de esa regla se hace al implementar la spec 003.
 - El catálogo inicial se carga una vez antes del primer uso; las actualizaciones posteriores son manuales y esporádicas.
+- Las categorías por tipo de alimento (lácteos, carnes, etc.) quedan fuera de esta spec; la navegación es por búsqueda de texto y filtro de origen.
+- El catálogo inicial cubre productos de marca vendidos en Argentina y alimentos genéricos. Sumar otros países es una carga adicional posterior; el volumen total debe caber en el plan gratuito de la base de datos (500 MB), que se verifica en el plan.
