@@ -12,7 +12,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "vitest run",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "check:secrets": "node scripts/check-bundle-secrets.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",

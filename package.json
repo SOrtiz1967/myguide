@@ -5,6 +5,7 @@
   },
   "scripts": {
     "test:functions": "deno test --allow-env=ALLOWED_ORIGINS --config supabase/functions/deno.json supabase/functions",
-    "test:db": "supabase test db"
+    "test:db": "supabase test db",
+    "test:config": "deno test --allow-read=supabase/config.toml --config supabase/functions/deno.json supabase/tests/config.test.ts"
   }
 }
