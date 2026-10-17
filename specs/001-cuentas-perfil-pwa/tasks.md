@@ -87,14 +87,14 @@ description: "Lista de tareas de la spec 001: cuentas, perfil y base de la PWA"
 - [X] T024 [P] [US1] Pruebas Deno en `supabase/functions/send-verification/index.test.ts` y `supabase/functions/confirm-email/index.test.ts`: reenvío bloqueado antes de 60 s (`429`), `409` si ya está confirmado, token vence a las 24 h, token de un solo uso, solo se guarda el hash, redirección idéntica para vencido, usado e inexistente (FR-026); si el proveedor de correo falla o agota el tiempo, `send-verification` responde `502` y registra la causa sin correos ni tokens (Principio VII)
 - [X] T025 [P] [US1] Pruebas de componentes de registro en `app/tests/component/RegisterForm.test.tsx`: casilla del aviso obligatoria (FR-029), contraseña de mínimo 10 y máximo 72 caracteres (FR-002), botón deshabilitado durante el envío para evitar doble alta (FR-007), mensaje claro "Ya existe una cuenta con ese correo. Inicia sesión o recupera tu contraseña" ante `409`, aviso de reintentar ante `503` de captcha y aviso de correo no enviado
 - [X] T026 [P] [US1] Pruebas de componentes en `app/tests/component/auth-forms.test.tsx` para ingreso, recuperación, restablecimiento y cambio de contraseña: error de credenciales uniforme (FR-005), respuesta neutral de recuperación, contraseña actual incorrecta rechazada (FR-028)
-- [ ] T027 [P] [US1] Prueba de extremo a extremo en `app/tests/e2e/auth.spec.ts` contra Supabase local y su buzón de correo: registro, banner de correo sin confirmar, recuperación **sin correo** si no está confirmado, confirmación, recuperación con correo, cierre de todas las sesiones, cambio de contraseña que cierra las demás, correo repetido (escenarios 1 a 6, 16 y 18)
+- [X] T027 [P] [US1] Prueba de extremo a extremo en `app/tests/e2e/auth.spec.ts` contra Supabase local y su buzón de correo: registro, banner de correo sin confirmar, recuperación **sin correo** si no está confirmado, confirmación, recuperación con correo, cierre de todas las sesiones, cambio de contraseña que cierra las demás, correo repetido (escenarios 1 a 6, 16 y 18)
 
 ### Implementation for User Story 1
 
 - [X] T028 [US1] Migración `supabase/migrations/20261016000400_session_expiry.sql` según el resultado de T007: `private.is_session_fresh()` (verdadera si `last_active_at` es de hace menos de 30 días), `public.touch_session()` y `public.start_session()` (solo si el `amr` de contraseña es reciente), aplicando la skill `database-design`
 - [X] T029 [P] [US1] Edge Function `supabase/functions/send-verification/index.ts`: autenticada; invalida tokens pendientes, crea uno de 24 h guardando solo su hash, envía el enlace; `429` y `409` según `contracts/backend-api.md`
 - [X] T030 [P] [US1] Edge Function `supabase/functions/confirm-email/index.ts`: valida hash, vigencia y uso único; marca `used_at` y `profiles.email_verified_at`; redirige a `/correo-confirmado` o `/correo-no-valido` sin distinguir causas
-- [ ] T031 [US1] Refuerzo opcional de FR-027 según el resultado de T008: Auth Hook de envío de correo en `supabase/config.toml` y su función, que descarte la recuperación para cuentas sin confirmar incluso ante llamadas directas al endpoint nativo. Si T008 indica que no está disponible, omitir y dejar documentado el residual
+- [ ] T031 [US1] **OMITIDA por ahora (opcional; ver verification.md, riesgo 2)**. Refuerzo opcional de FR-027 según el resultado de T008: Auth Hook de envío de correo en `supabase/config.toml` y su función, que descarte la recuperación para cuentas sin confirmar incluso ante llamadas directas al endpoint nativo. Si T008 indica que no está disponible, omitir y dejar documentado el residual
 - [X] T032 [P] [US1] Esquemas Zod de los formularios en `app/src/features/auth/schemas.ts` (correo, contraseña de 10 a 72 caracteres)
 - [X] T033 [P] [US1] API de autenticación en `app/src/features/auth/api.ts`: registro llamando a la Edge Function `register` y luego inicio de sesión con contraseña; inicio de sesión directo contra Auth seguido de `start_session()`; cierre de sesión; cambio de contraseña que primero **reautentica con la contraseña actual** (`signInWithPassword`) y luego actualiza (FR-028), cerrando las demás sesiones (FR-030); recuperación llamando a `request-password-reset`; restablecimiento con cierre de todas las sesiones (FR-030)
 - [X] T034 [US1] `AuthProvider` en `app/src/features/auth/AuthProvider.tsx`: llama a `touch_session()` al abrir la aplicación y al renovar el token; ante `session_expired` cierra la sesión local y redirige a ingresar
@@ -131,7 +131,7 @@ description: "Lista de tareas de la spec 001: cuentas, perfil y base de la PWA"
 - [X] T043 [P] [US2] Prueba pgTAP en `supabase/tests/rls_session_fresh.test.sql`: con `last_active_at` de hace 31 días, `select` y `update` sobre el propio perfil devuelven cero filas (FR-003, FR-010)
 - [X] T044 [P] [US2] Prueba pgTAP en `supabase/tests/private_tokens.test.sql`: `anon` y `authenticated` no pueden leer ni escribir `private.email_verification_tokens`
 - [X] T045 [P] [US2] Prueba pgTAP guardiana en `supabase/tests/rls_guardrail.test.sql`: falla si alguna tabla del esquema `public` no tiene RLS activado o carece de políticas basadas en `user_id = auth.uid()`; protege a las specs 002 a 011
-- [ ] T046 [P] [US2] Pruebas en `app/tests/component/RequireAuth.test.tsx` y `app/tests/e2e/access.spec.ts`: una ruta privada sin sesión redirige a `/ingresar` sin pedir datos (FR-012)
+- [X] T046 [P] [US2] Pruebas en `app/tests/component/RequireAuth.test.tsx` y `app/tests/e2e/access.spec.ts`: una ruta privada sin sesión redirige a `/ingresar` sin pedir datos (FR-012)
 
 ### Implementation for User Story 2
 
@@ -155,7 +155,7 @@ description: "Lista de tareas de la spec 001: cuentas, perfil y base de la PWA"
 - [X] T051 [P] [US3] Pruebas unitarias en `app/tests/unit/profileSchema.test.ts`: fecha de nacimiento no futura y no anterior a 120 años atrás, altura entre 50 y 250, sexo `female`, `male` o nulo, zona horaria IANA válida (FR-014)
 - [X] T052 [P] [US3] Prueba pgTAP en `supabase/tests/profiles_constraints.test.sql`: se rechazan los valores fuera de rango y `unit_system` distinto de `metric`
 - [X] T053 [P] [US3] Pruebas de componentes en `app/tests/component/ProfileForm.test.tsx`: altura mostrada con "cm", sexo opcional con la opción "Prefiero no indicarlo", dato sin informar mostrado como "No informado" y nunca con valor supuesto (FR-017), la zona horaria del dispositivo se sugiere pero no se aplica sola (FR-016), la fecha de nacimiento se muestra e ingresa en formato regional día/mes/año (FR-031)
-- [ ] T054 [P] [US3] Prueba de extremo a extremo en `app/tests/e2e/profile.spec.ts`: completar el perfil, recargar y ver los valores persistidos con su unidad (escenarios 9 a 11)
+- [X] T054 [P] [US3] Prueba de extremo a extremo en `app/tests/e2e/profile.spec.ts`: completar el perfil, recargar y ver los valores persistidos con su unidad (escenarios 9 a 11)
 
 ### Implementation for User Story 3
 
@@ -181,8 +181,8 @@ description: "Lista de tareas de la spec 001: cuentas, perfil y base de la PWA"
 
 - [X] T062 [P] [US4] Pruebas unitarias en `app/tests/unit/drafts.test.ts`: clave `draft:v1:<userId>:<formId>`, restauración validada con Zod, datos inválidos descartados, descarte al confirmar el servidor, purga de todo `draft:*` (FR-021, FR-022)
 - [X] T063 [P] [US4] Pruebas de componentes en `app/tests/component/useDraft.test.tsx`: el formulario recupera el borrador, muestra "Recuperamos lo que estabas escribiendo" y permite descartarlo
-- [ ] T064 [P] [US4] Prueba de extremo a extremo en `app/tests/e2e/pwa-offline.spec.ts`: sin conexión se muestra el mensaje de no disponible; guardar sin conexión muestra error y no éxito; recargar conserva el borrador; cerrar sesión no deja `draft:*` (escenarios 12 a 14, FR-019 a FR-022)
-- [ ] T065 [P] [US4] Prueba en `app/tests/e2e/pwa-install.spec.ts`: el manifiesto, los íconos y el service worker cumplen los requisitos de instalación (FR-018, SC-008)
+- [X] T064 [P] [US4] Prueba de extremo a extremo en `app/tests/e2e/pwa-offline.spec.ts`: sin conexión se muestra el mensaje de no disponible; guardar sin conexión muestra error y no éxito; recargar conserva el borrador; cerrar sesión no deja `draft:*` (escenarios 12 a 14, FR-019 a FR-022)
+- [X] T065 [P] [US4] Prueba en `app/tests/e2e/pwa-install.spec.ts`: el manifiesto, los íconos y el service worker cumplen los requisitos de instalación (FR-018, SC-008)
 
 ### Implementation for User Story 4
 
@@ -201,16 +201,16 @@ description: "Lista de tareas de la spec 001: cuentas, perfil y base de la PWA"
 
 **Purpose**: calidad transversal y cierre
 
-- [ ] T072 [P] Pruebas de accesibilidad con axe y recorrido completo por teclado (tabulación, foco visible, envío con Enter) de los formularios de registro, ingreso, recuperación, perfil y cambio de contraseña en `app/tests/e2e/a11y.spec.ts` (FR-024)
-- [ ] T073 [P] Pruebas de ancho móvil y de escritorio en `app/tests/e2e/responsive.spec.ts` (SC-007) y medición de la carga inicial de la carcasa, con meta de menos de 3 segundos en una conexión móvil típica simulada (meta de rendimiento del plan)
+- [X] T072 [P] Pruebas de accesibilidad con axe y recorrido completo por teclado (tabulación, foco visible, envío con Enter) de los formularios de registro, ingreso, recuperación, perfil y cambio de contraseña en `app/tests/e2e/a11y.spec.ts` (FR-024)
+- [X] T073 [P] Pruebas de ancho móvil y de escritorio en `app/tests/e2e/responsive.spec.ts` (SC-007) y medición de la carga inicial de la carcasa, con meta de menos de 3 segundos en una conexión móvil típica simulada (meta de rendimiento del plan)
 - [X] T074 Script `app/scripts/check-bundle-secrets.mjs` y el comando `check:secrets` en `app/package.json`: falla si el bundle o el repositorio contienen la clave de servicio, credenciales SMTP o el secreto de Turnstile (escenario 17, Principio I)
 - [X] T075 [P] `README.md` en la raíz con los comandos documentados para instalar, ejecutar, comprobar tipos, formato, lint y pruebas (Principio VIII)
 - [X] T076 [P] `Documentacion/despliegue.md`: despliegue en Cloudflare Pages y Supabase, variables por entorno, límites de los planes gratuitos y qué hacer si Supabase pausa el proyecto por inactividad. Incluir como deuda explícita que el plazo de retención de los logs de las Edge Functions aún no está definido y se resuelve en la spec 011 (Principio IX)
 - [ ] T077 Despliegue inicial (requiere acción del autor): crear el proyecto de Supabase y el sitio de Cloudflare Pages, aplicar migraciones, configurar secretos y verificar los escenarios críticos en producción
-- [ ] T078 Ejecutar los 23 escenarios del `quickstart.md` y registrar el resultado en `specs/001-cuentas-perfil-pwa/quickstart.md`
-- [ ] T079 Revisión de seguridad de todo el cambio con la skill `security-review`: autorización, exposición de claves, límites de intentos y funciones de borde; corregir hallazgos
-- [ ] T080 Ejecutar `npm run format:check`, `lint`, `typecheck`, `test`, `e2e` y `npx supabase test db`; todo en verde antes de dar la spec por terminada
-- [ ] T081 Reevaluar antes de publicar, y anotar en `Documentacion/roadmap-specs.md`, si la confirmación de correo pasa a ser obligatoria y que la spec 011 es obligatoria con registro abierto
+- [X] T078 Ejecutar los 23 escenarios del `quickstart.md` y registrar el resultado en `specs/001-cuentas-perfil-pwa/quickstart.md`
+- [X] T079 Revisión de seguridad de todo el cambio con la skill `security-review`: autorización, exposición de claves, límites de intentos y funciones de borde; corregir hallazgos
+- [X] T080 Ejecutar `npm run format:check`, `lint`, `typecheck`, `test`, `e2e` y `npx supabase test db`; todo en verde antes de dar la spec por terminada
+- [X] T081 Reevaluar antes de publicar, y anotar en `Documentacion/roadmap-specs.md`, si la confirmación de correo pasa a ser obligatoria y que la spec 011 es obligatoria con registro abierto
 
 ---
 

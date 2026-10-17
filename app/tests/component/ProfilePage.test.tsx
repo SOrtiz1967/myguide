@@ -54,7 +54,12 @@ function renderPage() {
 
 beforeEach(() => {
   mockedFetch.mockReset().mockResolvedValue(profile())
-  mockedUpdate.mockReset().mockImplementation(async (values) => profile({ ...values }))
+  // El servidor real devuelve una marca de actualización nueva: la pantalla se vuelve a montar.
+  mockedUpdate
+    .mockReset()
+    .mockImplementation(async (values) =>
+      profile({ ...values, updated_at: new Date().toISOString() }),
+    )
   mockedDevice.mockReset().mockReturnValue(BA)
 })
 

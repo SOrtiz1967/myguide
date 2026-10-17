@@ -2,8 +2,10 @@
 import { describe, expect, it } from 'vitest'
 import { findSecrets } from '../../scripts/secret-scan'
 
-const base64url = (value: object) => btoa(JSON.stringify(value)).replace(/=+$/, '').replace(/\+/g, '-').replace(/\//g, '_')
-const jwt = (role: string) => `${base64url({ alg: 'HS256', typ: 'JWT' })}.${base64url({ role, iss: 'supabase-demo' })}.firma-de-prueba`
+const base64url = (value: object) =>
+  btoa(JSON.stringify(value)).replace(/=+$/, '').replace(/\+/g, '-').replace(/\//g, '_')
+const jwt = (role: string) =>
+  `${base64url({ alg: 'HS256', typ: 'JWT' })}.${base64url({ role, iss: 'supabase-demo' })}.firma-de-prueba`
 
 describe('findSecrets', () => {
   it('detecta un JWT con rol service_role', () => {
@@ -16,7 +18,15 @@ describe('findSecrets', () => {
   })
 
   it('detecta las claves secretas con prefijo conocido', () => {
-    const text = 'a sb_secret_ABCDEFGHIJKLMNOPQRSTUV b xsmtpsib-1234567890abcdef1234567890abcdef c xkeysib-1234567890abcdef1234567890abcdef'
+    // Las claves de ejemplo se arman por partes: así el escáner no se detecta a sí mismo en el repositorio.
+    const text = [
+      'a',
+      'sb_' + 'secret_ABCDEFGHIJKLMNOPQRSTUV',
+      'b',
+      'xsmtp' + 'sib-1234567890abcdef1234567890abcdef',
+      'c',
+      'xkey' + 'sib-1234567890abcdef1234567890abcdef',
+    ].join(' ')
     expect(findSecrets(text, []).map((f) => f.rule)).toEqual(
       expect.arrayContaining([
         'clave secreta de Supabase (sb_secret_)',
@@ -49,7 +59,7 @@ describe('findSecrets', () => {
   })
 
   it('informa en qué línea está el hallazgo', () => {
-    const found = findSecrets(`linea uno\nlinea dos sb_secret_ABCDEFGHIJKLMNOPQRSTUV`, [])
+    const found = findSecrets(`linea uno\nlinea dos sb_${'secret_ABCDEFGHIJKLMNOPQRSTUV'}`, [])
     expect(found[0]?.line).toBe(2)
   })
 })

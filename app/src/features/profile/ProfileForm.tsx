@@ -3,7 +3,6 @@ import { useEffect, useMemo, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { ErrorState } from '../../components/ErrorState'
 import { Field } from '../../components/Field'
-import { SuccessMessage } from '../../components/SuccessMessage'
 import { es } from '../../copy/es'
 import { discardDraft } from '../../lib/drafts'
 import { saveRemotely, WriteError } from '../../lib/mutation'
@@ -16,14 +15,20 @@ import { useUpdateProfile } from './useUpdateProfile'
 
 const FORM_ID = 'profile'
 
-export function ProfileForm({ profile }: { profile: Profile }) {
+interface ProfileFormProps {
+  profile: Profile
+  /** Se llama solo cuando el servidor confirmó el guardado. El mensaje lo muestra la pantalla, que no se vuelve a montar. */
+  onConfirmed: () => void
+  onSubmitStart: () => void
+}
+
+export function ProfileForm({ profile, onConfirmed, onSubmitStart }: ProfileFormProps) {
   // El borrador se elimina antes de que la pantalla se monte con el perfil confirmado (FR-021).
   const update = useUpdateProfile({ onSaved: () => discardDraft(profile.user_id, FORM_ID) })
   const draft = useDraft({ userId: profile.user_id, formId: FORM_ID, schema: profileDraftSchema })
   const saved = toFormValues(profile)
 
   const [error, setError] = useState<string | null>(null)
-  const [confirmed, setConfirmed] = useState(false)
 
   const {
     register,
@@ -60,10 +65,10 @@ export function ProfileForm({ profile }: { profile: Profile }) {
 
   const submit = handleSubmit(async (values) => {
     setError(null)
-    setConfirmed(false)
+    onSubmitStart()
     try {
       await saveRemotely(() => update.mutateAsync(values))
-      setConfirmed(true)
+      onConfirmed()
     } catch (e) {
       // FR-020: nada se muestra como guardado si no llegó al servidor; lo escrito y el borrador quedan.
       setError(e instanceof WriteError ? e.message : es.errors.generic)
@@ -149,7 +154,6 @@ export function ProfileForm({ profile }: { profile: Profile }) {
       </div>
 
       {error ? <ErrorState message={error} /> : null}
-      {confirmed ? <SuccessMessage>{es.profile.saved}</SuccessMessage> : null}
 
       <button type="submit" className="btn-primary" disabled={isSubmitting}>
         {es.profile.save}

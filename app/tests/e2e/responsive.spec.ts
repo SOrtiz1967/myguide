@@ -42,7 +42,9 @@ for (const viewport of VIEWPORTS) {
 
       await page.getByLabel(es.profile.labels.birthDate).fill('1990-05-17')
       await page.getByLabel(es.profile.labels.height).fill('171,5')
-      await page.getByLabel(es.profile.labels.timezone).selectOption('America/Buenos_Aires')
+      await page
+        .getByLabel(es.profile.labels.timezone, { exact: true })
+        .selectOption('America/Buenos_Aires')
       await page.getByRole('button', { name: es.profile.save }).click()
       await expect(page.getByText(es.profile.saved)).toBeVisible()
     })

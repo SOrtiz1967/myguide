@@ -12,6 +12,12 @@ export interface ResetDeps {
   verifyTurnstile(token: string, ip: string): Promise<TurnstileResult>
   findUser(email: string): Promise<{ id: string; emailVerified: boolean } | null>
   sendRecovery(email: string): Promise<void>
+  /**
+   * Ejecuta el envío DESPUÉS de responder. Así la respuesta tarda lo mismo exista o no la cuenta y
+   * no hay un canal de tiempo que revele qué correos están registrados (FR-005). Sin esta
+   * dependencia (pruebas simples) el envío se espera.
+   */
+  runInBackground?: (task: Promise<unknown>) => void
   log: LogFn
 }
 
@@ -48,12 +54,16 @@ export async function handleRequestReset(req: Request, deps: ResetDeps): Promise
 
   // FR-027: solo se envía si la cuenta existe y su correo está confirmado.
   if (user?.emailVerified) {
-    try {
-      await deps.sendRecovery(email)
-    } catch (error) {
-      // Un fallo del proveedor se registra pero no cambia la respuesta (FR-005, Principio VII).
-      deps.log('error', 'recovery_email_failed', { cause: errorCause(error) })
-    }
+    const send = (async () => {
+      try {
+        await deps.sendRecovery(email)
+      } catch (error) {
+        // Un fallo del proveedor se registra pero no cambia la respuesta (FR-005, Principio VII).
+        deps.log('error', 'recovery_email_failed', { cause: errorCause(error) })
+      }
+    })()
+    if (deps.runInBackground) deps.runInBackground(send)
+    else await send
   }
 
   return jsonResponse(ACCEPTED, 202, origin)

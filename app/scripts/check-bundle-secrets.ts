@@ -54,7 +54,9 @@ const tracked = execSync('git ls-files', { cwd: repoRoot, encoding: 'utf8' })
 
 const findings = [...scan(filesUnder(dist), known), ...scan(tracked, known)]
 
-console.log(`Revisados: bundle (${filesUnder(dist).length} archivos) y repositorio (${tracked.length} archivos).`)
+console.log(
+  `Revisados: bundle (${filesUnder(dist).length} archivos) y repositorio (${tracked.length} archivos).`,
+)
 console.log(`Valores secretos conocidos del servidor usados en la búsqueda: ${known.length}.`)
 
 if (findings.length > 0) {

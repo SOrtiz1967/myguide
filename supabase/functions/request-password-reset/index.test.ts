@@ -116,3 +116,44 @@ Deno.test('IX: los registros técnicos no contienen el correo', async () => {
   await handleRequestReset(post(valid), deps)
   for (const line of calls.logs) assertFalse(line.includes(EMAIL), line)
 })
+
+Deno.test('FR-005: el envío del correo no retrasa la respuesta (sin canal de tiempo que revele si la cuenta existe)', async () => {
+  const background: Array<Promise<unknown>> = []
+  const { deps } = makeDeps({
+    // Un envío que nunca termina: si la respuesta lo esperara, esta prueba se colgaría.
+    sendRecovery: () => new Promise<void>(() => {}),
+    runInBackground: (task) => {
+      background.push(task)
+    },
+  })
+  const res = await handleRequestReset(post(valid), deps)
+  assertEquals(res.status, 202)
+  assertEquals(background.length, 1, 'el envío se delegó a segundo plano')
+})
+
+Deno.test('FR-005: una cuenta inexistente no delega nada pero responde igual', async () => {
+  const background: Array<Promise<unknown>> = []
+  const { deps } = makeDeps({
+    findUser: () => Promise.resolve(null),
+    runInBackground: (task) => {
+      background.push(task)
+    },
+  })
+  const res = await handleRequestReset(post(valid), deps)
+  assertEquals(res.status, 202)
+  assertEquals(background.length, 0)
+})
+
+Deno.test('VII: un fallo del envío en segundo plano igual se registra sin datos personales', async () => {
+  const background: Array<Promise<unknown>> = []
+  const { deps, calls } = makeDeps({
+    sendRecovery: () => Promise.reject(new Error(`falló ${EMAIL}`)),
+    runInBackground: (task) => {
+      background.push(task)
+    },
+  })
+  await handleRequestReset(post(valid), deps)
+  await Promise.all(background)
+  assert(calls.logs.some((l) => l.includes('recovery_email_failed')))
+  for (const line of calls.logs) assertFalse(line.includes(EMAIL), line)
+})

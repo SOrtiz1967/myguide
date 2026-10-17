@@ -7,9 +7,13 @@ import { handleRequestReset } from './handler.ts'
 
 const admin = adminClient()
 
+// Disponible en el entorno de ejecución de Supabase: mantiene vivo el envío después de responder.
+declare const EdgeRuntime: { waitUntil(task: Promise<unknown>): void }
+
 Deno.serve((req) =>
   handleRequestReset(req, {
     rateLimit: rateLimiter(admin, 10, '1 hour'),
+    runInBackground: (task) => EdgeRuntime.waitUntil(task),
     verifyTurnstile: (token, ip) =>
       verifyTurnstile({
         secret: Deno.env.get('TURNSTILE_SECRET_KEY') ?? '',

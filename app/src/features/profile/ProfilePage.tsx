@@ -1,5 +1,7 @@
+import { useState } from 'react'
 import { ErrorState } from '../../components/ErrorState'
 import { LoadingState } from '../../components/LoadingState'
+import { SuccessMessage } from '../../components/SuccessMessage'
 import { es } from '../../copy/es'
 import { discardDraft } from '../../lib/drafts'
 import { detectDeviceTimezone, isValidTimezone } from '../../lib/timezone'
@@ -14,6 +16,7 @@ import { useUpdateProfile } from './useUpdateProfile'
 export function ProfilePage() {
   const { data: profile, isLoading, isError, refetch } = useProfile()
   // Al aceptar la zona horaria el perfil cambia por fuera del formulario: el borrador ya no aplica.
+  const [confirmed, setConfirmed] = useState(false)
   const update = useUpdateProfile({
     onSaved: () => profile && discardDraft(profile.user_id, 'profile'),
   })
@@ -42,7 +45,13 @@ export function ProfilePage() {
       ) : null}
 
       {/* Se vuelve a montar al cambiar el perfil guardado, así el formulario muestra lo confirmado. */}
-      <ProfileForm key={profile.updated_at} profile={profile} />
+      <ProfileForm
+        key={profile.updated_at}
+        profile={profile}
+        onSubmitStart={() => setConfirmed(false)}
+        onConfirmed={() => setConfirmed(true)}
+      />
+      {confirmed ? <SuccessMessage>{es.profile.saved}</SuccessMessage> : null}
 
       <section aria-labelledby="cambiar-contrasena" className="flex flex-col gap-4">
         <h2 id="cambiar-contrasena" className="text-lg font-semibold">

@@ -84,3 +84,10 @@ Basado en la Constitution v1.2.0. Este documento solo define el corte y el conte
 - Decisiones pendientes #7 y #9.
 - Obligatoria antes de publicar con usuarios reales; no bloquea el uso personal del MVP.
 - Principios: I, IX.
+
+## Notas de la spec 001 (cerrada el 2026-10-17)
+
+- **Confirmación de correo:** es no bloqueante solo por ser un MVP. Antes de abrir la aplicación a otras personas debe reevaluarse si pasa a ser obligatoria.
+- **Registro abierto:** la spec 011 (privacidad y ciclo de vida de los datos) es **obligatoria antes de publicar**.
+- **Pendientes de la spec 001:** prueba de envío real de correo (T009), refuerzo opcional con Auth Hook (T031) y despliegue inicial (T077).
+- Verificación y revisión de seguridad: `specs/001-cuentas-perfil-pwa/verification.md`.

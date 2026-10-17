@@ -1,10 +1,17 @@
 // Utilidades de petición compartidas por las Edge Functions.
 import { corsHeaders, jsonResponse } from './cors.ts'
 
-/** IP del cliente según los encabezados que añade el proxy de Supabase; 'unknown' si no hay. */
+/**
+ * IP del cliente para el límite de solicitudes (FR-008). El cliente puede inventar el contenido de
+ * `X-Forwarded-For`, así que NO se usa su primera entrada: se prefiere `cf-connecting-ip`, que fija
+ * Cloudflare y el cliente no puede alterar, y como respaldo la ÚLTIMA entrada de `X-Forwarded-For`,
+ * que es la que agrega el proxy confiable más cercano. 'unknown' si no hay ninguna.
+ */
 export function clientIp(req: Request): string {
-  const forwarded = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
-  return forwarded || req.headers.get('cf-connecting-ip') || 'unknown'
+  const cloudflare = req.headers.get('cf-connecting-ip')?.trim()
+  if (cloudflare) return cloudflare
+  const forwarded = req.headers.get('x-forwarded-for')?.split(',').at(-1)?.trim()
+  return forwarded || 'unknown'
 }
 
 /** Respuesta al preflight de CORS. */

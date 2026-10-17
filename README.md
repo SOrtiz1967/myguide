@@ -8,7 +8,7 @@ Desarrollada con **Spec-Driven Development** (Spec Kit). Los principios del proy
 
 | Spec | Estado |
 |---|---|
-| 001 Cuentas, perfil y base de la PWA | Implementada; pendiente la prueba de envío real de correo (T009) y el despliegue (T077) |
+| 001 Cuentas, perfil y base de la PWA | Implementada y verificada; pendiente la prueba de envío real de correo (T009) y el despliegue (T077) |
 | 002 a 011 | Pendientes |
 
 ## Stack

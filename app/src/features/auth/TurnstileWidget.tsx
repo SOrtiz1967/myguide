@@ -85,5 +85,5 @@ export function TurnstileWidget({ onToken, onError }: TurnstileWidgetProps) {
     }
   }, [])
 
-  return <div ref={container} aria-label="Verificación de seguridad" />
+  return <div ref={container} role="group" aria-label="Verificación de seguridad" />
 }

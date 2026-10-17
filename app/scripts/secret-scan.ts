@@ -44,7 +44,10 @@ export function findSecrets(text: string, known: KnownSecret[]): Finding[] {
 
   for (const match of text.matchAll(JWT_PATTERN)) {
     if (jwtRole(match[1] ?? '') === 'service_role') {
-      findings.push({ rule: 'clave de servicio (JWT service_role)', line: lineOf(match.index ?? 0) })
+      findings.push({
+        rule: 'clave de servicio (JWT service_role)',
+        line: lineOf(match.index ?? 0),
+      })
     }
   }
 
