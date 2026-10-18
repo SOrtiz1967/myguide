@@ -46,6 +46,37 @@ describe('cabecera', () => {
     )
     expect(screen.queryByRole('button', { name: es.auth.actions.logout })).toBeNull()
   })
+
+  it('spec 002: con sesión ofrece el enlace "Alimentos" hacia /alimentos', () => {
+    render(
+      <AuthContext.Provider value={signedIn()}>
+        <MemoryRouter>
+          <AppShell>
+            <p>contenido</p>
+          </AppShell>
+        </MemoryRouter>
+      </AuthContext.Provider>,
+    )
+    expect(screen.getByRole('link', { name: es.foods.navLink })).toHaveAttribute(
+      'href',
+      '/alimentos',
+    )
+  })
+
+  it('spec 002: sin sesión no muestra el enlace "Alimentos"', () => {
+    render(
+      <AuthContext.Provider
+        value={{ status: 'signedOut', session: null, expired: false, signOut: async () => {} }}
+      >
+        <MemoryRouter>
+          <AppShell>
+            <p>contenido</p>
+          </AppShell>
+        </MemoryRouter>
+      </AuthContext.Provider>,
+    )
+    expect(screen.queryByRole('link', { name: es.foods.navLink })).toBeNull()
+  })
 })
 
 describe('sesión vencida', () => {

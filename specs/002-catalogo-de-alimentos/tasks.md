@@ -65,8 +65,8 @@ description: "Lista de tareas de la spec 002: catálogo de alimentos"
 
 - [X] T015 [P] Pruebas unitarias en `app/tests/unit/nutrition.test.ts` (escribir primero, deben fallar): `formatValue` (valor con unidad y formato regional; `null` → "sin dato", nunca 0), `parseDecimal` (coma y punto; texto inválido → error), `energyCoherence` (esperada = 4·P + 4·C + 9·G; avisa solo si la diferencia supera el 25 % y 30 kcal; no avisa con datos insuficientes), `basisLabel` ("por 100 g" / "por 100 ml")
 - [X] T016 Implementar `app/src/features/foods/nutrition.ts` (funciones puras) para que pasen las pruebas de T015
-- [ ] T017 [P] Prueba en `app/tests/component/session-ui.test.tsx` (ampliar, escribir primero, debe fallar): con sesión, la cabecera muestra el enlace "Alimentos" hacia `/alimentos`; sin sesión no
-- [ ] T018 Textos en español de la spec en `app/src/copy/es.ts` (sección `foods`: pestañas, estados, etiquetas de nutrientes, procedencia, avisos, errores), enlace "Alimentos" en `app/src/components/AppShell.tsx` y rutas provisionales de `contracts/ui-routes.md` en `app/src/routes/index.tsx` (todas bajo `RequireAuth`)
+- [X] T017 [P] Prueba en `app/tests/component/session-ui.test.tsx` (ampliar, escribir primero, debe fallar): con sesión, la cabecera muestra el enlace "Alimentos" hacia `/alimentos`; sin sesión no
+- [X] T018 Textos en español de la spec en `app/src/copy/es.ts` (sección `foods`: pestañas, estados, etiquetas de nutrientes, procedencia, avisos, errores), enlace "Alimentos" en `app/src/components/AppShell.tsx` y rutas provisionales de `contracts/ui-routes.md` en `app/src/routes/index.tsx` (todas bajo `RequireAuth`)
 
 **Checkpoint**: esquema y seguridad listos. Las historias pueden comenzar.
 

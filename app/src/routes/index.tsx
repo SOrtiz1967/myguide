@@ -4,6 +4,7 @@ import { LoginPage } from '../features/auth/pages/LoginPage'
 import { RecoverPage } from '../features/auth/pages/RecoverPage'
 import { RegisterPage } from '../features/auth/pages/RegisterPage'
 import { ResetPage } from '../features/auth/pages/ResetPage'
+import { FoodsPlaceholderPage } from '../features/foods/pages/FoodsPlaceholderPage'
 import { ProfilePage } from '../features/profile/ProfilePage'
 import { AppLayout } from './AppLayout'
 import { HomePage } from './HomePage'
@@ -30,6 +31,11 @@ export const routes: RouteObject[] = [
         children: [
           { path: '/', element: <HomePage /> },
           { path: '/perfil', element: <ProfilePage /> },
+          { path: '/alimentos', element: <FoodsPlaceholderPage /> },
+          { path: '/alimentos/nuevo', element: <FoodsPlaceholderPage /> },
+          { path: '/alimentos/:id', element: <FoodsPlaceholderPage /> },
+          { path: '/alimentos/:id/editar', element: <FoodsPlaceholderPage /> },
+          { path: '/fuentes', element: <FoodsPlaceholderPage /> },
         ],
       },
     ],
