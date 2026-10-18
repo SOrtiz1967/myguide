@@ -28,6 +28,7 @@ Resuelve la decisión técnica pendiente **#4** de la Constitution (fuentes de d
   - Licencia inequívoca, sin obligaciones de redistribución; USDA pide citar la fuente, y se hace igual.
   - SR Legacy (~7.800 alimentos, versión final de 2018) y Foundation Foods (~365, mayor calidad analítica) cubren los genéricos habituales: frutas, verduras, carnes, lácteos, legumbres, cereales, aceites.
   - Descarga en CSV pequeña (decenas de MB).
+- **Una sola fuente en la aplicación**: Foundation Foods y SR Legacy se registran juntas como la fuente `usda-fdc` (decisión del autor). Si un alimento aparece en ambas con el mismo nombre normalizado, **gana Foundation Foods** (mejor calidad analítica) y no se duplica. El `source_item_id` es el `fdc_id`, único en todo USDA.
 - **Límite conocido**: los nombres están en **inglés** y hay alimentos poco habituales en Argentina. Mitigación en la Decisión 4.
 - **Alternativas evaluadas**:
   - *ARGENFOODS (Universidad Nacional de Luján)*: es la referencia local, pero **no encontré términos de descarga ni licencia** documentados; se contacta a la universidad como mejora futura y no bloquea esta spec.
@@ -46,7 +47,7 @@ Resuelve la decisión técnica pendiente **#4** de la Constitution (fuentes de d
 ## Decisión 4: Nombres en español
 
 - **Productos de marca (OFF)**: el nombre es un nombre propio de producto; se usa el que figura en español (`lang = es`) o el principal, **sin traducirlo** (estado `original`).
-- **Genéricos (USDA)**: se traducen **una sola vez, de forma asistida**, a un archivo versionado (`supabase/import/data/usda-nombres-es.csv`) con estado `traducción sin revisar`. Las traducciones se pueden corregir editando ese archivo y volviendo a cargar; la interfaz muestra el estado (`original`, `sin revisar`, `revisada`).
+- **Genéricos (USDA)**: se traducen **una sola vez, de forma asistida**, a un archivo versionado (`supabase/import/data/usda-nombres-es.csv`) con estado `traducción sin revisar`. El archivo tiene las columnas `fdc_id,nombre_es,estado`, donde `estado` es `machine_translated` (sin revisar) o `reviewed` (revisada). Las traducciones se corrigen editando ese archivo —y se marcan `reviewed` al confirmarlas— y volviendo a cargar; la interfaz muestra el estado (`original`, `sin revisar`, `revisada`).
 - **Razón**: cumple el Principio X (nombres en español, revisables y corregibles) sin depender de un servicio de traducción en tiempo de ejecución.
 - **Alternativas**: traducir al vuelo con IA (rechazado: depende de un tercero y gasta cuota); dejar los nombres en inglés (rechazado por el Principio X).
 

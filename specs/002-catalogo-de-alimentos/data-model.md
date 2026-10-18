@@ -108,6 +108,14 @@ Solo `service_role`.
 | `public.import_foods(source_slug, items jsonb)` | solo `service_role` | crea o actualiza alimentos del catálogo en lote, por `(fuente, identificador)`; devuelve cuentas |
 | `public.finish_import(source_slug, report jsonb)` | solo `service_role` | actualiza `last_imported_at`, `food_count` y registra el informe |
 
+## Regla de claves foráneas hacia `foods`
+
+Ninguna tabla que referencie `foods` puede usar `on delete cascade`, salvo `food_portions`. Las referencias futuras (por ejemplo, las del registro de comidas de la spec 003) deben usar `on delete set null` y guardar un *snapshot* de los valores. Lo hace cumplir una prueba guardiana (`foods_schema.test.sql`), así eliminar un alimento nunca borra ni altera historial (FR-024, Principio II).
+
+## Copias y energía
+
+Un alimento del catálogo puede no tener energía. `copy_food` lo copia igual, fiel al original; `update_food` y `create_food` exigen la energía, así que la persona debe completarla para guardar cambios en esa copia.
+
 ## Transiciones
 
 - **Alimento propio**: creado → editado → eliminado. Al eliminarlo, las copias que se basaban en él quedan con `based_on_food_id` nulo y conservan sus valores.

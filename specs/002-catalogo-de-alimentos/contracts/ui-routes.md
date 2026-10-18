@@ -14,6 +14,15 @@
 
 El enlace "Alimentos" se agrega a la navegación de la cabecera. La pestaña activa y el texto buscado viven en la URL (`?q=&origen=`), así que sobreviven a ir al detalle y volver (FR-033).
 
+## Glosario de términos en pantalla
+
+| En pantalla | En la base de datos |
+|---|---|
+| **Del catálogo** (nunca "importado" ni "común") | `origin = 'imported'` |
+| **Propio** | `origin = 'own'` |
+| **Sin dato** | valor `null` |
+| **Traducción sin revisar** | `name_status = 'machine_translated'` |
+
 ## Estados por pantalla
 
 | Pantalla | Carga | Vacío | Éxito | Error |

@@ -45,6 +45,8 @@
 | Nombre en varios idiomas | `es`, si no el principal; sin traducir (productos de marca) |
 | Producto sin ningún nutriente | Se omite (`no_nutrients`) |
 | Duplicado dentro de la misma fuente | Gana el de mayor completitud |
+| Mismo alimento en Foundation Foods y en SR Legacy (nombre normalizado igual) | Gana Foundation Foods; ambos se cargan bajo la fuente `usda-fdc` |
+| Estado del nombre de un genérico USDA | Lo define la columna `estado` de `data/usda-nombres-es.csv` (`machine_translated` o `reviewed`); sin entrada en el CSV, el alimento se omite (`no_translation`) |
 
 ## Garantías
 
