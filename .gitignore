@@ -10,3 +10,6 @@ playwright-report/
 test-results/
 coverage/
 supabase/.env.local
+
+# Archivos intermedios de la carga del catalogo (pueden ser grandes; se regeneran)
+supabase/import/out/

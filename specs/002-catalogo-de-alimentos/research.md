@@ -100,3 +100,25 @@ Resuelve la decisión técnica pendiente **#4** de la Constitution (fuentes de d
 4. **ODbL y reutilización pública**: revisar con asesoramiento legal antes de abrir la aplicación a terceros.
 5. **Traducciones de genéricos USDA** sin revisar: revisión incremental.
 6. **Licencia de ARGENFOODS**: sin verificar; contacto pendiente (mejora futura).
+
+## Resultados de prototipos
+
+### T005: tamaño y velocidad de la búsqueda (2026-10-18)
+
+Base local (Postgres 17), 50.000 alimentos sintéticos con nombres y marcas realistas de Argentina, columna de texto normalizado (sin acentos y en minúsculas) con índice GIN de trigramas. Equipo con poca memoria libre, así que las cifras son conservadoras.
+
+| Medida | Resultado |
+|---|---|
+| Tabla | 11 MB |
+| Índice de trigramas | 3,7 MB |
+| Índice por nombre | 1,1 MB |
+| **Total** | **19 MB, unos 402 bytes por alimento** |
+| Consulta con recorrido completo de la tabla (primera versión) | p95 365 ms, máximo 917 ms |
+| **Consulta que usa el índice (LIKE por palabra, SQL dinámico)** | **p50 26 ms, p95 164 ms, promedio 48 ms, máximo 794 ms** |
+
+Conclusiones:
+
+- **El presupuesto de 150 MB no es una restricción**: 60.000 alimentos ocupan unos 24 MB; 300.000 ocuparían unos 120 MB. El tope por defecto de la carga sube de 60.000 a **100.000** alimentos (unos 40 MB), a confirmar con la medición final (T071).
+- **SC-002 se cumple con margen** (95 % en menos de 1 s; medido p95 de 164 ms).
+- La búsqueda **debe armar una condición `LIKE` por palabra** (hasta 5 palabras, escapando `%` y `_`) para que el planificador use el índice de trigramas. La forma "no existe una palabra que no coincida" obliga a recorrer toda la tabla y es 2 a 3 veces más lenta.
+- El peor caso son las consultas muy cortas y comunes (2 letras), que coinciden con miles de alimentos y deben ordenarse: unos 0,2 a 0,8 s. Es aceptable; si molestara, se puede exigir 3 caracteres o limitar el orden por similitud a un conjunto acotado.

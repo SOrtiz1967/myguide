@@ -33,9 +33,9 @@ description: "Lista de tareas de la spec 002: catálogo de alimentos"
 **Purpose**: prototipos de riesgo, documentación obligatoria de licencias y estructura
 
 - [ ] T001 Prototipo del riesgo #1 (cobertura): obtener una muestra de hasta 5.000 productos de Argentina de Open Food Facts (por la API de búsqueda con `User-Agent` identificado y ritmo cortés, o por el volcado `jsonl.gz` en transmisión si la API no responde) y medir: cantidad de productos de Argentina que se pueden obtener, porcentaje con energía y macros informados, y tamaño medio de fila. Registrar en `specs/002-catalogo-de-alimentos/research.md`, sección "Resultados de prototipos", y decidir el tope de volumen
-- [ ] T002 [P] Documentar las fuentes en `Documentacion/fuentes-datos.md`: Open Food Facts (ODbL 1.0, DbCL 1.0, texto de atribución, enlace a las condiciones, qué se importa y qué no —imágenes excluidas—, nota sobre *share-alike* y reutilización pública) y USDA FoodData Central (CC0 1.0, cita requerida, conjuntos usados). Entregable obligatorio antes de importar (Principio X, FR-013)
-- [ ] T003 [P] Crear `supabase/import/` con su `deno.json` (importaciones `@std/csv`, `@std/assert`) y los comandos de la raíz `import:muestra`, `import:off`, `import:usda` y `test:import` en `package.json`
-- [ ] T004 [P] Ampliar `.gitignore` con `supabase/import/out/` (archivos intermedios generados, potencialmente grandes) y verificar que `supabase/import/data/` sí se versiona
+- [X] T002 [P] Documentar las fuentes en `Documentacion/fuentes-datos.md`: Open Food Facts (ODbL 1.0, DbCL 1.0, texto de atribución, enlace a las condiciones, qué se importa y qué no —imágenes excluidas—, nota sobre *share-alike* y reutilización pública) y USDA FoodData Central (CC0 1.0, cita requerida, conjuntos usados). Entregable obligatorio antes de importar (Principio X, FR-013)
+- [X] T003 [P] Crear `supabase/import/` con su `deno.json` (importaciones `@std/csv`, `@std/assert`) y los comandos de la raíz `import:muestra`, `import:off`, `import:usda` y `test:import` en `package.json`
+- [X] T004 [P] Ampliar `.gitignore` con `supabase/import/out/` (archivos intermedios generados, potencialmente grandes) y verificar que `supabase/import/data/` sí se versiona
 
 ---
 
@@ -47,7 +47,7 @@ description: "Lista de tareas de la spec 002: catálogo de alimentos"
 
 ### Prototipo de tamaño y velocidad
 
-- [ ] T005 Prototipo del riesgo #2: en una base local descartable, crear una tabla con la forma de `foods` (ver `data-model.md`), cargar 50.000 filas sintéticas con nombres y marcas realistas, crear el índice GIN de trigramas y medir (a) tamaño de tabla e índice, (b) p95 del tiempo de búsqueda con consultas típicas. Registrar en `research.md`; si no cumple SC-002 (menos de 1 s) o el presupuesto de 150 MB, ajustar el índice o el tope
+- [X] T005 Prototipo del riesgo #2: en una base local descartable, crear una tabla con la forma de `foods` (ver `data-model.md`), cargar 50.000 filas sintéticas con nombres y marcas realistas, crear el índice GIN de trigramas y medir (a) tamaño de tabla e índice, (b) p95 del tiempo de búsqueda con consultas típicas. Registrar en `research.md`; si no cumple SC-002 (menos de 1 s) o el presupuesto de 150 MB, ajustar el índice o el tope
 
 ### Base de datos (usar la skill `database-design`)
 

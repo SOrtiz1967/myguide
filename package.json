@@ -6,6 +6,10 @@
   "scripts": {
     "test:functions": "deno test --allow-env=ALLOWED_ORIGINS --config supabase/functions/deno.json supabase/functions",
     "test:db": "supabase test db",
-    "test:config": "deno test --allow-read=supabase/config.toml --config supabase/functions/deno.json supabase/tests/config.test.ts"
+    "test:config": "deno test --allow-read=supabase/config.toml --config supabase/functions/deno.json supabase/tests/config.test.ts",
+    "test:import": "deno test --allow-read=supabase/import --config supabase/import/deno.json supabase/import",
+    "import:muestra": "deno run --allow-read=supabase/import --allow-net=127.0.0.1 --allow-env=SUPABASE_URL,SUPABASE_SERVICE_ROLE_KEY --config supabase/import/deno.json supabase/import/load.ts --source muestra --input supabase/import/data/muestra.ndjson",
+    "import:off": "deno run --allow-read=supabase/import --allow-write=supabase/import/out --allow-net --allow-env=SUPABASE_URL,SUPABASE_SERVICE_ROLE_KEY --config supabase/import/deno.json supabase/import/load.ts --source open-food-facts",
+    "import:usda": "deno run --allow-read=supabase/import --allow-write=supabase/import/out --allow-net --allow-env=SUPABASE_URL,SUPABASE_SERVICE_ROLE_KEY --config supabase/import/deno.json supabase/import/load.ts --source usda-fdc"
   }
 }
