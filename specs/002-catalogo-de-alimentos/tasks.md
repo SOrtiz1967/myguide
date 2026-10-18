@@ -59,12 +59,12 @@ description: "Lista de tareas de la spec 002: catálogo de alimentos"
 - [X] T011 [P] Prueba pgTAP en `supabase/tests/food_sources_seed.test.sql` (escribir primero, debe fallar): existen las fuentes `open-food-facts` (ODbL 1.0) y `usda-fdc` (CC0 1.0), cada una con licencia, enlace de licencia, texto de atribución y enlace de la fuente no vacíos (FR-013)
 - [X] T012 Migración `supabase/migrations/20261017000400_food_sources_seed.sql`: insertar las dos fuentes con la información documentada en T002
 - [X] T013 Actualizar `supabase/tests/rls_guardrail.test.sql`: admitir una **lista explícita de tablas de referencia de solo lectura** (por ahora `food_sources`) que no tienen `user_id`, siempre que tengan RLS, una única política `select` y ningún permiso de escritura para `anon` ni `authenticated`; toda otra tabla de `public` sigue exigiendo `user_id`. Verificar con una mutación que una tabla nueva sin `user_id` fuera de la lista falla
-- [ ] T014 [P] Ayudantes de prueba en `supabase/seed.sql`: `tests.create_food(user_id, name, ...)` para alimentos propios y `tests.create_catalog_food(source_slug, source_item_id, name, ...)` para filas del catálogo (solo local)
+- [X] T014 [P] Ayudantes de prueba en `supabase/seed.sql`: `tests.create_food(user_id, name, ...)` para alimentos propios y `tests.create_catalog_food(source_slug, source_item_id, name, ...)` para filas del catálogo (solo local)
 
 ### Utilidades del frontend (usar la skill `nutrition-domain-rules`)
 
-- [ ] T015 [P] Pruebas unitarias en `app/tests/unit/nutrition.test.ts` (escribir primero, deben fallar): `formatValue` (valor con unidad y formato regional; `null` → "sin dato", nunca 0), `parseDecimal` (coma y punto; texto inválido → error), `energyCoherence` (esperada = 4·P + 4·C + 9·G; avisa solo si la diferencia supera el 25 % y 30 kcal; no avisa con datos insuficientes), `basisLabel` ("por 100 g" / "por 100 ml")
-- [ ] T016 Implementar `app/src/features/foods/nutrition.ts` (funciones puras) para que pasen las pruebas de T015
+- [X] T015 [P] Pruebas unitarias en `app/tests/unit/nutrition.test.ts` (escribir primero, deben fallar): `formatValue` (valor con unidad y formato regional; `null` → "sin dato", nunca 0), `parseDecimal` (coma y punto; texto inválido → error), `energyCoherence` (esperada = 4·P + 4·C + 9·G; avisa solo si la diferencia supera el 25 % y 30 kcal; no avisa con datos insuficientes), `basisLabel` ("por 100 g" / "por 100 ml")
+- [X] T016 Implementar `app/src/features/foods/nutrition.ts` (funciones puras) para que pasen las pruebas de T015
 - [ ] T017 [P] Prueba en `app/tests/component/session-ui.test.tsx` (ampliar, escribir primero, debe fallar): con sesión, la cabecera muestra el enlace "Alimentos" hacia `/alimentos`; sin sesión no
 - [ ] T018 Textos en español de la spec en `app/src/copy/es.ts` (sección `foods`: pestañas, estados, etiquetas de nutrientes, procedencia, avisos, errores), enlace "Alimentos" en `app/src/components/AppShell.tsx` y rutas provisionales de `contracts/ui-routes.md` en `app/src/routes/index.tsx` (todas bajo `RequireAuth`)
 
