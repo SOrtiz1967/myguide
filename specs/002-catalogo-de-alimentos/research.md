@@ -15,7 +15,7 @@ Resuelve la decisión técnica pendiente **#4** de la Constitution (fuentes de d
 - **Imágenes**: no se importan (fuera de alcance de la spec y, además, tienen licencia distinta).
 - **Share-alike**: la ODbL exige compartir bajo la misma licencia una *base de datos derivada* que se **distribuya** públicamente. MyGuide muestra los datos en una aplicación (una "obra producida") y no redistribuye la base; con atribución visible alcanza. **Si algún día se ofrece la base derivada para descarga o la aplicación se abre a terceros, hay que revisarlo con asesoramiento legal.** Queda como riesgo documentado, no resuelto por esta spec.
 - **Calidad**: es colaborativa. Por eso: valores faltantes se conservan como faltantes, registros imposibles se omiten con informe, y la persona puede crear su copia corregida (Principio X).
-- **Cobertura en Argentina**: **a medir**. El volcado completo tiene unos 4,8 millones de productos (medido hoy); la cantidad de productos de Argentina no se pudo obtener (la API devolvía 503 y la consulta remota al Parquet falla en este equipo). Se mide en el prototipo T001.
+- **Cobertura en Argentina**: medida en T001 (ver "Resultados de prototipos"): unos 13.400 productos leídos, 26 % utilizables. El volcado completo tiene unos 4,8 millones de productos (medido hoy); la cantidad de productos de Argentina no se pudo obtener (la API devolvía 503 y la consulta remota al Parquet falla en este equipo). Se mide en el prototipo T001.
 - **Alternativas evaluadas**:
   - *APIs comerciales (FatSecret, Nutritionix, Edamam)*: prohíben o limitan guardar los datos y chocan con el Principio X (copia local).
   - *Bases de supermercados / scraping*: sin licencia, descartado.
@@ -122,3 +122,26 @@ Conclusiones:
 - **SC-002 se cumple con margen** (95 % en menos de 1 s; medido p95 de 164 ms).
 - La búsqueda **debe armar una condición `LIKE` por palabra** (hasta 5 palabras, escapando `%` y `_`) para que el planificador use el índice de trigramas. La forma "no existe una palabra que no coincida" obliga a recorrer toda la tabla y es 2 a 3 veces más lenta.
 - El peor caso son las consultas muy cortas y comunes (2 letras), que coinciden con miles de alimentos y deben ordenarse: unos 0,2 a 0,8 s. Es aceptable; si molestara, se puede exigir 3 caracteres o limitar el orden por similitud a un conjunto acotado.
+
+### T001: cobertura de Open Food Facts en Argentina (2026-10-18)
+
+Se recorrió el volcado completo (jsonl.gz, 13,2 GB) en streaming y se conservaron los productos con Argentina en `countries_tags`. **La lectura se interrumpió en la fila 4.000.000 de unas 4,8 millones (cerca del 83 %)** por poca memoria del equipo; no se reintentó. Las cifras son por lo tanto de un **piso**: faltan los productos de las últimas filas del volcado.
+
+| Medida | Resultado |
+|---|---|
+| Productos de Argentina leídos | **13.395** (1 código repetido) |
+| Con nombre (en español u otro idioma) | 84,6 % |
+| Con marca | 59,0 % |
+| Con algún dato nutricional | 39,3 % |
+| Con energía (kcal por 100 g) | 29,7 % |
+| Con proteínas, carbohidratos y grasas | 27,4 % |
+| **Utilizables** (nombre + energía + los tres macronutrientes) | **3.513 (26,2 %)** |
+| Con porción informada | 41,0 % |
+| Tamaño promedio de la fila filtrada | 694 bytes |
+
+Conclusiones:
+
+- **OFF aporta pocos miles de productos utilizables para Argentina** (del orden de 4.000 al completar la lectura), no decenas de miles. Más de la mitad del volcado de Argentina no tiene datos nutricionales completos y se omite con informe (FR-028).
+- El tope de 100.000 alimentos queda muy por encima de lo necesario: el catálogo será de unos pocos miles de productos de marca más los genéricos de USDA. El tamaño deja de ser una preocupación.
+- Con esta cobertura, **los alimentos propios y las copias editables cobran más peso** (riesgo 1 de arriba): una persona va a echar de menos productos de marca locales y debe poder crearlos con poco esfuerzo.
+- Si se quiere el número final, la lectura completa se puede repetir cuando haya memoria disponible; no cambia ninguna decisión de diseño.
