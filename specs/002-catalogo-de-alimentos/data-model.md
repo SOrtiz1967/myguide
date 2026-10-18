@@ -44,6 +44,7 @@ Hereda la convención de propiedad de la spec 001 (`supabase/README.md`), con la
 | `protein_g`, `carbs_g`, `sugars_g`, `fat_g`, `saturated_fat_g`, `fiber_g` | numeric(8,2), nulo | 0 a 100 |
 | `sodium_mg` | numeric(10,2), nulo | 0 a 40000 |
 | `search_text` | text, no nulo | nombre + marca, en minúsculas y sin acentos (columna generada) |
+| `name_norm` | text, no nulo | solo el nombre, en minúsculas y sin acentos (columna generada); sirve para ordenar por coincidencia exacta o por prefijo |
 | `completeness` | smallint, no nulo | cantidad de nutrientes informados (0 a 8), generada; sirve para ordenar |
 | `client_request_id` | uuid, nulo | clave de idempotencia de la creación |
 | `created_at`, `updated_at` | timestamptz | |
@@ -57,7 +58,7 @@ Hereda la convención de propiedad de la spec 001 (`supabase/README.md`), con la
 - Coherencia: proteínas + carbohidratos + grasas ≤ 100; azúcares ≤ carbohidratos; saturadas ≤ grasas.
 - Un disparador impide cambiar `origin`, `user_id`, `source_id` y `source_item_id` después de creado.
 
-**Índices**: GIN de trigramas sobre `search_text`; `(user_id)`; `(origin)`.
+**Índices**: GIN de trigramas sobre `search_text`; `name_norm` con `text_pattern_ops` (prefijos); `(user_id)`; `(origin)`.
 
 **Políticas (RLS)**
 
@@ -68,7 +69,7 @@ Hereda la convención de propiedad de la spec 001 (`supabase/README.md`), con la
 | `update` | `authenticated` | `user_id = auth.uid()` en `using` y `with check`, y sesión vigente |
 | `delete` | `authenticated` | `user_id = auth.uid()` y sesión vigente |
 
-Ninguna fila del catálogo cumple las condiciones de escritura: **el catálogo es de solo lectura** (FR-022). Permisos por columna: el cliente no puede enviar `origin`, `source_id`, `source_item_id`, `imported_at`, `search_text`, `completeness`.
+Ninguna fila del catálogo cumple las condiciones de escritura: **el catálogo es de solo lectura** (FR-022). Permisos por columna: el cliente no puede enviar `origin`, `source_id`, `source_item_id`, `imported_at`, `search_text`, `name_norm`, `completeness`.
 
 ## `public.food_portions`
 
