@@ -145,3 +145,34 @@ Conclusiones:
 - El tope de 100.000 alimentos queda muy por encima de lo necesario: el catálogo será de unos pocos miles de productos de marca más los genéricos de USDA. El tamaño deja de ser una preocupación.
 - Con esta cobertura, **los alimentos propios y las copias editables cobran más peso** (riesgo 1 de arriba): una persona va a echar de menos productos de marca locales y debe poder crearlos con poco esfuerzo.
 - Si se quiere el número final, la lectura completa se puede repetir cuando haya memoria disponible; no cambia ninguna decisión de diseño.
+
+### T071: medición final con 50.000 alimentos (2026-10-19)
+
+Base local (Postgres 17) con el catálogo real cargado (≈4.100 alimentos) más 50.000 alimentos sintéticos: **54.109 alimentos**. Se ejecutaron 300 búsquedas (30 consultas típicas, 10 veces cada una) **como una cuenta con sesión**, es decir, con RLS aplicada.
+
+| Medida | Resultado |
+|---|---|
+| Tabla de alimentos | 24 MB |
+| Índices (trigramas, nombre, dueño, origen, copias) | 35 MB |
+| **Total con porciones** | **60 MB** (≈1,1 KB por alimento) |
+| Búsqueda: p50 / **p95** / máximo | 63 ms / **234 ms** / 353 ms |
+| Consultas más lentas (2 letras, miles de coincidencias) | "co" 261 ms, "al" 240 ms, "le" 204 ms |
+
+Conclusiones:
+
+- **SC-002 se cumple con margen**: el 95 % de las búsquedas responde en 234 ms (el límite es 1 s). **El tamaño cumple el presupuesto**: 60 MB frente a 150 MB; con el tope de 100.000 alimentos serían unos 110 MB.
+- **Defecto encontrado y corregido gracias a esta medición.** La primera corrida no terminó en 8 minutos: las políticas RLS llamaban a `private.is_session_fresh()` *por cada fila* (la función es `security definer` y el planificador no la simplifica). Con `(select private.is_session_fresh())` se evalúa una vez por consulta (migración `20261017001000`). Una prueba pgTAP (`foods_rls.test.sql`) impide que vuelva a escribirse una llamada suelta en las políticas de `foods`, `food_portions` y `food_sources`.
+- Las políticas de la spec 001 (`profiles`) tienen una sola fila por cuenta, así que no se ven afectadas. Cualquier tabla futura con muchas filas debe usar `(select private.is_session_fresh())` en sus políticas (queda anotado en `supabase/README.md`).
+
+### T053: revisión de la carga local (2026-10-19)
+
+Cargas ejecutadas contra la base local con `npm run import:muestra` y `npm run import:off -- --dump … --plain` (el fragmento del volcado de T001: 13.395 productos de Argentina).
+
+| Fuente | Leídos | Cargados | Omitidos | Motivos |
+|---|---|---|---|---|
+| Muestra de desarrollo | 183 | 172 | 10 | 10 inválidos a propósito (energía negativa, macros > 100, sin nombre, sin código, etc.) + 1 duplicado conservando el más completo |
+| Open Food Facts (Argentina) | 13.395 | **3.929** | 9.465 | sin ningún nutriente 7.339; sin nombre 2.061; fuera de rango 41; macros > 100 g: 15; azúcares > carbohidratos: 6; saturadas > grasas: 3 |
+
+- Repetir cualquiera de las cargas dio **0 creados y todos actualizados**: la carga es idempotente (FR-026).
+- Controles sobre lo cargado de Open Food Facts: 0 nombres vacíos, 3.929 identificadores distintos, 3.428 con marca; 103 sin energía (se muestran como "sin dato") y 83 con energía 0 que son productos reales de 0 kcal; ningún faltante se convirtió en 0.
+- **USDA FoodData Central: pendiente.** El archivo de traducciones (`data/usda-nombres-es.csv`) está vacío y los CSV no se pudieron descargar desde este equipo (ver `supabase/README.md`, sección "Cargar USDA"). Los genéricos del catálogo real llegan con ese paso (T050 a T052).

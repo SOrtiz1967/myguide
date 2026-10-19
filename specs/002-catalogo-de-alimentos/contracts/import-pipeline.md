@@ -53,7 +53,7 @@
 - **Idempotencia**: la clave es `(fuente, source_item_id)`. Repetir la carga no duplica ni toca alimentos propios ni copias (FR-026, FR-027).
 - **Licencia**: sin `license_name`, `license_url` y `attribution` registrados para la fuente, la carga se rechaza (FR-013).
 - **Sin datos personales**: los informes y registros contienen solo códigos de producto y motivos.
-- **Tope de volumen**: la carga se corta en el máximo configurado (por defecto 60.000), priorizando los más completos.
+- **Tope de volumen**: la carga se corta en el máximo configurado (por defecto 100.000), priorizando los más completos.
 
 ## Configuración
 

@@ -1,6 +1,6 @@
 -- T009 (spec 002, FR-016, FR-022): alimentos propios privados y catálogo de solo lectura.
 begin;
-select plan(28);
+select plan(29);
 
 select tests.create_user('a@test.local') as uid_a \gset
 select tests.create_user('b@test.local') as uid_b \gset
@@ -95,6 +95,22 @@ update public.profiles set last_active_at = now() - interval '31 days' where use
 select tests.authenticate_as(:'uid_a');
 select is((select count(*) from public.foods), 0::bigint, 'FR-003: con la sesión vencida no ve nada, ni siquiera el catálogo');
 select tests.clear_authentication();
+
+-- rendimiento: la vigencia de la sesión se evalúa una sola vez por consulta, no por fila ---------------------
+-- Una llamada suelta a una función en una política se evalúa por cada fila; envuelta en (select ...) el
+-- planificador la evalúa una vez. Con un catálogo grande la diferencia es de segundos (T071).
+select is(
+  (
+    select count(*)
+    from pg_policies p,
+         lateral (select coalesce(p.qual, '') || ' ' || coalesce(p.with_check, '') as expr) e
+    where p.schemaname = 'public'
+      and p.tablename in ('foods', 'food_portions', 'food_sources')
+      and regexp_count(e.expr, 'private.is_session_fresh()') > regexp_count(e.expr, 'SELECT private.is_session_fresh()')
+  ),
+  0::bigint,
+  'SC-002: las políticas evalúan la vigencia de la sesión una sola vez por consulta'
+);
 
 -- anónimo -------------------------------------------------------------------------------------------------
 select tests.authenticate_as_anon();
