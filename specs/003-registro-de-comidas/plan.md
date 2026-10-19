@@ -64,7 +64,7 @@ No hay dependencias nuevas de frontend ni servicios externos.
 | **VII. Arquitectura** | Cálculo de totales y validaciones puros y probados; la base y la función reimponen las validaciones del cliente; sin dependencias nuevas. | ✅ Cumple |
 | **VIII. Calidad y SDD** | TDD en cada tarea; 27 escenarios en `quickstart.md`; prototipos de los tres riesgos antes de construir. | ✅ Cumple |
 | **IX. Observabilidad** | La función de fotos registra solo resultado, tamaño y duración, sin identificadores personales ni contenido. | ✅ Cumple |
-| **X. Catálogos** | Se usa el catálogo de la spec 002 sin modificarlo; la instantánea conserva la procedencia (nombre y marca registrados). | ✅ Cumple |
+| **X. Catálogos** | Se usa el catálogo de la spec 002 sin modificarlo; la instantánea conserva el nombre, la marca, la base y los valores por 100 del momento, y el origen del ítem (del catálogo, propio o manual). No guarda el nombre de la fuente: la procedencia completa se ve en el alimento, mientras exista. | ✅ Cumple |
 
 **Resultado**: sin violaciones.
 
@@ -102,6 +102,10 @@ app/src/features/meals/
 ├── MealSection.tsx          # una comida con sus ítems, subtotal, foto y acciones
 ├── AddEntryPage.tsx         # recientes, búsqueda y entrada manual
 ├── QuantityPicker.tsx       # g/ml o porciones
+├── ManualEntryForm.tsx      # entrada manual
+├── saveAsFood.ts            # convertir un manual en datos de un alimento propio
+├── SaveAsFoodDialog.tsx     # pide el peso o volumen y crea el alimento
+├── RepeatMealDialog.tsx     # repetir una comida con la vista previa
 ├── EntryDetailPage.tsx      # detalle, edición, eliminar, guardar como alimento propio
 └── MealPhoto.tsx            # subir, ver, reemplazar, eliminar
 app/tests/{unit,component,e2e}/
@@ -121,6 +125,7 @@ supabase/functions/meal-photo/
 | Desviación | Por qué hace falta | Alternativa más simple descartada porque |
 |---|---|---|
 | Edge Function para subir fotos en lugar de subir directo a Storage | El Principio I exige quitar los metadatos **en el servidor** antes de almacenar | La subida directa deja que un archivo sin limpiar llegue al bucket |
+| Reescribir las políticas de `profiles` (spec 001) en esta spec | El guardián de rendimiento exige que toda política de `public` envuelva `private.is_session_fresh()` en `(select …)`; las de `profiles` lo hacían con una llamada suelta (no afecta a una tabla de una fila por cuenta, pero el guardián debe ser uniforme) | Dejar una excepción en el guardián complica la regla y permite que se copie el mal patrón |
 | Tabla `log_day_starts` | Recordar la decisión explícita "Empezar el día de hoy" sin tocar el perfil de la spec 001 | Una columna en `profiles` obliga a ampliar sus permisos por columna y mezcla responsabilidades |
 
 ## Riesgos y verificaciones previas a implementar
@@ -129,4 +134,5 @@ supabase/functions/meal-photo/
 2. **P2, decodificación en el navegador y HEIC**: qué formatos decodifica cada navegador y tamaño final de una foto de 12 MP.
 3. **P3, Storage privado en local**: URL firmada para la persona dueña; acceso denegado a otra cuenta y a anónimos; la URL firmada vence.
 4. **Espacio de fotos**: unos 365 MB por año. Si se acerca al límite, se reduce la calidad o se ofrece borrar fotos viejas (spec futura).
-5. **Zonas horarias**: pruebas con distintas zonas y el paso por la medianoche, con la hora simulada.
+5. **Fotos huérfanas al eliminar una cuenta**: el borrado en cascada no alcanza a los archivos; queda como requisito del futuro flujo de eliminación de cuenta (`research.md`, Decisión 11).
+6. **Zonas horarias**: pruebas con distintas zonas y el paso por la medianoche, con la hora simulada.

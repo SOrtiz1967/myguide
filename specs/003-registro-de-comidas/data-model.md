@@ -24,7 +24,7 @@ Sigue la convención de propiedad de la spec 001: toda tabla tiene `user_id`, RL
 | `portion_quantity` | numeric(8,2), nulo | g o ml de una porción (instantánea) |
 | `portion_count` | numeric(6,2), nulo | de 0 (excluido) a 50; si hay porción, `quantity = portion_quantity × portion_count` |
 | `quantity_text` | text, nulo | cantidad descriptiva de un manual ("1 porción"), hasta 60 |
-| `energy_kcal`, `protein_g`, `carbs_g`, `sugars_g`, `fat_g`, `saturated_fat_g`, `fiber_g`, `sodium_mg` | numeric, nulo | valores **del ítem**; los calcula el disparador desde la instantánea (o los escribe la persona si es manual). Un faltante es `null` |
+| `energy_kcal`, `protein_g`, `carbs_g`, `sugars_g`, `fat_g`, `saturated_fat_g`, `fiber_g`, `sodium_mg` | numeric(12,2), nulo | valores **del ítem**; los calcula el disparador desde la instantánea (o los escribe la persona si es manual). Un faltante es `null` |
 | `client_request_id` | uuid, nulo | único por `(user_id, client_request_id)` |
 | `created_at`, `updated_at` | timestamptz | `created_at` es el "momento de registro" |
 
@@ -38,7 +38,7 @@ Sigue la convención de propiedad de la spec 001: toda tabla tiene `user_id`, RL
 
 - Si no es manual, calcula cada valor como `per100_x × quantity / 100`, redondeado a 2 decimales; si `per100_x` es nulo, el valor queda nulo.
 - Si hay porción, fija `quantity = portion_quantity × portion_count`.
-- Impide cambiar `user_id`, `origin`, `food_id` y la instantánea después de crear. Solo cambian la cantidad, la porción, la comida, el día y, en los manuales, la descripción y los valores.
+- Impide cambiar `user_id`, `origin` y la instantánea después de crear. `food_id` solo puede **pasar a nulo**: es lo que hace la base cuando se elimina el alimento (`on delete set null`), y bloquear esa actualización impediría eliminar alimentos con ítems registrados. Solo cambian la cantidad, la porción, la comida, el día y, en los manuales, la descripción y los valores.
 
 **Índices**: `(user_id, log_date, meal)`; `(user_id, created_at desc)` para los recientes; `(food_id)`.
 
@@ -65,7 +65,7 @@ PK `(user_id, log_date)`. Solo `select` e `insert` propios.
 | `bytes` | integer | ≤ 3.145.728 |
 | `created_at` | timestamptz | |
 
-Única por `(user_id, log_date, meal)`. El cliente solo tiene `select` y `delete` propios; las altas y los reemplazos los hace la Edge Function con la clave de servicio, después de limpiar la imagen. Al eliminar o reemplazar, la función borra también el objeto de Storage.
+Única por `(user_id, log_date, meal)`. El cliente solo tiene `select` y `delete` propios; las altas y los reemplazos los hace la Edge Function con la clave de servicio, después de limpiar la imagen. Al eliminar o reemplazar, la función borra también el objeto de Storage. Al eliminar una cuenta, la fila se borra en cascada pero el objeto no: ver `research.md`, Decisión 11.
 
 **Bucket `meal-photos`** (privado; sin listado público):
 
@@ -78,7 +78,7 @@ PK `(user_id, log_date)`. Solo `select` e `insert` propios.
 |---|---|---|
 | `add_meal_entry(entry jsonb, request_id uuid)` | authenticated (invoker) | Crea un ítem; toma la instantánea del alimento visible; idempotente |
 | `update_meal_entry(id uuid, changes jsonb)` | authenticated (invoker) | Cambia cantidad o porción, comida, día y, si es manual, la descripción y los valores |
-| `log_day_status(client_timezone text)` | authenticated (invoker) | `{today, proposed_date, closing}` según la Decisión 4 |
+| `log_day_status(client_timezone text)` | authenticated (invoker) | `{today, proposed_date, closing}` según la Decisión 4; llama a `private.log_day_status_at(ahora, zona)`, que es la que prueba pgTAP con una hora simulada |
 | `start_log_day(day date)` | authenticated (invoker) | Inserta la marca de "Empezar el día de hoy" (idempotente) |
 | `recent_meal_items(max int default 20)` | authenticated (invoker) | Los recientes de la Decisión 5 |
 | `preview_repeat_meal(from_date, from_meal)` | authenticated (invoker) | Cuántos ítems se recalcularían y cuántos se copiarían |

@@ -38,6 +38,8 @@ El enlace "Registro" se agrega a la cabecera, antes de "Alimentos". `:fecha` usa
 - Cada valor lleva su unidad. Energía sin decimales y gramos con hasta un decimal, en formato es-AR. Los totales incompletos se marcan como tales.
 - Cada ítem muestra su nombre y su marca (de la instantánea), la cantidad ("150 g", o "1,5 tazas (237 g)"), la energía y su origen. Si el alimento ya no existe: "Este alimento ya no está disponible; se muestran los valores registrados".
 - La comida se elige con un control de cinco opciones; la cantidad, con un campo numérico (coma o punto) y, si el alimento tiene porciones, con un selector entre "g/ml" y cada porción.
+- Un ítem con estado "estimado, sin confirmar" (reservado para la spec 009) se muestra con la etiqueta "Estimado, sin confirmar" y una nota de que puede contener errores.
+- "Guardar como alimento propio" (desde el menú de un ítem manual) abre un diálogo que pide cuánto pesa o mide esa cantidad (g o ml), muestra los valores por 100 resultantes y crea el alimento con esa cantidad como porción; el ítem no cambia.
 - Aviso informativo de coherencia de energía y macronutrientes en los manuales (como en la spec 002), sin impedir guardar.
 - Repetir: desde el menú de una comida con ítems, "Repetir en…" (día y comida de destino) y una confirmación que dice cuántos ítems se recalculan y cuántos se copian.
 - Ningún mensaje juzga lo comido (Principio IV): sin colores de "bien" o "mal" y sin comparaciones con un objetivo (spec 004).

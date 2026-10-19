@@ -38,7 +38,7 @@ Decisiones técnicas de la spec 003. Se apoyan en el stack de la spec 001 (Vite 
 - **Decisión**:
   - El ítem guarda `log_date` (fecha, no hora): el día queda fijado al guardar y no se mueve por cambios de zona horaria o de horario de verano (FR-026).
   - "Hoy" se calcula con la zona horaria del perfil; si el perfil no la tiene, con la del dispositivo y un aviso (como en la spec 001).
-  - La función `log_day_status(client_timezone)` devuelve `{today, proposed_date, closing}`. `proposed_date` es **ayer** si se cumplen las tres condiciones siguientes:
+  - La función `log_day_status(client_timezone)` (que llama a `private.log_day_status_at(ahora, zona)`; las pruebas ejercitan esa función privada con una hora simulada, y la pública siempre usa `now()`) devuelve `{today, proposed_date, closing}`. `proposed_date` es **ayer** si se cumplen las tres condiciones siguientes:
     1. hoy no tiene ítems,
     2. la persona no eligió "Empezar el día de hoy",
     3. ayer sí tiene ítems ("el día que se está cerrando").
@@ -107,7 +107,7 @@ Decisiones técnicas de la spec 003. Se apoyan en el stack de la spec 001 (Vite 
 | Energía de un ítem manual | obligatoria, de 0 a 5.000 kcal |
 | Gramos de un ítem manual (proteínas, carbohidratos, azúcares, grasas, saturadas, fibra) | de 0 a 1.000 g; azúcares ≤ carbohidratos; saturadas ≤ grasas |
 | Sodio de un ítem manual | de 0 a 50.000 mg |
-| Día | desde el 1/1/2000 hasta 7 días después de hoy en la zona horaria del perfil |
+| Día | desde el 1/1/2000 hasta 7 días después de hoy en la zona horaria del perfil; sin zona en el perfil, en UTC con un día de tolerancia |
 | Foto | JPEG, PNG, WebP o HEIC (si el navegador lo decodifica) hasta 15 MB al elegirla; JPEG de hasta 3 MB al subirla |
 
 Las mismas reglas están en Zod (cliente) y en la base o la función (servidor). Los errores tienen la forma `invalid_entry:<motivo>:<campo>`, como en la spec 002.
@@ -124,6 +124,10 @@ El enlace "Registro" se suma a la cabecera. Las pantallas son páginas, no diál
 ## Decisión 10: observabilidad y privacidad
 
 La Edge Function `meal-photo` registra solo el resultado (aceptada o rechazada y el motivo), el tamaño y la duración, con el identificador de solicitud que ya usan las funciones de la spec 001. Nunca registra el contenido, la ruta con el `user_id` ni los metadatos que quitó (Principio IX).
+
+## Decisión 11: eliminar una cuenta y los archivos de fotos
+
+Las filas de `meal_photos` se borran en cascada con la cuenta, pero **los archivos de Storage no**: quedarían huérfanos. El flujo de eliminación de cuenta (pendiente por la Constitution, Principio I) debe borrar los objetos de la carpeta `<user_id>/` del bucket con la API de Storage antes de borrar la cuenta. Se documenta en `supabase/README.md` y en `verification.md`; no se construye en esta spec porque la eliminación de cuentas no existe todavía.
 
 ## Riesgos y prototipos antes de implementar
 

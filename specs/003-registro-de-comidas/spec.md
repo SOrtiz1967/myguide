@@ -172,7 +172,6 @@ La persona puede adjuntar una foto a una comida del día como recordatorio visua
 - **FR-007**: Si la energía de un ítem libre difiere notablemente de la que resultaría de sus macronutrientes, el sistema MUST avisarlo de forma informativa y MUST permitir guardar.
 - **FR-008**: Las comidas de un día MUST ser desayuno, almuerzo, merienda, cena y colación, en ese orden.
 - **FR-009**: Registrar un ítem MUST ser idempotente ante dobles envíos y reintentos (un solo ítem).
-- **FR-040**: Al agregar a una comida, el sistema MUST mostrar los recientes de la persona: los últimos 20 alimentos distintos que registró (del catálogo, propios o entradas manuales, identificados por su alimento o, si es manual, por su descripción), cada uno con la última cantidad usada precargada y editable antes de confirmar. Un reciente cuyo alimento ya no existe o ya no es visible MUST NOT mostrarse; una entrada manual reciente se vuelve a registrar con sus valores. La búsqueda MUST seguir disponible en la misma pantalla.
 
 ### Instantánea y origen (Principio II)
 
@@ -195,7 +194,7 @@ La persona puede adjuntar una foto a una comida del día como recordatorio visua
 - **FR-020**: La persona MUST poder mover un ítem a otra comida u otro día.
 - **FR-021**: La persona MUST poder editar la descripción y los valores de un ítem manual, con las mismas validaciones que al crearlo.
 - **FR-022**: La persona MUST poder eliminar un ítem tras una confirmación explícita.
-- **FR-023**: La persona MUST poder convertir un ítem manual en un alimento propio (spec 002) sin modificar el ítem.
+- **FR-023**: La persona MUST poder convertir un ítem manual en un alimento propio (spec 002) sin modificar el ítem. Como los valores de un ítem manual corresponden a toda la cantidad descripta ("1 porción de torta"), el sistema MUST pedir cuánto pesa o mide esa cantidad (en g o ml), calcular los valores por 100 g o 100 ml y crear el alimento con esa cantidad como porción.
 
 ### Regla del día (Principio II)
 
@@ -206,7 +205,7 @@ La persona puede adjuntar una foto a una comida del día como recordatorio visua
 
 ### Repetir
 
-- **FR-028**: La persona MUST poder repetir todos los ítems de una comida de otro día en una comida elegida de otro día, en un paso, de forma idempotente. Los ítems que vienen de un alimento que todavía existe y la persona puede ver MUST recalcularse con los valores actuales de ese alimento (guardando una instantánea nueva), con la misma cantidad; los ítems manuales, y los de un alimento que ya no existe, MUST copiar lo registrado. La persona MUST ver, antes de confirmar, cuántos ítems se recalculan y cuántos se copian.
+- **FR-028**: La persona MUST poder repetir todos los ítems de una comida de un día en una comida elegida de cualquier día (incluido el mismo, por ejemplo para copiar el almuerzo a la merienda), en un paso, de forma idempotente. Los ítems que vienen de un alimento que todavía existe y la persona puede ver MUST recalcularse con los valores actuales de ese alimento (guardando una instantánea nueva), con la misma cantidad; los ítems manuales, y los de un alimento que ya no existe, MUST copiar lo registrado. La persona MUST ver, antes de confirmar, cuántos ítems se recalculan y cuántos se copian.
 - **FR-029**: Los ítems repetidos MUST ser independientes de los originales: editar o eliminar unos no afecta a los otros.
 
 ### Foto de la comida (Principios I y VI)
@@ -214,7 +213,7 @@ La persona puede adjuntar una foto a una comida del día como recordatorio visua
 - **FR-030**: La persona MUST poder adjuntar una foto opcional a una comida de un día, verla, reemplazarla y eliminarla. Registrar una comida MUST NOT exigir foto.
 - **FR-031**: Antes de almacenar una foto se MUST eliminar todo metadato EXIF (incluida la ubicación), aunque el dispositivo no lo haya hecho, y se SHOULD reducir y comprimir la imagen.
 - **FR-032**: Las fotos MUST guardarse de forma privada y cifrada en reposo: solo su dueño, con sesión vigente, puede verlas; MUST NOT existir un acceso público ni un listado de fotos.
-- **FR-033**: Solo se MUST aceptar imágenes (JPEG, PNG, WebP o HEIC) de hasta 15 MB antes de comprimir; otros archivos se rechazan con un mensaje claro.
+- **FR-033**: Solo se MUST aceptar imágenes JPEG, PNG o WebP, y HEIC cuando el navegador pueda abrirlo, de hasta 15 MB antes de comprimir; otros archivos, y un HEIC que el navegador no puede abrir, se rechazan con un mensaje claro que sugiere probar con JPEG o PNG.
 - **FR-034**: Eliminar o reemplazar una foto MUST dejar la anterior inaccesible de inmediato.
 - **FR-035**: Las fotos de esta spec MUST NOT enviarse a ningún servicio externo de análisis.
 
@@ -224,6 +223,10 @@ La persona puede adjuntar una foto a una comida del día como recordatorio visua
 - **FR-037**: Un guardado que no llegó al servidor MUST informarse como tal; los formularios de registro MUST conservar su borrador local hasta la confirmación del servidor y descartarlo al confirmar (spec 001).
 - **FR-038**: Los estados de carga, vacío, éxito y error MUST estar definidos en la vista del día, el formulario de registro y la foto.
 - **FR-039**: Las pantallas MUST ser responsive, en español, con etiquetas accesibles, navegación por teclado, errores comprensibles y la unidad en cada valor numérico.
+
+### Agregar rápido
+
+- **FR-040**: Al agregar a una comida, el sistema MUST mostrar los recientes de la persona: los últimos 20 alimentos distintos que registró (del catálogo, propios o entradas manuales, identificados por su alimento o, si es manual, por su descripción), cada uno con la última cantidad usada precargada y editable antes de confirmar. Un reciente cuyo alimento ya no existe o ya no es visible MUST NOT mostrarse; una entrada manual reciente se vuelve a registrar con sus valores. La búsqueda MUST seguir disponible en la misma pantalla.
 
 ### Key Entities *(include if feature involves data)*
 
@@ -253,7 +256,8 @@ La persona puede adjuntar una foto a una comida del día como recordatorio visua
 - Se admite una foto por comida de un día (reemplazable). Varias fotos por comida, o fotos por ítem, quedan para una spec futura si hace falta.
 - No se impide registrar en fechas futuras cercanas (hasta 7 días), pero la aplicación no está pensada para planificar comidas.
 - Sin conexión no hay registro (spec 001, Principio VI): los borradores se conservan y nada se muestra como guardado.
-- La eliminación de una cuenta borra sus ítems y sus fotos (como el resto de sus datos, spec 001).
+- Al eliminar una cuenta se borran sus ítems y también los archivos de sus fotos del almacenamiento. El flujo de eliminación de cuenta todavía no existe (Principio I lo exige antes de publicar con personas reales): cuando se construya debe incluir esa limpieza, porque el borrado en cascada de la base no alcanza a los archivos. Queda anotado como pendiente.
+- El rango de días admitidos se calcula con la zona horaria del perfil; si el perfil no tiene zona, se usa UTC con un día de tolerancia.
 - El catálogo, los alimentos propios y sus porciones son los de la spec 002; esta spec no cambia cómo se crean ni se editan.
 - Los totales del día no comparan con un objetivo (spec 004) ni sugieren nada (Principio IV).
 - La spec 009 agregará ítems "estimados" por IA que la persona confirma; el modelo de esta spec deja ese estado previsto para no cambiarlo después.
