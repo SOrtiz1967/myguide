@@ -297,6 +297,7 @@ export const es = {
     add: {
       title: (meal: string) => `Agregar a ${meal}`,
       destination: (label: string) => `Se registrará en el ${label}`,
+      switchDay: (label: string) => `Registrar en el ${label}`,
       meal: 'Comida',
       recents: 'Recientes',
       recentsEmpty: 'Todavía no registraste nada. Busca un alimento o escribe lo que comiste.',

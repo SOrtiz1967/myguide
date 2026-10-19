@@ -12,6 +12,7 @@ import { FoodChooser } from './FoodChooser'
 import { formatDay, isMeal, MEALS, mealLabel, parseDate, suggestMeal, type Meal } from './meals'
 import { ManualEntryForm } from './ManualEntryForm'
 import { SelectedFoodForm } from './SelectedFoodForm'
+import { useDayStatus } from './useDayStatus'
 import { manualDraftSchema, type ManualFormInput, type QuantityFormInput } from './schema'
 
 /** Forma del borrador: lo elegido y la cantidad, solo texto (puede estar a medio escribir). */
@@ -75,6 +76,15 @@ function AddEntryForm({ date }: { date: string }) {
   const userId = session?.user.id ?? ''
   const navigate = useNavigate()
   const [params, setParams] = useSearchParams()
+  const status = useDayStatus().data
+
+  // Mientras el día anterior se cierra, se puede elegir en cuál de los dos registrar antes de guardar.
+  const otherDay =
+    status?.closing && (date === status.today || date === status.proposed_date)
+      ? date === status.today
+        ? status.proposed_date
+        : status.today
+      : null
 
   const mealParam = params.get('comida')
   const meal: Meal = isMeal(mealParam) ? mealParam : suggestMeal()
@@ -141,6 +151,17 @@ function AddEntryForm({ date }: { date: string }) {
           {es.meals.add.title(mealLabel(meal))}
         </h1>
         <p className="text-muted">{es.meals.add.destination(formatDay(date))}</p>
+        {otherDay ? (
+          <p>
+            <Link
+              to={`/comidas/${otherDay}/agregar?comida=${meal}`}
+              replace
+              className="inline-flex min-h-11 items-center underline"
+            >
+              {es.meals.add.switchDay(formatDay(otherDay))}
+            </Link>
+          </p>
+        ) : null}
       </header>
 
       <fieldset className="flex flex-col gap-2">

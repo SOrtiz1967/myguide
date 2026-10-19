@@ -5,8 +5,10 @@ import { SuccessMessage } from '../../components/SuccessMessage'
 import { es } from '../../copy/es'
 import { isNetworkError } from '../../lib/errors'
 import { addDays, formatDay, formatDayShort, isDateInRange, MEALS, parseDate } from './meals'
+import { ClosingDayNotice } from './ClosingDayNotice'
 import { MealSection, TotalsList } from './MealSection'
 import { useDay } from './useDay'
+import { useDayStatus } from './useDayStatus'
 import { useToday } from './useToday'
 
 const linkClass = 'inline-flex min-h-11 items-center underline'
@@ -36,6 +38,8 @@ function Day({ date, today }: { date: string; today: string }) {
   const navigate = useNavigate()
   const added = (useLocation().state as { added?: string } | null)?.added
   const { query, entries, grouped, dayTotal, subtotal } = useDay(date)
+  const status = useDayStatus().data
+  const closing = status?.closing && status.proposed_date === date ? status : null
 
   const previous = addDays(date, -1)
   const next = addDays(date, 1)
@@ -88,6 +92,7 @@ function Day({ date, today }: { date: string; today: string }) {
       </header>
 
       {added ? <SuccessMessage>{added}</SuccessMessage> : null}
+      {closing ? <ClosingDayNotice status={closing} /> : null}
 
       {query.isPending ? <LoadingState label={es.meals.day.loading} /> : null}
       {query.isError ? (

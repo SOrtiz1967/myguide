@@ -255,7 +255,7 @@ description: "Lista de tareas de la spec 003: registro de comidas"
 
 ### Tests for User Story 5 ⚠️
 
-- [ ] T046 [P] [US5] Prueba pgTAP en `supabase/tests/log_day_status.test.sql`, que ejercita `private.log_day_status_at(ahora, zona)` con una hora simulada (la función pública solo la llama con `now()`). Debe cubrir:
+- [X] T046 [P] [US5] Prueba pgTAP en `supabase/tests/log_day_status.test.sql`, que ejercita `private.log_day_status_at(ahora, zona)` con una hora simulada (la función pública solo la llama con `now()`). Debe cubrir:
   - "Hoy" usa la zona horaria del perfil; sin zona en el perfil, la del cliente.
   - A las 01:00, con ítems ayer, sin ítems hoy y sin marca → `proposed_date = ayer` y `closing = true`.
   - Con un ítem hoy, con la marca de hoy o sin ítems ayer → `proposed_date = hoy`.
@@ -263,16 +263,16 @@ description: "Lista de tareas de la spec 003: registro de comidas"
   - `start_log_day` es idempotente y solo admite el "hoy" del perfil.
   - El cambio de horario de verano no altera el resultado.
   - Cambiar la zona horaria del perfil no mueve ítems ya guardados (FR-024 a FR-027).
-- [ ] T047 [P] [US5] Pruebas de componentes en `app/tests/component/DayRule.test.tsx`:
+- [X] T047 [P] [US5] Pruebas de componentes en `app/tests/component/DayRule.test.tsx`:
   - con `closing = true`, la vista muestra "Registrando en el lunes 18" en una región visible y el botón "Empezar el día de hoy";
   - el formulario de agregar muestra la fecha de destino y permite elegir el día nuevo antes de guardar;
   - `/comidas` lleva al día propuesto.
-- [ ] T048 [P] [US5] Prueba de extremo a extremo `app/tests/e2e/meals-day-rule.spec.ts` con el reloj simulado de Playwright (`page.clock`): escenarios 17, 18 y 19
+- [X] T048 [P] [US5] Prueba de extremo a extremo `app/tests/e2e/meals-day-rule.spec.ts` en una zona horaria cuya hora local ahora es 01:xx (el servidor usa su propio reloj, así que no se simula el tiempo): escenarios 17, 18 y 19
 
 ### Implementation for User Story 5
 
-- [ ] T049 [US5] Migración `supabase/migrations/20261019000700_log_day.sql`: `private.log_day_status_at(ahora, zona)` (sin permiso para el cliente), `public.log_day_status(client_timezone)` (que la llama con `now()`) y `public.start_log_day(day)`. No hay ningún parámetro de hora en la función pública
-- [ ] T050 [US5] Aviso del día que se cierra en `DayPage.tsx`, selector de la fecha de destino en `AddEntryPage.tsx`, `startLogDay` y `fetchDayStatus` en `api.ts`, y redirección de `/comidas` al día propuesto
+- [X] T049 [US5] Migración `supabase/migrations/20261019000700_log_day.sql`: `private.log_day_status_at(ahora, zona)` (sin permiso para el cliente), `public.log_day_status(client_timezone)` (que la llama con `now()`) y `public.start_log_day(day)`. No hay ningún parámetro de hora en la función pública
+- [X] T050 [US5] Aviso del día que se cierra en `DayPage.tsx`, selector de la fecha de destino en `AddEntryPage.tsx`, `startLogDay` y `fetchDayStatus` en `api.ts`, y redirección de `/comidas` al día propuesto
 
 **Checkpoint**: la regla del día de la Constitution funciona.
 

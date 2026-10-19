@@ -5,11 +5,15 @@ import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { es } from '../../src/copy/es'
-import { fetchDayEntries, type MealEntry } from '../../src/features/meals/api'
+import { fetchDayEntries, fetchDayStatus, type MealEntry } from '../../src/features/meals/api'
 import { DayPage } from '../../src/features/meals/DayPage'
 import { fetchProfile, type Profile } from '../../src/features/profile/api'
 
-vi.mock('../../src/features/meals/api', () => ({ fetchDayEntries: vi.fn() }))
+vi.mock('../../src/features/meals/api', () => ({
+  fetchDayEntries: vi.fn(),
+  fetchDayStatus: vi.fn(),
+  startLogDay: vi.fn(),
+}))
 vi.mock('../../src/features/foods/api', () => ({ createFood: vi.fn() }))
 vi.mock('../../src/features/profile/api', () => ({ fetchProfile: vi.fn(), updateProfile: vi.fn() }))
 
@@ -90,6 +94,9 @@ beforeEach(() => {
   // Solo se simula la fecha: "hoy" es el 19/10/2026 en Buenos Aires.
   vi.useFakeTimers({ toFake: ['Date'], now: new Date('2026-10-19T15:00:00Z') })
   mockedDay.mockReset().mockResolvedValue([])
+  vi.mocked(fetchDayStatus)
+    .mockReset()
+    .mockResolvedValue({ today: '2026-10-19', proposed_date: '2026-10-19', closing: false })
   vi.mocked(fetchProfile).mockReset().mockResolvedValue(profile)
 })
 

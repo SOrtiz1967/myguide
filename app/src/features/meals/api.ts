@@ -1,4 +1,5 @@
 import { supabase } from '../../lib/supabase'
+import { detectDeviceTimezone } from '../../lib/timezone'
 import type { Food } from '../foods/api'
 import type { ReferenceBasis } from '../foods/nutrition'
 import type { Meal } from './meals'
@@ -179,4 +180,30 @@ export async function deleteEntry(id: string): Promise<void> {
   const { data, error } = await supabase.from('meal_entries').delete().eq('id', id).select('id')
   if (error) throw error
   if (!data || data.length === 0) throw new Error('not_found')
+}
+
+/** Qué día se propone al registrar y si el día anterior todavía se está cerrando (FR-024, FR-025). */
+export interface DayStatus {
+  today: string
+  proposed_date: string
+  closing: boolean
+}
+
+export async function fetchDayStatus(): Promise<DayStatus> {
+  const { data, error } = await supabase.rpc('log_day_status', {
+    client_timezone: detectDeviceTimezone(),
+  })
+  if (error) throw error
+  const row = (data as DayStatus[] | null)?.[0]
+  if (!row) throw new Error('log_day_status sin resultado')
+  return row
+}
+
+/** "Empezar el día de hoy": deja de proponer el día que se cierra. Es idempotente. */
+export async function startLogDay(day: string): Promise<void> {
+  const { error } = await supabase.rpc('start_log_day', {
+    day,
+    client_timezone: detectDeviceTimezone(),
+  })
+  if (error) throw error
 }

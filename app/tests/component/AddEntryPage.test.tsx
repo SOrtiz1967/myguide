@@ -13,11 +13,20 @@ import {
   type Food,
   type FoodSummary,
 } from '../../src/features/foods/api'
-import { addEntry, fetchRecents, type RecentItem } from '../../src/features/meals/api'
+import {
+  addEntry,
+  fetchDayStatus,
+  fetchRecents,
+  type RecentItem,
+} from '../../src/features/meals/api'
 import { AddEntryPage } from '../../src/features/meals/AddEntryPage'
 import { draftKey } from '../../src/lib/drafts'
 
-vi.mock('../../src/features/meals/api', () => ({ addEntry: vi.fn(), fetchRecents: vi.fn() }))
+vi.mock('../../src/features/meals/api', () => ({
+  addEntry: vi.fn(),
+  fetchRecents: vi.fn(),
+  fetchDayStatus: vi.fn(),
+}))
 vi.mock('../../src/features/foods/api', () => ({
   searchFoods: vi.fn(),
   catalogHasFoods: vi.fn(),
@@ -136,6 +145,9 @@ const confirm = () => screen.getByRole('button', { name: es.meals.add.confirm })
 
 beforeEach(() => {
   mockedAdd.mockReset().mockResolvedValue('entry-1')
+  vi.mocked(fetchDayStatus)
+    .mockReset()
+    .mockResolvedValue({ today: '2026-10-19', proposed_date: '2026-10-19', closing: false })
   mockedRecents.mockReset().mockResolvedValue([recent()])
   mockedSearch.mockReset().mockResolvedValue([])
   vi.mocked(catalogHasFoods).mockReset().mockResolvedValue(true)
