@@ -22,6 +22,7 @@ vi.mock('../../src/features/meals/api', () => ({
   fetchDayEntries: vi.fn(),
   fetchDayStatus: vi.fn(),
   fetchRecents: vi.fn(),
+  fetchPhotos: vi.fn().mockResolvedValue([]),
   startLogDay: vi.fn(),
   addEntry: vi.fn(),
 }))

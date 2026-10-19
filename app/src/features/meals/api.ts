@@ -3,6 +3,7 @@ import { detectDeviceTimezone } from '../../lib/timezone'
 import type { Food } from '../foods/api'
 import type { ReferenceBasis } from '../foods/nutrition'
 import type { Meal } from './meals'
+import { PHOTO_URL_SECONDS, PhotoRequestError } from './photo'
 import type { QuantityInput } from './schema'
 
 export type EntryOrigin = 'catalog' | 'own' | 'manual' | 'estimated'
@@ -252,4 +253,67 @@ export async function repeatMeal(input: RepeatInput, requestId: string): Promise
   const row = (data as RepeatResult[] | null)?.[0]
   if (!row) throw new Error('repeat_meal sin resultado')
   return row
+}
+
+/** La foto de una comida (FR-030). La ruta no se muestra: se pide una URL firmada y vence a los 10 minutos. */
+export interface MealPhotoRow {
+  id: string
+  log_date: string
+  meal: Meal
+  storage_path: string
+  width: number
+  height: number
+  bytes: number
+}
+
+export async function fetchPhotos(date: string): Promise<MealPhotoRow[]> {
+  const { data, error } = await supabase
+    .from('meal_photos')
+    .select('id, log_date, meal, storage_path, width, height, bytes')
+    .eq('log_date', date)
+  if (error) throw error
+  return (data ?? []) as MealPhotoRow[]
+}
+
+export async function photoUrl(path: string): Promise<string> {
+  const { data, error } = await supabase.storage
+    .from('meal-photos')
+    .createSignedUrl(path, PHOTO_URL_SECONDS)
+  if (error || !data) throw error ?? new Error('sin URL firmada')
+  return data.signedUrl
+}
+
+async function photoFailure(error: unknown): Promise<Error> {
+  const name = (error as { name?: string } | null)?.name
+  // La petición no llegó al servidor: se trata como falta de conexión.
+  if (name === 'FunctionsFetchError') return new TypeError('Failed to fetch')
+  const context = (error as { context?: unknown } | null)?.context
+  if (context instanceof Response) {
+    try {
+      const body = (await context.json()) as { code?: string }
+      return new PhotoRequestError(body.code ?? `http_${context.status}`)
+    } catch {
+      return new PhotoRequestError(`http_${context.status}`)
+    }
+  }
+  return new PhotoRequestError('unknown')
+}
+
+/** Sube (o reemplaza) la foto de una comida. El servidor le quita los metadatos y la guarda en privado. */
+export async function uploadPhoto(date: string, meal: Meal, photo: Blob): Promise<void> {
+  const body = new FormData()
+  body.append('log_date', date)
+  body.append('meal', meal)
+  body.append('photo', photo, 'foto.jpg')
+  const { error } = await supabase.functions.invoke('meal-photo', { method: 'POST', body })
+  if (error) throw await photoFailure(error)
+}
+
+/** Elimina la foto de una comida. Es idempotente: si no hay foto responde igual. */
+export async function deletePhoto(date: string, meal: Meal): Promise<void> {
+  const { error } = await supabase.functions.invoke(
+    `meal-photo?log_date=${encodeURIComponent(date)}&meal=${encodeURIComponent(meal)}`,
+    { method: 'DELETE' },
+  )
+  if (error) throw await photoFailure(error)
 }

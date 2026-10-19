@@ -4,11 +4,13 @@ import { LoadingState } from '../../components/LoadingState'
 import { SuccessMessage } from '../../components/SuccessMessage'
 import { es } from '../../copy/es'
 import { isNetworkError } from '../../lib/errors'
+import { MealPhoto } from './MealPhoto'
 import { addDays, formatDay, formatDayShort, isDateInRange, MEALS, parseDate } from './meals'
 import { ClosingDayNotice } from './ClosingDayNotice'
 import { MealSection, TotalsList } from './MealSection'
 import { useDay } from './useDay'
 import { useDayStatus } from './useDayStatus'
+import { usePhotos } from './usePhotos'
 import { useToday } from './useToday'
 
 const linkClass = 'inline-flex min-h-11 items-center underline'
@@ -40,7 +42,7 @@ function Day({ date, today }: { date: string; today: string }) {
   const { query, entries, grouped, dayTotal, subtotal } = useDay(date)
   const status = useDayStatus().data
   const closing = status?.closing && status.proposed_date === date ? status : null
-
+  const photos = usePhotos(date).data
   const previous = addDays(date, -1)
   const next = addDays(date, 1)
   const canGoNext = isDateInRange(next, today)
@@ -125,6 +127,9 @@ function Day({ date, today }: { date: string; today: string }) {
               date={date}
               entries={grouped[meal]}
               subtotal={subtotal(meal)}
+              extra={
+                <MealPhoto date={date} meal={meal} photo={photos?.find((p) => p.meal === meal)} />
+              }
             />
           ))}
         </>

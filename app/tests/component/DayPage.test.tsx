@@ -12,6 +12,7 @@ import { fetchProfile, type Profile } from '../../src/features/profile/api'
 vi.mock('../../src/features/meals/api', () => ({
   fetchDayEntries: vi.fn(),
   fetchDayStatus: vi.fn(),
+  fetchPhotos: vi.fn().mockResolvedValue([]),
   startLogDay: vi.fn(),
 }))
 vi.mock('../../src/features/foods/api', () => ({ createFood: vi.fn() }))

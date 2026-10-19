@@ -31,11 +31,11 @@ description: "Lista de tareas de la spec 003: registro de comidas"
 
 **Purpose**: prototipos de riesgo y configuración del almacenamiento de fotos
 
-- [ ] T001 Prototipo P1 (research, Decisión 7): en `supabase/functions/meal-photo/jpeg.ts` (borrador), recorrer los segmentos de un JPEG de teléfono real con GPS en su EXIF (fixture en `supabase/functions/meal-photo/fixtures/con-gps.jpg`) y quitar todos los APPn salvo APP0 y todos los COM; comprobar que no queda EXIF (inspeccionar los bytes), que la imagen sigue abriendo y que tarda menos de 1 s. Registrar en `specs/003-registro-de-comidas/research.md`, sección "Resultados de prototipos"
-- [ ] T002 [P] Prototipo P2: con Playwright (Chromium de escritorio y emulación de Pixel 7), comprobar qué formatos decodifica `createImageBitmap` (JPEG, PNG, WebP, HEIC) y el tamaño resultante de reducir una foto de 12 MP a 1600 px y codificarla como JPEG de calidad 0,8 (objetivo: menos de 500 KB). Registrar en `research.md` y el comportamiento acordado para HEIC
-- [ ] T003 [P] Prototipo P3: en Supabase local, crear el bucket privado `meal-photos` y una política de lectura por carpeta del dueño; comprobar que la persona dueña obtiene una URL firmada, que otra cuenta y una petición anónima no pueden leer ni listar, y que una URL firmada vencida falla. Registrar en `research.md`
-- [ ] T004 [P] Configurar el bucket en `supabase/config.toml` (`[storage.buckets.meal-photos]`: `public = false`, `file_size_limit = "3MiB"`, `allowed_mime_types = ["image/jpeg"]`) y la entrada `[functions.meal-photo]` (con `verify_jwt` coherente con las otras funciones). Ampliar `supabase/tests/config.test.ts` (escribir primero, debe fallar) para que exija bucket privado, límite de 3 MiB, solo JPEG y la función configurada. El bucket local sale de `config.toml`; el de producción, de la migración T064
-- [ ] T005 [P] Fixtures de fotos en `supabase/functions/meal-photo/fixtures/` y `app/tests/fixtures/`: un JPEG con EXIF y GPS, uno con XMP e IPTC, un PNG, un archivo que no es imagen y un JPEG truncado (generados con un script documentado, sin datos personales)
+- [X] T001 Prototipo P1 (research, Decisión 7): en `supabase/functions/meal-photo/jpeg.ts` (borrador), recorrer los segmentos de un JPEG de teléfono real con GPS en su EXIF (fixture en `supabase/functions/meal-photo/fixtures/con-gps.jpg`) y quitar todos los APPn salvo APP0 y todos los COM; comprobar que no queda EXIF (inspeccionar los bytes), que la imagen sigue abriendo y que tarda menos de 1 s. Registrar en `specs/003-registro-de-comidas/research.md`, sección "Resultados de prototipos"
+- [X] T002 [P] Prototipo P2: con Playwright (Chromium de escritorio y emulación de Pixel 7), comprobar qué formatos decodifica `createImageBitmap` (JPEG, PNG, WebP, HEIC) y el tamaño resultante de reducir una foto de 12 MP a 1600 px y codificarla como JPEG de calidad 0,8 (objetivo: menos de 500 KB). Registrar en `research.md` y el comportamiento acordado para HEIC
+- [X] T003 [P] Prototipo P3: en Supabase local, crear el bucket privado `meal-photos` y una política de lectura por carpeta del dueño; comprobar que la persona dueña obtiene una URL firmada, que otra cuenta y una petición anónima no pueden leer ni listar, y que una URL firmada vencida falla. Registrar en `research.md`
+- [X] T004 [P] Configurar el bucket en `supabase/config.toml` (`[storage.buckets.meal-photos]`: `public = false`, `file_size_limit = "3MiB"`, `allowed_mime_types = ["image/jpeg"]`) y la entrada `[functions.meal-photo]` (con `verify_jwt` coherente con las otras funciones). Ampliar `supabase/tests/config.test.ts` (escribir primero, debe fallar) para que exija bucket privado, límite de 3 MiB, solo JPEG y la función configurada. El bucket local sale de `config.toml`; el de producción, de la migración T064
+- [X] T005 [P] Fixtures de fotos en `supabase/functions/meal-photo/fixtures/` y `app/tests/fixtures/`: un JPEG con EXIF y GPS, uno con XMP e IPTC, un PNG, un archivo que no es imagen y un JPEG truncado (generados con un script documentado, sin datos personales)
 
 ---
 
@@ -318,43 +318,43 @@ description: "Lista de tareas de la spec 003: registro de comidas"
 
 ### Tests for User Story 7 ⚠️
 
-- [ ] T056 [P] [US7] Pruebas Deno en `supabase/functions/meal-photo/jpeg.test.ts`:
+- [X] T056 [P] [US7] Pruebas Deno en `supabase/functions/meal-photo/jpeg.test.ts`:
   - quita APP1 (EXIF y XMP), APP13 (IPTC), otros APPn y COM, y conserva APP0 y los datos de la imagen;
   - la salida empieza en `FF D8` y termina en `FF D9`;
   - un archivo truncado, sin firma JPEG o con un largo de segmento inválido da `invalid_image`;
   - una entrada enorme no se recorre más allá de su tamaño;
   - el fixture con GPS no conserva la cadena `Exif` ni las etiquetas GPS.
-- [ ] T057 [P] [US7] Pruebas Deno en `supabase/functions/meal-photo/index.test.ts`, con Storage y la base simulados:
+- [X] T057 [P] [US7] Pruebas Deno en `supabase/functions/meal-photo/index.test.ts`, con Storage y la base simulados:
   - sin sesión o con la sesión vencida → `401`; origen no permitido → rechazo;
   - errores de validación: `log_date` o `meal` inválidos → `400`; más de 3 MB → `413`; no JPEG → `415`; JPEG corrupto → `422`; más de 30 fotos por hora por cuenta → `429`;
   - guarda en `<user_id>/<uuid>.jpg` el archivo **limpio**;
   - reemplazar borra la foto anterior; si falla la fila, borra el objeto huérfano;
   - `DELETE` es idempotente;
   - el registro no contiene `user_id`, ruta, fecha ni comida.
-- [ ] T058 [P] [US7] Prueba pgTAP en `supabase/tests/meal_photos_storage.test.sql`:
+- [X] T058 [P] [US7] Prueba pgTAP en `supabase/tests/meal_photos_storage.test.sql`:
   - políticas de `storage.objects` para el bucket `meal-photos`: la persona dueña puede leer lo de su carpeta con sesión vigente;
   - otra cuenta, `anon` y una sesión vencida no pueden;
   - ningún rol del cliente puede insertar, actualizar, borrar ni listar objetos;
   - el bucket no es público (FR-032).
-- [ ] T059 [P] [US7] Pruebas unitarias en `app/tests/unit/photo.test.ts`, con `createImageBitmap` y `canvas` simulados:
+- [X] T059 [P] [US7] Pruebas unitarias en `app/tests/unit/photo.test.ts`, con `createImageBitmap` y `canvas` simulados:
   - calcula las dimensiones para que el lado mayor no pase de 1600 px sin agrandar;
   - rechaza lo que no es imagen y lo que pesa más de 15 MB;
   - un HEIC que no se puede decodificar da el mensaje acordado en T002;
   - la salida es JPEG.
-- [ ] T060 [P] [US7] Pruebas de componentes en `app/tests/component/MealPhoto.test.tsx`:
+- [X] T060 [P] [US7] Pruebas de componentes en `app/tests/component/MealPhoto.test.tsx`:
   - "Agregar foto"; progreso de subida; miniatura; abrir en grande con texto alternativo;
   - reemplazar y eliminar (con confirmación);
   - errores claros, sin afectar los ítems;
   - sin conexión no se sube nada ni se da por hecho;
   - la URL firmada se renueva al vencer.
-- [ ] T061 [P] [US7] Prueba de extremo a extremo `app/tests/e2e/meals-photo.spec.ts`: escenarios 22 a 25. Debe incluir descargar la foto guardada y comprobar que no tiene EXIF ni GPS y que pesa menos que la original, y que otra cuenta y una petición anónima reciben acceso denegado. Además: tras reemplazar o eliminar, la URL firmada de la foto anterior ya no sirve (FR-034), y durante todo el flujo se bloquea cualquier petición que no sea al servidor local sin que nada se intente (FR-035, como el escenario 26 de la spec 002)
+- [X] T061 [P] [US7] Prueba de extremo a extremo `app/tests/e2e/meals-photo.spec.ts`: escenarios 22 a 25. Debe incluir descargar la foto guardada y comprobar que no tiene EXIF ni GPS y que pesa menos que la original, y que otra cuenta y una petición anónima reciben acceso denegado. Además: tras reemplazar o eliminar, la URL firmada de la foto anterior ya no sirve (FR-034), y durante todo el flujo se bloquea cualquier petición que no sea al servidor local sin que nada se intente (FR-035, como el escenario 26 de la spec 002)
 
 ### Implementation for User Story 7
 
-- [ ] T062 [US7] `supabase/functions/meal-photo/jpeg.ts` (limpieza de segmentos, pura) a partir del prototipo T001
-- [ ] T063 [US7] `supabase/functions/meal-photo/index.ts` según `contracts/meal-photo.md`, reutilizando `_shared` (CORS, sesión, límite de solicitudes con `check_rate_limit` por cuenta y registro técnico sin datos personales)
-- [ ] T064 [US7] Migración `supabase/migrations/20261019000900_meal_photos_storage.sql`: bucket `meal-photos` privado (si no existe) y la política de lectura de `storage.objects` por carpeta del dueño con `(select private.is_session_fresh())`; sin políticas de escritura para el cliente
-- [ ] T065 [US7] `app/src/features/meals/photo.ts` (reducir y volver a codificar), `uploadPhoto`, `deletePhoto` y `photoUrl` (URL firmada de 10 minutos) en `api.ts`, y componente `app/src/features/meals/MealPhoto.tsx` en `MealSection.tsx`
+- [X] T062 [US7] `supabase/functions/meal-photo/jpeg.ts` (limpieza de segmentos, pura) a partir del prototipo T001
+- [X] T063 [US7] `supabase/functions/meal-photo/index.ts` según `contracts/meal-photo.md`, reutilizando `_shared` (CORS, sesión, límite de solicitudes con `check_rate_limit` por cuenta y registro técnico sin datos personales)
+- [X] T064 [US7] Migración `supabase/migrations/20261019000900_meal_photos_storage.sql`: bucket `meal-photos` privado (si no existe) y la política de lectura de `storage.objects` por carpeta del dueño con `(select private.is_session_fresh())`; sin políticas de escritura para el cliente
+- [X] T065 [US7] `app/src/features/meals/photo.ts` (reducir y volver a codificar), `uploadPhoto`, `deletePhoto` y `photoUrl` (URL firmada de 10 minutos) en `api.ts`, y componente `app/src/features/meals/MealPhoto.tsx` en `MealSection.tsx`
 
 **Checkpoint**: todas las historias funcionan.
 
