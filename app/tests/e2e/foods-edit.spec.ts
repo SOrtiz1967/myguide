@@ -31,6 +31,14 @@ test.afterAll(() => {
   clearSeededFoods()
 })
 
+// Los alimentos propios de corridas anteriores no deben contarse en esta (todos llevan "e2e" en el nombre).
+function cleanOwnFoods() {
+  dbQuery("delete from public.foods where origin = 'own' and name like '%e2e%'")
+}
+
+test.beforeAll(cleanOwnFoods)
+test.afterAll(cleanOwnFoods)
+
 test.beforeEach(async ({ page }) => {
   resetRateLimits()
   await stubTurnstile(page)
@@ -92,7 +100,7 @@ test('escenario 21: cortar la red al guardar avisa que no se guardó y conserva 
 
   await context.setOffline(true)
   await save(page).click()
-  await expect(page.getByRole('alert')).toContainText(es.errors.offline)
+  await expect(page.getByRole('alert').filter({ hasText: es.errors.offline })).toBeVisible()
   await expect(page.getByText(es.foods.form.saved)).toHaveCount(0)
   await expect(field(page, 'Nombre')).toHaveValue('Cambio sin guardar e2e21')
   expect(dbQuery("select count(*) from public.foods where name = 'Cambio sin guardar e2e21'")).toBe(

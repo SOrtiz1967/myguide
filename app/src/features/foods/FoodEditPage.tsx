@@ -23,7 +23,7 @@ export function FoodEditPage() {
 
   const initialValues = useMemo(() => (food ? foodToFormValues(food) : null), [food])
   const back = (
-    <Link to={`/alimentos/${id}`} className="underline">
+    <Link to={`/alimentos/${id}`} className="inline-flex min-h-11 items-center underline">
       {es.foods.actions.cancel}
     </Link>
   )
@@ -41,7 +41,7 @@ export function FoodEditPage() {
     return (
       <div className="flex flex-col gap-4">
         <EmptyState title={es.foods.notFound} />
-        <Link to="/alimentos" className="underline">
+        <Link to="/alimentos" className="inline-flex min-h-11 items-center underline">
           {es.foods.backToSearch}
         </Link>
       </div>

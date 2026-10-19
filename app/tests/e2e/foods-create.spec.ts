@@ -6,6 +6,14 @@ import { dbQuery, register, resetRateLimits, stubTurnstile, uniqueEmail } from '
 const field = (page: Page, text: string) => page.getByLabel(text, { exact: false })
 const save = (page: Page) => page.getByRole('button', { name: es.foods.actions.save })
 
+// Los alimentos propios de corridas anteriores no deben contarse en esta (todos llevan "e2e" en el nombre).
+function cleanOwnFoods() {
+  dbQuery("delete from public.foods where origin = 'own' and name like '%e2e%'")
+}
+
+test.beforeAll(cleanOwnFoods)
+test.afterAll(cleanOwnFoods)
+
 test.beforeEach(async ({ page }) => {
   resetRateLimits()
   await stubTurnstile(page)

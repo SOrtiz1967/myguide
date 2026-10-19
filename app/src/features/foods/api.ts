@@ -101,8 +101,7 @@ const FOOD_COLUMNS = `
   reference_basis, energy_kcal, protein_g, carbs_g, sugars_g, fat_g, saturated_fat_g, fiber_g,
   sodium_mg,
   portions:food_portions(id, name, quantity, position),
-  source:food_sources(id, slug, name),
-  based_on:foods!based_on_food_id(id, name)
+  source:food_sources(id, slug, name)
 `
 
 // Un id con formato inválido (22P02) se comporta como un alimento inexistente.
@@ -120,8 +119,21 @@ export async function fetchFood(id: string): Promise<Food | null> {
     throw error
   }
   if (!data) return null
-  const food = data as unknown as Food
-  return { ...food, portions: [...(food.portions ?? [])].sort((a, b) => a.position - b.position) }
+  const food = data as unknown as Omit<Food, 'based_on'>
+  return {
+    ...food,
+    portions: [...(food.portions ?? [])].sort((a, b) => a.position - b.position),
+    based_on: await fetchOriginal(food.based_on_food_id),
+  }
+}
+
+// Se pide aparte y no con un embed: en una relación de la tabla consigo misma PostgREST no distingue
+// si se pide el original o las copias, y devolvería lo equivocado.
+async function fetchOriginal(id: string | null): Promise<Food['based_on']> {
+  if (!id) return null
+  const { data, error } = await supabase.from('foods').select('id, name').eq('id', id).maybeSingle()
+  if (error) throw error
+  return data ? { id: data.id as string, name: data.name as string } : null
 }
 
 /** Crea un alimento propio con sus porciones, de forma atómica e idempotente por `requestId`. */

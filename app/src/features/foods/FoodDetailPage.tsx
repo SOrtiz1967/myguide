@@ -139,7 +139,7 @@ export function FoodDetailPage() {
   const from = state?.from ?? ''
   const { data: food, isPending, isError, refetch } = useFood(id)
   const back = (
-    <Link to={`/alimentos${from}`} className="underline">
+    <Link to={`/alimentos${from}`} className="inline-flex min-h-11 items-center underline">
       {es.foods.backToSearch}
     </Link>
   )

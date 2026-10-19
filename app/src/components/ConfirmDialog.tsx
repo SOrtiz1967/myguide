@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from 'react'
+import { createPortal } from 'react-dom'
 import { ErrorState } from './ErrorState'
 
 interface ConfirmDialogProps {
@@ -33,6 +34,7 @@ export function ConfirmDialog({
 }: ConfirmDialogProps) {
   const titleId = useId()
   const descriptionId = useId()
+  const overlay = useRef<HTMLDivElement>(null)
   const dialog = useRef<HTMLDivElement>(null)
   const cancel = useRef<HTMLButtonElement>(null)
   // Quien tenía el foco al abrirse: se lee una sola vez, en el primer render.
@@ -40,7 +42,16 @@ export function ConfirmDialog({
 
   useEffect(() => {
     cancel.current?.focus()
-    return () => opener?.focus?.()
+    // El resto de la página queda inerte mientras el diálogo está abierto: no se puede tabular,
+    // leer con el lector de pantalla ni hacer clic fuera de él.
+    const background = Array.from(document.body.children).filter(
+      (element) => element !== overlay.current && !element.hasAttribute('inert'),
+    )
+    background.forEach((element) => element.setAttribute('inert', ''))
+    return () => {
+      background.forEach((element) => element.removeAttribute('inert'))
+      opener?.focus?.()
+    }
   }, [opener])
 
   function onKeyDown(event: KeyboardEvent<HTMLDivElement>) {
@@ -64,8 +75,8 @@ export function ConfirmDialog({
     }
   }
 
-  return (
-    <div className="fixed inset-0 z-20 grid place-items-center bg-black/50 p-4">
+  return createPortal(
+    <div ref={overlay} className="fixed inset-0 z-20 grid place-items-center bg-black/50 p-4">
       <div
         ref={dialog}
         role="dialog"
@@ -97,6 +108,7 @@ export function ConfirmDialog({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }

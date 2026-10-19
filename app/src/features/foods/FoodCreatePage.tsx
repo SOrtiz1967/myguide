@@ -21,7 +21,7 @@ export function FoodCreatePage() {
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <Link to="/alimentos" className="underline">
+        <Link to="/alimentos" className="inline-flex min-h-11 items-center underline">
           {es.foods.backToSearch}
         </Link>
       </div>
