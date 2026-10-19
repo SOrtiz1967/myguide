@@ -47,7 +47,7 @@ description: "Lista de tareas de la spec 003: registro de comidas"
 
 ### Base de datos (skill `database-design`)
 
-- [ ] T006 Prueba pgTAP en `supabase/tests/meal_entries_schema.test.sql` (escribir primero, debe fallar). Debe cubrir:
+- [X] T006 Prueba pgTAP en `supabase/tests/meal_entries_schema.test.sql` (escribir primero, debe fallar). Debe cubrir:
   - `meal` solo `breakfast`, `lunch`, `snack`, `dinner` o `extra`; `origin` solo `catalog`, `own`, `manual` o `estimated`; `status` solo `confirmed` o `pending`, y `pending` solo si `origin = 'estimated'`.
   - `catalog` y `own` exigen `food_id` al crear, instantánea y `quantity` mayor que 0 y hasta 5000; `manual` exige `energy_kcal` y deja nulas `quantity` y la instantánea por 100.
   - `portion_count` mayor que 0 y hasta 50, con `quantity = portion_quantity × portion_count`.
@@ -55,34 +55,34 @@ description: "Lista de tareas de la spec 003: registro de comidas"
   - No se pueden cambiar `user_id`, `origin` ni la instantánea; `food_id` solo puede pasar a nulo.
   - `food_id` usa `on delete set null`: **eliminar el alimento deja el ítem intacto con `food_id` nulo** (la actualización de la clave foránea no debe chocar con el disparador), y la prueba guardiana de claves foráneas de la spec 002 sigue en verde.
   - Único `(user_id, client_request_id)`; `meal_photos` único `(user_id, log_date, meal)`; `log_day_starts` con PK `(user_id, log_date)`.
-- [ ] T007 Migración `supabase/migrations/20261019000100_meal_tables.sql`: `public.meal_entries`, `public.log_day_starts` y `public.meal_photos` con las columnas, restricciones, índices (`(user_id, log_date, meal)`, `(user_id, created_at desc)`, `(food_id)`) y el disparador `private.prepare_meal_entry` de `data-model.md`; **RLS activado sin políticas** y `revoke all` para `anon` y `authenticated`
-- [ ] T008 [P] Prueba pgTAP en `supabase/tests/meal_rls.test.sql` (escribir primero, debe fallar). Debe cubrir, en las tres tablas:
+- [X] T007 Migración `supabase/migrations/20261019000100_meal_tables.sql`: `public.meal_entries`, `public.log_day_starts` y `public.meal_photos` con las columnas, restricciones, índices (`(user_id, log_date, meal)`, `(user_id, created_at desc)`, `(food_id)`) y el disparador `private.prepare_meal_entry` de `data-model.md`; **RLS activado sin políticas** y `revoke all` para `anon` y `authenticated`
+- [X] T008 [P] Prueba pgTAP en `supabase/tests/meal_rls.test.sql` (escribir primero, debe fallar). Debe cubrir, en las tres tablas:
   - La cuenta B no ve, modifica ni borra lo de A.
   - Con la sesión vencida no se ve nada; `anon` no accede.
   - El cliente no puede insertar ni actualizar `meal_entries` directamente (solo por las funciones) y sí puede borrar lo propio.
   - `log_day_starts` solo admite `select` e `insert` propios.
   - `meal_photos` solo admite `select` y `delete` propios desde el cliente.
-- [ ] T009 Migración `supabase/migrations/20261019000200_meal_rls.sql`: permisos mínimos y políticas de las tres tablas, con `(select auth.uid())` y `(select private.is_session_fresh())`
-- [ ] T010 Endurecer el guardián (lección T071 de la spec 002). Primero ampliar `supabase/tests/rls_guardrail.test.sql` (debe fallar por las políticas de `profiles`) para que **ninguna** política de `public` llame a `private.is_session_fresh()` sin envolverla en `(select …)`. Después, la migración `supabase/migrations/20261019000300_profiles_rls_session_once.sql` reescribe las políticas de `profiles` con `(select private.is_session_fresh())`, sin cambiar su comportamiento. Las pruebas de la spec 001 siguen en verde
-- [ ] T011 [P] Ayudantes de prueba en `supabase/seed.sql`: `tests.create_meal_entry(user_id, log_date, meal, food_id, quantity)`, `tests.create_manual_entry(user_id, log_date, meal, description, energy)` y `tests.set_profile_timezone(user_id, timezone)` (solo local)
+- [X] T009 Migración `supabase/migrations/20261019000200_meal_rls.sql`: permisos mínimos y políticas de las tres tablas, con `(select auth.uid())` y `(select private.is_session_fresh())`
+- [X] T010 Endurecer el guardián (lección T071 de la spec 002). Primero ampliar `supabase/tests/rls_guardrail.test.sql` (debe fallar por las políticas de `profiles`) para que **ninguna** política de `public` llame a `private.is_session_fresh()` sin envolverla en `(select …)`. Después, la migración `supabase/migrations/20261019000300_profiles_rls_session_once.sql` reescribe las políticas de `profiles` con `(select private.is_session_fresh())`, sin cambiar su comportamiento. Las pruebas de la spec 001 siguen en verde
+- [X] T011 [P] Ayudantes de prueba en `supabase/seed.sql`: `tests.create_meal_entry(user_id, log_date, meal, food_id, quantity)`, `tests.create_manual_entry(user_id, log_date, meal, description, energy)` y `tests.set_profile_timezone(user_id, timezone)` (solo local)
 
 ### Utilidades del frontend (skill `nutrition-domain-rules`)
 
-- [ ] T012 [P] Pruebas unitarias en `app/tests/unit/mealTotals.test.ts` (escribir primero, deben fallar):
+- [X] T012 [P] Pruebas unitarias en `app/tests/unit/mealTotals.test.ts` (escribir primero, deben fallar):
   - suma por comida y del día de energía, proteínas, carbohidratos y grasas;
   - un nutriente faltante en algún ítem marca el total como incompleto y cuenta cuántos ítems faltan (FR-015);
   - un total sin ningún dato es "sin dato";
   - redondeo para mostrar: energía sin decimales y gramos con un decimal (FR-016), y la suma se hace antes de redondear (SC-006).
-- [ ] T013 Implementar `app/src/features/meals/mealTotals.ts` para que pasen las pruebas de T012
-- [ ] T014 [P] Pruebas unitarias en `app/tests/unit/meals.test.ts` (escribir primero, deben fallar):
+- [X] T013 Implementar `app/src/features/meals/mealTotals.ts` para que pasen las pruebas de T012
+- [X] T014 [P] Pruebas unitarias en `app/tests/unit/meals.test.ts` (escribir primero, deben fallar):
   - orden y etiquetas de las comidas (FR-008);
   - leer y validar `AAAA-MM-DD`; sumar y restar días sin errores por el horario de verano;
   - "hoy" en una zona horaria dada;
   - formato "lunes 18" y "domingo 17 de octubre";
   - rango de fechas admitido (desde el 1/1/2000 hasta hoy + 7 días).
-- [ ] T015 Implementar `app/src/features/meals/meals.ts` para que pasen las pruebas de T014
-- [ ] T016 [P] Ampliar `app/tests/component/session-ui.test.tsx` (escribir primero, debe fallar): con sesión, la cabecera muestra el enlace "Registro" hacia `/registro`, antes de "Alimentos"; sin sesión no
-- [ ] T017 Textos en español de la spec en `app/src/copy/es.ts` (sección `meals`), enlace "Registro" en `app/src/components/AppShell.tsx` y rutas provisionales de `contracts/ui-routes.md` en `app/src/routes/index.tsx` (bajo `RequireAuth`). Incluye los textos del estado "Estimado, sin confirmar" (FR-012)
+- [X] T015 Implementar `app/src/features/meals/meals.ts` para que pasen las pruebas de T014
+- [X] T016 [P] Ampliar `app/tests/component/session-ui.test.tsx` (escribir primero, debe fallar): con sesión, la cabecera muestra el enlace "Registro" hacia `/registro`, antes de "Alimentos"; sin sesión no
+- [X] T017 Textos en español de la spec en `app/src/copy/es.ts` (sección `meals`), enlace "Registro" en `app/src/components/AppShell.tsx` y rutas provisionales de `contracts/ui-routes.md` en `app/src/routes/index.tsx` (bajo `RequireAuth`). Incluye los textos del estado "Estimado, sin confirmar" (FR-012)
 
 **Checkpoint**: esquema, seguridad y utilidades listos.
 

@@ -63,6 +63,39 @@ describe('cabecera', () => {
     )
   })
 
+  it('spec 003: con sesión ofrece el enlace "Registro" hacia /registro, antes de "Alimentos"', () => {
+    render(
+      <AuthContext.Provider value={signedIn()}>
+        <MemoryRouter>
+          <AppShell>
+            <p>contenido</p>
+          </AppShell>
+        </MemoryRouter>
+      </AuthContext.Provider>,
+    )
+    const registro = screen.getByRole('link', { name: es.meals.navLink })
+    expect(registro).toHaveAttribute('href', '/registro')
+    const alimentos = screen.getByRole('link', { name: es.foods.navLink })
+    expect(
+      registro.compareDocumentPosition(alimentos) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy()
+  })
+
+  it('spec 003: sin sesión no muestra el enlace "Registro"', () => {
+    render(
+      <AuthContext.Provider
+        value={{ status: 'signedOut', session: null, expired: false, signOut: async () => {} }}
+      >
+        <MemoryRouter>
+          <AppShell>
+            <p>contenido</p>
+          </AppShell>
+        </MemoryRouter>
+      </AuthContext.Provider>,
+    )
+    expect(screen.queryByRole('link', { name: es.meals.navLink })).toBeNull()
+  })
+
   it('spec 002: sin sesión no muestra el enlace "Alimentos"', () => {
     render(
       <AuthContext.Provider

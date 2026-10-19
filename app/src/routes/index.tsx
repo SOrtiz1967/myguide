@@ -9,6 +9,7 @@ import { FoodDetailPage } from '../features/foods/FoodDetailPage'
 import { FoodEditPage } from '../features/foods/FoodEditPage'
 import { FoodSearchPage } from '../features/foods/FoodSearchPage'
 import { SourcesPage } from '../features/foods/SourcesPage'
+import { MealsPlaceholderPage } from '../features/meals/pages/MealsPlaceholderPage'
 import { ProfilePage } from '../features/profile/ProfilePage'
 import { AppLayout } from './AppLayout'
 import { HomePage } from './HomePage'
@@ -35,6 +36,10 @@ export const routes: RouteObject[] = [
         children: [
           { path: '/', element: <HomePage /> },
           { path: '/perfil', element: <ProfilePage /> },
+          { path: '/registro', element: <MealsPlaceholderPage /> },
+          { path: '/registro/:fecha', element: <MealsPlaceholderPage /> },
+          { path: '/registro/:fecha/agregar', element: <MealsPlaceholderPage /> },
+          { path: '/registro/item/:id', element: <MealsPlaceholderPage /> },
           { path: '/alimentos', element: <FoodSearchPage /> },
           { path: '/alimentos/nuevo', element: <FoodCreatePage /> },
           { path: '/alimentos/:id', element: <FoodDetailPage /> },

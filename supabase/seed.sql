@@ -132,3 +132,62 @@ values (
   'Datos de ejemplo para desarrollo y pruebas de MyGuide. No son datos reales.',
   'https://example.test/muestra'
 ) on conflict (slug) do nothing;
+
+-- Ayudantes de la spec 003 (registro de comidas). Se ejecutan como administrador de pruebas y escriben
+-- directamente, sin pasar por las funciones del cliente.
+
+-- Crea un ítem manual. Devuelve su id.
+create or replace function tests.create_manual_entry(
+  p_user_id uuid,
+  p_log_date date,
+  p_meal text,
+  p_description text,
+  p_energy numeric default 100
+) returns uuid
+language plpgsql
+as $$
+declare
+  v_id uuid := gen_random_uuid();
+begin
+  insert into public.meal_entries (id, user_id, log_date, meal, origin, food_name, energy_kcal)
+  values (v_id, p_user_id, p_log_date, p_meal, 'manual', p_description, p_energy);
+  return v_id;
+end;
+$$;
+
+-- Crea un ítem desde un alimento (toma su instantánea ahora). Devuelve su id.
+create or replace function tests.create_meal_entry(
+  p_user_id uuid,
+  p_log_date date,
+  p_meal text,
+  p_food_id uuid,
+  p_quantity numeric default 100
+) returns uuid
+language plpgsql
+as $$
+declare
+  v_id uuid := gen_random_uuid();
+begin
+  insert into public.meal_entries (
+    id, user_id, log_date, meal, origin, food_id, food_name, food_brand, reference_basis,
+    per100_energy_kcal, per100_protein_g, per100_carbs_g, per100_sugars_g, per100_fat_g,
+    per100_saturated_fat_g, per100_fiber_g, per100_sodium_mg, quantity
+  )
+  select v_id, p_user_id, p_log_date, p_meal,
+         case when f.user_id is null then 'catalog' else 'own' end, f.id, f.name, f.brand, f.reference_basis,
+         f.energy_kcal, f.protein_g, f.carbs_g, f.sugars_g, f.fat_g, f.saturated_fat_g, f.fiber_g, f.sodium_mg,
+         p_quantity
+  from public.foods f
+  where f.id = p_food_id;
+  return v_id;
+end;
+$$;
+
+-- Fija la zona horaria del perfil de una cuenta.
+create or replace function tests.set_profile_timezone(p_user_id uuid, p_timezone text) returns void
+language sql
+as $$
+  update public.profiles set timezone = p_timezone where user_id = p_user_id;
+$$;
+
+grant execute on all functions in schema tests to anon, authenticated;

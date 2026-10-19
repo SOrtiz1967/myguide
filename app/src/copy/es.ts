@@ -245,6 +245,21 @@ export const es = {
       neverImported: 'Todavía no se importó',
     },
   },
+  // Spec 003 (registro de comidas). Sin juicios sobre lo comido (Principio IV).
+  meals: {
+    navLink: 'Registro',
+    title: 'Registro de comidas',
+    names: {
+      breakfast: 'Desayuno',
+      lunch: 'Almuerzo',
+      snack: 'Merienda',
+      dinner: 'Cena',
+      extra: 'Colación',
+    },
+    origin: { catalog: 'Del catálogo', own: 'Propio', manual: 'Manual', estimated: 'Estimado' },
+    pending: 'Estimado, sin confirmar',
+    pendingNote: 'Los valores estimados pueden contener errores. Revísalos antes de confirmar.',
+  },
   offline: {
     banner:
       'Sin conexión. MyGuide necesita internet para guardar y mostrar tus datos: no se guardará nada hasta que vuelva la conexión.',

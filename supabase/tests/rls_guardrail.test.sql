@@ -5,7 +5,7 @@
 -- usuario) no tienen `user_id`, pero deben tener RLS, una única política `select` y ningún permiso
 -- de escritura para anon ni authenticated. Agregar una tabla a esta lista requiere justificarlo.
 begin;
-select plan(6);
+select plan(7);
 
 create temp table reference_tables (name text primary key) on commit drop;
 insert into reference_tables (name) values ('food_sources');
@@ -78,6 +78,20 @@ select is(
   ),
   0::bigint,
   'las tablas de referencia no admiten escritura desde el cliente'
+);
+
+-- Rendimiento (lección de la spec 002, T071): una llamada suelta a private.is_session_fresh() en una política
+-- se ejecuta por CADA fila; envuelta en (select ...) se evalúa una vez por consulta. Debe ser uniforme.
+select is(
+  (
+    select count(*)
+    from pg_policies p,
+         lateral (select coalesce(p.qual, '') || ' ' || coalesce(p.with_check, '') as expr) e
+    where p.schemaname = 'public'
+      and regexp_count(e.expr, 'private.is_session_fresh()') > regexp_count(e.expr, 'SELECT private.is_session_fresh()')
+  ),
+  0::bigint,
+  'rendimiento: ninguna política de public llama a is_session_fresh() fuera de un (select ...)'
 );
 
 select * from finish();

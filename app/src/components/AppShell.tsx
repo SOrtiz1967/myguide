@@ -16,12 +16,15 @@ export function AppShell({ children }: { children: ReactNode }) {
       </a>
       <OfflineNotice />
       <header className="border-b border-line bg-surface">
-        <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-3">
+        <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-x-3 px-4 py-2">
           <Link to="/" className="text-lg font-semibold tracking-tight">
             {es.appName}
           </Link>
           {auth?.status === 'signedIn' ? (
-            <nav aria-label="Cuenta" className="flex items-center gap-3">
+            <nav aria-label="Cuenta" className="flex flex-wrap items-center gap-x-3">
+              <Link to="/registro" className="inline-flex min-h-11 items-center underline">
+                {es.meals.navLink}
+              </Link>
               <Link to="/alimentos" className="inline-flex min-h-11 items-center underline">
                 {es.foods.navLink}
               </Link>
