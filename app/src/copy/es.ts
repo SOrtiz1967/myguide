@@ -364,6 +364,23 @@ export const es = {
         amount: 'Escribe cuánto pesa o mide: un número mayor que 0 y hasta 5.000.',
       },
     },
+    repeat: {
+      action: 'Repetir en…',
+      title: (meal: string) => `Repetir ${meal}`,
+      day: 'Día de destino',
+      meal: 'Comida de destino',
+      next: 'Continuar',
+      cancel: 'Cancelar',
+      loadingPreview: 'Calculando qué se repetiría…',
+      previewError: 'No pudimos preparar la repetición.',
+      confirmTitle: (items: string) => `¿Repetir ${items}?`,
+      confirmBody: (total: string, recalculated: number, copied: number, destination: string) =>
+        `Se crean ${total} en ${destination}. ${recalculated} se recalculan con los valores actuales del alimento y ${copied} se copian tal cual estaban. Lo que ya registraste no cambia.`,
+      confirm: 'Sí, repetir',
+      failed: 'No pudimos repetir la comida. No se guardó nada.',
+      done: (items: string) => `Se repitieron ${items}`,
+      items: (count: number) => (count === 1 ? '1 ítem' : `${count} ítems`),
+    },
     entry: {
       back: 'Volver al día',
       values: 'Valores registrados',

@@ -286,25 +286,25 @@ description: "Lista de tareas de la spec 003: registro de comidas"
 
 ### Tests for User Story 6 ⚠️
 
-- [ ] T051 [P] [US6] Prueba pgTAP en `supabase/tests/repeat_meal.test.sql`. Debe cubrir:
+- [X] T051 [P] [US6] Prueba pgTAP en `supabase/tests/repeat_meal.test.sql`. Debe cubrir:
   - Crea un ítem por cada ítem de origen, con la misma cantidad y porciones.
   - Recalcula con una instantánea nueva si el alimento existe y es visible; copia los manuales y los de alimentos que ya no existen.
   - `preview_repeat_meal` cuenta lo que se recalcula y lo que se copia.
   - Idempotente: repetir con el mismo `request_id` no duplica, ni siquiera tras un corte, gracias a la transacción.
   - Los ítems de origen no cambian y los nuevos son independientes.
   - Repetir una comida vacía crea 0 ítems; no se pueden repetir comidas ajenas; día o comida inválidos dan error (FR-028, FR-029).
-- [ ] T052 [P] [US6] Pruebas de componentes en `app/tests/component/RepeatMeal.test.tsx`:
+- [X] T052 [P] [US6] Pruebas de componentes en `app/tests/component/RepeatMeal.test.tsx`:
   - "Repetir en…" desde una comida con ítems;
   - elegir día y comida de destino;
   - la confirmación muestra cuántos ítems se recalculan y cuántos se copian;
   - el doble clic hace un solo envío;
   - éxito con aviso; un fallo de red no da nada por hecho.
-- [ ] T053 [P] [US6] Prueba de extremo a extremo `app/tests/e2e/meals-repeat.spec.ts`: escenarios 20 y 21
+- [X] T053 [P] [US6] Prueba de extremo a extremo `app/tests/e2e/meals-repeat.spec.ts`: escenarios 20 y 21
 
 ### Implementation for User Story 6
 
-- [ ] T054 [US6] Migración `supabase/migrations/20261019000800_repeat_meal.sql`: `public.preview_repeat_meal(...)` y `public.repeat_meal(...)` con `client_request_id` derivado de `(request_id, id de origen)`
-- [ ] T055 [US6] Flujo "Repetir en…" en `app/src/features/meals/RepeatMealDialog.tsx` (con `ConfirmDialog`), `repeatMeal` y `previewRepeat` en `api.ts`, y la acción en `MealSection.tsx`
+- [X] T054 [US6] Migración `supabase/migrations/20261019000800_repeat_meal.sql`: `public.preview_repeat_meal(...)` y `public.repeat_meal(...)` con `client_request_id` derivado de `(request_id, id de origen)`
+- [X] T055 [US6] Flujo "Repetir en…" en `app/src/features/meals/RepeatMealDialog.tsx` (con `ConfirmDialog`), `repeatMeal` y `previewRepeat` en `api.ts`, y la acción en `MealSection.tsx`
 
 **Checkpoint**: repetir comidas ahorra pasos.
 

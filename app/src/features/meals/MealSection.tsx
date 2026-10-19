@@ -5,6 +5,7 @@ import { formatValue, type Unit } from '../foods/nutrition'
 import type { MealEntry } from './api'
 import { entryQuantityText } from './entryText'
 import { mealLabel, type Meal } from './meals'
+import { RepeatMeal } from './RepeatMeal'
 import { SaveAsFoodPanel } from './SaveAsFoodPanel'
 import { formatTotal, TOTAL_KEYS, type Total, type TotalKey } from './mealTotals'
 
@@ -122,6 +123,7 @@ export function MealSection({ meal, date, entries, subtotal, extra }: MealSectio
           >
             <TotalsList totals={subtotal} />
           </div>
+          <RepeatMeal date={date} meal={meal} />
         </>
       )}
       {extra}

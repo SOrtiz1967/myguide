@@ -207,3 +207,49 @@ export async function startLogDay(day: string): Promise<void> {
   })
   if (error) throw error
 }
+
+/** Lo que haría repetir una comida: cuántos ítems se recalculan y cuántos se copian (FR-028). */
+export interface RepeatPreview {
+  total: number
+  recalculated: number
+  copied: number
+}
+
+export interface RepeatResult {
+  created: number
+  recalculated: number
+  copied: number
+}
+
+export interface RepeatInput {
+  fromDate: string
+  fromMeal: Meal
+  toDate: string
+  toMeal: Meal
+}
+
+export async function previewRepeat(fromDate: string, fromMeal: Meal): Promise<RepeatPreview> {
+  const { data, error } = await supabase.rpc('preview_repeat_meal', {
+    from_date: fromDate,
+    from_meal: fromMeal,
+  })
+  if (error) throw error
+  const row = (data as RepeatPreview[] | null)?.[0]
+  if (!row) throw new Error('preview_repeat_meal sin resultado')
+  return row
+}
+
+/** Repite una comida en otro día u otra comida. `requestId` hace seguros los reintentos. */
+export async function repeatMeal(input: RepeatInput, requestId: string): Promise<RepeatResult> {
+  const { data, error } = await supabase.rpc('repeat_meal', {
+    from_date: input.fromDate,
+    from_meal: input.fromMeal,
+    to_date: input.toDate,
+    to_meal: input.toMeal,
+    request_id: requestId,
+  })
+  if (error) throw error
+  const row = (data as RepeatResult[] | null)?.[0]
+  if (!row) throw new Error('repeat_meal sin resultado')
+  return row
+}
