@@ -27,7 +27,8 @@ select throws_ilike(
 select lives_ok($$ update storage.objects set name = 'x/otro.jpg' where bucket_id = 'meal-photos' $$, 'renombrar no falla pero no toca nada (sin política)');
 select throws_ilike($$ delete from storage.objects where bucket_id = 'meal-photos' $$, '%not allowed%', 'borrar directo tampoco se puede (solo por la API de Storage con la clave de servicio)');
 select tests.clear_authentication();
-select is((select count(*) from storage.objects where bucket_id = 'meal-photos'), 2::bigint, 'los objetos siguen ahí');
+-- La base local puede tener fotos de otras corridas (los archivos no se borran por SQL): se cuentan solo las de esta prueba.
+select is((select count(*) from storage.objects where bucket_id = 'meal-photos' and (name like :'uid_a' || '/%' or name like :'uid_b' || '/%')), 2::bigint, 'los objetos siguen ahí');
 
 -- otra cuenta y anónimo
 select tests.authenticate_as(:'uid_b');

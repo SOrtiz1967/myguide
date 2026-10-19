@@ -375,8 +375,8 @@ description: "Lista de tareas de la spec 003: registro de comidas"
   - `Documentacion/roadmap-specs.md`;
   - `Documentacion/despliegue.md`: crear el bucket y desplegar `meal-photo` en producción;
   - actualizar `Documentacion/issues-autor/04-despliegue.md`.
-- [ ] T071 Ejecutar los 27 escenarios del `quickstart.md` y registrar el resultado en `specs/003-registro-de-comidas/verification.md`
-- [ ] T072 Revisión de seguridad dirigida, registrada en `verification.md`:
+- [X] T071 Ejecutar los 27 escenarios del `quickstart.md` y registrar el resultado en `specs/003-registro-de-comidas/verification.md`
+- [X] T072 Revisión de seguridad dirigida, registrada en `verification.md`:
   - instantánea no manipulable desde el cliente;
   - funciones que no aceptan ítems ni alimentos ajenos;
   - fotos sin metadatos y sin acceso público ni listado;
@@ -387,7 +387,7 @@ description: "Lista de tareas de la spec 003: registro de comidas"
   - `check:secrets`.
   
   Corregir los hallazgos con TDD.
-- [ ] T073 Ejecutar `format:check`, `lint`, `typecheck`, `test`, `e2e` (por partes), `test:db`, `test:functions`, `test:import`, `test:config` y `check:secrets`; todo en verde antes de dar la spec por terminada
+- [X] T073 Ejecutar `format:check`, `lint`, `typecheck`, `test`, `e2e` (por partes), `test:db`, `test:functions`, `test:import`, `test:config` y `check:secrets`; todo en verde antes de dar la spec por terminada
 
 ---
 

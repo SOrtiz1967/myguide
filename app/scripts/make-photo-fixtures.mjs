@@ -166,4 +166,6 @@ for (const dir of targets) {
   mkdirSync(dir, { recursive: true })
   for (const [name, data] of Object.entries(files)) writeFileSync(join(dir, name), data)
 }
-console.log(`Fixtures escritos en ${targets.length} carpetas (${Object.keys(files).length} archivos).`)
+console.log(
+  `Fixtures escritos en ${targets.length} carpetas (${Object.keys(files).length} archivos).`,
+)
