@@ -201,6 +201,21 @@ describe('FoodDetailPage: estados y acciones', () => {
     expect(await screen.findByRole('heading', { name: long.trim() })).toBeVisible()
   })
 
+  it('tras guardar, confirma "Alimento guardado"', async () => {
+    mockedFetch.mockResolvedValue(ownFood())
+    const client = new QueryClient({ defaultOptions: { queries: { retry: false, gcTime: 0 } } })
+    render(
+      <QueryClientProvider client={client}>
+        <MemoryRouter initialEntries={[{ pathname: '/alimentos/o1', state: { saved: true } }]}>
+          <Routes>
+            <Route path="/alimentos/:id" element={<FoodDetailPage />} />
+          </Routes>
+        </MemoryRouter>
+      </QueryClientProvider>,
+    )
+    expect(await screen.findByText(es.foods.form.saved)).toBeVisible()
+  })
+
   it('un alimento inexistente o ajeno dice "No encontramos este alimento"', async () => {
     mockedFetch.mockResolvedValue(null)
     renderPage('otro')

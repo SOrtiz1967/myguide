@@ -107,19 +107,19 @@ description: "Lista de tareas de la spec 002: catálogo de alimentos"
 
 ### Tests for User Story 2 ⚠️ (escribir primero y verificar que FALLAN)
 
-- [ ] T030 [P] [US2] Prueba pgTAP en `supabase/tests/create_food.test.sql`: `create_food` inserta alimento y porciones en una sola transacción; con una porción inválida no queda nada insertado; idempotente por `request_id` (el segundo envío devuelve el mismo alimento); `energy_required`; errores `negative_value`, `out_of_range`, `macros_exceed_100`, `sugars_exceed_carbs`, `saturated_exceeds_fat`, `name_required`, `invalid_portion`, `too_many_portions`; otra cuenta no lo ve; no se puede crear con `origin = 'imported'`
-- [ ] T031 [P] [US2] Pruebas unitarias en `app/tests/unit/foodSchema.test.ts`: las mismas reglas que la base; decimales con coma y con punto; mensajes claros con el campo; la incoherencia energía/macros **no** bloquea; nombres con espacios en los extremos se recortan; hasta 20 porciones sin repetir nombre
-- [ ] T032 [P] [US2] Pruebas de componentes en `app/tests/component/FoodForm.test.tsx`: crea con solo nombre y energía; agrega y quita porciones; errores por campo con foco en el primero; aviso informativo de incoherencia; el botón se deshabilita al enviar (doble clic = un solo envío, mismo `request_id`); fallo de red conserva lo escrito y el borrador y no muestra "guardado"; éxito lleva al detalle; precarga el nombre desde `?nombre=`; todos los campos con etiqueta y unidad (FR-015 a FR-019, FR-023, FR-031)
+- [X] T030 [P] [US2] Prueba pgTAP en `supabase/tests/create_food.test.sql`: `create_food` inserta alimento y porciones en una sola transacción; con una porción inválida no queda nada insertado; idempotente por `request_id` (el segundo envío devuelve el mismo alimento); `energy_required`; errores `negative_value`, `out_of_range`, `macros_exceed_100`, `sugars_exceed_carbs`, `saturated_exceeds_fat`, `name_required`, `invalid_portion`, `too_many_portions`; otra cuenta no lo ve; no se puede crear con `origin = 'imported'`
+- [X] T031 [P] [US2] Pruebas unitarias en `app/tests/unit/foodSchema.test.ts`: las mismas reglas que la base; decimales con coma y con punto; mensajes claros con el campo; la incoherencia energía/macros **no** bloquea; nombres con espacios en los extremos se recortan; hasta 20 porciones sin repetir nombre
+- [X] T032 [P] [US2] Pruebas de componentes en `app/tests/component/FoodForm.test.tsx`: crea con solo nombre y energía; agrega y quita porciones; errores por campo con foco en el primero; aviso informativo de incoherencia; el botón se deshabilita al enviar (doble clic = un solo envío, mismo `request_id`); fallo de red conserva lo escrito y el borrador y no muestra "guardado"; éxito lleva al detalle; precarga el nombre desde `?nombre=`; todos los campos con etiqueta y unidad (FR-015 a FR-019, FR-023, FR-031)
 - [ ] T033 [P] [US2] Prueba de extremo a extremo `app/tests/e2e/foods-create.spec.ts`: escenarios 9 a 15 (alimento mínimo, con porciones, valores imposibles, incoherencia, coma decimal, privacidad entre cuentas, doble clic)
 - [ ] T034 [P] [US2] Prueba de extremo a extremo por la API real en `app/tests/e2e/foods-readonly.spec.ts`: con una sesión válida, los intentos de `insert`, `update` y `delete` sobre filas del catálogo son rechazados o no afectan nada, el catálogo sigue intacto, y la cuenta A no puede leer, modificar ni borrar los alimentos propios de B (SC-006, FR-016, FR-022)
 
 ### Implementation for User Story 2
 
-- [ ] T035 [US2] Migración `supabase/migrations/20261017000600_create_food.sql`: función `public.create_food(food, portions, request_id)` atómica e idempotente, con las validaciones y los códigos de error de `contracts/database-api.md`
-- [ ] T036 [P] [US2] Esquema Zod `app/src/features/foods/schema.ts` con las mismas reglas que la base, usando `parseDecimal` de `nutrition.ts`
-- [ ] T037 [P] [US2] Escritura en `app/src/features/foods/api.ts`: `createFood` con `request_id` generado por formulario y `saveRemotely` (guardado confirmado, spec 001)
-- [ ] T038 [US2] Formulario `app/src/features/foods/FoodForm.tsx` y página `app/src/features/foods/FoodCreatePage.tsx` con porciones, borrador local (`useDraft`, formulario `food-new`) y aviso de coherencia
-- [ ] T039 [US2] Conectar `/alimentos/nuevo` y el botón "Crear [lo buscado]" del estado vacío de la búsqueda (T027) en `app/src/routes/index.tsx`
+- [X] T035 [US2] Migración `supabase/migrations/20261017000600_create_food.sql`: función `public.create_food(food, portions, request_id)` atómica e idempotente, con las validaciones y los códigos de error de `contracts/database-api.md`
+- [X] T036 [P] [US2] Esquema Zod `app/src/features/foods/schema.ts` con las mismas reglas que la base, usando `parseDecimal` de `nutrition.ts`
+- [X] T037 [P] [US2] Escritura en `app/src/features/foods/api.ts`: `createFood` con `request_id` generado por formulario y `saveRemotely` (guardado confirmado, spec 001)
+- [X] T038 [US2] Formulario `app/src/features/foods/FoodForm.tsx` y página `app/src/features/foods/FoodCreatePage.tsx` con porciones, borrador local (`useDraft`, formulario `food-new`) y aviso de coherencia
+- [X] T039 [US2] Conectar `/alimentos/nuevo` y el botón "Crear [lo buscado]" del estado vacío de la búsqueda (T027) en `app/src/routes/index.tsx`
 
 **Checkpoint**: se puede crear y encontrar un alimento propio. Pasan T030 a T033.
 

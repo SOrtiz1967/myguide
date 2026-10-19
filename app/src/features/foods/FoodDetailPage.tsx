@@ -2,6 +2,7 @@ import { Link, useLocation, useParams } from 'react-router'
 import { EmptyState } from '../../components/EmptyState'
 import { ErrorState } from '../../components/ErrorState'
 import { LoadingState } from '../../components/LoadingState'
+import { SuccessMessage } from '../../components/SuccessMessage'
 import { es } from '../../copy/es'
 import type { Food } from './api'
 import { FoodProvenance } from './FoodProvenance'
@@ -59,7 +60,8 @@ function Actions({ food }: { food: Food }) {
 
 export function FoodDetailPage() {
   const { id = '' } = useParams()
-  const from = (useLocation().state as { from?: string } | null)?.from ?? ''
+  const state = useLocation().state as { from?: string; saved?: boolean } | null
+  const from = state?.from ?? ''
   const { data: food, isPending, isError, refetch } = useFood(id)
   const back = (
     <Link to={`/alimentos${from}`} className="underline">
@@ -88,6 +90,7 @@ export function FoodDetailPage() {
   return (
     <div className="flex flex-col gap-6">
       <div>{back}</div>
+      {state?.saved ? <SuccessMessage>{es.foods.form.saved}</SuccessMessage> : null}
       <header className="flex flex-col gap-1">
         <h1 className="break-words text-2xl font-semibold tracking-tight">{food.name}</h1>
         {food.brand ? <p className="text-muted">{food.brand}</p> : null}

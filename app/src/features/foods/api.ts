@@ -1,5 +1,6 @@
 import { supabase } from '../../lib/supabase'
 import type { ReferenceBasis } from './nutrition'
+import type { FoodPayload } from './schema'
 
 export type FoodOrigin = 'imported' | 'own'
 export type NameStatus = 'original' | 'machine_translated' | 'reviewed'
@@ -121,4 +122,16 @@ export async function fetchFood(id: string): Promise<Food | null> {
   if (!data) return null
   const food = data as unknown as Food
   return { ...food, portions: [...(food.portions ?? [])].sort((a, b) => a.position - b.position) }
+}
+
+/** Crea un alimento propio con sus porciones, de forma atómica e idempotente por `requestId`. */
+export async function createFood(payload: FoodPayload, requestId: string): Promise<string> {
+  const { portions, ...food } = payload
+  const { data, error } = await supabase.rpc('create_food', {
+    food,
+    portions,
+    request_id: requestId,
+  })
+  if (error) throw error
+  return data as string
 }
