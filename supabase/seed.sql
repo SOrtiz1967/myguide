@@ -72,5 +72,63 @@ begin
 end;
 $$;
 
+
+-- Ayudantes de la spec 002 (alimentos). Se ejecutan como administrador de pruebas.
+
+-- Crea un alimento PROPIO de una cuenta. Devuelve su id.
+create or replace function tests.create_food(
+  p_user_id uuid,
+  p_name text,
+  p_brand text default null,
+  p_energy numeric default 100,
+  p_basis text default '100g',
+  p_protein numeric default null,
+  p_carbs numeric default null,
+  p_fat numeric default null
+) returns uuid
+language plpgsql
+as $$
+declare
+  v_id uuid := gen_random_uuid();
+begin
+  insert into public.foods (id, user_id, origin, name, brand, reference_basis, energy_kcal, protein_g, carbs_g, fat_g)
+  values (v_id, p_user_id, 'own', p_name, p_brand, p_basis, p_energy, p_protein, p_carbs, p_fat);
+  return v_id;
+end;
+$$;
+
+-- Crea un alimento del CATALOGO (sin dueno). La fuente se toma por su slug. Devuelve su id.
+create or replace function tests.create_catalog_food(
+  p_source_slug text,
+  p_source_item_id text,
+  p_name text,
+  p_brand text default null,
+  p_energy numeric default 100,
+  p_basis text default '100g',
+  p_protein numeric default null,
+  p_carbs numeric default null,
+  p_fat numeric default null
+) returns uuid
+language plpgsql
+as $$
+declare
+  v_id uuid := gen_random_uuid();
+begin
+  insert into public.foods (id, origin, source_id, source_item_id, imported_at, name, brand, reference_basis, energy_kcal, protein_g, carbs_g, fat_g)
+  values (v_id, 'imported', (select id from public.food_sources where slug = p_source_slug), p_source_item_id, now(), p_name, p_brand, p_basis, p_energy, p_protein, p_carbs, p_fat);
+  return v_id;
+end;
+$$;
+
 grant usage on schema tests to anon, authenticated;
 grant execute on all functions in schema tests to anon, authenticated;
+
+-- Fuente de la muestra de desarrollo (spec 002, T043). Solo existe en local: la carga de producción
+-- no la usa. Los datos de la muestra son de ejemplo, no son datos reales.
+insert into public.food_sources (slug, name, license_name, license_url, attribution, source_url)
+values (
+  'muestra-desarrollo', 'Datos de ejemplo (desarrollo)', 'CC0 1.0',
+  'https://creativecommons.org/publicdomain/zero/1.0/',
+  'Datos de ejemplo para desarrollo y pruebas de MyGuide. No son datos reales.',
+  'https://example.test/muestra'
+) on conflict (slug) do nothing;

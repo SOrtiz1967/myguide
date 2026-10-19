@@ -22,7 +22,10 @@ export function AppShell({ children }: { children: ReactNode }) {
           </Link>
           {auth?.status === 'signedIn' ? (
             <nav aria-label="Cuenta" className="flex items-center gap-3">
-              <Link to="/perfil" className="underline">
+              <Link to="/alimentos" className="inline-flex min-h-11 items-center underline">
+                {es.foods.navLink}
+              </Link>
+              <Link to="/perfil" className="inline-flex min-h-11 items-center underline">
                 Perfil
               </Link>
               <button type="button" className="btn-secondary" onClick={() => void auth.signOut()}>

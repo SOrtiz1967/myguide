@@ -56,6 +56,7 @@ Para pruebas se usan las claves de prueba oficiales de Cloudflare: sitio `1x0000
 npm run test:db          # pgTAP: aislamiento entre cuentas, sesión, restricciones y soporte de funciones
 npm run test:functions   # Deno: manejadores, validación, Turnstile, tokens, correo y registro técnico
 npm run test:config      # invariantes de seguridad de config.toml
+npm run test:import      # Deno: normalización, extractores y cargador del catálogo
 ```
 
 ## Convención de propiedad (obligatoria para toda tabla de usuario)
@@ -108,3 +109,66 @@ Usa los ayudantes de `seed.sql` (`tests.create_user`, `tests.authenticate_as`, `
 ## Funciones de servicio
 
 Las funciones `public.check_rate_limit`, `issue_email_token`, `consume_email_token`, `email_token_stats`, `mark_email_verified`, `find_user_by_email` e `is_privacy_notice_current` solo las puede ejecutar `service_role` (las Edge Functions). Están en `public` porque `supabase-js` solo expone ese esquema por RPC; ni `anon` ni `authenticated` tienen permiso de ejecución.
+
+## Catálogo de alimentos (spec 002)
+
+### Tablas
+
+| Tabla | Qué guarda | Quién la ve |
+|---|---|---|
+| `public.foods` | Alimentos del catálogo (`user_id` nulo, `origin = 'imported'`) y alimentos propios (`origin = 'own'`, con dueño) | El catálogo, cualquier cuenta con sesión vigente; lo propio, solo su dueño |
+| `public.food_portions` | Porciones de consumo de cada alimento, aparte de los valores por 100 g/ml | Igual que su alimento |
+| `public.food_sources` | Fuentes con licencia, atribución, fecha de la última importación y cantidad | Cualquier cuenta con sesión (solo lectura) |
+| `private.import_runs` | Informe de cada carga | Solo `service_role` |
+
+`food_sources` es una **tabla de referencia** sin `user_id`: está en la lista explícita de `tests/rls_guardrail.test.sql`. Agregar otra requiere justificarlo allí.
+
+### Funciones
+
+| Función | Quién la ejecuta | Qué hace |
+|---|---|---|
+| `search_foods(q, scope, page_size, page_offset)` | Cuentas con sesión | Búsqueda sin acentos ni mayúsculas, por palabras parciales, ordenada por relevancia, con tandas |
+| `create_food(food, portions, request_id)` | Cuentas con sesión | Crea un alimento propio con sus porciones, atómico e idempotente |
+| `update_food(id, food, portions)` | Cuentas con sesión | Edita un alimento propio y reemplaza sus porciones; el catálogo da `not_found` |
+| `copy_food(id, request_id)` | Cuentas con sesión | Crea una copia propia (`based_on_food_id`) de un alimento visible |
+| `import_foods(source_slug, items)` · `finish_import(source_slug, report)` | **Solo `service_role`** | Cargan y cierran la carga del catálogo; nunca tocan alimentos propios ni copias |
+
+Los errores de validación tienen la forma `invalid_food:<motivo>:<campo>`.
+
+> **Regla de rendimiento.** En una política RLS de una tabla con muchas filas, la vigencia de la sesión se escribe `(select private.is_session_fresh())`, nunca como llamada suelta: sin el `select`, la función se ejecuta por cada fila (con 50.000 alimentos pasó de ~230 ms a minutos). `tests/foods_rls.test.sql` lo verifica para las tablas de alimentos.
+
+### Cargar el catálogo
+
+La carga la hace el autor desde su equipo. Necesita `SUPABASE_URL` y `SUPABASE_SERVICE_ROLE_KEY`: para el entorno local están en `supabase/.env.local` (clave de desarrollo) y para producción en `supabase/.env` (**la clave `service_role` es un secreto: nunca va en `app/` ni en Git**).
+
+```powershell
+npm run import:muestra                      # ≈170 alimentos de ejemplo (fuente local "muestra-desarrollo")
+npm run import:off                          # Open Food Facts, Argentina, por su API (ritmo cortés, reanudable)
+npm run import:off -- --dump off.jsonl.gz   # o desde el volcado completo, por transmisión (no se carga en memoria)
+npm run import:usda                         # USDA (ver "Cargar USDA")
+npm run import:usda -- --dry-run            # valida y cuenta sin escribir nada
+```
+
+- Un dato que la fuente no informa queda **sin dato** (`null`), nunca 0. Se omiten, con su motivo, los registros imposibles (valores negativos, macronutrientes que suman más de 100 g, sin nombre, sin ningún nutriente...). El informe queda en `supabase/import/out/informe-<fuente>.json` y se muestra en pantalla.
+- Repetir la carga no duplica nada: la clave es (fuente, código de origen). No toca alimentos propios ni copias.
+- La carga se **rechaza** si la fuente no tiene licencia, enlace de licencia y atribución registrados (FR-013).
+- Tope de volumen por defecto: 100.000 alimentos (los más completos). Se cambia con `--limit`.
+- Una carga contra producción se hace con `npm run import:off:prod` / `import:usda:prod`, que leen `supabase/.env`.
+
+### Cargar USDA
+
+1. Descargar de <https://fdc.nal.usda.gov/download-datasets> los CSV de **Foundation Foods** y de **SR Legacy** y descomprimirlos en `supabase/import/out/usda/foundation` y `supabase/import/out/usda/sr_legacy` (cada carpeta con `food.csv`, `food_nutrient.csv`, `food_portion.csv` y `measure_unit.csv`). La carpeta `out/` no se sube a Git.
+2. Los nombres de USDA están en inglés. Solo se cargan los alimentos que tienen una fila en `supabase/import/data/usda-nombres-es.csv` (`fdc_id,nombre_es,estado`).
+3. `estado` es `machine_translated` (traducción sin revisar: la pantalla lo avisa) o `reviewed`.
+
+**Corregir un nombre:** editar la fila en `usda-nombres-es.csv`, cambiar `estado` a `reviewed` y volver a ejecutar `npm run import:usda`. La carga actualiza el nombre y el estado sin duplicar el alimento.
+
+### Procedencia de cada dato
+
+| Dato | Fuente | Licencia |
+|---|---|---|
+| Productos de marca de Argentina | Open Food Facts | ODbL 1.0 (contenidos DbCL 1.0): atribución obligatoria |
+| Alimentos genéricos | USDA FoodData Central (Foundation Foods y SR Legacy) | CC0 1.0 |
+| Alimentos propios y copias | La persona usuaria | Privados de cada cuenta |
+
+Detalle y texto de atribución en [`Documentacion/fuentes-datos.md`](../Documentacion/fuentes-datos.md); la aplicación los muestra en `/fuentes`.

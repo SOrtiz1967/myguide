@@ -4,6 +4,11 @@ import { LoginPage } from '../features/auth/pages/LoginPage'
 import { RecoverPage } from '../features/auth/pages/RecoverPage'
 import { RegisterPage } from '../features/auth/pages/RegisterPage'
 import { ResetPage } from '../features/auth/pages/ResetPage'
+import { FoodCreatePage } from '../features/foods/FoodCreatePage'
+import { FoodDetailPage } from '../features/foods/FoodDetailPage'
+import { FoodEditPage } from '../features/foods/FoodEditPage'
+import { FoodSearchPage } from '../features/foods/FoodSearchPage'
+import { SourcesPage } from '../features/foods/SourcesPage'
 import { ProfilePage } from '../features/profile/ProfilePage'
 import { AppLayout } from './AppLayout'
 import { HomePage } from './HomePage'
@@ -30,6 +35,11 @@ export const routes: RouteObject[] = [
         children: [
           { path: '/', element: <HomePage /> },
           { path: '/perfil', element: <ProfilePage /> },
+          { path: '/alimentos', element: <FoodSearchPage /> },
+          { path: '/alimentos/nuevo', element: <FoodCreatePage /> },
+          { path: '/alimentos/:id', element: <FoodDetailPage /> },
+          { path: '/alimentos/:id/editar', element: <FoodEditPage /> },
+          { path: '/fuentes', element: <SourcesPage /> },
         ],
       },
     ],
