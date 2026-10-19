@@ -51,3 +51,21 @@ Deno.test('FR-012: solo las funciones públicas por diseño se abren sin sesión
   assertEquals(functions['confirm-email']?.verify_jwt, false)
   assertEquals(functions['send-verification']?.verify_jwt, true)
 })
+
+// T004 (spec 003, FR-032, FR-033): las fotos de las comidas.
+const storage = (config.storage ?? {}) as Toml
+const photoBucket = (storage.buckets?.['meal-photos'] ?? {}) as Toml
+
+Deno.test('FR-032: el bucket de fotos de las comidas es privado', () => {
+  assertEquals(photoBucket.public, false)
+})
+
+Deno.test('FR-033: el bucket de fotos admite solo JPEG de hasta 3 MiB', () => {
+  assertEquals(photoBucket.file_size_limit, '3MiB')
+  assertEquals(photoBucket.allowed_mime_types, ['image/jpeg'])
+})
+
+Deno.test('FR-030: la función meal-photo verifica la sesión ella misma', () => {
+  // Está configurada (y su verificación automática apagada porque el preflight de CORS no lleva sesión).
+  assertEquals(functions['meal-photo']?.verify_jwt, false)
+})

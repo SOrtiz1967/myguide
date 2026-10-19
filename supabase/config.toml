@@ -436,3 +436,16 @@ verify_jwt = false
 
 [functions.send-verification]
 verify_jwt = true
+
+# --- Fotos de las comidas (spec 003) ---
+# El bucket es privado, solo admite JPEG y pesa como mucho 3 MiB: lo que sube `meal-photo` ya viene
+# reducido y sin metadatos. En producción el bucket lo crea la migración 20261019000900.
+[storage.buckets.meal-photos]
+public = false
+file_size_limit = "3MiB"
+allowed_mime_types = ["image/jpeg"]
+
+# `meal-photo` verifica el token ella misma (el preflight de CORS no lleva sesión) y exige que la sesión
+# siga vigente; por eso la verificación automática del gateway queda apagada, como en las funciones públicas.
+[functions.meal-photo]
+verify_jwt = false
