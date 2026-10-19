@@ -1,9 +1,11 @@
+import { useState } from 'react'
 import { Link } from 'react-router'
 import { es } from '../../copy/es'
 import { formatValue, type Unit } from '../foods/nutrition'
 import type { MealEntry } from './api'
 import { entryQuantityText } from './entryText'
 import { mealLabel, type Meal } from './meals'
+import { SaveAsFoodPanel } from './SaveAsFoodPanel'
 import { formatTotal, TOTAL_KEYS, type Total, type TotalKey } from './mealTotals'
 
 const UNITS: Record<TotalKey, Unit> = {
@@ -28,6 +30,7 @@ export function TotalsList({ totals }: { totals: Record<TotalKey, Total> }) {
 }
 
 function EntryRow({ entry, date }: { entry: MealEntry; date: string }) {
+  const [saving, setSaving] = useState(false)
   const quantity = entryQuantityText(entry)
   const gone = entry.food_id === null && (entry.origin === 'catalog' || entry.origin === 'own')
   return (
@@ -57,6 +60,19 @@ function EntryRow({ entry, date }: { entry: MealEntry; date: string }) {
         ) : null}
         {gone ? <span className="text-sm text-muted">{es.meals.day.foodGone}</span> : null}
       </Link>
+      {entry.origin === 'manual' ? (
+        <div className="flex flex-col gap-3 pb-3">
+          {saving ? (
+            <SaveAsFoodPanel entry={entry} onClose={() => setSaving(false)} />
+          ) : (
+            <div>
+              <button type="button" className="btn-secondary" onClick={() => setSaving(true)}>
+                {es.meals.saveAsFood.action}
+              </button>
+            </div>
+          )}
+        </div>
+      ) : null}
     </li>
   )
 }

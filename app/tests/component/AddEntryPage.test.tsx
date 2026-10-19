@@ -323,3 +323,75 @@ describe('borrador (FR-037)', () => {
     expect(localStorage.getItem(draftKey('u1', 'meal-add-2026-10-19-lunch'))).toBeNull()
   })
 })
+
+describe('entrada manual (FR-006)', () => {
+  it('"Escribir a mano" abre el formulario de entrada manual y permite volver', async () => {
+    renderPage()
+    await userEvent.click(await screen.findByRole('button', { name: es.meals.add.manual }))
+    expect(await screen.findByRole('heading', { name: es.meals.manual.title })).toBeVisible()
+    await userEvent.click(screen.getByRole('button', { name: es.meals.manual.back }))
+    expect(await screen.findByRole('button', { name: es.meals.add.manual })).toBeVisible()
+  })
+
+  it('un reciente manual se vuelve a registrar con sus valores en el formulario', async () => {
+    mockedRecents.mockResolvedValue([
+      recent({
+        food_id: null,
+        origin: 'manual',
+        food_name: 'Torta de cumpleaños',
+        food_brand: null,
+        reference_basis: null,
+        quantity: null,
+        quantity_text: '1 porción',
+        energy_kcal: 380,
+        protein_g: null,
+      }),
+    ])
+    renderPage()
+    await userEvent.click(await screen.findByRole('button', { name: /Torta de cumpleaños/ }))
+    expect(await screen.findByLabelText(es.meals.manual.description)).toHaveValue(
+      'Torta de cumpleaños',
+    )
+    expect(screen.getByLabelText(es.meals.manual.quantityText)).toHaveValue('1 porción')
+    expect(screen.getByLabelText('Energía (kcal)', { exact: false })).toHaveValue('380')
+    expect(screen.getByLabelText('Proteínas (g)', { exact: false })).toHaveValue('')
+  })
+
+  it('un borrador manual se recupera al abrir la pantalla', async () => {
+    localStorage.setItem(
+      draftKey('u1', 'meal-manual-2026-10-19-lunch'),
+      JSON.stringify({
+        savedAt: Date.now(),
+        values: {
+          description: 'Sin terminar',
+          quantity_text: '',
+          energy_kcal: '120',
+          protein_g: '',
+          carbs_g: '',
+          sugars_g: '',
+          fat_g: '',
+          saturated_fat_g: '',
+          fiber_g: '',
+          sodium_mg: '',
+        },
+      }),
+    )
+    renderPage()
+    expect(await screen.findByLabelText(es.meals.manual.description)).toHaveValue('Sin terminar')
+    expect(screen.getByText(es.meals.manual.draftRestored)).toBeVisible()
+  })
+
+  it('al guardar un ítem manual vuelve al día con el aviso de lo agregado', async () => {
+    renderPage()
+    await userEvent.click(await screen.findByRole('button', { name: es.meals.add.manual }))
+    await userEvent.type(await screen.findByLabelText(es.meals.manual.description), 'Torta')
+    await userEvent.type(screen.getByLabelText('Energía (kcal)', { exact: false }), '350')
+    await userEvent.click(screen.getByRole('button', { name: es.meals.manual.save }))
+    expect(await screen.findByText(es.meals.addedTo.lunch)).toBeVisible()
+    expect(mockedAdd.mock.calls[0]![0]).toMatchObject({
+      origin: 'manual',
+      description: 'Torta',
+      meal: 'lunch',
+    })
+  })
+})

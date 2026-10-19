@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router'
 import { z } from 'zod'
 import { es } from '../../copy/es'
-import { discardDraft } from '../../lib/drafts'
+import { discardDraft, loadDraft } from '../../lib/drafts'
 import { newRequestId } from '../../lib/ids'
 import { useDraft } from '../../lib/useDraft'
 import { useAuth } from '../auth/useAuth'
@@ -10,8 +10,9 @@ import type { FoodSummary } from '../foods/api'
 import type { RecentItem } from './api'
 import { FoodChooser } from './FoodChooser'
 import { formatDay, isMeal, MEALS, mealLabel, parseDate, suggestMeal, type Meal } from './meals'
+import { ManualEntryForm } from './ManualEntryForm'
 import { SelectedFoodForm } from './SelectedFoodForm'
-import type { QuantityFormInput } from './schema'
+import { manualDraftSchema, type ManualFormInput, type QuantityFormInput } from './schema'
 
 /** Forma del borrador: lo elegido y la cantidad, solo texto (puede estar a medio escribir). */
 const draftSchema = z.object({ foodId: z.string(), portion: z.string(), amount: z.string() })
@@ -30,6 +31,23 @@ function fromRecent(item: RecentItem): QuantityFormInput {
     return { portion: item.portion_id, amount: toText(item.portion_count) }
   }
   return { portion: '', amount: item.quantity !== null ? toText(item.quantity) : '100' }
+}
+
+const optionalText = (value: number | null) => (value === null ? '' : toText(value))
+
+function manualFromRecent(item: RecentItem): ManualFormInput {
+  return {
+    description: item.food_name,
+    quantity_text: item.quantity_text ?? '',
+    energy_kcal: optionalText(item.energy_kcal),
+    protein_g: optionalText(item.protein_g),
+    carbs_g: optionalText(item.carbs_g),
+    sugars_g: optionalText(item.sugars_g),
+    fat_g: optionalText(item.fat_g),
+    saturated_fat_g: optionalText(item.saturated_fat_g),
+    fiber_g: optionalText(item.fiber_g),
+    sodium_mg: optionalText(item.sodium_mg),
+  }
 }
 
 export function AddEntryPage() {
@@ -74,6 +92,13 @@ function AddEntryForm({ date }: { date: string }) {
       : null,
   )
   const [restored, setRestored] = useState(draft.restored)
+
+  // Escribir a mano: se abre solo si había un borrador a medias (FR-037) o al repetir un reciente manual.
+  const manualDraftId = `meal-manual-${date}-${meal}`
+  const [manualId] = useState(manualDraftId)
+  const [manual, setManual] = useState<{ initial?: ManualFormInput } | null>(() =>
+    loadDraft(userId, manualDraftId, manualDraftSchema) ? {} : null,
+  )
 
   // Cada cambio se guarda como borrador hasta que el servidor confirma (FR-037).
   const saveDraft = draft.save
@@ -151,7 +176,19 @@ function AddEntryForm({ date }: { date: string }) {
         </div>
       ) : null}
 
-      {selection ? (
+      {manual ? (
+        <ManualEntryForm
+          userId={userId}
+          date={date}
+          meal={meal}
+          draftId={manualId}
+          initial={manual.initial}
+          onCancel={() => setManual(null)}
+          onAdded={() =>
+            void navigate(`/comidas/${date}`, { state: { added: es.meals.addedTo[meal] } })
+          }
+        />
+      ) : selection ? (
         <SelectedFoodForm
           key={selection.requestId}
           foodId={selection.foodId}
@@ -168,12 +205,20 @@ function AddEntryForm({ date }: { date: string }) {
           }
         />
       ) : (
-        <FoodChooser
-          onPickRecent={(item) => {
-            if (item.food_id) choose(item.food_id, fromRecent(item))
-          }}
-          onPickFood={(food: FoodSummary) => choose(food.id, { portion: '', amount: '100' })}
-        />
+        <div className="flex flex-col gap-6">
+          <div>
+            <button type="button" className="btn-secondary" onClick={() => setManual({})}>
+              {es.meals.add.manual}
+            </button>
+          </div>
+          <FoodChooser
+            onPickRecent={(item) => {
+              if (item.food_id) choose(item.food_id, fromRecent(item))
+              else setManual({ initial: manualFromRecent(item) })
+            }}
+            onPickFood={(food: FoodSummary) => choose(food.id, { portion: '', amount: '100' })}
+          />
+        </div>
       )}
     </div>
   )

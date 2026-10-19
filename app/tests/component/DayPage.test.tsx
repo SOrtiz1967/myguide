@@ -10,6 +10,7 @@ import { DayPage } from '../../src/features/meals/DayPage'
 import { fetchProfile, type Profile } from '../../src/features/profile/api'
 
 vi.mock('../../src/features/meals/api', () => ({ fetchDayEntries: vi.fn() }))
+vi.mock('../../src/features/foods/api', () => ({ createFood: vi.fn() }))
 vi.mock('../../src/features/profile/api', () => ({ fetchProfile: vi.fn(), updateProfile: vi.fn() }))
 
 const mockedDay = vi.mocked(fetchDayEntries)
@@ -203,6 +204,25 @@ describe('DayPage: comidas, subtotales y total (FR-014, FR-015, FR-016)', () => 
     expect(area.getByText('Torta de cumpleaños')).toBeVisible()
     expect(area.getByText(/1 porción/)).toBeVisible()
     expect(area.getByText(es.meals.origin.manual)).toBeVisible()
+  })
+
+  it('FR-023: solo un ítem manual ofrece guardarlo como alimento propio, y abre el panel', async () => {
+    mockedDay.mockResolvedValue([
+      entry({
+        id: 'e1',
+        origin: 'manual',
+        food_id: null,
+        food_name: 'Torta',
+        quantity: null,
+        quantity_text: '1 porción',
+      }),
+      entry({ id: 'e2', meal: 'dinner', food_name: 'Arroz blanco' }),
+    ])
+    renderDay()
+    const buttons = await screen.findAllByRole('button', { name: es.meals.saveAsFood.action })
+    expect(buttons).toHaveLength(1)
+    await userEvent.click(buttons[0]!)
+    expect(await screen.findByRole('heading', { name: es.meals.saveAsFood.title })).toBeVisible()
   })
 
   it('FR-013: si el alimento ya no existe lo indica y conserva los valores registrados', async () => {

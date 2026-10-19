@@ -196,19 +196,19 @@ description: "Lista de tareas de la spec 003: registro de comidas"
   - Azúcares no mayores que carbohidratos; saturadas no mayores que grasas.
   - Los nutrientes no informados quedan `null`.
   - Idempotente por `request_id` (FR-006, FR-007, FR-012).
-- [ ] T037 [P] [US3] Pruebas de componentes en `app/tests/component/ManualEntryForm.test.tsx`:
+- [X] T037 [P] [US3] Pruebas de componentes en `app/tests/component/ManualEntryForm.test.tsx`:
   - crea con solo descripción y energía;
   - errores por campo con foco en el primero;
   - el aviso de coherencia de energía y macronutrientes no bloquea;
   - coma decimal;
   - el doble clic hace un solo envío;
   - un fallo de red conserva el borrador.
-- [ ] T038 [P] [US3] Prueba de extremo a extremo `app/tests/e2e/meals-manual.spec.ts`: escenarios 10, 11 y 12
+- [X] T038 [P] [US3] Prueba de extremo a extremo `app/tests/e2e/meals-manual.spec.ts`: escenarios 10, 11 y 12
 
 ### Implementation for User Story 3
 
-- [ ] T039 [US3] Componente `app/src/features/meals/ManualEntryForm.tsx` (dentro de `AddEntryPage`, pestaña "Escribir a mano"), reutilizando `energyCoherence` de `foods/nutrition.ts`
-- [ ] T040 [US3] "Guardar como alimento propio" (FR-023, escenario 12). Primero la prueba unitaria `app/tests/unit/saveAsFood.test.ts` (debe fallar): dado el peso o volumen que representa el ítem, calcula los valores por 100 g o 100 ml (los faltantes siguen faltando), valida contra los rangos de la spec 002 (por ejemplo, macronutrientes que sumen más de 100 por 100 se rechazan con un mensaje) y crea una porción con la cantidad descriptiva. Después `app/src/features/meals/saveAsFood.ts` y `SaveAsFoodDialog.tsx`, abierto desde el menú de un ítem manual en `MealSection.tsx`; usa `createFood` de la spec 002 con su `request_id`; el ítem no cambia. Su prueba de componente va en `app/tests/component/SaveAsFoodDialog.test.tsx`
+- [X] T039 [US3] Componente `app/src/features/meals/ManualEntryForm.tsx` (dentro de `AddEntryPage`, pestaña "Escribir a mano"), reutilizando `energyCoherence` de `foods/nutrition.ts`
+- [X] T040 [US3] "Guardar como alimento propio" (FR-023, escenario 12). Primero la prueba unitaria `app/tests/unit/saveAsFood.test.ts` (debe fallar): dado el peso o volumen que representa el ítem, calcula los valores por 100 g o 100 ml (los faltantes siguen faltando), valida contra los rangos de la spec 002 (por ejemplo, macronutrientes que sumen más de 100 por 100 se rechazan con un mensaje) y crea una porción con la cantidad descriptiva. Después `app/src/features/meals/saveAsFood.ts` y `SaveAsFoodPanel.tsx` (un panel dentro de la fila del ítem manual en `MealSection.tsx`); usa `createFood` de la spec 002 con su `request_id`; el ítem no cambia. Su prueba de componente va en `app/tests/component/SaveAsFoodPanel.test.tsx`
 
 **Checkpoint**: se puede registrar cualquier cosa, esté o no en el catálogo.
 
