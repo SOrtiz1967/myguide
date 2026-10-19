@@ -28,9 +28,18 @@ interface ManualEntryFormProps {
   draftId: string
   /** Valores iniciales (por ejemplo, al repetir un reciente manual). */
   initial?: ManualFormInput
-  onCancel: () => void
-  /** Se llama solo cuando el servidor confirmó el alta. */
+  /** Si falta, no hay botón para volver (la pantalla de edición no lo necesita). */
+  onCancel?: () => void
+  /** Se llama solo cuando el servidor confirmó el guardado. */
   onAdded: () => void
+  /**
+   * Cómo se guarda. Por omisión agrega un ítem nuevo; la pantalla de edición pasa su propia función.
+   * Debe lanzar si el servidor no confirmó.
+   */
+  onSubmit?: (payload: ManualPayload, requestId: string) => Promise<unknown>
+  submitLabel?: string
+  /** Título de la sección; `null` lo oculta. */
+  title?: string | null
 }
 
 const numberOrNull = (text: string | undefined): number | null => {
@@ -52,6 +61,9 @@ export function ManualEntryForm({
   initial,
   onCancel,
   onAdded,
+  onSubmit,
+  submitLabel = es.meals.manual.save,
+  title = es.meals.manual.title,
 }: ManualEntryFormProps) {
   const queryClient = useQueryClient()
   const draft = useDraft({ userId, formId: draftId, schema: manualDraftSchema })
@@ -95,7 +107,10 @@ export function ManualEntryForm({
     setError(null)
     try {
       await saveRemotely(
-        () => addEntry({ log_date: date, meal, origin: 'manual', ...payload }, requestId),
+        () =>
+          onSubmit
+            ? onSubmit(payload, requestId)
+            : addEntry({ log_date: date, meal, origin: 'manual', ...payload }, requestId),
         entryErrorMessage,
       )
       discardDraft(userId, draftId)
@@ -109,12 +124,16 @@ export function ManualEntryForm({
 
   return (
     <form onSubmit={submit} noValidate className="flex flex-col gap-5">
-      <div className="flex items-center justify-between gap-3">
-        <h2 className="text-xl font-semibold">{es.meals.manual.title}</h2>
-        <button type="button" className="btn-secondary" onClick={onCancel}>
-          {es.meals.manual.back}
-        </button>
-      </div>
+      {title || onCancel ? (
+        <div className="flex items-center justify-between gap-3">
+          {title ? <h2 className="text-xl font-semibold">{title}</h2> : <span />}
+          {onCancel ? (
+            <button type="button" className="btn-secondary" onClick={onCancel}>
+              {es.meals.manual.back}
+            </button>
+          ) : null}
+        </div>
+      ) : null}
 
       {draft.restored ? (
         <div
@@ -137,7 +156,7 @@ export function ManualEntryForm({
         </div>
       ) : null}
 
-      <p className="text-muted">{es.meals.add.title(mealLabel(meal))}</p>
+      {onSubmit ? null : <p className="text-muted">{es.meals.add.title(mealLabel(meal))}</p>}
 
       <Field
         label={es.meals.manual.description}
@@ -180,7 +199,7 @@ export function ManualEntryForm({
 
       <div>
         <button type="submit" className="btn-primary" disabled={isSubmitting}>
-          {es.meals.manual.save}
+          {submitLabel}
         </button>
       </div>
     </form>

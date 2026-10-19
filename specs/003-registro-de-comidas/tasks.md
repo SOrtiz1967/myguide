@@ -222,26 +222,26 @@ description: "Lista de tareas de la spec 003: registro de comidas"
 
 ### Tests for User Story 4 ⚠️
 
-- [ ] T041 [P] [US4] Prueba pgTAP en `supabase/tests/update_meal_entry.test.sql`. Debe cubrir:
+- [X] T041 [P] [US4] Prueba pgTAP en `supabase/tests/update_meal_entry.test.sql`. Debe cubrir:
   - Cambiar la cantidad recalcula **desde la instantánea** aunque el alimento haya cambiado.
   - Se puede cambiar el número de porciones, mover a otra comida o a otro día dentro del rango, y editar descripción y valores de un manual con las mismas validaciones.
   - Origen, alimento e instantánea no se pueden cambiar.
   - Un ítem ajeno da `not_found` y no cambia nada.
   - Borrar lo propio funciona y lo ajeno no afecta nada.
   - Editar, eliminar o **reimportar** (`import_foods`) el alimento de origen deja el ítem intacto, y al eliminarlo `food_id` pasa a `null` (FR-011, FR-013, FR-019 a FR-022, FR-026, SC-004).
-- [ ] T042 [P] [US4] Pruebas de componentes en `app/tests/component/EntryDetailPage.test.tsx`:
+- [X] T042 [P] [US4] Pruebas de componentes en `app/tests/component/EntryDetailPage.test.tsx`:
   - detalle con todos los nutrientes, origen y cantidad;
   - editar la cantidad o la porción, la comida y el día;
   - eliminar con `ConfirmDialog` (Escape cancela);
   - "Este alimento ya no está disponible";
   - "No encontramos este registro";
   - un fallo de red conserva el borrador (`meal-edit-<id>`).
-- [ ] T043 [P] [US4] Prueba de extremo a extremo `app/tests/e2e/meals-edit.spec.ts`: escenarios 13, 14, 15 y 16
+- [X] T043 [P] [US4] Prueba de extremo a extremo `app/tests/e2e/meals-edit.spec.ts`: escenarios 13, 14, 15 y 16
 
 ### Implementation for User Story 4
 
-- [ ] T044 [US4] Migración `supabase/migrations/20261019000600_update_meal_entry.sql`: `public.update_meal_entry(id, changes)` atómica
-- [ ] T045 [US4] `updateEntry` y `deleteEntry` en `app/src/features/meals/api.ts` y pantalla `app/src/features/meals/EntryDetailPage.tsx` (usa el diálogo de T040 también desde el detalle de un manual); conectar `/comidas/item/:id`
+- [X] T044 [US4] Migración `supabase/migrations/20261019000600_update_meal_entry.sql`: `public.update_meal_entry(id, changes)` atómica
+- [X] T045 [US4] `updateEntry` y `deleteEntry` en `app/src/features/meals/api.ts` y pantalla `app/src/features/meals/EntryDetailPage.tsx` (usa el diálogo de T040 también desde el detalle de un manual); conectar `/comidas/item/:id`
 
 **Checkpoint**: ciclo de vida completo de un ítem.
 
