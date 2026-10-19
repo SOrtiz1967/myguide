@@ -96,7 +96,7 @@ description: "Lista de tareas de la spec 003: registro de comidas"
 
 ### Tests for User Story 1 ⚠️ (escribir primero y verificar que FALLAN)
 
-- [ ] T018 [P] [US1] Prueba pgTAP en `supabase/tests/add_meal_entry.test.sql`. Debe cubrir:
+- [X] T018 [P] [US1] Prueba pgTAP en `supabase/tests/add_meal_entry.test.sql`. Debe cubrir:
   - La instantánea se toma del alimento en el servidor: nombre, marca, base, los 8 valores por 100 y la porción.
   - El origen es `catalog` u `own` según el alimento.
   - Cálculo por cantidad en g o ml y por porciones (por ejemplo, 1,5 × 158 g = 237 g).
@@ -109,7 +109,7 @@ description: "Lista de tareas de la spec 003: registro de comidas"
     - de la cantidad: 0, negativa o mayor que 5000 → `invalid_quantity`; porciones 0 o mayores que 50 → `invalid_portion_count`;
     - de la comida y el día: comida inválida → `invalid_meal`; día anterior al 2000 o posterior a hoy + 7 → `invalid_date`.
   - Otra cuenta no ve el ítem; `anon` recibe "permission denied" (FR-001 a FR-005, FR-009, FR-010, FR-012).
-- [ ] T019 [P] [US1] Prueba pgTAP en `supabase/tests/recent_meal_items.test.sql`. Debe cubrir:
+- [X] T019 [P] [US1] Prueba pgTAP en `supabase/tests/recent_meal_items.test.sql`. Debe cubrir:
   - Hasta 20 ítems distintos, del más reciente al más viejo, agrupados por alimento o por la descripción normalizada si es manual.
   - Cada uno trae su última cantidad y porción.
   - Excluye los alimentos que ya no existen o que la persona no puede ver.
@@ -135,8 +135,8 @@ description: "Lista de tareas de la spec 003: registro de comidas"
 
 ### Implementation for User Story 1
 
-- [ ] T024 [US1] Migración `supabase/migrations/20261019000400_add_meal_entry.sql`: `private.validate_meal_entry(...)` con las reglas de research (Decisión 8) y `public.add_meal_entry(entry, request_id)` según `contracts/database-api.md`, atómica e idempotente (`security invoker`, `search_path` vacío)
-- [ ] T025 [US1] Migración `supabase/migrations/20261019000500_recent_meal_items.sql`: `public.recent_meal_items(max)`
+- [X] T024 [US1] Migración `supabase/migrations/20261019000400_add_meal_entry.sql`: `private.validate_meal_entry(...)` con las reglas de research (Decisión 8) y `public.add_meal_entry(entry, request_id)` según `contracts/database-api.md`, atómica e idempotente (`security invoker`, `search_path` vacío)
+- [X] T025 [US1] Migración `supabase/migrations/20261019000500_recent_meal_items.sql`: `public.recent_meal_items(max)`
 - [ ] T026 [P] [US1] Acceso a datos en `app/src/features/meals/api.ts`:
   - `addEntry` con `request_id` y `saveRemotely`;
   - `fetchRecents`;
@@ -189,7 +189,7 @@ description: "Lista de tareas de la spec 003: registro de comidas"
 
 ### Tests for User Story 3 ⚠️
 
-- [ ] T036 [P] [US3] Prueba pgTAP en `supabase/tests/manual_meal_entry.test.sql`. Debe cubrir:
+- [X] T036 [P] [US3] Prueba pgTAP en `supabase/tests/manual_meal_entry.test.sql`. Debe cubrir:
   - `origin = 'manual'` sin alimento.
   - Una descripción vacía da `description_required`; sin energía, `energy_required`.
   - Rangos: energía de 0 a 5000 kcal; gramos de 0 a 1000; sodio de 0 a 50000 mg.
