@@ -144,3 +144,24 @@ Medidos el 19/10/2026 (Chromium de Playwright en escritorio y emulación de Pixe
 2. **P2, decodificación en el navegador (T002)**: `createImageBitmap` decodifica JPEG, PNG y WebP en ambos perfiles; **HEIC no** (falla con `InvalidStateError`). Comportamiento acordado: un HEIC (por tipo o por extensión) que no se puede decodificar muestra "Este navegador no puede leer fotos HEIC. Elige una foto en JPEG o PNG, o activa el formato «Más compatible» de la cámara." Una imagen sintética de 12 MP (4000×3000, JPEG de 2,1 MB) reducida a 1600×1200 y codificada como JPEG de calidad 0,8 pesa **413 KB** (objetivo: menos de 500 KB) y tarda 37-56 ms. Una foto real, con menos ruido que la sintética, pesa bastante menos.
 3. **P3, acceso privado en Storage (T003)**: el bucket `meal-photos` es privado (`public = false`, 3 MiB, solo `image/jpeg`). La dueña lee su objeto con su sesión; otra cuenta y una petición anónima reciben un error (4xx) en la ruta autenticada y en la pública, y tampoco pueden firmar una URL de una carpeta ajena; una URL firmada por 2 s ya no sirve a los 3,5 s; tras reemplazar o eliminar, la URL firmada de la foto anterior deja de funcionar. Hay una restricción de la plataforma: `storage.objects` tiene un disparador que prohíbe borrar con SQL directo ("Direct deletion from storage tables is not allowed"), así que el borrado solo puede hacerse por la API de Storage con la clave de servicio, que es justo lo que hace la función.
 4. **Regla del día y zonas horarias**: cubierto por `supabase/tests/log_day_status.test.sql` (23 comprobaciones con hora simulada, incluido el cambio de horario de verano de Madrid y el cambio de zona del perfil).
+
+## Mediciones de la implementación (T069)
+
+Medidas el 19/10/2026 con `app/tests/e2e/meals-measure.spec.ts` y `meals-measure-photo.spec.ts` (Pixel 7 emulado, Supabase local en Docker sobre Windows, compilación de producción en `localhost:4173`; la foto sobre el servidor de desarrollo porque la función solo admite ese origen en local). Red emulada con el protocolo de Chrome: 9 Mbps de bajada, 1,5 Mbps de subida y 170 ms de latencia por pedido.
+
+| Criterio | Objetivo | Medido | Resultado |
+|---|---|---|---|
+| SC-001, alimento nuevo desde la vista del día | 4 interacciones o menos, menos de 30 s | 4 interacciones (elegir comida, buscar, elegir alimento, confirmar cantidad); 1,6 s | Cumple |
+| SC-001, reciente con su última cantidad | 2 interacciones o menos | 2 interacciones (tocar el reciente, confirmar); 0,75 s | Cumple |
+| SC-002, día con 60 ítems, dentro de la aplicación (de un día al anterior, 30 días distintos) | menos de 2 s en el 95 % | mediana 0,45 s; p95 0,64 s | Cumple |
+| SC-002, día con 60 ítems, carga en frío (recarga completa, 20 muestras) | menos de 2 s en el 95 % | mediana 1,14 s; p95 1,2 s (una muestra de 1,9 s) | Cumple |
+| Foto de 12 MP con ruido típico (4000×3000, JPEG de 1,9 MB) | menos de 500 KB | 200 KB | Cumple |
+| Foto de 12 MP con ruido extremo (5,6 MB, peor caso para JPEG) | menos de 3 MiB (límite de la función) | 735 KB | Cumple el límite; supera los 500 KB, que el objetivo reserva para fotos reales |
+| Función `meal-photo` (limpieza, Storage y base de datos) | menos de 2 s | 1,3 s con 200 KB y con 735 KB | Cumple, con poco margen |
+| Foto: de elegirla a "Foto guardada" (reducción en el navegador más subida) | sin objetivo propio | 2,5 s (típica) y 5,3 s (extrema) | Informativo |
+
+Observaciones:
+
+- La carga en frío de un día son cinco viajes de red seguidos: documento, bundle, `touch_session` (la app espera la marca de actividad de la spec 001 antes de pedir datos), y luego el perfil, las fotos, la regla del día y los ítems en paralelo. Con 170 ms de latencia por pedido eso explica la mediana de 1,1 s; dentro de la aplicación solo quedan los pedidos de datos.
+- Hubo corridas anteriores, con la máquina más cargada, en las que algunas muestras en frío llegaron a 2-5 s: las respuestas sueltas de Supabase local tardaban 1 s o más. No se repitieron al repetir la medición y no se atribuyen a la aplicación, pero indican que en una máquina lenta el margen del 95 % en frío es chico. En el servidor de desarrollo (cientos de módulos sueltos con esa latencia) la carga ni siquiera termina en 60 s; por eso se mide la compilación de producción.
+- La función de fotos tarda 1,3 s, bastante cerca del tope de 2 s. Si en producción se acerca al límite, el primer lugar donde mirar es el arranque en frío de la función; el recorrido de bytes del JPEG tarda pocos milisegundos (ver prototipo P1).
