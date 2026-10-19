@@ -10,7 +10,8 @@ Desarrollada con **Spec-Driven Development** (Spec Kit). Los principios del proy
 |---|---|
 | 001 Cuentas, perfil y base de la PWA | Implementada y verificada; pendiente la prueba de envío real de correo (T009) y el despliegue (T077) |
 | 002 Catálogo de alimentos | Implementada y verificada; pendiente cargar los genéricos de USDA (traducción de nombres) y la carga en producción. Ver [`verification.md`](specs/002-catalogo-de-alimentos/verification.md) |
-| 003 a 011 | Pendientes |
+| 003 Registro de comidas | Implementada; falta la verificación final (`verification.md`). Para producción: crear el bucket y desplegar `meal-photo` (ver el despliegue) |
+| 004 a 011 | Pendientes |
 
 ## Stack
 

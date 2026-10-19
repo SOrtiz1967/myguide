@@ -7,7 +7,7 @@ Backend de MyGuide como código: migraciones, funciones de borde (Edge Functions
 | Carpeta | Contenido |
 |---|---|
 | `migrations/` | Esquema, RLS, funciones y disparadores. Una migración por cambio lógico, en orden cronológico. |
-| `functions/` | Edge Functions (Deno): `register`, `request-password-reset`, `send-verification`, `confirm-email` y utilidades en `_shared/`. Cada una separa la lógica probada (`handler.ts`) de su conexión real (`index.ts`). |
+| `functions/` | Edge Functions (Deno): `register`, `request-password-reset`, `send-verification`, `confirm-email`, `meal-photo` y utilidades en `_shared/`. Cada una separa la lógica probada (`handler.ts`) de su conexión real (`index.ts`). |
 | `tests/` | Pruebas pgTAP (`*.test.sql`) y la prueba de invariantes de configuración (`config.test.ts`). |
 | `seed.sql` | Ayudantes de prueba en el esquema `tests`. **Solo local**: no se aplica a producción. |
 | `config.toml` | Configuración de Auth y de las funciones. Las decisiones de seguridad están comentadas al final. |
@@ -172,3 +172,44 @@ npm run import:usda -- --dry-run            # valida y cuenta sin escribir nada
 | Alimentos propios y copias | La persona usuaria | Privados de cada cuenta |
 
 Detalle y texto de atribución en [`Documentacion/fuentes-datos.md`](../Documentacion/fuentes-datos.md); la aplicación los muestra en `/fuentes`.
+
+## Registro de comidas (spec 003)
+
+### Tablas
+
+| Tabla | Qué guarda | Quién la ve y qué puede hacer |
+|---|---|---|
+| `public.meal_entries` | Ítems registrados: comida, día, origen (`manual`, `catalog`, y `estimated`/`confirmed` reservados para la spec 009), cantidad y una **instantánea** de los valores nutricionales | Solo su dueño. El cliente lee (`select`) y borra (`delete`); **no inserta ni modifica**: eso lo hacen las funciones |
+| `public.log_day_starts` | Marca de «empecé a registrar este día», que cierra el día anterior para imputar comidas | Solo su dueño, lectura; la escribe `start_log_day` |
+| `public.meal_photos` | Una foto como máximo por (cuenta, día, comida): ruta en el bucket, medidas y peso | Solo su dueño, **solo lectura**; la escribe la función `meal-photo` |
+
+La instantánea (`energy_kcal`, `protein_g`...) la calcula un disparador (`private.prepare_meal_entry`) a partir del alimento visible para esa cuenta y la cantidad; el cliente nunca envía valores calculados de un ítem del catálogo. Editar o borrar después el alimento no cambia lo registrado.
+
+### Funciones
+
+Todas verifican `auth.uid()` y `private.is_session_fresh()`. Las que escriben son `security definer` (con `search_path` vacío) porque el cliente no tiene permisos de escritura sobre las tablas.
+
+| Función | Qué hace |
+|---|---|
+| `add_meal_entry(entry, request_id)` | Agrega un ítem del catálogo o manual; idempotente por `request_id` |
+| `update_meal_entry(id, changes)` | Cambia cantidad, comida, día o los valores de un ítem manual; recalcula la instantánea de un ítem del catálogo; un ítem ajeno da `not_found` |
+| `recent_meal_items(max_items)` | Alimentos usados hace poco con su última cantidad |
+| `log_day_status(client_timezone)` · `start_log_day(day, client_timezone)` | Regla del día: cuál es «hoy», qué día se propone y si el anterior sigue cerrándose; `start_log_day` solo acepta el «hoy» de la cuenta |
+| `preview_repeat_meal(from_date, from_meal)` · `repeat_meal(from_date, from_meal, to_date, to_meal, request_id)` | Cuenta y copia una comida de otro día; los ítems del catálogo se recalculan con el alimento actual y los manuales o con el alimento ya borrado se copian; idempotente |
+
+La zona horaria para el corte del día es la del perfil; si no hay, la del navegador (si es válida); si no, UTC. `private.log_day_status_at(usuario, ahora, zona)` recibe la hora como parámetro para poder probarla con hora simulada y no tiene permiso para el cliente.
+
+### Fotos (bucket `meal-photos` y función `meal-photo`)
+
+- El bucket es **privado**, de 3 MiB y solo `image/jpeg`; lo crea la migración `20261019000900_meal_photos_storage.sql` (también en producción). Las fotos se guardan como `<user_id>/<uuid>.jpg`. La persona solo puede **leer** su carpeta (política `meal_photos_storage_select_own`, con `(select private.is_session_fresh())`); no hay políticas de escritura ni de borrado para el cliente. La app pide una URL firmada de **600 s** y la renueva a los 540 s.
+- **Cifrado en reposo:** el que da por defecto el almacenamiento de Supabase (AES-256 en el proveedor de la nube), como admite el Principio I para el MVP; la aplicación no agrega una capa propia. Las fotos viajan siempre por HTTPS y no se envían a ningún servicio externo.
+- `meal-photo` (`POST` para subir o reemplazar, `DELETE` para quitar) es la **única** que escribe en el bucket y en `meal_photos`, con la clave de servicio, que vive solo en esa función. Verifica el token con Auth y que la actividad sea de los últimos 30 días, comprueba el origen, limita a **30 fotos por hora** por cuenta, rechaza más de 3 MiB y todo lo que no sea JPEG.
+- **Limpieza de metadatos en el servidor:** aunque el navegador ya reduce la foto (JPEG de hasta 1600 px, calidad 0,8), el servidor no confía en eso: recorre los segmentos y conserva solo los de imagen; quita todos los `APPn` (EXIF, GPS, XMP, IPTC...) salvo `APP0`, de la que además anula la miniatura, quita los comentarios (`COM`) y descarta todo lo que venga después del marcador final. Al reemplazar o quitar, borra el archivo anterior; si falla la base de datos tras subir, borra el huérfano. `DELETE` es idempotente (204).
+- Los registros de la función no incluyen la cuenta, la ruta, el día ni la comida.
+- Supabase **prohíbe borrar con SQL** filas de `storage.objects`: los archivos solo se pueden borrar por la API de Storage.
+
+> **Pendiente (Principio I): eliminar una cuenta.** Las filas de `meal_photos` se borran en cascada con la cuenta, pero **los archivos del bucket no**. Cuando se construya la eliminación de cuentas, tiene que borrar primero los objetos de `meal-photos/<user_id>/` con la API de Storage (clave de servicio) y después la cuenta. Hasta entonces, borrar un usuario a mano deja sus fotos huérfanas en el bucket. Ver `specs/003-registro-de-comidas/research.md`, Decisión 11.
+
+### Pruebas
+
+`tests/meal_entries_schema`, `meal_rls`, `add_meal_entry`, `manual_meal_entry`, `recent_meal_items`, `update_meal_entry`, `log_day_status`, `repeat_meal` y `meal_photos_storage` (pgTAP, todos `*.test.sql`) cubren el aislamiento, la instantánea, la idempotencia, la regla del día con hora simulada y las políticas del bucket; `functions/meal-photo/*.test.ts` (Deno) cubre la limpieza del JPEG y el manejador. La suite de la función usa `--allow-read` sobre sus fixtures: se ejecuta con `npm run test:functions`.

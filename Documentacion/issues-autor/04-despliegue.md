@@ -9,13 +9,13 @@
 ## 1. Supabase (base de datos, cuentas y funciones)
 
 1. Crear el proyecto en <https://supabase.com/dashboard> (región más cercana: São Paulo).
-2. Vincular y aplicar las migraciones (incluye las de la spec 002):
+2. Vincular y aplicar las migraciones (incluye las de las specs 002 y 003, entre ellas la que crea el bucket privado `meal-photos`):
    ```powershell
    npx supabase login
    npx supabase link --project-ref <ref-del-proyecto>
    npx supabase db push
    ```
-3. Cargar los secretos de las funciones (correo de Brevo y Turnstile) y desplegarlas. Ver la guía.
+3. Cargar los secretos de las funciones (correo de Brevo y Turnstile) y desplegarlas, incluida `meal-photo` (fotos de comidas), que debe quedar con *Verify JWT* apagado. Ver la guía.
 4. En Authentication → URL Configuration, poner la dirección pública del sitio.
 
 ## 2. Turnstile
@@ -34,6 +34,8 @@ Agregar el dominio del sitio de Cloudflare Pages a la lista de dominios permitid
 - [ ] Instalar la app (Agregar a pantalla de inicio).
 - [ ] Completar el perfil.
 - [ ] Abrir `/alimentos`: debe funcionar, aunque el catálogo esté vacío hasta el issue 05.
+- [ ] Abrir `/comidas`, agregar un ítem manual y, si ya hay alimentos, uno del catálogo.
+- [ ] Adjuntar una foto a una comida (desde el teléfono): se ve en el día y el bucket `meal-photos` del panel es privado.
 - [ ] Avisarme el resultado para registrarlo y cerrar T077.
 
 **Ojo:** el plan gratuito de Supabase pausa el proyecto después de una semana sin uso. Cómo reactivarlo: sección "Operación" de la guía.

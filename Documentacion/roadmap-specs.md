@@ -32,6 +32,7 @@ Basado en la Constitution v1.2.1. Este documento solo define el corte y el conte
 - Estados manual, estimado y confirmado; snapshots de macros; idempotencia.
 - Regla del día: imputar comidas pasada la medianoche al día en curso.
 - Principios: II, III, VI.
+- **Estado (2026-10-19): implementada** (verificación final en curso). Ítems con instantánea inmutable y origen visible, regla del día (el día que se cierra), repetir una comida y foto opcional privada con limpieza de metadatos en el servidor. Mediciones y decisiones en [`specs/003-registro-de-comidas/research.md`](../specs/003-registro-de-comidas/research.md). Pendiente: al construir la eliminación de cuentas hay que borrar también los archivos de `meal-photos/<user_id>/`.
 
 ### 004 — Objetivo calórico y resumen diario
 - Objetivo configurable y calorías restantes, con incertidumbre explícita.
