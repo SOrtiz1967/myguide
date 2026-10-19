@@ -133,7 +133,7 @@ export const es = {
     resultsCount: (count: number) => (count === 1 ? '1 resultado' : `${count} resultados`),
     tabsLabel: 'Origen de los alimentos',
     tabs: { all: 'Todos', catalog: 'Del catálogo', own: 'Mis alimentos' },
-    originBadge: { catalog: 'Del catálogo', own: 'Propio' },
+    originBadge: { catalog: 'Del catálogo', own: 'Propio', copy: 'Propio · copia' },
     noBrand: 'Sin marca',
     emptyTitle: 'No encontramos alimentos con esa búsqueda',
     emptyBody: 'Revisa cómo está escrito o crea el alimento con tus propios valores.',
@@ -141,6 +141,7 @@ export const es = {
     catalogEmpty: 'El catálogo todavía no tiene alimentos cargados.',
     ownEmpty: 'Todavía no creaste alimentos propios.',
     searchError: 'No pudimos buscar alimentos.',
+    offlineSearch: 'No hay conexión. No pudimos buscar alimentos.',
     detailError: 'No pudimos cargar este alimento.',
     notFound: 'No encontramos este alimento',
     backToSearch: 'Volver a la búsqueda',
@@ -167,7 +168,7 @@ export const es = {
     provenance: {
       title: 'Procedencia',
       own: 'Propio',
-      ownBasedOn: (name: string) => `Propio, basado en ${name}`,
+      ownBasedOnPrefix: 'Propio, basado en',
       catalog: (source: string, code: string, date: string) =>
         `Del catálogo · ${source} · código ${code} · importado el ${date}`,
       viewSources: 'Ver fuentes y licencias',

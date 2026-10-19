@@ -7,7 +7,7 @@ import { AuthProvider } from './features/auth/AuthProvider'
 import './index.css'
 import { routes } from './routes'
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({ defaultOptions: { queries: { retry: 1 } } })
 const router = createBrowserRouter(routes)
 
 createRoot(document.getElementById('root')!).render(

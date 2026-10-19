@@ -100,6 +100,37 @@ export async function login(page: Page, email: string, password = PASSWORD): Pro
   await page.getByRole('button', { name: es.auth.actions.login }).click()
 }
 
+/** Alimentos de catálogo para las pruebas (spec 002). Solo ASCII: el texto viaja por la línea de comandos. */
+export interface SeedFood {
+  id: string
+  name: string
+  brand?: string
+  energy: number | null
+  fiber?: number | null
+  portions?: Array<{ name: string; quantity: number }>
+}
+
+export function clearSeededFoods(): void {
+  dbQuery("delete from public.foods where source_item_id like 'E2E-%'")
+}
+
+export function seedCatalogFoods(foods: SeedFood[]): void {
+  for (const food of foods) {
+    const brand = food.brand ? `'${food.brand}'` : 'null'
+    const energy = food.energy === null ? 'null' : String(food.energy)
+    const fiber =
+      food.fiber === undefined ? '0.4' : food.fiber === null ? 'null' : String(food.fiber)
+    dbQuery(
+      `insert into public.foods (origin, source_id, source_item_id, imported_at, name, brand, reference_basis, energy_kcal, protein_g, carbs_g, fat_g, fiber_g) select 'imported', id, 'E2E-${food.id}', '2026-10-18T12:00:00Z', '${food.name}', ${brand}, '100g', ${energy}, 3.3, 12, 0.5, ${fiber} from public.food_sources where slug = 'usda-fdc'`,
+    )
+    for (const [position, portion] of (food.portions ?? []).entries()) {
+      dbQuery(
+        `insert into public.food_portions (food_id, name, quantity, position) select id, '${portion.name}', ${portion.quantity}, ${position} from public.foods where source_item_id = 'E2E-${food.id}'`,
+      )
+    }
+  }
+}
+
 /** Confirma el correo abriendo el enlace que llegó al buzón local. */
 export async function confirmEmail(page: Page, email: string): Promise<void> {
   const text = await waitForMail(email, /confirma tu correo/i)

@@ -49,6 +49,11 @@ export function formatValue(value: number | null | undefined, unit: Unit): strin
   return `${formatters[unit].format(value)} ${unit}`
 }
 
+/** Cantidad de una porción con la unidad de la base del alimento: "30 g" o "200 ml" (FR-007). */
+export function formatAmount(quantity: number, basis: ReferenceBasis): string {
+  return `${formatters.g.format(quantity)} ${basis === '100g' ? 'g' : 'ml'}`
+}
+
 export function basisLabel(basis: ReferenceBasis): string {
   return basis === '100g' ? 'por 100 g' : 'por 100 ml'
 }

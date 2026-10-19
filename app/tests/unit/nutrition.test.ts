@@ -4,6 +4,7 @@ import {
   NUTRIENTS,
   basisLabel,
   energyCoherence,
+  formatAmount,
   formatValue,
   parseDecimal,
 } from '../../src/features/foods/nutrition'
@@ -116,5 +117,14 @@ describe('basisLabel y NUTRIENTS', () => {
   it('los subtotales (azúcares y saturadas) se distinguen de los totales', () => {
     const sub = NUTRIENTS.filter((n) => n.indent).map((n) => n.key)
     expect(sub).toEqual(['sugars_g', 'saturated_fat_g'])
+  })
+})
+
+describe('formatAmount (FR-007)', () => {
+  it('muestra la cantidad de una porción con la unidad de su base', () => {
+    expect(formatAmount(30, '100g')).toBe('30 g')
+    expect(formatAmount(200, '100ml')).toBe('200 ml')
+    expect(formatAmount(7.5, '100g')).toBe('7,5 g')
+    expect(formatAmount(1250, '100g')).toBe('1.250 g')
   })
 })
