@@ -122,3 +122,13 @@ $$;
 
 grant usage on schema tests to anon, authenticated;
 grant execute on all functions in schema tests to anon, authenticated;
+
+-- Fuente de la muestra de desarrollo (spec 002, T043). Solo existe en local: la carga de producción
+-- no la usa. Los datos de la muestra son de ejemplo, no son datos reales.
+insert into public.food_sources (slug, name, license_name, license_url, attribution, source_url)
+values (
+  'muestra-desarrollo', 'Datos de ejemplo (desarrollo)', 'CC0 1.0',
+  'https://creativecommons.org/publicdomain/zero/1.0/',
+  'Datos de ejemplo para desarrollo y pruebas de MyGuide. No son datos reales.',
+  'https://example.test/muestra'
+) on conflict (slug) do nothing;

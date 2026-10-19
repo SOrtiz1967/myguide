@@ -2,6 +2,9 @@
 begin;
 select plan(8);
 
+-- La base local puede tener cargas hechas: se parte de fuentes sin importar (todo se deshace al final).
+update public.food_sources set last_imported_at = null, food_count = 0;
+
 select is((select count(*) from public.food_sources where slug in ('open-food-facts', 'usda-fdc')), 2::bigint, 'existen las dos fuentes del catálogo');
 
 select is((select license_name from public.food_sources where slug = 'open-food-facts'), 'ODbL 1.0', 'Open Food Facts: licencia ODbL 1.0');

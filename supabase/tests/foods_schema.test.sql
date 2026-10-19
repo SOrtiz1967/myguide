@@ -2,6 +2,9 @@
 begin;
 select plan(38);
 
+-- La base local puede tener el catálogo cargado: la prueba parte de una base sin alimentos (todo se deshace al final).
+delete from public.foods;
+
 select tests.create_user('dueno@test.local') as uid \gset
 select tests.create_user('otro@test.local') as uid2 \gset
 
