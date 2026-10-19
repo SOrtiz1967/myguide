@@ -1,8 +1,8 @@
 # Constitution — Fitness Tracking App
 
-**Versión:** 1.2.0  
+**Versión:** 1.2.1  
 **Ratificada:** 2026-10-16  
-**Última modificación:** 2026-10-16  
+**Última modificación:** 2026-10-19  
 **Estado:** Ratificada para el MVP  
 **Metodología:** Spec-Driven Development (Spec Kit)  
 **Idioma del producto:** Español  
@@ -214,7 +214,7 @@ Las siguientes decisiones están pendientes y NO se consideran fijadas por esta 
 1. Framework basado en React (por ejemplo, Vite o Next.js) y estructura de despliegue.
 2. Backend, autenticación, base de datos y estrategia de almacenamiento de fotos.
 3. Proveedor de IA para analizar fotos o descripciones de comidas.
-4. Fuentes del catálogo de alimentos (genéricos y marcas) y del catálogo de ejercicios, formato y proceso de importación, estrategia de traducción al español y método para calcular calorías y macronutrientes. Debe validarse licencia, cobertura y calidad de cada fuente (ver Principio X).
+4. Fuentes del catálogo de ejercicios, su formato y proceso de importación, y estrategia de traducción al español, además del método para calcular calorías y macronutrientes de las estimaciones. Debe validarse licencia, cobertura y calidad de cada fuente (ver Principio X). Las fuentes del catálogo de alimentos ya están decididas (ver «Decisiones ya tomadas»).
 5. Cómo se obtienen los pasos y la actividad: registro manual, APIs del dispositivo o servicios de salud. Debe investigarse la viabilidad real en una PWA, ya que el acceso a sensores o a servicios de salud desde el navegador es limitado según la plataforma. Hasta que se decida, el registro manual es la vía de base.
 6. Estrategia de costos, límites de uso, cuotas, compresión de imágenes y comportamiento ante indisponibilidad de servicios.
 7. Política concreta de exportación, retención y eliminación de datos.
@@ -231,6 +231,7 @@ Cada decisión MUST documentarse en la especificación o plan técnico correspon
 - La aplicación requiere conexión a internet; no hay funcionamiento offline ni sincronización diferida, aunque sí persistencia local de borradores en curso para evitar pérdidas accidentales (ver Principio VI).
 - Sistema métrico por defecto en el MVP (ver Principio VI).
 - Los catálogos de alimentos y de ejercicios son copias propias importadas, con alimentos y ejercicios creados por el usuario (ver Principio X).
+- Fuentes del catálogo de alimentos (spec 002), importadas a una copia local: **Open Food Facts** para productos de marca de Argentina (licencias ODbL 1.0 y DbCL 1.0; exige atribución visible, que la aplicación muestra en la pantalla de fuentes, y una revisión legal de la obligación de compartir bajo la misma licencia antes de abrir la aplicación a otras personas) y **USDA FoodData Central** para alimentos genéricos (CC0 1.0). Los nombres de USDA se traducen al español y quedan marcados como «sin revisar» o «revisada». Detalle, cobertura medida y obligaciones en `Documentacion/fuentes-datos.md` y en `specs/002-catalogo-de-alimentos/research.md`.
 
 ## Fuera del alcance del MVP
 
@@ -269,6 +270,7 @@ La aplicación se orienta al seguimiento personal y a la educación sobre hábit
 
 | Versión | Fecha | Cambios |
 |---------|-------|---------|
+| 1.2.1 | 2026-10-19 | Se registra la decisión sobre las fuentes del catálogo de alimentos (Open Food Facts y USDA FoodData Central, con su licencia y obligaciones) y la decisión técnica pendiente #4 queda solo para el catálogo de ejercicios. No cambia ningún principio. |
 | 1.2.0 | 2026-10-16 | Se agrega el Principio X (catálogos de referencia de alimentos y ejercicios): copia local importada, procedencia por ítem, licencias y atribución, ítems propios del usuario, valores normalizados por 100 g/ml y traducción al español revisable. Se amplía la decisión técnica pendiente #4 y se registra la decisión tomada sobre catálogos. |
 | 1.1.1 | 2026-10-16 | Corrección de redacción en el Principio I ("offrezca" → "ofrezca"). |
 | 1.1.0 | 2026-10-16 | Se delimita el uso de IA en imágenes exclusivamente a fotos de comidas (sin exigir exclusión de entrenamiento de modelos). Se define el corte de día a las 00:00 hs con imputación flexible de comidas al día en curso antes de abrir uno nuevo. Se agregan reglas de inmutabilidad (snapshots) para el historial, idempotencia en mutaciones y llamadas a IA, persistencia local de borradores de formularios (`localStorage`/`sessionStorage`), compresión de imágenes, validación de esquemas en respuestas de IA y trazabilidad de pruebas en SDD. |

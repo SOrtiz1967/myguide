@@ -391,3 +391,44 @@ Deno.test('USDA: entre Foundation Foods y SR Legacy con el mismo nombre normaliz
   assertEquals(result.duplicates, 1)
   assertEquals(result.foods.map((f) => f.source_item_id).sort(), ['F1', 'S2'])
 })
+
+// ---- T074: endurecimiento frente a datos externos malformados ------------------------------------------
+
+Deno.test('T074: los caracteres de control se eliminan de nombres y marcas (un NUL haría fallar todo el lote)', () => {
+  const result = normalizeOffProduct(
+    off({ product_name_es: 'Leche\u0000 entera\u0007\u001b[31m roja', brands: 'Mar\u0000ca' }),
+  )
+  if (!result.ok) throw new Error(result.reason)
+  assertEquals(result.food.name, 'Leche entera[31m roja')
+  assertEquals(result.food.brand, 'Marca')
+  // lo que queda sin texto visible se trata como sin nombre
+  assertEquals(
+    skipReason(off({ product_name_es: '\u0000\u0001', product_name: '', generic_name: '' })),
+    'no_name',
+  )
+})
+
+Deno.test('T074: un código de origen con caracteres raros o demasiado largo se rechaza', () => {
+  assertEquals(skipReason(off({ code: '7790895000010' })), 'ok')
+  assertEquals(skipReason(off({ code: "1'; drop table foods; --" })), 'no_code')
+  assertEquals(skipReason(off({ code: '1'.repeat(65) })), 'no_code')
+  assertEquals(skipReason(off({ code: 'ABC-123_x.y' })), 'ok')
+})
+
+Deno.test('T074: valores numéricos extraños (texto, infinitos, notación) no pasan como datos', () => {
+  const weird = okFood(
+    off({
+      nutriments: {
+        'energy-kcal_100g': 50,
+        proteins_100g: Infinity,
+        carbohydrates_100g: 'NaN' as never,
+        fat_100g: {} as never,
+        fiber_100g: [] as never,
+      },
+    }),
+  )
+  assertEquals(weird.protein_g, null)
+  assertEquals(weird.carbs_g, null)
+  assertEquals(weird.fat_g, null)
+  assertEquals(weird.fiber_g, null)
+})

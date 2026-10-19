@@ -4,9 +4,21 @@ import { ErrorState } from '../../components/ErrorState'
 import { LoadingState } from '../../components/LoadingState'
 import { es } from '../../copy/es'
 import { formatDate } from '../../lib/format'
+import { safeHttpUrl } from '../../lib/url'
 import { fetchSources, type FoodSource } from './api'
 
 const externalLink = { target: '_blank', rel: 'noopener noreferrer' } as const
+
+/** Enlace externo solo si la dirección es http(s); si no, el texto sin enlace (T074). */
+function ExternalLink({ href, children }: { href: string; children: string }) {
+  const safe = safeHttpUrl(href)
+  if (!safe) return <>{children}</>
+  return (
+    <a href={safe} className="underline" {...externalLink}>
+      {children}
+    </a>
+  )
+}
 
 function SourceCard({ source }: { source: FoodSource }) {
   return (
@@ -16,9 +28,7 @@ function SourceCard({ source }: { source: FoodSource }) {
       <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
         <dt className="text-muted">{es.foods.sources.license}</dt>
         <dd>
-          <a href={source.license_url} className="underline" {...externalLink}>
-            {source.license_name}
-          </a>
+          <ExternalLink href={source.license_url}>{source.license_name}</ExternalLink>
         </dd>
         <dt className="text-muted">{es.foods.sources.lastImport}</dt>
         <dd>
@@ -30,9 +40,7 @@ function SourceCard({ source }: { source: FoodSource }) {
         <dd>{es.foods.sources.foodCount(source.food_count)}</dd>
       </dl>
       <p>
-        <a href={source.source_url} className="underline" {...externalLink}>
-          {es.foods.sources.siteLink}
-        </a>
+        <ExternalLink href={source.source_url}>{es.foods.sources.siteLink}</ExternalLink>
       </p>
     </article>
   )

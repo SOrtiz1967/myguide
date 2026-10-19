@@ -103,8 +103,15 @@ function toNumber(value: unknown): number | null {
   return null
 }
 
+// Los caracteres de control (NUL, BEL, ESC...) se eliminan: un NUL en un solo nombre haría fallar el
+// lote completo en la base de datos, y ninguno tiene sentido en el nombre de un alimento.
+const CONTROL_CHARACTERS = /[\u0000-\u001f\u007f-\u009f]/g
+
 const clean = (value: unknown): string =>
-  typeof value === 'string' ? value.replace(/\s+/g, ' ').trim() : ''
+  typeof value === 'string' ? value.replace(/\s+/g, ' ').replace(CONTROL_CHARACTERS, '').trim() : ''
+
+/** Los códigos de origen son identificadores: letras, números y . _ - hasta 64 caracteres. */
+const SOURCE_ITEM_ID = /^[A-Za-z0-9._-]{1,64}$/
 
 const truncate = (
   value: string,
@@ -148,7 +155,7 @@ export function validateFood(food: NormalizedFood): Result {
     source_item_id: food.source_item_id,
   })
 
-  if (food.source_item_id.trim() === '') return fail('no_code')
+  if (!SOURCE_ITEM_ID.test(food.source_item_id)) return fail('no_code')
   if (food.name.trim() === '' || food.name.length > NAME_MAX) return fail('no_name')
 
   let informed = 0

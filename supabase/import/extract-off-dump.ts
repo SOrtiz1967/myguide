@@ -45,14 +45,21 @@ export interface DumpStats {
  */
 export async function* extractOffDump(
   source: ReadableStream<Uint8Array<ArrayBuffer>>,
-  options: { gzip?: boolean; stats?: DumpStats } = {},
+  options: { gzip?: boolean; stats?: DumpStats; maxLineLength?: number } = {},
 ): AsyncGenerator<OffProduct> {
   const stats = options.stats ?? { rows: 0, argentine: 0, malformed: 0 }
   const bytes = options.gzip === false
     ? source
     : source.pipeThrough(new DecompressionStream('gzip'))
   const text = bytes.pipeThrough(new TextDecoderStream())
-  for await (const line of textLines(text)) {
+  const lines = textLines(text, {
+    maxLineLength: options.maxLineLength,
+    onOverflow: () => {
+      stats.rows++
+      stats.malformed++
+    },
+  })
+  for await (const line of lines) {
     if (line.trim() === '') continue
     stats.rows++
     let raw: Record<string, unknown>

@@ -1,6 +1,6 @@
 # Roadmap de specs — Fitness Tracking App
 
-Basado en la Constitution v1.2.0. Este documento solo define el corte y el contenido previsto de cada spec; ninguna spec está escrita todavía.
+Basado en la Constitution v1.2.1. Este documento solo define el corte y el contenido previsto de cada spec; ninguna spec está escrita todavía.
 
 **Contexto del MVP:** el MVP lo usa solo el autor. Las reglas de privacidad y autenticación de la Constitution se mantienen igual. Lo que se pospone es el trabajo orientado a usuarios externos (ver spec 011).
 
@@ -25,6 +25,7 @@ Basado en la Constitution v1.2.0. Este documento solo define el corte y el conte
 - Procedencia por ítem, valores por 100 g/ml, valores faltantes visibles.
 - Decisión pendiente #4: fuentes, licencias, cobertura para Argentina.
 - Principios: II, III, X.
+- **Estado (2026-10-19): implementada.** Fuentes: Open Food Facts (ODbL 1.0, ≈3.900 productos utilizables de Argentina) y USDA FoodData Central (CC0, genéricos). Cobertura medida: solo ≈26 % de los productos de Argentina de Open Food Facts tiene energía y macronutrientes, por eso los alimentos propios y las copias editables pesan más. Pendientes del autor: cargar USDA (traducción de nombres), carga en producción y revisión legal de la ODbL antes de abrir la aplicación (T077, T078). Resultados en [`specs/002-catalogo-de-alimentos/research.md`](../specs/002-catalogo-de-alimentos/research.md).
 
 ### 003 — Registro de comidas
 - Registro por texto o por catálogo, foto opcional.

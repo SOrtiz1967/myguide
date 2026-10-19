@@ -279,3 +279,26 @@ Deno.test('OFF volcado: lee por transmisión; no consume todo el archivo para en
   assert(pulled < 50, `se leyeron ${pulled} pedazos de ${totalChunks} para entregar el primero`)
   await iterator.return(undefined)
 })
+
+// ---- T074: líneas desmedidas ----------------------------------------------------------------------------------
+
+Deno.test('T074: una línea desmedida se descarta sin acumularla en memoria y la lectura continúa', async () => {
+  const huge = JSON.stringify({
+    code: 'x',
+    countries_tags: ['en:argentina'],
+    product_name: 'A'.repeat(300_000),
+  })
+  const ok = JSON.stringify({ code: '1', countries_tags: ['en:argentina'], product_name: 'Normal' })
+  const stats: DumpStats = { rows: 0, argentine: 0, malformed: 0 }
+  const found = []
+  for await (
+    const item of extractOffDump(asStream(await gzip(`${huge}\n${ok}\n`)), {
+      stats,
+      maxLineLength: 100_000,
+    })
+  ) {
+    found.push(item)
+  }
+  assertEquals(found.map((p) => p.code), ['1'])
+  assertEquals(stats.malformed, 1)
+})

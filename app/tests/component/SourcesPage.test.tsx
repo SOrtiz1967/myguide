@@ -109,3 +109,17 @@ describe('SourcesPage', () => {
     expect(await screen.findByRole('heading', { name: 'Open Food Facts' })).toBeVisible()
   })
 })
+
+describe('SourcesPage: enlaces no confiables (T074)', () => {
+  it('un enlace que no es http(s) se muestra como texto, no como enlace', async () => {
+    mockedFetch.mockResolvedValue([
+      { ...off, license_url: 'javascript:alert(1)', source_url: 'data:text/html,x' },
+    ])
+    renderPage()
+    const card = (await screen.findByRole('heading', { name: 'Open Food Facts' })).closest(
+      'article',
+    )!
+    expect(within(card).queryByRole('link')).toBeNull()
+    expect(within(card).getByText('ODbL 1.0')).toBeVisible()
+  })
+})

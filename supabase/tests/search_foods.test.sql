@@ -1,6 +1,6 @@
 -- T019 (spec 002, FR-001 a FR-004, FR-032, FR-033): búsqueda de alimentos.
 begin;
-select plan(31);
+select plan(34);
 
 -- La base local puede tener el catálogo cargado: la prueba parte de una base sin alimentos (todo se deshace al final).
 delete from public.foods;
@@ -91,6 +91,11 @@ select is((select count(*) from public.search_foods('xyzzy')), 0::bigint, 'sin c
 select is((select count(*) from public.search_foods('%%')), 0::bigint, 'los comodines no se interpretan');
 select is((select count(*) from public.search_foods('p_n')), 0::bigint, 'el guion bajo no actúa como comodín');
 select is((select energy_kcal from public.search_foods('sin energia')), null, 'FR-006: un valor faltante llega null, no 0');
+
+-- T074: el texto buscado nunca se interpreta como SQL ni como patrón
+select is((select count(*) from public.search_foods('x'' or ''1''=''1')), 0::bigint, 'T074: una comilla en el texto buscado no altera la consulta');
+select lives_ok($q$ select * from public.search_foods('a\b''; drop table public.foods; --') $q$, 'T074: barras y comillas no rompen la búsqueda');
+select lives_ok($q$ select * from public.search_foods(repeat('leche ', 100000)) $q$, 'T074: un texto desmedido se acota y no frena la búsqueda');
 
 -- procedencia en el resultado (FR-011)
 select is(

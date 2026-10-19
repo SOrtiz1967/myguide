@@ -9,7 +9,8 @@ Desarrollada con **Spec-Driven Development** (Spec Kit). Los principios del proy
 | Spec | Estado |
 |---|---|
 | 001 Cuentas, perfil y base de la PWA | Implementada y verificada; pendiente la prueba de envío real de correo (T009) y el despliegue (T077) |
-| 002 a 011 | Pendientes |
+| 002 Catálogo de alimentos | Implementada y verificada; pendiente cargar los genéricos de USDA (traducción de nombres) y la carga en producción. Ver [`verification.md`](specs/002-catalogo-de-alimentos/verification.md) |
+| 003 a 011 | Pendientes |
 
 ## Stack
 
@@ -47,10 +48,25 @@ Todo debe pasar antes de dar una funcionalidad por terminada.
 | Pruebas de extremo a extremo (necesitan el stack local) | `npm run e2e --prefix app` |
 | Pruebas de base de datos (pgTAP) | `npm run test:db` |
 | Pruebas de Edge Functions (Deno) | `npm run test:functions` |
+| Pruebas de la carga del catálogo (Deno) | `npm run test:import` |
 | Invariantes de configuración | `npm run test:config` |
 | Sin secretos en el bundle ni en el repositorio | `npm run check:secrets --prefix app` |
 
 La primera vez que se corren las pruebas de extremo a extremo hay que instalar el navegador: `npx playwright install chromium` (desde `app/`).
+
+## Catálogo de alimentos (spec 002)
+
+El catálogo es una copia local de fuentes con licencia compatible (Open Food Facts y USDA FoodData Central); buscar y consultar no depende de ningún servicio de terceros. La carga la ejecuta el autor, no la aplicación:
+
+| Qué | Comando |
+|---|---|
+| Muestra de desarrollo (≈170 alimentos de ejemplo) | `npm run import:muestra` |
+| Open Food Facts, Argentina (API o volcado) | `npm run import:off` · `npm run import:off -- --dump archivo.jsonl.gz` |
+| USDA FoodData Central (genéricos) | `npm run import:usda` |
+| Lo mismo contra producción | `npm run import:off:prod` · `npm run import:usda:prod` |
+| Simular sin escribir | agregar `-- --dry-run` |
+
+Licencias y atribución: [`Documentacion/fuentes-datos.md`](Documentacion/fuentes-datos.md). Funcionamiento de la carga: [`supabase/README.md`](supabase/README.md).
 
 ## Estructura
 
