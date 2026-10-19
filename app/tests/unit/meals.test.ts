@@ -9,6 +9,7 @@ import {
   MEALS,
   mealLabel,
   parseDate,
+  suggestMeal,
   todayIn,
 } from '../../src/features/meals/meals'
 
@@ -118,5 +119,16 @@ describe('groupByMeal', () => {
     expect(grouped.lunch.map((e) => e.id)).toEqual(['a', 'c'])
     expect(grouped.breakfast.map((e) => e.id)).toEqual(['b'])
     expect(grouped.dinner).toEqual([])
+  })
+})
+
+describe('suggestMeal', () => {
+  it('propone la comida según la hora local', () => {
+    const at = (hour: number) => new Date(2026, 9, 19, hour, 30)
+    expect(suggestMeal(at(8))).toBe('breakfast')
+    expect(suggestMeal(at(13))).toBe('lunch')
+    expect(suggestMeal(at(17))).toBe('snack')
+    expect(suggestMeal(at(21))).toBe('dinner')
+    expect(suggestMeal(at(1))).toBe('breakfast')
   })
 })

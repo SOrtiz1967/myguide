@@ -63,7 +63,7 @@ describe('cabecera', () => {
     )
   })
 
-  it('spec 003: con sesión ofrece el enlace "Registro" hacia /registro, antes de "Alimentos"', () => {
+  it('spec 003: con sesión ofrece el enlace "Registro" hacia /comidas, antes de "Alimentos"', () => {
     render(
       <AuthContext.Provider value={signedIn()}>
         <MemoryRouter>
@@ -74,7 +74,7 @@ describe('cabecera', () => {
       </AuthContext.Provider>,
     )
     const registro = screen.getByRole('link', { name: es.meals.navLink })
-    expect(registro).toHaveAttribute('href', '/registro')
+    expect(registro).toHaveAttribute('href', '/comidas')
     const alimentos = screen.getByRole('link', { name: es.foods.navLink })
     expect(
       registro.compareDocumentPosition(alimentos) & Node.DOCUMENT_POSITION_FOLLOWING,

@@ -6,12 +6,12 @@
 
 | Ruta | Propósito | Historia |
 |---|---|---|
-| `/registro` | Redirige al día propuesto (`log_day_status`) | 2, 5 |
-| `/registro/:fecha` | Vista del día: comidas, ítems, subtotales, total, navegación entre días, fotos | 2, 5, 7 |
-| `/registro/:fecha/agregar?comida=` | Agregar: recientes, búsqueda (la de la spec 002, reutilizada) y entrada manual; elegir cantidad o porción | 1, 3 |
-| `/registro/item/:id` | Detalle del ítem con todos sus nutrientes y origen; editar cantidad o porción, comida y día; eliminar; "Guardar como alimento propio" si es manual | 4 |
+| `/comidas` | Redirige al día propuesto (`log_day_status`) | 2, 5 |
+| `/comidas/:fecha` | Vista del día: comidas, ítems, subtotales, total, navegación entre días, fotos | 2, 5, 7 |
+| `/comidas/:fecha/agregar?comida=` | Agregar: recientes, búsqueda (la de la spec 002, reutilizada) y entrada manual; elegir cantidad o porción | 1, 3 |
+| `/comidas/item/:id` | Detalle del ítem con todos sus nutrientes y origen; editar cantidad o porción, comida y día; eliminar; "Guardar como alimento propio" si es manual | 4 |
 
-El enlace "Registro" se agrega a la cabecera, antes de "Alimentos". `:fecha` usa el formato AAAA-MM-DD; una fecha inválida o fuera de rango muestra un aviso con un enlace a "Hoy".
+El enlace "Comidas" se agrega a la cabecera, antes de "Alimentos". `:fecha` usa el formato AAAA-MM-DD; una fecha inválida o fuera de rango muestra un aviso con un enlace a "Hoy".
 
 ## Glosario en pantalla
 

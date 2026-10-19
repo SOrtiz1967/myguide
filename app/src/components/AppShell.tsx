@@ -22,7 +22,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </Link>
           {auth?.status === 'signedIn' ? (
             <nav aria-label="Cuenta" className="flex flex-wrap items-center gap-x-3">
-              <Link to="/registro" className="inline-flex min-h-11 items-center underline">
+              <Link to="/comidas" className="inline-flex min-h-11 items-center underline">
                 {es.meals.navLink}
               </Link>
               <Link to="/alimentos" className="inline-flex min-h-11 items-center underline">

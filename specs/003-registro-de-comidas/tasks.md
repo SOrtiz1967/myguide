@@ -81,8 +81,8 @@ description: "Lista de tareas de la spec 003: registro de comidas"
   - formato "lunes 18" y "domingo 17 de octubre";
   - rango de fechas admitido (desde el 1/1/2000 hasta hoy + 7 días).
 - [X] T015 Implementar `app/src/features/meals/meals.ts` para que pasen las pruebas de T014
-- [X] T016 [P] Ampliar `app/tests/component/session-ui.test.tsx` (escribir primero, debe fallar): con sesión, la cabecera muestra el enlace "Registro" hacia `/registro`, antes de "Alimentos"; sin sesión no
-- [X] T017 Textos en español de la spec en `app/src/copy/es.ts` (sección `meals`), enlace "Registro" en `app/src/components/AppShell.tsx` y rutas provisionales de `contracts/ui-routes.md` en `app/src/routes/index.tsx` (bajo `RequireAuth`). Incluye los textos del estado "Estimado, sin confirmar" (FR-012)
+- [X] T016 [P] Ampliar `app/tests/component/session-ui.test.tsx` (escribir primero, debe fallar): con sesión, la cabecera muestra el enlace "Comidas" hacia `/comidas`, antes de "Alimentos"; sin sesión no
+- [X] T017 Textos en español de la spec en `app/src/copy/es.ts` (sección `meals`), enlace "Comidas" en `app/src/components/AppShell.tsx` y rutas provisionales de `contracts/ui-routes.md` en `app/src/routes/index.tsx` (bajo `RequireAuth`). Incluye los textos del estado "Estimado, sin confirmar" (FR-012)
 
 **Checkpoint**: esquema, seguridad y utilidades listos.
 
@@ -115,13 +115,13 @@ description: "Lista de tareas de la spec 003: registro de comidas"
   - Excluye los alimentos que ya no existen o que la persona no puede ver.
   - Los valores de los que vienen de un alimento se calculan con el alimento actual.
   - No mezcla cuentas (FR-040).
-- [ ] T020 [P] [US1] Pruebas unitarias en `app/tests/unit/mealSchema.test.ts`: las reglas de cantidad y porciones de FR-003, con coma y con punto, y mensajes claros por campo
-- [ ] T021 [P] [US1] Pruebas de componentes en `app/tests/component/QuantityPicker.test.tsx`:
+- [X] T020 [P] [US1] Pruebas unitarias en `app/tests/unit/mealSchema.test.ts`: las reglas de cantidad y porciones de FR-003, con coma y con punto, y mensajes claros por campo
+- [X] T021 [P] [US1] Pruebas de componentes en `app/tests/component/QuantityPicker.test.tsx`:
   - alterna entre g (o ml, según la base) y cada porción del alimento;
   - muestra la cantidad equivalente ("1,5 tazas = 237 g");
   - previsualiza energía y macronutrientes para la cantidad, con "sin dato" en los faltantes;
   - etiquetas accesibles.
-- [ ] T022 [P] [US1] Pruebas de componentes en `app/tests/component/AddEntryPage.test.tsx`:
+- [X] T022 [P] [US1] Pruebas de componentes en `app/tests/component/AddEntryPage.test.tsx`:
   - muestra los recientes con la última cantidad precargada y los registra en 2 interacciones;
   - busca con la búsqueda de la spec 002 e incluye los alimentos propios con su marca "Propio";
   - elegir un alimento abre el selector de cantidad;
@@ -131,21 +131,21 @@ description: "Lista de tareas de la spec 003: registro de comidas"
   - la comida de destino viene de `?comida=` y se puede cambiar;
   - un alimento eliminado mientras se completaba el formulario muestra un mensaje claro y conserva el borrador;
   - se puede agregar a un día pasado abierto desde la navegación (registro tardío, FR-027).
-- [ ] T023 [P] [US1] Prueba de extremo a extremo `app/tests/e2e/meals-add.spec.ts`: escenarios 1 a 6 del `quickstart.md`. **Se ejecuta cuando existe la vista del día (T035)**, porque verifica el resultado allí
+- [X] T023 [P] [US1] Prueba de extremo a extremo `app/tests/e2e/meals-add.spec.ts`: escenarios 1 a 6 del `quickstart.md`. **Se ejecuta cuando existe la vista del día (T035)**, porque verifica el resultado allí
 
 ### Implementation for User Story 1
 
 - [X] T024 [US1] Migración `supabase/migrations/20261019000400_add_meal_entry.sql`: `private.validate_meal_entry(...)` con las reglas de research (Decisión 8) y `public.add_meal_entry(entry, request_id)` según `contracts/database-api.md`, atómica e idempotente (`security invoker`, `search_path` vacío)
 - [X] T025 [US1] Migración `supabase/migrations/20261019000500_recent_meal_items.sql`: `public.recent_meal_items(max)`
-- [ ] T026 [P] [US1] Acceso a datos en `app/src/features/meals/api.ts`:
+- [X] T026 [P] [US1] Acceso a datos en `app/src/features/meals/api.ts`:
   - `addEntry` con `request_id` y `saveRemotely`;
   - `fetchRecents`;
   - `fetchDayEntries(fecha)`;
   - los tipos `MealEntry`, `Meal`, `EntryOrigin` y `RecentItem`.
-- [ ] T027 [P] [US1] Esquema Zod en `app/src/features/meals/schema.ts` (cantidad, porciones y entrada manual), con `parseDecimal` de `foods/nutrition.ts`
-- [ ] T028 [US1] Componente `app/src/features/meals/QuantityPicker.tsx`
-- [ ] T029 [US1] Pantalla `app/src/features/meals/AddEntryPage.tsx`: recientes, búsqueda reutilizada de `features/foods` (sin pisar el parámetro `?comida=`), selector de cantidad, borrador local y guardado confirmado (skill `frontend-design`)
-- [ ] T030 [US1] Conectar `/registro/:fecha/agregar` en `app/src/routes/index.tsx`
+- [X] T027 [P] [US1] Esquema Zod en `app/src/features/meals/schema.ts` (cantidad, porciones y entrada manual), con `parseDecimal` de `foods/nutrition.ts`
+- [X] T028 [US1] Componente `app/src/features/meals/QuantityPicker.tsx`
+- [X] T029 [US1] Pantalla `app/src/features/meals/AddEntryPage.tsx`: recientes, búsqueda reutilizada de `features/foods` (sin pisar el parámetro `?comida=`), selector de cantidad, borrador local y guardado confirmado (skill `frontend-design`)
+- [X] T030 [US1] Conectar `/comidas/:fecha/agregar` en `app/src/routes/index.tsx`
 
 **Checkpoint**: se puede agregar del catálogo y de los recientes. Pasan T018 a T022; T023 pasa al terminar la vista del día (US2). US1 y US2 se validan juntas.
 
@@ -159,7 +159,7 @@ description: "Lista de tareas de la spec 003: registro de comidas"
 
 ### Tests for User Story 2 ⚠️
 
-- [ ] T031 [P] [US2] Pruebas de componentes en `app/tests/component/DayPage.test.tsx`:
+- [X] T031 [P] [US2] Pruebas de componentes en `app/tests/component/DayPage.test.tsx`:
   - las comidas en orden, cada una con sus ítems (nombre, marca, cantidad, energía y origen) y su subtotal;
   - total del día con unidades, y nutrientes incompletos marcados como tales;
   - estado vacío con "Agregar" por comida;
@@ -169,13 +169,13 @@ description: "Lista de tareas de la spec 003: registro de comidas"
   - un ítem cuyo alimento ya no existe lo indica (FR-013);
   - un ítem "estimado, sin confirmar" (`status = pending`) se muestra con su etiqueta y la nota de posibles errores (FR-012);
   - el día visible se conserva al ir al detalle y volver (FR-014 a FR-018).
-- [ ] T032 [P] [US2] Prueba de extremo a extremo `app/tests/e2e/meals-day.spec.ts`: escenarios 7, 8, 9, 19 y 27 (60 ítems en un teléfono emulado con red 4G simulada en menos de 2 s; totales correctos)
+- [X] T032 [P] [US2] Prueba de extremo a extremo `app/tests/e2e/meals-day.spec.ts`: escenarios 7, 8, 9, 19 y 27 (60 ítems en un teléfono emulado con red 4G simulada en menos de 2 s; totales correctos)
 
 ### Implementation for User Story 2
 
-- [ ] T033 [P] [US2] Hook `app/src/features/meals/useDay.ts`: ítems del día y totales con `mealTotals`
-- [ ] T034 [P] [US2] Componente `app/src/features/meals/MealSection.tsx`: título de la comida, ítems, subtotal y acciones (agregar; el menú de repetir y la foto se completan en US6 y US7)
-- [ ] T035 [US2] Pantalla `app/src/features/meals/DayPage.tsx` y rutas `/registro` (por ahora va a hoy; US5 agrega el día propuesto) y `/registro/:fecha` en `app/src/routes/index.tsx`
+- [X] T033 [P] [US2] Hook `app/src/features/meals/useDay.ts`: ítems del día y totales con `mealTotals`
+- [X] T034 [P] [US2] Componente `app/src/features/meals/MealSection.tsx`: título de la comida, ítems, subtotal y acciones (agregar; el menú de repetir y la foto se completan en US6 y US7)
+- [X] T035 [US2] Pantalla `app/src/features/meals/DayPage.tsx` y rutas `/comidas` (por ahora va a hoy; US5 agrega el día propuesto) y `/comidas/:fecha` en `app/src/routes/index.tsx`
 
 **Checkpoint**: registrar y ver el día. US1 + US2 forman el MVP mínimo útil.
 
@@ -241,7 +241,7 @@ description: "Lista de tareas de la spec 003: registro de comidas"
 ### Implementation for User Story 4
 
 - [ ] T044 [US4] Migración `supabase/migrations/20261019000600_update_meal_entry.sql`: `public.update_meal_entry(id, changes)` atómica
-- [ ] T045 [US4] `updateEntry` y `deleteEntry` en `app/src/features/meals/api.ts` y pantalla `app/src/features/meals/EntryDetailPage.tsx` (usa el diálogo de T040 también desde el detalle de un manual); conectar `/registro/item/:id`
+- [ ] T045 [US4] `updateEntry` y `deleteEntry` en `app/src/features/meals/api.ts` y pantalla `app/src/features/meals/EntryDetailPage.tsx` (usa el diálogo de T040 también desde el detalle de un manual); conectar `/comidas/item/:id`
 
 **Checkpoint**: ciclo de vida completo de un ítem.
 
@@ -266,13 +266,13 @@ description: "Lista de tareas de la spec 003: registro de comidas"
 - [ ] T047 [P] [US5] Pruebas de componentes en `app/tests/component/DayRule.test.tsx`:
   - con `closing = true`, la vista muestra "Registrando en el lunes 18" en una región visible y el botón "Empezar el día de hoy";
   - el formulario de agregar muestra la fecha de destino y permite elegir el día nuevo antes de guardar;
-  - `/registro` lleva al día propuesto.
+  - `/comidas` lleva al día propuesto.
 - [ ] T048 [P] [US5] Prueba de extremo a extremo `app/tests/e2e/meals-day-rule.spec.ts` con el reloj simulado de Playwright (`page.clock`): escenarios 17, 18 y 19
 
 ### Implementation for User Story 5
 
 - [ ] T049 [US5] Migración `supabase/migrations/20261019000700_log_day.sql`: `private.log_day_status_at(ahora, zona)` (sin permiso para el cliente), `public.log_day_status(client_timezone)` (que la llama con `now()`) y `public.start_log_day(day)`. No hay ningún parámetro de hora en la función pública
-- [ ] T050 [US5] Aviso del día que se cierra en `DayPage.tsx`, selector de la fecha de destino en `AddEntryPage.tsx`, `startLogDay` y `fetchDayStatus` en `api.ts`, y redirección de `/registro` al día propuesto
+- [ ] T050 [US5] Aviso del día que se cierra en `DayPage.tsx`, selector de la fecha de destino en `AddEntryPage.tsx`, `startLogDay` y `fetchDayStatus` en `api.ts`, y redirección de `/comidas` al día propuesto
 
 **Checkpoint**: la regla del día de la Constitution funciona.
 

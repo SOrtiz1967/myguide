@@ -41,4 +41,29 @@ describe('saveRemotely', () => {
     expect((error as WriteError).network).toBe(false)
     expect((error as WriteError).message).toBe(es.errors.generic)
   })
+
+  it('un mapeador puede dar un mensaje específico para un error conocido del servidor', async () => {
+    const error = await saveRemotely(
+      () => Promise.reject({ message: 'not_found: el alimento no existe', code: 'P0002' }),
+      (e) => ((e as { code?: string }).code === 'P0002' ? 'Ese alimento ya no existe.' : null),
+    ).catch((e: unknown) => e)
+    expect((error as WriteError).message).toBe('Ese alimento ya no existe.')
+    expect((error as WriteError).network).toBe(false)
+  })
+
+  it('si el mapeador no reconoce el error, queda el mensaje general', async () => {
+    const error = await saveRemotely(
+      () => Promise.reject({ message: 'otra cosa', code: 'XX000' }),
+      () => null,
+    ).catch((e: unknown) => e)
+    expect((error as WriteError).message).toBe(es.errors.generic)
+  })
+
+  it('un fallo de red siempre dice que no hay conexión, aunque haya mapeador', async () => {
+    const error = await saveRemotely(
+      () => Promise.reject(new TypeError('Failed to fetch')),
+      () => 'no debería usarse',
+    ).catch((e: unknown) => e)
+    expect((error as WriteError).message).toBe(es.errors.offline)
+  })
 })

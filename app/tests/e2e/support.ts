@@ -110,6 +110,11 @@ export interface SeedFood {
   portions?: Array<{ name: string; quantity: number }>
 }
 
+/** Borra los ítems de comidas de corridas anteriores (todos llevan "e2e" en el nombre). */
+export function clearSeededEntries(): void {
+  dbQuery("delete from public.meal_entries where food_name like '%e2e%'")
+}
+
 export function clearSeededFoods(): void {
   dbQuery("delete from public.foods where source_item_id like 'E2E-%'")
 }

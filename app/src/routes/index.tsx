@@ -9,6 +9,9 @@ import { FoodDetailPage } from '../features/foods/FoodDetailPage'
 import { FoodEditPage } from '../features/foods/FoodEditPage'
 import { FoodSearchPage } from '../features/foods/FoodSearchPage'
 import { SourcesPage } from '../features/foods/SourcesPage'
+import { AddEntryPage } from '../features/meals/AddEntryPage'
+import { DayPage } from '../features/meals/DayPage'
+import { MealsRedirect } from '../features/meals/MealsRedirect'
 import { MealsPlaceholderPage } from '../features/meals/pages/MealsPlaceholderPage'
 import { ProfilePage } from '../features/profile/ProfilePage'
 import { AppLayout } from './AppLayout'
@@ -36,10 +39,10 @@ export const routes: RouteObject[] = [
         children: [
           { path: '/', element: <HomePage /> },
           { path: '/perfil', element: <ProfilePage /> },
-          { path: '/registro', element: <MealsPlaceholderPage /> },
-          { path: '/registro/:fecha', element: <MealsPlaceholderPage /> },
-          { path: '/registro/:fecha/agregar', element: <MealsPlaceholderPage /> },
-          { path: '/registro/item/:id', element: <MealsPlaceholderPage /> },
+          { path: '/comidas', element: <MealsRedirect /> },
+          { path: '/comidas/:fecha', element: <DayPage /> },
+          { path: '/comidas/:fecha/agregar', element: <AddEntryPage /> },
+          { path: '/comidas/item/:id', element: <MealsPlaceholderPage /> },
           { path: '/alimentos', element: <FoodSearchPage /> },
           { path: '/alimentos/nuevo', element: <FoodCreatePage /> },
           { path: '/alimentos/:id', element: <FoodDetailPage /> },

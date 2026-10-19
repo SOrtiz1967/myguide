@@ -15,8 +15,14 @@ export class WriteError extends Error {
 /**
  * Ejecuta un guardado remoto (FR-020): sin conexión no lo intenta, y cualquier fallo se convierte en
  * un `WriteError` con un mensaje seguro. Quien lo usa solo muestra "guardado" si esta función resuelve.
+ *
+ * `messageFor` es opcional: traduce un error conocido del servidor (por ejemplo, "el alimento ya no
+ * existe") a un mensaje claro. Nunca se usa el texto crudo del servidor.
  */
-export async function saveRemotely<T>(write: () => Promise<T>): Promise<T> {
+export async function saveRemotely<T>(
+  write: () => Promise<T>,
+  messageFor?: (error: unknown) => string | null,
+): Promise<T> {
   if (typeof navigator !== 'undefined' && navigator.onLine === false) {
     throw new WriteError(true, es.errors.offline)
   }
@@ -24,6 +30,9 @@ export async function saveRemotely<T>(write: () => Promise<T>): Promise<T> {
     return await write()
   } catch (error) {
     const network = isNetworkError(error)
-    throw new WriteError(network, network ? es.errors.offline : es.errors.generic)
+    throw new WriteError(
+      network,
+      network ? es.errors.offline : (messageFor?.(error) ?? es.errors.generic),
+    )
   }
 }

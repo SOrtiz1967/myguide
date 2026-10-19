@@ -95,3 +95,12 @@ export function groupByMeal<T extends { meal: Meal }>(entries: T[]): Record<Meal
   for (const entry of entries) grouped[entry.meal].push(entry)
   return grouped
 }
+
+/** La comida más probable según la hora local: se propone al agregar sin que se haya elegido una. */
+export function suggestMeal(now: Date = new Date()): Meal {
+  const hour = now.getHours()
+  if (hour < 11) return 'breakfast'
+  if (hour < 15) return 'lunch'
+  if (hour < 19) return 'snack'
+  return 'dinner'
+}

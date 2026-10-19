@@ -114,12 +114,12 @@ Las mismas reglas están en Zod (cliente) y en la base o la función (servidor).
 
 ## Decisión 9: pantallas y rutas
 
-- `/registro`: lleva al día propuesto (`proposed_date`).
-- `/registro/:fecha` (AAAA-MM-DD): la vista del día.
-- `/registro/:fecha/agregar?comida=`: agregar (recientes, búsqueda y entrada manual).
-- `/registro/item/:id`: detalle y edición de un ítem.
+- `/comidas`: lleva al día propuesto (`proposed_date`).
+- `/comidas/:fecha` (AAAA-MM-DD): la vista del día.
+- `/comidas/:fecha/agregar?comida=`: agregar (recientes, búsqueda y entrada manual).
+- `/comidas/item/:id`: detalle y edición de un ítem.
 
-El enlace "Registro" se suma a la cabecera. Las pantallas son páginas, no diálogos superpuestos: cada formulario tiene su borrador (`meal-add-<fecha>-<comida>`, `meal-edit-<id>`) y el botón Atrás del teléfono funciona. Detalle en `contracts/ui-routes.md`.
+El enlace "Comidas" se suma a la cabecera. Las pantallas son páginas, no diálogos superpuestos: cada formulario tiene su borrador (`meal-add-<fecha>-<comida>`, `meal-edit-<id>`) y el botón Atrás del teléfono funciona. Detalle en `contracts/ui-routes.md`.
 
 ## Decisión 10: observabilidad y privacidad
 
