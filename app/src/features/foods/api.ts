@@ -135,3 +135,26 @@ export async function createFood(payload: FoodPayload, requestId: string): Promi
   if (error) throw error
   return data as string
 }
+
+/** Crea una copia propia y editable de un alimento visible (catálogo o propio), idempotente por `requestId`. */
+export async function copyFood(id: string, requestId: string): Promise<string> {
+  const { data, error } = await supabase.rpc('copy_food', { id, request_id: requestId })
+  if (error) throw error
+  return data as string
+}
+
+/** Edita un alimento propio y reemplaza sus porciones en la misma operación. */
+export async function updateFood(id: string, payload: FoodPayload): Promise<string> {
+  const { portions, ...food } = payload
+  const { data, error } = await supabase.rpc('update_food', { id, food, portions })
+  if (error) throw error
+  return data as string
+}
+
+/** Elimina un alimento propio. Sus porciones se eliminan con él; las copias que se basaban en él no cambian. */
+export async function deleteFood(id: string): Promise<void> {
+  const { data, error } = await supabase.from('foods').delete().eq('id', id).select('id')
+  if (error) throw error
+  // RLS hace que un alimento ajeno o del catálogo no afecte ninguna fila.
+  if (!data || data.length === 0) throw new Error('not_found')
+}

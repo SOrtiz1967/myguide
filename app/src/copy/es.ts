@@ -203,6 +203,10 @@ export const es = {
       optional: 'Opcional',
       saved: 'Alimento guardado',
       deleted: 'Alimento eliminado',
+      copyCreated: 'Creamos tu copia. Ya puedes editarla; el original no cambia.',
+      editNotAllowed:
+        'Los alimentos del catálogo no se pueden editar. Crea tu versión desde el detalle.',
+      deleteFailed: 'No pudimos eliminar el alimento.',
       deleteTitle: '¿Eliminar este alimento?',
       deleteBody:
         'Se elimina solo de tu lista. Lo que registraste antes conserva sus propios valores.',

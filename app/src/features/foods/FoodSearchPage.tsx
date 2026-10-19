@@ -2,6 +2,7 @@ import { Link, useLocation, useNavigate } from 'react-router'
 import { EmptyState } from '../../components/EmptyState'
 import { ErrorState } from '../../components/ErrorState'
 import { LoadingState } from '../../components/LoadingState'
+import { SuccessMessage } from '../../components/SuccessMessage'
 import { es } from '../../copy/es'
 import { isNetworkError } from '../../lib/errors'
 import type { FoodSummary } from './api'
@@ -42,6 +43,7 @@ export function FoodSearchPage() {
   const search = useFoodSearch()
   const navigate = useNavigate()
   const location = useLocation()
+  const deleted = (location.state as { deleted?: boolean } | null)?.deleted === true
 
   const createNamed = () =>
     void navigate(`/alimentos/nuevo?nombre=${encodeURIComponent(search.query)}`)
@@ -54,6 +56,8 @@ export function FoodSearchPage() {
           {es.foods.newFood}
         </Link>
       </div>
+
+      {deleted ? <SuccessMessage>{es.foods.form.deleted}</SuccessMessage> : null}
 
       <div className="flex flex-col gap-1">
         <label htmlFor="busqueda" className="font-medium">

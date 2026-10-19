@@ -163,14 +163,14 @@ description: "Lista de tareas de la spec 002: catálogo de alimentos"
 
 ### Tests for User Story 3 ⚠️ (escribir primero y verificar que FALLAN)
 
-- [ ] T054 [P] [US3] Prueba pgTAP en `supabase/tests/copy_food.test.sql`: copiar un alimento del catálogo y uno propio, con sus porciones; la copia tiene `based_on_food_id` y es propia; idempotente por `request_id`; dos copias con distinto `request_id` son independientes; el original no cambia; otra cuenta ve el original intacto; una nueva importación que cambia el original no altera la copia; eliminar el original deja `based_on_food_id` nulo y la copia con sus valores; copiar un alimento del catálogo que no tiene energía crea la copia igual, fiel al original; no se puede copiar un alimento ajeno (FR-020, FR-024, FR-027)
-- [ ] T055 [P] [US3] Pruebas de componentes en `app/tests/component/FoodCopy.test.tsx`: "Crear mi versión" crea la copia y lleva a su edición; muestra "basado en [original]" con enlace; en la búsqueda se distinguen el original y la copia; sin conexión no se da por creada
-- [ ] T056 [P] [US3] Prueba de extremo a extremo `app/tests/e2e/foods-copy.spec.ts`: escenarios 16 a 18 (copia, edición sin tocar el original, y repetir la carga sin afectar la copia)
+- [X] T054 [P] [US3] Prueba pgTAP en `supabase/tests/copy_food.test.sql`: copiar un alimento del catálogo y uno propio, con sus porciones; la copia tiene `based_on_food_id` y es propia; idempotente por `request_id`; dos copias con distinto `request_id` son independientes; el original no cambia; otra cuenta ve el original intacto; una nueva importación que cambia el original no altera la copia; eliminar el original deja `based_on_food_id` nulo y la copia con sus valores; copiar un alimento del catálogo que no tiene energía crea la copia igual, fiel al original; no se puede copiar un alimento ajeno (FR-020, FR-024, FR-027)
+- [X] T055 [P] [US3] Pruebas de componentes en `app/tests/component/FoodCopy.test.tsx`: "Crear mi versión" crea la copia y lleva a su edición; muestra "basado en [original]" con enlace; en la búsqueda se distinguen el original y la copia; sin conexión no se da por creada
+- [X] T056 [P] [US3] Prueba de extremo a extremo `app/tests/e2e/foods-copy.spec.ts`: escenarios 16 a 18 (copia, edición sin tocar el original, y repetir la carga sin afectar la copia)
 
 ### Implementation for User Story 3
 
-- [ ] T057 [US3] Migración `supabase/migrations/20261017000800_copy_food.sql`: función `public.copy_food(id, request_id)` atómica e idempotente
-- [ ] T058 [US3] `copyFood` en `app/src/features/foods/api.ts` y botones "Crear mi versión" / "Crear una copia" en `FoodDetailPage.tsx`
+- [X] T057 [US3] Migración `supabase/migrations/20261017000800_copy_food.sql`: función `public.copy_food(id, request_id)` atómica e idempotente
+- [X] T058 [US3] `copyFood` en `app/src/features/foods/api.ts` y botones "Crear mi versión" / "Crear una copia" en `FoodDetailPage.tsx`
 
 **Checkpoint**: se puede corregir un dato del catálogo sin tocarlo. Pasan T054 a T056.
 
@@ -184,16 +184,16 @@ description: "Lista de tareas de la spec 002: catálogo de alimentos"
 
 ### Tests for User Story 4 ⚠️ (escribir primero y verificar que FALLAN)
 
-- [ ] T059 [P] [US4] Prueba pgTAP en `supabase/tests/update_delete_food.test.sql`: `update_food` reemplaza porciones atómicamente; sobre un alimento del catálogo o ajeno devuelve `not_found` y no cambia nada; valida igual que al crear; eliminar un alimento propio elimina sus porciones; las copias que se basaban en él conservan sus valores; el catálogo no se puede eliminar; guardar la edición de una copia sin energía se rechaza con `energy_required` hasta completarla (FR-015, FR-021, FR-022, FR-024)
-- [ ] T060 [P] [US4] Pruebas de componentes en `app/tests/component/FoodEdit.test.tsx`: el formulario de edición viene cargado; guarda y confirma; eliminar pide confirmación accesible (foco, Escape cancela) y recién entonces elimina; el catálogo no ofrece Editar ni Eliminar; fallo de red conserva el borrador y no da por guardado; valores inválidos se rechazan igual que al crear
-- [ ] T061 [P] [US4] Prueba de extremo a extremo `app/tests/e2e/foods-edit.spec.ts`: escenarios 19 a 21 (editar, eliminar, catálogo de solo lectura, corte de red)
+- [X] T059 [P] [US4] Prueba pgTAP en `supabase/tests/update_delete_food.test.sql`: `update_food` reemplaza porciones atómicamente; sobre un alimento del catálogo o ajeno devuelve `not_found` y no cambia nada; valida igual que al crear; eliminar un alimento propio elimina sus porciones; las copias que se basaban en él conservan sus valores; el catálogo no se puede eliminar; guardar la edición de una copia sin energía se rechaza con `energy_required` hasta completarla (FR-015, FR-021, FR-022, FR-024)
+- [X] T060 [P] [US4] Pruebas de componentes en `app/tests/component/FoodEdit.test.tsx`: el formulario de edición viene cargado; guarda y confirma; eliminar pide confirmación accesible (foco, Escape cancela) y recién entonces elimina; el catálogo no ofrece Editar ni Eliminar; fallo de red conserva el borrador y no da por guardado; valores inválidos se rechazan igual que al crear
+- [X] T061 [P] [US4] Prueba de extremo a extremo `app/tests/e2e/foods-edit.spec.ts`: escenarios 19 a 21 (editar, eliminar, catálogo de solo lectura, corte de red)
 
 ### Implementation for User Story 4
 
-- [ ] T062 [US4] Migración `supabase/migrations/20261017000900_update_food.sql`: función `public.update_food(id, food, portions)` atómica
-- [ ] T063 [P] [US4] Componente accesible `app/src/components/ConfirmDialog.tsx` (rol de diálogo, foco atrapado, Escape, devolución del foco)
-- [ ] T064 [US4] Página `app/src/features/foods/FoodEditPage.tsx` reutilizando `FoodForm`, con borrador (`food-edit-<id>`) y `updateFood` en `api.ts`; conectar `/alimentos/:id/editar`
-- [ ] T065 [US4] Eliminar con confirmación en `FoodDetailPage.tsx` (`deleteFood` en `api.ts`) y volver a la búsqueda
+- [X] T062 [US4] Migración `supabase/migrations/20261017000900_update_food.sql`: función `public.update_food(id, food, portions)` atómica
+- [X] T063 [P] [US4] Componente accesible `app/src/components/ConfirmDialog.tsx` (rol de diálogo, foco atrapado, Escape, devolución del foco)
+- [X] T064 [US4] Página `app/src/features/foods/FoodEditPage.tsx` reutilizando `FoodForm`, con borrador (`food-edit-<id>`) y `updateFood` en `api.ts`; conectar `/alimentos/:id/editar`
+- [X] T065 [US4] Eliminar con confirmación en `FoodDetailPage.tsx` (`deleteFood` en `api.ts`) y volver a la búsqueda
 
 **Checkpoint**: el ciclo de vida de los alimentos propios está completo. Pasan T059 a T061.
 

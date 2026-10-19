@@ -1,10 +1,15 @@
-import { Link, useLocation, useParams } from 'react-router'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useState } from 'react'
+import { Link, useLocation, useNavigate, useParams } from 'react-router'
+import { ConfirmDialog } from '../../components/ConfirmDialog'
 import { EmptyState } from '../../components/EmptyState'
 import { ErrorState } from '../../components/ErrorState'
 import { LoadingState } from '../../components/LoadingState'
 import { SuccessMessage } from '../../components/SuccessMessage'
 import { es } from '../../copy/es'
-import type { Food } from './api'
+import { newRequestId } from '../../lib/ids'
+import { saveRemotely, WriteError } from '../../lib/mutation'
+import { copyFood, deleteFood, type Food } from './api'
 import { FoodProvenance } from './FoodProvenance'
 import { formatAmount } from './nutrition'
 import { NutritionFacts } from './NutritionFacts'
@@ -34,26 +39,96 @@ function Portions({ food }: { food: Food }) {
   )
 }
 
+/** Crea la copia propia (idempotente: un reintento reutiliza el mismo identificador) y lleva a editarla. */
+function useCopyAction(food: Food) {
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
+  const [requestId] = useState(newRequestId)
+  const [error, setError] = useState<string | null>(null)
+
+  const mutation = useMutation({
+    mutationFn: () => saveRemotely(() => copyFood(food.id, requestId)),
+    onMutate: () => setError(null),
+    onSuccess: (copyId) => {
+      void queryClient.invalidateQueries({ queryKey: ['foods'] })
+      void navigate(`/alimentos/${copyId}/editar`, { state: { copied: true } })
+    },
+    onError: (e) => setError(e instanceof WriteError ? e.message : es.errors.generic),
+  })
+  return { copy: () => mutation.mutate(), pending: mutation.isPending, error }
+}
+
+/** Elimina el alimento propio (FR-021) y vuelve a la búsqueda. El diálogo sigue abierto si falla. */
+function useDeleteAction(food: Food) {
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
+  const [open, setOpen] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const mutation = useMutation({
+    mutationFn: () => saveRemotely(() => deleteFood(food.id)),
+    onMutate: () => setError(null),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['foods'] })
+      void navigate('/alimentos', { state: { deleted: true } })
+    },
+    onError: (e) => setError(e instanceof WriteError ? e.message : es.foods.form.deleteFailed),
+  })
+  return {
+    open,
+    show: () => {
+      setError(null)
+      setOpen(true)
+    },
+    hide: () => setOpen(false),
+    confirm: () => mutation.mutate(),
+    pending: mutation.isPending,
+    error,
+  }
+}
+
 function Actions({ food }: { food: Food }) {
+  const copy = useCopyAction(food)
+  const remove = useDeleteAction(food)
   return (
-    <div className="flex flex-wrap gap-3">
-      {food.origin === 'imported' ? (
-        <button type="button" className="btn-primary">
-          {es.foods.actions.createMine}
-        </button>
-      ) : (
-        <>
-          <Link to={`/alimentos/${food.id}/editar`} className="btn-primary">
-            {es.foods.actions.edit}
-          </Link>
-          <button type="button" className="btn-secondary">
-            {es.foods.actions.copy}
+    <div className="flex flex-col gap-3">
+      <div className="flex flex-wrap gap-3">
+        {food.origin === 'imported' ? (
+          <button type="button" className="btn-primary" disabled={copy.pending} onClick={copy.copy}>
+            {es.foods.actions.createMine}
           </button>
-          <button type="button" className="btn-secondary">
-            {es.foods.actions.delete}
-          </button>
-        </>
-      )}
+        ) : (
+          <>
+            <Link to={`/alimentos/${food.id}/editar`} className="btn-primary">
+              {es.foods.actions.edit}
+            </Link>
+            <button
+              type="button"
+              className="btn-secondary"
+              disabled={copy.pending}
+              onClick={copy.copy}
+            >
+              {es.foods.actions.copy}
+            </button>
+            <button type="button" className="btn-secondary" onClick={remove.show}>
+              {es.foods.actions.delete}
+            </button>
+          </>
+        )}
+      </div>
+      {copy.error ? <ErrorState message={copy.error} /> : null}
+      {remove.open ? (
+        <ConfirmDialog
+          title={es.foods.form.deleteTitle}
+          description={es.foods.form.deleteBody}
+          confirmLabel={es.foods.actions.confirmDelete}
+          cancelLabel={es.foods.actions.cancel}
+          onConfirm={remove.confirm}
+          onCancel={remove.hide}
+          busy={remove.pending}
+          error={remove.error}
+        />
+      ) : null}
     </div>
   )
 }
