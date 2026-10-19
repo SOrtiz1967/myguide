@@ -237,10 +237,12 @@ export const es = {
       license: 'Licencia',
       attribution: 'Atribución',
       lastImport: 'Última importación',
-      foodCount: (count: number) => (count === 1 ? '1 alimento' : `${count} alimentos`),
+      foodCount: (count: number) =>
+        count === 1 ? '1 alimento' : `${count.toLocaleString('es-AR')} alimentos`,
+      siteLink: 'Sitio de la fuente',
       empty: 'Todavía no hay fuentes cargadas',
       error: 'No pudimos cargar las fuentes.',
-      neverImported: 'Sin importaciones',
+      neverImported: 'Todavía no se importó',
     },
   },
   offline: {

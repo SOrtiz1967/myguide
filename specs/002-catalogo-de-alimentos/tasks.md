@@ -207,12 +207,12 @@ description: "Lista de tareas de la spec 002: catálogo de alimentos"
 
 ### Tests for User Story 6 ⚠️ (escribir primero y verificar que FALLAN)
 
-- [ ] T066 [P] [US6] Pruebas de componentes en `app/tests/component/SourcesPage.test.tsx`: lista cada fuente con nombre, licencia (enlazada), texto de atribución, fecha de la última importación (dd/mm/aaaa) y cantidad de alimentos; fuente sin importar → "Todavía no se importó"; estado vacío, carga y error con "Reintentar"; desde la procedencia de un alimento se llega a su fuente (FR-012)
-- [ ] T067 [P] [US6] Prueba de extremo a extremo `app/tests/e2e/foods-sources.spec.ts`: escenario 25
+- [X] T066 [P] [US6] Pruebas de componentes en `app/tests/component/SourcesPage.test.tsx`: lista cada fuente con nombre, licencia (enlazada), texto de atribución, fecha de la última importación (dd/mm/aaaa) y cantidad de alimentos; fuente sin importar → "Todavía no se importó"; estado vacío, carga y error con "Reintentar"; desde la procedencia de un alimento se llega a su fuente (FR-012)
+- [X] T067 [P] [US6] Prueba de extremo a extremo `app/tests/e2e/foods-sources.spec.ts`: escenario 25
 
 ### Implementation for User Story 6
 
-- [ ] T068 [US6] Pantalla `app/src/features/foods/SourcesPage.tsx`, `fetchSources` en `api.ts`, enlace desde `FoodProvenance.tsx` y ruta `/fuentes`
+- [X] T068 [US6] Pantalla `app/src/features/foods/SourcesPage.tsx`, `fetchSources` en `api.ts`, enlace desde `FoodProvenance.tsx` y ruta `/fuentes`
 
 **Checkpoint**: todas las historias funcionan. Pasan T066 y T067.
 

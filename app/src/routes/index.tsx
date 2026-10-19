@@ -8,7 +8,7 @@ import { FoodCreatePage } from '../features/foods/FoodCreatePage'
 import { FoodDetailPage } from '../features/foods/FoodDetailPage'
 import { FoodEditPage } from '../features/foods/FoodEditPage'
 import { FoodSearchPage } from '../features/foods/FoodSearchPage'
-import { FoodsPlaceholderPage } from '../features/foods/pages/FoodsPlaceholderPage'
+import { SourcesPage } from '../features/foods/SourcesPage'
 import { ProfilePage } from '../features/profile/ProfilePage'
 import { AppLayout } from './AppLayout'
 import { HomePage } from './HomePage'
@@ -39,7 +39,7 @@ export const routes: RouteObject[] = [
           { path: '/alimentos/nuevo', element: <FoodCreatePage /> },
           { path: '/alimentos/:id', element: <FoodDetailPage /> },
           { path: '/alimentos/:id/editar', element: <FoodEditPage /> },
-          { path: '/fuentes', element: <FoodsPlaceholderPage /> },
+          { path: '/fuentes', element: <SourcesPage /> },
         ],
       },
     ],

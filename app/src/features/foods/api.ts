@@ -158,3 +158,15 @@ export async function deleteFood(id: string): Promise<void> {
   // RLS hace que un alimento ajeno o del catálogo no afecte ninguna fila.
   if (!data || data.length === 0) throw new Error('not_found')
 }
+
+/** Las fuentes del catálogo con su licencia y su atribución (FR-012). */
+export async function fetchSources(): Promise<FoodSource[]> {
+  const { data, error } = await supabase
+    .from('food_sources')
+    .select(
+      'id, slug, name, license_name, license_url, attribution, source_url, last_imported_at, food_count',
+    )
+    .order('name')
+  if (error) throw error
+  return (data ?? []) as FoodSource[]
+}
