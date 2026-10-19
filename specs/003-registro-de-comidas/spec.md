@@ -14,6 +14,7 @@
 
 - Q: Pasada la medianoche, ¿hasta cuándo se propone registrar en el día que se está cerrando? → A: Sin límite de hora: hasta que la persona registre algo en el día nuevo o elija "Empezar el día de hoy"; la vista lo indica de forma visible.
 - Q: Al repetir una comida de otro día, ¿se copian los valores registrados o se recalculan? → A: Se recalculan con los valores actuales del alimento si todavía existe; los ítems manuales y los de alimentos que ya no existen copian lo registrado.
+- Q: Al agregar un alimento a una comida, ¿la app muestra atajos a lo ya usado? → A: Sí, recientes: los últimos 20 alimentos distintos registrados (del catálogo, propios o manuales), con la última cantidad usada precargada; la búsqueda sigue disponible arriba.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -34,6 +35,7 @@ La persona abre el día, elige una comida (por ejemplo, "Almuerzo"), busca un al
 5. **Given** un alimento propio de la persona, **When** lo busca desde el registro, **Then** aparece junto con los del catálogo, distinguido como "propio".
 6. **Given** un doble clic en "Agregar" o un reintento de red, **When** se envía, **Then** se registra un solo ítem.
 7. **Given** que se cortó la conexión al agregar, **When** falla el guardado, **Then** la persona ve que no se guardó, el formulario conserva lo que había elegido y puede reintentar.
+8. **Given** que la persona ya registró antes "Leche entera, 1 vaso", **When** abre el formulario para agregar, **Then** lo ve entre sus recientes con esa cantidad precargada y lo registra con un toque más.
 
 ---
 
@@ -170,6 +172,7 @@ La persona puede adjuntar una foto a una comida del día como recordatorio visua
 - **FR-007**: Si la energía de un ítem libre difiere notablemente de la que resultaría de sus macronutrientes, el sistema MUST avisarlo de forma informativa y MUST permitir guardar.
 - **FR-008**: Las comidas de un día MUST ser desayuno, almuerzo, merienda, cena y colación, en ese orden.
 - **FR-009**: Registrar un ítem MUST ser idempotente ante dobles envíos y reintentos (un solo ítem).
+- **FR-040**: Al agregar a una comida, el sistema MUST mostrar los recientes de la persona: los últimos 20 alimentos distintos que registró (del catálogo, propios o entradas manuales, identificados por su alimento o, si es manual, por su descripción), cada uno con la última cantidad usada precargada y editable antes de confirmar. Un reciente cuyo alimento ya no existe o ya no es visible MUST NOT mostrarse; una entrada manual reciente se vuelve a registrar con sus valores. La búsqueda MUST seguir disponible en la misma pantalla.
 
 ### Instantánea y origen (Principio II)
 
@@ -233,7 +236,7 @@ La persona puede adjuntar una foto a una comida del día como recordatorio visua
 
 ### Measurable Outcomes
 
-- **SC-001**: Registrar un alimento del catálogo en una comida lleva como máximo 4 interacciones desde la vista del día (elegir comida, buscar, elegir alimento, confirmar cantidad) y menos de 30 segundos en una prueba guiada.
+- **SC-001**: Registrar un alimento del catálogo en una comida lleva como máximo 4 interacciones desde la vista del día (elegir comida, buscar, elegir alimento, confirmar cantidad) y menos de 30 segundos en una prueba guiada; volver a registrar un reciente con su última cantidad lleva como máximo 2 interacciones.
 - **SC-002**: La vista de un día con hasta 60 ítems se muestra completa, con totales, en menos de 2 segundos en un teléfono con conexión móvil típica en el 95 % de los casos.
 - **SC-003**: Ninguna operación repetida (doble clic, reintento) crea ítems duplicados en el 100 % de las pruebas de idempotencia.
 - **SC-004**: El 100 % de los ítems registrados conserva sus valores después de editar, eliminar o reimportar su alimento de origen.
