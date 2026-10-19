@@ -8,27 +8,15 @@ import { es } from '../../src/copy/es'
 import {
   clearSeededEntries,
   clearSeededFoods,
+  dayIn,
   dbQuery,
   register,
   resetRateLimits,
   seedCatalogFoods,
   stubTurnstile,
   uniqueEmail,
+  zoneWhereItIsOneAm,
 } from './support'
-
-/** Una zona de horas enteras en la que ahora son las 01:xx. */
-function zoneWhereItIsOneAm(): string {
-  const utcHour = new Date().getUTCHours()
-  let offset = (1 - utcHour + 24) % 24
-  if (offset > 12) offset -= 24
-  if (offset === 0) return 'Etc/GMT'
-  return `Etc/GMT${offset > 0 ? '-' : '+'}${Math.abs(offset)}`
-}
-
-function dayIn(zone: string, plusDays = 0): string {
-  const date = new Date(Date.now() + plusDays * 24 * 3600 * 1000)
-  return new Intl.DateTimeFormat('en-CA', { timeZone: zone }).format(date)
-}
 
 const ZONE = zoneWhereItIsOneAm()
 const TODAY = dayIn(ZONE)

@@ -362,11 +362,11 @@ description: "Lista de tareas de la spec 003: registro de comidas"
 
 ## Phase 10: Polish & Cross-Cutting Concerns
 
-- [ ] T066 [P] Accesibilidad en `app/tests/e2e/a11y-meals.spec.ts`:
+- [X] T066 [P] Accesibilidad en `app/tests/e2e/a11y-meals.spec.ts`:
   - axe en el día (con ítems, vacío y con el aviso del día que se cierra), en agregar (recientes, búsqueda y manual), en el detalle de un ítem, en la foto y en el diálogo de repetir;
   - recorrido por teclado de la navegación entre días, el selector de cantidad y los diálogos.
-- [ ] T067 [P] Responsive en `app/tests/e2e/responsive-meals.spec.ts`: teléfono y escritorio sin desplazamiento horizontal, áreas táctiles de 44 px o más y nombres largos recortados (SC-008)
-- [ ] T068 [P] Aislamiento por la API real en `app/tests/e2e/meals-isolation.spec.ts`: con una sesión válida, la cuenta A no puede leer, insertar, modificar ni borrar ítems, marcas ni fotos de B, ni llamar a las funciones con ítems ajenos (escenario 26)
+- [X] T067 [P] Responsive en `app/tests/e2e/responsive-meals.spec.ts`: teléfono y escritorio sin desplazamiento horizontal, áreas táctiles de 44 px o más y nombres largos recortados (SC-008)
+- [X] T068 [P] Aislamiento por la API real en `app/tests/e2e/meals-isolation.spec.ts`: con una sesión válida, la cuenta A no puede leer, insertar, modificar ni borrar ítems, marcas ni fotos de B, ni llamar a las funciones con ítems ajenos (escenario 26)
 - [ ] T069 Medición: SC-001 (interacciones y tiempo para agregar un alimento y un reciente), SC-002 (día con 60 ítems en un teléfono emulado) y tiempo y tamaño de la foto (12 MP a menos de 500 KB; función en menos de 2 s); registrar en `research.md`
 - [ ] T070 [P] Documentación:
   - `supabase/README.md`: tablas, funciones, bucket, cifrado en reposo y cómo se limpian las fotos;
