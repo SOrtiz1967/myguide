@@ -126,6 +126,7 @@ La persona puede cambiar su objetivo cuando lo decida, o quitarlo. El cambio rig
 - Sin conexión, la aplicación no permite guardar, no muestra nada como guardado y conserva el borrador (spec 001).
 - La sesión vence mientras se edita el objetivo: se pide ingresar de nuevo y el borrador se conserva hasta cerrar sesión.
 - Cuentas distintas nunca ven ni cambian el objetivo ni el historial de otra.
+- Una persona cierra sesión y otra entra en la misma pestaña (por ejemplo, en un dispositivo compartido): la segunda no ve, ni por un instante, el objetivo ni los ítems de la primera.
 
 ## Requirements *(mandatory)*
 
@@ -168,6 +169,7 @@ La persona puede cambiar su objetivo cuando lo decida, o quitarlo. El cambio rig
 - **FR-026**: Todas las pantallas y estados nuevos MUST tener estados de carga, vacío, éxito y error, en español, y ser accesibles por teclado y lector de pantalla, sin depender solo del color.
 - **FR-027**: Los registros técnicos (logs) MUST NOT contener el valor del objetivo ni datos que identifiquen a la persona.
 - **FR-028**: Al eliminar una cuenta, su objetivo y su historial MUST eliminarse con ella.
+- **FR-029**: Al cerrar sesión o al entrar con otra cuenta en el mismo navegador, la aplicación MUST NOT conservar ni mostrar datos de la cuenta anterior (objetivo, ítems, fotos), ni siquiera por un instante mientras se cargan los de la nueva.
 
 ### Key Entities *(include if feature involves data)*
 
@@ -185,7 +187,7 @@ La persona puede cambiar su objetivo cuando lo decida, o quitarlo. El cambio rig
 - **SC-004**: Cambiar o quitar el objetivo no modifica el resumen de ningún día anterior en el 100 % de los casos de prueba, incluido un cambio de zona horaria del perfil.
 - **SC-005**: En el 100 % de los estados con el objetivo superado, el texto de toda la pantalla no contiene sugerencias de ayuno, de saltar comidas, de compensar con ejercicio ni de recortes, ni lenguaje de culpa o juicio (verificado con una lista de términos prohibidos sobre todo el texto de la pantalla), y no usa estilo de alarma.
 - **SC-006**: Ninguna operación repetida (doble clic, reintento) crea entradas duplicadas en el historial en el 100 % de las pruebas de idempotencia.
-- **SC-007**: Ninguna cuenta puede leer ni modificar el objetivo ni el historial de otra por ningún camino probado (tablas, funciones y petición anónima).
+- **SC-007**: Ninguna cuenta puede leer ni modificar el objetivo ni el historial de otra por ningún camino probado (tablas, funciones y petición anónima), y al cambiar de cuenta en el mismo navegador la segunda nunca ve datos de la primera en el 100 % de las pruebas.
 - **SC-008**: Todas las pantallas nuevas pasan la revisión automática de accesibilidad sin problemas graves, se entienden sin depender del color y funcionan en anchos de teléfono y de escritorio sin desplazamiento horizontal.
 - **SC-009**: Sin objetivo configurado, el 100 % de las pantallas de prueba no muestra restantes, porcentaje ni barra de progreso.
 
