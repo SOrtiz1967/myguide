@@ -42,7 +42,7 @@ Los nombres de músculos y de equipamiento son los de `research.md`, Decisión 5
 ## Reglas de presentación
 
 - **Lista**: nombre (recortado con puntos suspensivos), tipo de medición en palabras, músculo principal y equipamiento (o «sin dato»), y la marca «Del catálogo» o «Propio».
-- **Detalle**: nombre; «También se conoce como» (nombre original y alias, si los hay); tipo de medición explicado; músculos principales y secundarios (o «sin dato»); equipamiento (o «sin dato»); descripción como pasos numerados (o «sin dato»); procedencia.
+- **Detalle**: nombre; «También se conoce como» (nombre original y alias, si los hay); tipo de medición explicado; músculos principales y secundarios (o «sin dato»); equipamiento (o «sin dato»); descripción (o «sin dato»): como lista numerada si todas sus líneas empiezan con «N. » y, si no, como texto libre con sus saltos de línea; procedencia.
 - **Procedencia**: «Del catálogo · [Fuente] · código [id de origen] · importado el [fecha dd/mm/aaaa]», o «Propio» / «Propio, basado en [ejercicio]». Los textos traducidos sin revisar llevan «traducción sin revisar» junto al nombre y junto a la descripción.
 - **Acciones en el detalle**: del catálogo → **Crear mi versión**; propio → **Editar**, **Eliminar** (con confirmación) y **Crear una copia**.
 - **Formulario**: nombre (obligatorio), tipo de medición (obligatorio; cuatro opciones, cada una con su explicación, como botones de radio), músculos principales y secundarios (casillas en cuadrícula), equipamiento (lista con «Sin dato»), descripción (texto largo) y «Otros nombres» (hasta 5, opcional). Al guardar con un nombre que ya existe entre los propios, se avisa («Ya tienes un ejercicio con ese nombre») y se permite guardar igual (variantes).
