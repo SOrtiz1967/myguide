@@ -1,9 +1,11 @@
-import { useId } from 'react'
+﻿import { useId } from 'react'
 import { Link } from 'react-router'
 import { ErrorState } from '../../components/ErrorState'
 import { es } from '../../copy/es'
 import { summarizeDay, type DaySummary, type SummaryEntry } from './daySummary'
 import { goalOn } from './goalHistory'
+import { LowGoalNote } from './LowGoalNote'
+import { LOW_GOAL_KCAL } from './schema'
 import { useGoalHistory } from './useGoalHistory'
 
 interface GoalSummaryProps {
@@ -107,6 +109,7 @@ function Body({ summary, date, today }: { summary: DaySummary; date: string; tod
         />
       </div>
       <Notes summary={summary} />
+      {summary.goal < LOW_GOAL_KCAL ? <LowGoalNote /> : null}
       <Link to={`/objetivo?volver=${date}`} className={linkClass}>
         {es.goal.change}
       </Link>

@@ -1,4 +1,4 @@
-import { zodResolver } from '@hookform/resolvers/zod'
+﻿import { zodResolver } from '@hookform/resolvers/zod'
 import { useQueryClient } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
@@ -17,7 +17,8 @@ import { formatDayMonth, parseDate } from '../meals/meals'
 import { useToday } from '../meals/useToday'
 import { saveGoal } from './api'
 import { currentGoal } from './goalHistory'
-import { goalFormSchema, type GoalFormInput, type GoalFormValues } from './schema'
+import { LowGoalNote } from './LowGoalNote'
+import { goalFormSchema, LOW_GOAL_KCAL, type GoalFormInput, type GoalFormValues } from './schema'
 import { goalHistoryKey, useGoalHistory } from './useGoalHistory'
 
 const FORM_ID = 'energy-goal'
@@ -48,6 +49,8 @@ export function GoalPage() {
           ? es.goal.page.current(current.kcal, formatDayMonth(current.since))
           : es.goal.page.none}
       </p>
+
+      {current && current.kcal < LOW_GOAL_KCAL ? <LowGoalNote /> : null}
 
       <GoalForm today={today} />
     </div>

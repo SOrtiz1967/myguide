@@ -249,3 +249,24 @@ describe('GoalPage: borrador (FR-025)', () => {
     expect(localStorage.getItem(draftKey('u1', 'energy-goal'))).toBeNull()
   })
 })
+
+describe('GoalPage: nota informativa (FR-005)', () => {
+  it('con un objetivo vigente menor a 1.200 kcal se muestra la nota', async () => {
+    mockedHistory.mockResolvedValue([change('2026-10-01', 1100, '2026-10-01T09:00:00Z')])
+    renderPage()
+    expect(await screen.findByText(g.lowGoalNote)).toBeVisible()
+  })
+
+  it('con 1.200 kcal o más no aparece, y sin objetivo tampoco', async () => {
+    mockedHistory.mockResolvedValue([change('2026-10-01', 1200, '2026-10-01T09:00:00Z')])
+    const first = renderPage()
+    await screen.findByText(g.page.current(1200, '1 de octubre'))
+    expect(screen.queryByText(g.lowGoalNote)).not.toBeInTheDocument()
+    first.unmount()
+
+    mockedHistory.mockResolvedValue([])
+    renderPage()
+    await screen.findByText(g.page.none)
+    expect(screen.queryByText(g.lowGoalNote)).not.toBeInTheDocument()
+  })
+})

@@ -208,18 +208,18 @@ description: "Lista de tareas de la spec 004: objetivo calórico y resumen diari
 
 ### Tests for User Story 4 ⚠️
 
-- [ ] T034 [P] [US4] Ampliar `app/tests/component/GoalSummary.test.tsx` (estado `over`; FR-019, FR-020, FR-022, SC-005):
+- [X] T034 [P] [US4] Ampliar `app/tests/component/GoalSummary.test.tsx` (estado `over`; FR-019, FR-020, FR-022, SC-005):
   - frase "Registraste 250 kcal más que el objetivo de este día." y cuenta "2.250 − 2.000 = 250 kcal"; con ítems sin dato, "Registraste al menos 250 kcal más…";
   - la barra llega a 100 % y **no cambia** respecto de `under`: mismas clases, sin el color `danger`, sin `role="alert"`, sin íconos de advertencia, sin cambio de peso tipográfico;
   - **todo el texto renderizado** de la tarjeta en cada estado (`none`, `under`, `met`, `over`, con faltantes y con estimados) pasa `findForbidden` (sin leer los nombres que escribe la persona);
   - no hay rachas, puntajes, insignias ni comparaciones.
-- [ ] T035 [P] [US4] Pruebas de componente de la nota informativa en `app/tests/component/LowGoalNote.test.tsx` y ampliando `GoalPage.test.tsx` / `GoalSummary.test.tsx` (FR-005): con 1.100 kcal se guarda y se muestra la nota ("El objetivo está por debajo de 1.200 kcal. Si tienes dudas sobre tu alimentación, puedes consultar a un profesional de la salud.") tanto después de guardar como al ver el objetivo guardado y en la tarjeta del día; con 1.200 o más no aparece; sin color ni ícono de advertencia y con texto que pasa `findForbidden`
-- [ ] T036 [US4] Prueba e2e en `app/tests/e2e/goals-over.spec.ts` (escenarios 17 a 20): registrar 2.250 con objetivo 2.000 → frase factual; `findForbidden` sobre el `innerText` de la tarjeta y de `/objetivo`; el color calculado de la barra y del texto del estado no es el de `danger` y no hay íconos de advertencia; exactamente 2.000 → "Restan 0 kcal"; fijar 1.100 muestra la nota; varios días seguidos por encima del objetivo (sembrados) no cambian el objetivo ni muestran avisos, rachas ni castigos
+- [X] T035 [P] [US4] Pruebas de componente de la nota informativa en `app/tests/component/LowGoalNote.test.tsx` y ampliando `GoalPage.test.tsx` / `GoalSummary.test.tsx` (FR-005): con 1.100 kcal se guarda y se muestra la nota ("El objetivo está por debajo de 1.200 kcal. Si tienes dudas sobre tu alimentación, puedes consultar a un profesional de la salud.") tanto después de guardar como al ver el objetivo guardado y en la tarjeta del día; con 1.200 o más no aparece; sin color ni ícono de advertencia y con texto que pasa `findForbidden`
+- [X] T036 [US4] Prueba e2e en `app/tests/e2e/goals-over.spec.ts` (escenarios 17 a 20): registrar 2.250 con objetivo 2.000 → frase factual; `findForbidden` sobre el `innerText` de la tarjeta y de `/objetivo`; el color calculado de la barra y del texto del estado no es el de `danger` y no hay íconos de advertencia; exactamente 2.000 → "Restan 0 kcal"; fijar 1.100 muestra la nota; varios días seguidos por encima del objetivo (sembrados) no cambian el objetivo ni muestran avisos, rachas ni castigos
 
 ### Implementation for User Story 4
 
-- [ ] T037 [US4] En `GoalSummary.tsx`: estado `over` (frase, cuenta, "al menos" cuando falta energía) con los mismos estilos neutros que `under`, sin `danger`, sin íconos y con la barra al tope. Hace pasar T034
-- [ ] T038 [P] [US4] `app/src/features/goals/LowGoalNote.tsx` (nota para menos de 1.200 kcal, sin color ni ícono de advertencia) e integrarla en `GoalPage.tsx` y `GoalSummary.tsx`. Hace pasar T035
+- [X] T037 [US4] En `GoalSummary.tsx`: estado `over` (frase, cuenta, "al menos" cuando falta energía) con los mismos estilos neutros que `under`, sin `danger`, sin íconos y con la barra al tope. Hace pasar T034
+- [X] T038 [P] [US4] `app/src/features/goals/LowGoalNote.tsx` (nota para menos de 1.200 kcal, sin color ni ícono de advertencia) e integrarla en `GoalPage.tsx` y `GoalSummary.tsx`. Hace pasar T035
 
 **Checkpoint**: escenarios 17 a 20.
 

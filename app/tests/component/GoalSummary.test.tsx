@@ -1,6 +1,6 @@
-// T020 (spec 004, FR-002, SC-009): la tarjeta "Objetivo del día", variante sin objetivo.
+﻿// T020 (spec 004, FR-002, SC-009): la tarjeta "Objetivo del día", variante sin objetivo.
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
@@ -8,6 +8,7 @@ import { es } from '../../src/copy/es'
 import { fetchGoalHistory } from '../../src/features/goals/api'
 import type { GoalChange } from '../../src/features/goals/goalHistory'
 import { GoalSummary } from '../../src/features/goals/GoalSummary'
+import { findForbidden } from '../support/forbiddenTerms'
 import type { SummaryEntry } from '../../src/features/goals/daySummary'
 
 vi.mock('../../src/features/goals/api', () => ({ fetchGoalHistory: vi.fn(), saveGoal: vi.fn() }))
@@ -263,5 +264,112 @@ describe('GoalSummary: aclaraciones de incertidumbre', () => {
     await userEvent.click(summary)
     expect(details).toHaveAttribute('open')
     for (const line of g.how) expect(screen.getByText(line)).toBeVisible()
+  })
+})
+
+// T034 (spec 004, FR-019, FR-020, FR-022, SC-005): al superar el objetivo solo se informa.
+describe('GoalSummary: objetivo superado', () => {
+  beforeEach(() => {
+    mockedHistory.mockResolvedValue(TWO_THOUSAND)
+  })
+
+  it('informa la diferencia con una frase factual y la cuenta', async () => {
+    renderCard({ entries: [item(2250)] })
+    expect(
+      await screen.findByText('Registraste 250 kcal más que el objetivo de este día.'),
+    ).toBeVisible()
+    expect(screen.getByText('2.250 − 2.000 = 250 kcal')).toBeVisible()
+    expect(screen.getByText('113 % del objetivo')).toBeVisible()
+    expect(screen.queryByText(/^Restan (como|\d)/)).not.toBeInTheDocument()
+  })
+
+  it('con ítems sin dato de energía dice "al menos"', async () => {
+    renderCard({ entries: [item(2250), item(null)] })
+    expect(
+      await screen.findByText('Registraste al menos 250 kcal más que el objetivo de este día.'),
+    ).toBeVisible()
+    expect(screen.getByText(g.missingNote(1))).toBeVisible()
+  })
+
+  it('la barra llega al 100 % y es idéntica a la de antes de superar el objetivo', async () => {
+    const under = renderCard({ entries: [item(1900)] })
+    await screen.findByText('Restan 100 kcal')
+    const underBar = under.container.querySelector<HTMLElement>('[data-goal-bar]')!
+    const underClasses = underBar.className
+    const underParent = underBar.parentElement!.className
+    under.unmount()
+
+    const over = renderCard({ entries: [item(3000)] })
+    await screen.findByText(/más que el objetivo/)
+    const bar = over.container.querySelector<HTMLElement>('[data-goal-bar]')!
+    expect(bar.style.width).toBe('100%')
+    expect(bar.className).toBe(underClasses)
+    expect(bar.parentElement!.className).toBe(underParent)
+  })
+
+  it('sin estilo de alarma: ni color de error, ni alerta, ni íconos', async () => {
+    const { container } = renderCard({ entries: [item(2250)] })
+    const phrase = await screen.findByText(/más que el objetivo/)
+    expect(container.innerHTML).not.toMatch(/danger|warning|amber|red-/)
+    expect(container.querySelector('[role="alert"], [role="alertdialog"]')).toBeNull()
+    expect(container.querySelector('svg, img')).toBeNull()
+    // la frase del exceso tiene el mismo estilo que la de "Restan…"
+    const under = renderCard({ entries: [item(1000)] })
+    const restan = await within(under.container).findByText(/^Restan \d/)
+    expect(phrase.className).toBe(restan.className)
+  })
+
+  it('no hay rachas, puntajes, insignias ni comparaciones', async () => {
+    const { container } = renderCard({ entries: [item(5000)] })
+    await screen.findByText(/más que el objetivo/)
+    expect(container.textContent).not.toMatch(
+      /racha|puntaje|insignia|logro|otras personas|comparad/i,
+    )
+  })
+
+  it('SC-005: ningún texto de la tarjeta, en ningún estado, contiene un término prohibido', async () => {
+    const scenarios: Array<[string, SummaryEntry[], GoalChange[]]> = [
+      ['sin objetivo', [item(1350), item(null)], []],
+      ['por debajo', [item(1350)], TWO_THOUSAND],
+      ['exacto', [item(2000)], TWO_THOUSAND],
+      ['superado', [item(2250)], TWO_THOUSAND],
+      ['superado con faltantes', [item(2250), item(null), item(null)], TWO_THOUSAND],
+      ['con estimados', [item(1000), item(500, 'pending')], TWO_THOUSAND],
+      ['objetivo bajo', [item(900)], [change('2026-10-01', 1100, '2026-10-01T09:00:00Z')]],
+    ]
+    for (const [label, entries, history] of scenarios) {
+      mockedHistory.mockResolvedValue(history)
+      const view = renderCard({ entries })
+      const card = await screen.findByRole('region', { name: g.cardTitle })
+      await screen.findByText(/^Registrado:/)
+      expect({ label, found: findForbidden(card.textContent ?? '') }).toEqual({ label, found: [] })
+      view.unmount()
+    }
+  })
+})
+
+// T035 (spec 004, FR-005): nota informativa para objetivos menores a 1.200 kcal.
+describe('GoalSummary: nota informativa', () => {
+  it('con un objetivo de 1.100 kcal se muestra la nota, sin color ni ícono de advertencia', async () => {
+    mockedHistory.mockResolvedValue([change('2026-10-01', 1100, '2026-10-01T09:00:00Z')])
+    const { container } = renderCard({ entries: [item(500)] })
+    const note = await screen.findByText(g.lowGoalNote)
+    expect(note).toBeVisible()
+    expect(note.closest('[role="alert"]')).toBeNull()
+    expect(container.querySelector('svg, img')).toBeNull()
+    expect(note.className).not.toMatch(/danger|warning/)
+  })
+
+  it.each([1200, 2000])('con %i kcal no aparece', async (kcal) => {
+    mockedHistory.mockResolvedValue([change('2026-10-01', kcal, '2026-10-01T09:00:00Z')])
+    renderCard({ entries: [item(500)] })
+    await screen.findByText(g.goalLine(kcal))
+    expect(screen.queryByText(g.lowGoalNote)).not.toBeInTheDocument()
+  })
+
+  it('sin objetivo no aparece', async () => {
+    renderCard()
+    await screen.findByText(g.registered(1350, false))
+    expect(screen.queryByText(g.lowGoalNote)).not.toBeInTheDocument()
   })
 })
