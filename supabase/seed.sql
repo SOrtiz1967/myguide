@@ -121,6 +121,45 @@ end;
 $$;
 
 grant usage on schema tests to anon, authenticated;
+-- Ayudantes de la spec 004 (objetivo de energía diaria). Escriben directamente, sin pasar por la función
+-- del cliente, para sembrar historiales con fechas y horas arbitrarias.
+
+-- Agrega un cambio al historial del objetivo (kcal nulo = se quitó el objetivo). Devuelve su id.
+create or replace function tests.create_energy_goal(
+  p_user_id uuid,
+  p_effective_from date,
+  p_kcal integer,
+  p_created_at timestamptz default now()
+) returns uuid
+language plpgsql
+as $$
+declare
+  v_id uuid := gen_random_uuid();
+begin
+  insert into public.energy_goals (id, user_id, effective_from, kcal, client_request_id, created_at)
+  values (v_id, p_user_id, p_effective_from, p_kcal, gen_random_uuid(), p_created_at);
+  return v_id;
+end;
+$$;
+
+-- Crea un ítem estimado todavía sin confirmar (origin = 'estimated', status = 'pending'). Devuelve su id.
+create or replace function tests.create_pending_estimate(
+  p_user_id uuid,
+  p_log_date date,
+  p_meal text,
+  p_energy_kcal numeric
+) returns uuid
+language plpgsql
+as $$
+declare
+  v_id uuid := gen_random_uuid();
+begin
+  insert into public.meal_entries (id, user_id, log_date, meal, origin, status, food_name, energy_kcal)
+  values (v_id, p_user_id, p_log_date, p_meal, 'estimated', 'pending', 'Estimado', p_energy_kcal);
+  return v_id;
+end;
+$$;
+
 grant execute on all functions in schema tests to anon, authenticated;
 
 -- Fuente de la muestra de desarrollo (spec 002, T043). Solo existe en local: la carga de producción
@@ -188,6 +227,45 @@ create or replace function tests.set_profile_timezone(p_user_id uuid, p_timezone
 language sql
 as $$
   update public.profiles set timezone = p_timezone where user_id = p_user_id;
+$$;
+
+-- Ayudantes de la spec 004 (objetivo de energía diaria). Escriben directamente, sin pasar por la función
+-- del cliente, para sembrar historiales con fechas y horas arbitrarias.
+
+-- Agrega un cambio al historial del objetivo (kcal nulo = se quitó el objetivo). Devuelve su id.
+create or replace function tests.create_energy_goal(
+  p_user_id uuid,
+  p_effective_from date,
+  p_kcal integer,
+  p_created_at timestamptz default now()
+) returns uuid
+language plpgsql
+as $$
+declare
+  v_id uuid := gen_random_uuid();
+begin
+  insert into public.energy_goals (id, user_id, effective_from, kcal, client_request_id, created_at)
+  values (v_id, p_user_id, p_effective_from, p_kcal, gen_random_uuid(), p_created_at);
+  return v_id;
+end;
+$$;
+
+-- Crea un ítem estimado todavía sin confirmar (origin = 'estimated', status = 'pending'). Devuelve su id.
+create or replace function tests.create_pending_estimate(
+  p_user_id uuid,
+  p_log_date date,
+  p_meal text,
+  p_energy_kcal numeric
+) returns uuid
+language plpgsql
+as $$
+declare
+  v_id uuid := gen_random_uuid();
+begin
+  insert into public.meal_entries (id, user_id, log_date, meal, origin, status, food_name, energy_kcal)
+  values (v_id, p_user_id, p_log_date, p_meal, 'estimated', 'pending', 'Estimado', p_energy_kcal);
+  return v_id;
+end;
 $$;
 
 grant execute on all functions in schema tests to anon, authenticated;

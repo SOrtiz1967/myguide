@@ -1,6 +1,10 @@
 // Textos de la interfaz, centralizados (Principio VI: interfaz en español).
 // Regla de lenguaje (Principio IV): sin tono culpabilizante ni moralizante.
 
+// Cifras con separador de miles también en cuatro cifras ("1.350"); es-AR agrupa desde el primer millar.
+const kcalFormat = new Intl.NumberFormat('es-AR', { maximumFractionDigits: 0 })
+const kcal = (value: number) => kcalFormat.format(value)
+
 export const es = {
   appName: 'MyGuide',
   common: {
@@ -438,6 +442,91 @@ export const es = {
       foodGone: 'Ese alimento ya no está disponible. No se registró nada.',
       saveFailed: 'No pudimos registrar la comida. No se guardó nada.',
       invalidDate: 'Esa fecha no es válida o está fuera del rango permitido.',
+    },
+  },
+  // Spec 004: objetivo de energía diaria y resumen del día. Todos los textos del objetivo viven aquí para
+  // poder revisarlos juntos contra la lista de términos prohibidos (Principio IV, SC-005): sin sugerir
+  // saltarse comidas, compensar ni restringir, y sin culpa ni juicio sobre lo registrado.
+  goal: {
+    cardTitle: 'Objetivo del día',
+    invite: 'Fijar un objetivo de energía (opcional)',
+    change: 'Cambiar objetivo',
+    goalLine: (goal: number) => `Objetivo: ${kcal(goal)} kcal`,
+    registered: (registered: number, atLeast: boolean) =>
+      atLeast
+        ? `Registrado: al menos ${kcal(registered)} kcal`
+        : `Registrado: ${kcal(registered)} kcal`,
+    percent: (percent: number) => `${kcal(percent)} % del objetivo`,
+    /** La frase principal del estado. Con ítems sin dato de energía el restante es un máximo. */
+    statement: (
+      summary:
+        | { state: 'under' | 'met'; remaining: number; lowerBound: boolean }
+        | { state: 'over'; difference: number; lowerBound: boolean },
+    ): string => {
+      if (summary.state === 'over') {
+        return `Registraste ${summary.lowerBound ? 'al menos ' : ''}${kcal(summary.difference)} kcal más que el objetivo de este día.`
+      }
+      if (summary.lowerBound) return `Restan como máximo ${kcal(summary.remaining)} kcal`
+      return summary.state === 'met'
+        ? 'Restan 0 kcal. Lo registrado coincide con el objetivo.'
+        : `Restan ${kcal(summary.remaining)} kcal`
+    },
+    /** La cuenta que explica la cifra: "2.000 − 1.350 = 650 kcal" o, al superarlo, "2.250 − 2.000 = 250 kcal". */
+    equation: (summary: {
+      goal: number
+      registered: number
+      state: 'under' | 'met' | 'over'
+      remaining: number
+      difference?: number
+    }): string =>
+      summary.state === 'over'
+        ? `${kcal(summary.registered)} − ${kcal(summary.goal)} = ${kcal(-summary.remaining)} kcal`
+        : `${kcal(summary.goal)} − ${kcal(summary.registered)} = ${kcal(summary.remaining)} kcal`,
+    missingNote: (count: number) =>
+      count === 1
+        ? '1 ítem no tiene dato de energía y no suma.'
+        : `${kcal(count)} ítems no tienen dato de energía y no suman.`,
+    pendingNote: (pending: number) =>
+      `Incluye ${kcal(pending)} kcal estimadas que todavía no confirmaste. Lo que resta depende de esa estimación.`,
+    howTitle: 'Cómo se calcula',
+    how: [
+      'Restan = objetivo − registrado.',
+      'Registrado es la suma de la energía de los ítems del día que tienen ese dato. Los ítems sin dato de energía no suman y se cuentan aparte.',
+      'Las estimaciones que todavía no confirmaste suman y se muestran aparte.',
+      'El objetivo es el que tenías ese día. Si lo cambias, rige desde hoy y los días anteriores no cambian.',
+    ],
+    loadError: 'No pudimos cargar el objetivo',
+    lowGoalNote:
+      'El objetivo está por debajo de 1.200 kcal. Si tienes dudas sobre tu alimentación, puedes consultar a un profesional de la salud.',
+    validation: {
+      empty: 'Escribe el objetivo en kcal.',
+      notNumber: 'Escribe solo números, por ejemplo 2000.',
+      notInteger: 'Escribe el objetivo en kcal enteras, sin decimales.',
+      range: 'El objetivo debe estar entre 1.000 y 6.000 kcal.',
+    },
+    page: {
+      title: 'Objetivo de energía diaria',
+      explanation: 'Es una referencia que eliges tú. MyGuide no la cambia sola.',
+      loading: 'Cargando el objetivo…',
+      current: (goal: number, since: string) => `Vigente: ${kcal(goal)} kcal, desde el ${since}`,
+      none: 'Todavía no fijaste un objetivo',
+      fieldLabel: 'Energía por día (kcal)',
+      fieldHelp: 'Entre 1.000 y 6.000',
+      save: 'Guardar objetivo',
+      saving: 'Guardando…',
+      remove: 'Quitar objetivo',
+      rule: 'El cambio rige desde hoy. Los días anteriores conservan el objetivo que tenían.',
+      saved: 'Objetivo guardado. Rige desde hoy.',
+      removed: 'Objetivo quitado. Rige desde hoy.',
+      notSaved: 'No se guardó el objetivo.',
+      back: 'Volver al día',
+      removeDialog: {
+        title: '¿Quitar el objetivo?',
+        description:
+          'Desde hoy no se mostrarán las calorías restantes ni el avance. Los días anteriores conservan el objetivo que tenían.',
+        confirm: 'Quitar objetivo',
+        cancel: 'Cancelar',
+      },
     },
   },
   offline: {

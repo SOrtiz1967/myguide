@@ -1,4 +1,5 @@
 // T034 (FR-003): al abrir la app y al renovar el token se marca actividad; si la sesión venció, se cierra.
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { act, render, screen, waitFor } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { AuthProvider } from '../../src/features/auth/AuthProvider'
@@ -48,15 +49,20 @@ function SignOutButton() {
   )
 }
 
+let queryClient: QueryClient
+
 function renderProvider() {
   return render(
-    <AuthProvider>
-      <Probe />
-    </AuthProvider>,
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <Probe />
+      </AuthProvider>
+    </QueryClientProvider>,
   )
 }
 
 beforeEach(() => {
+  queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } })
   auth.getSession.mockReset()
   auth.signOut.mockReset().mockResolvedValue({ error: null })
   rpc.mockReset().mockResolvedValue({ error: null })
@@ -149,9 +155,11 @@ describe('AuthProvider: borradores locales (FR-022)', () => {
   it('FR-022: el cierre de sesión explícito purga antes de cerrar', async () => {
     auth.getSession.mockResolvedValue({ data: { session: SESSION } })
     render(
-      <AuthProvider>
-        <SignOutButton />
-      </AuthProvider>,
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <SignOutButton />
+        </AuthProvider>
+      </QueryClientProvider>,
     )
     await waitFor(() => expect(rpc).toHaveBeenCalled())
     await act(async () => {
@@ -159,5 +167,78 @@ describe('AuthProvider: borradores locales (FR-022)', () => {
     })
     expect(localStorage.getItem(KEY)).toBeNull()
     expect(auth.signOut).toHaveBeenCalled()
+  })
+})
+
+// T014 (spec 004, FR-029): la caché de consultas no puede mostrar datos de la cuenta anterior.
+describe('AuthProvider: caché de consultas por sesión (FR-029)', () => {
+  const OTHER = { access_token: 'jwt2', user: { id: 'u2', email: 'otra@ejemplo.com' } }
+
+  beforeEach(() => {
+    queryClient.setQueryData(['meals', 'day', '2026-10-19'], [{ food_name: 'Torta de A' }])
+    queryClient.setQueryData(['goals', 'history'], [{ kcal: 2000 }])
+  })
+
+  it('al cerrar sesión la caché queda vacía', async () => {
+    auth.getSession.mockResolvedValue({ data: { session: SESSION } })
+    renderProvider()
+    await screen.findByText(/estado:signedIn/)
+    expect(queryClient.getQueryCache().getAll()).toHaveLength(2)
+    await act(async () => {
+      authListener('SIGNED_OUT', null)
+    })
+    expect(queryClient.getQueryCache().getAll()).toHaveLength(0)
+  })
+
+  it('al vencer la sesión por inactividad la caché queda vacía', async () => {
+    auth.getSession.mockResolvedValue({ data: { session: SESSION } })
+    rpc.mockResolvedValue({ error: { message: 'session_expired: vencida' } })
+    renderProvider()
+    await screen.findByText(/estado:signedOut vencida:true/)
+    expect(queryClient.getQueryCache().getAll()).toHaveLength(0)
+  })
+
+  it('al entrar con otra cuenta la caché queda vacía', async () => {
+    auth.getSession.mockResolvedValue({ data: { session: SESSION } })
+    renderProvider()
+    await screen.findByText(/estado:signedIn/)
+    await act(async () => {
+      authListener('SIGNED_IN', OTHER)
+    })
+    expect(queryClient.getQueryCache().getAll()).toHaveLength(0)
+  })
+
+  it('la misma cuenta que renueva el token o vuelve a entrar conserva la caché', async () => {
+    auth.getSession.mockResolvedValue({ data: { session: SESSION } })
+    renderProvider()
+    await screen.findByText(/estado:signedIn/)
+    await act(async () => {
+      authListener('TOKEN_REFRESHED', SESSION)
+      authListener('SIGNED_IN', SESSION)
+    })
+    expect(queryClient.getQueryCache().getAll()).toHaveLength(2)
+  })
+
+  it('una consulta de la cuenta anterior que resuelve después del cierre no vuelve a llenar la caché', async () => {
+    auth.getSession.mockResolvedValue({ data: { session: SESSION } })
+    renderProvider()
+    await screen.findByText(/estado:signedIn/)
+
+    let finish: (value: string) => void = () => {}
+    const pending = queryClient
+      .fetchQuery({
+        queryKey: ['meals', 'day', '2026-10-20'],
+        queryFn: () => new Promise<string>((resolve) => (finish = resolve)),
+      })
+      .catch(() => 'cancelada')
+    await act(async () => {
+      authListener('SIGNED_OUT', null)
+    })
+    await act(async () => {
+      finish('datos de A')
+      await pending
+    })
+    expect(queryClient.getQueryData(['meals', 'day', '2026-10-20'])).toBeUndefined()
+    expect(queryClient.getQueryCache().getAll()).toHaveLength(0)
   })
 })

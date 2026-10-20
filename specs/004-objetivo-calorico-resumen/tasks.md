@@ -37,11 +37,11 @@ description: "Lista de tareas de la spec 004: objetivo calórico y resumen diari
 
 **Purpose**: la lista de términos prohibidos y la línea base verde
 
-- [ ] T001 [P] Lista de términos prohibidos (Principio IV, `research.md` Decisión 5):
+- [X] T001 [P] Lista de términos prohibidos (Principio IV, `research.md` Decisión 5):
   - Pruebas primero en `app/tests/unit/forbiddenTerms.test.ts` (deben fallar): `findForbidden(texto)` devuelve los términos hallados sin importar mayúsculas ni acentos; detecta "ayuno", "Compensa con ejercicio", "te pasaste", "eso está mal" y "tienes que"; **no** marca "Restan 650 kcal.", "normal", "Registraste 250 kcal más que el objetivo de este día." ni "Si tienes dudas sobre tu alimentación, puedes consultar a un profesional de la salud.".
   - Después `app/tests/support/forbiddenTerms.ts`: exporta `FORBIDDEN_TERMS` (la lista inicial de `research.md`: ayun, saltar, saltea, compens, quemar, quema, ejercicio, entren, culpa, fall, excedi, exceso, pasaste, pasarte, mal, malo, prohib, castig, engord, limit, restring, dieta, deber, "tenes que", "tienes que", "hay que") y `findForbidden`. Cada término coincide **al comienzo de una palabra** (`mal` solo como palabra completa), para que "normal" no se marque.
   - Verificar que `tsconfig.app.json` / `tsconfig.e2e.json` incluyen `tests/support/` (el e2e también la importa).
-- [ ] T002 [P] Línea base: con la base local arriba, ejecutar `npm run test:db`, `npm test --prefix app`, `npm run lint --prefix app` y `npm run typecheck --prefix app` y registrar que parten en verde (si algo falla, corregirlo antes de seguir, con `systematic-debugging`)
+- [X] T002 [P] Línea base: con la base local arriba, ejecutar `npm run test:db`, `npm test --prefix app`, `npm run lint --prefix app` y `npm run typecheck --prefix app` y registrar que parten en verde (si algo falla, corregirlo antes de seguir, con `systematic-debugging`)
 
 ---
 
@@ -53,24 +53,24 @@ description: "Lista de tareas de la spec 004: objetivo calórico y resumen diari
 
 ### Base de datos (skill `database-design`)
 
-- [ ] T003 Prueba pgTAP en `supabase/tests/energy_goals_schema.test.sql` (escribir primero, debe fallar). Debe cubrir:
+- [X] T003 Prueba pgTAP en `supabase/tests/energy_goals_schema.test.sql` (escribir primero, debe fallar). Debe cubrir:
   - columnas y tipos de `data-model.md` (`id` uuid, `user_id`, `effective_from` date, `kcal` integer **nulo permitido**, `client_request_id` uuid, `created_at`);
   - `check (kcal is null or kcal between 1000 and 6000)`: 999 y 6001 se rechazan; 1000, 6000 y nulo se aceptan;
   - `check (effective_from >= date '2000-01-01')`;
   - único `(user_id, client_request_id)`;
   - existe el índice `(user_id, created_at desc)`;
   - `user_id` → `auth.users` con `on delete cascade`: **eliminar la cuenta borra su historial** y deja intacto el de otra cuenta (FR-028).
-- [ ] T004 Migración `supabase/migrations/20261020000100_energy_goals.sql`: `public.energy_goals` con las columnas, restricciones e índices de `data-model.md`; **RLS activado sin políticas** y `revoke all` para `anon` y `authenticated` (el mismo patrón que `20261019000100_meal_tables.sql`)
-- [ ] T005 [P] Prueba pgTAP en `supabase/tests/energy_goals_rls.test.sql` (escribir primero, debe fallar). Debe cubrir:
+- [X] T004 Migración `supabase/migrations/20261020000100_energy_goals.sql`: `public.energy_goals` con las columnas, restricciones e índices de `data-model.md`; **RLS activado sin políticas** y `revoke all` para `anon` y `authenticated` (el mismo patrón que `20261019000100_meal_tables.sql`)
+- [X] T005 [P] Prueba pgTAP en `supabase/tests/energy_goals_rls.test.sql` (escribir primero, debe fallar). Debe cubrir:
   - la cuenta B no ve, modifica ni borra las filas de A (FR-023);
   - con la sesión vencida no se ve nada; `anon` no accede;
   - el cliente (`authenticated`) **solo puede hacer `select`** de lo propio: `insert`, `update` y `delete` directos fallan (la escritura es solo por `set_energy_goal`).
-- [ ] T006 Migración `supabase/migrations/20261020000200_energy_goals_rls.sql`: permiso `select` para `authenticated` y política de lectura con `user_id = (select auth.uid())` y `(select private.is_session_fresh())` (evaluada una vez por consulta)
-- [ ] T007 [P] Ayudantes de prueba en `supabase/seed.sql` (solo local): `tests.create_energy_goal(user_id uuid, effective_from date, kcal integer, created_at timestamptz default now())` y `tests.create_pending_estimate(user_id uuid, log_date date, meal text, energy_kcal numeric)`, que inserta un ítem `origin = 'estimated'`, `status = 'pending'` respetando las reglas del disparador de la spec 003 (lo usan los e2e de US3 y US4). Comprobar que `supabase/tests/rls_guardrail.test.sql` y la prueba de rendimiento de políticas de la spec 002 siguen en verde con la tabla nueva, **sin cambios** en ellas (si fallan, la tabla o la política incumplen la convención: corregir la migración, no la prueba)
+- [X] T006 Migración `supabase/migrations/20261020000200_energy_goals_rls.sql`: permiso `select` para `authenticated` y política de lectura con `user_id = (select auth.uid())` y `(select private.is_session_fresh())` (evaluada una vez por consulta)
+- [X] T007 [P] Ayudantes de prueba en `supabase/seed.sql` (solo local): `tests.create_energy_goal(user_id uuid, effective_from date, kcal integer, created_at timestamptz default now())` y `tests.create_pending_estimate(user_id uuid, log_date date, meal text, energy_kcal numeric)`, que inserta un ítem `origin = 'estimated'`, `status = 'pending'` respetando las reglas del disparador de la spec 003 (lo usan los e2e de US3 y US4). Comprobar que `supabase/tests/rls_guardrail.test.sql` y la prueba de rendimiento de políticas de la spec 002 siguen en verde con la tabla nueva, **sin cambios** en ellas (si fallan, la tabla o la política incumplen la convención: corregir la migración, no la prueba)
 
 ### Cálculos puros del frontend (skill `nutrition-domain-rules`)
 
-- [ ] T008 [P] Pruebas unitarias en `app/tests/unit/goalHistory.test.ts` (escribir primero, deben fallar). Casos de tabla de `goalOn(history, day)` y `currentGoal(history, today)` (`research.md` Decisiones 1 y 3):
+- [X] T008 [P] Pruebas unitarias en `app/tests/unit/goalHistory.test.ts` (escribir primero, deben fallar). Casos de tabla de `goalOn(history, day)` y `currentGoal(history, today)` (`research.md` Decisiones 1 y 3):
   - sin filas → sin objetivo;
   - el ejemplo de `data-model.md` (2.000 el 1/10, 1.800 y 1.900 el 12/10, nulo el 15/10): antes del 1/10 sin objetivo, 1/10 a 11/10 → 2.000, 12/10 a 14/10 → 1.900, desde el 15/10 sin objetivo;
   - dos cambios el mismo día: gana el de `created_at` más reciente (FR-009), sin importar el orden del arreglo;
@@ -78,8 +78,8 @@ description: "Lista de tareas de la spec 004: objetivo calórico y resumen diari
   - fila con `effective_from` posterior al día consultado se ignora; quitar y volver a fijar (FR-010);
   - fecha futura dentro de los 7 días rige con el valor vigente hoy (FR-011);
   - `currentGoal` devuelve valor y "vigente desde" = `effective_from` de la primera fila de la racha consecutiva con el mismo valor (guardar el mismo valor otra vez **no** mueve la fecha), y `none` si el último cambio es nulo.
-- [ ] T009 Implementar `app/src/features/goals/goalHistory.ts` (tipos `GoalChange`, `goalOn`, `currentGoal`) para que pasen las pruebas de T008
-- [ ] T010 [P] Pruebas unitarias en `app/tests/unit/daySummary.test.ts` (escribir primero, deben fallar). Casos de tabla de `summarizeDay(entries, goal)` (`data-model.md`, `research.md` Decisión 4):
+- [X] T009 Implementar `app/src/features/goals/goalHistory.ts` (tipos `GoalChange`, `goalOn`, `currentGoal`) para que pasen las pruebas de T008
+- [X] T010 [P] Pruebas unitarias en `app/tests/unit/daySummary.test.ts` (escribir primero, deben fallar). Casos de tabla de `summarizeDay(entries, goal)` (`data-model.md`, `research.md` Decisión 4):
   - 1.350 con objetivo 2.000 → `under`, restan 650, `percent` 68; la cuenta usa el total ya redondeado;
   - exactamente 2.000 → `met`, restan 0; 2.250 → `over`, `difference` 250;
   - día vacío con objetivo → `registered` 0, restante = objetivo, `under`, `percent` 0;
@@ -89,19 +89,19 @@ description: "Lista de tareas de la spec 004: objetivo calórico y resumen diari
   - **sin objetivo** (`goal` ausente o nulo): `state = 'none'` y las propiedades `goal`, `remaining`, `difference` y `percent` **no existen** en el resultado (`'goal' in result === false`), con `registered`, `pending` y `missing` correctos (FR-002, SC-009);
   - coincide con el total de energía de `mealTotals` de la spec 003 para los mismos ítems (SC-003);
   - rendimiento: 60 ítems se resumen en menos de 5 ms (riesgo 3 del plan).
-- [ ] T011 Implementar `app/src/features/goals/daySummary.ts` (`summarizeDay`) para que pasen las pruebas de T010; reutiliza `sumEntries` de `mealTotals.ts` (devuelve la suma sin redondear) y redondea **una sola vez** para `registered` y `pending`
-- [ ] T012 [P] Pruebas unitarias en `app/tests/unit/goalCopy.test.ts` (escribir primero, deben fallar): recorrer **todos** los textos de `copy.goal` (cadenas y funciones de texto llamadas con valores de ejemplo para cada estado: `under`, `met`, `over`, con y sin ítems sin dato, con estimados, con y sin objetivo, las cuatro validaciones y la nota de menos de 1.200 kcal) y exigir que `findForbidden` devuelva vacío; exigir además que existan los textos de `contracts/ui-routes.md` (frases de los tres estados, "Restan como máximo…", "Registraste al menos…", "Incluye … estimadas…", "Registrado: al menos…", los cuatro mensajes de validación, la nota informativa y el texto del desplegable); y que ningún texto use "tú"-imperativo coercitivo ("debes", "tienes que")
-- [ ] T013 Textos en español de la spec en `app/src/copy/es.ts` bajo la clave `goal`, con el contenido de `contracts/ui-routes.md` (pantalla, tarjeta, estados, aclaraciones, "Cómo se calcula", validaciones, diálogo de quitar, nota informativa, estados de carga/vacío/error). Las cifras se formatean con el formateador de kcal de `features/foods/nutrition.ts`. Hace pasar T012
+- [X] T011 Implementar `app/src/features/goals/daySummary.ts` (`summarizeDay`) para que pasen las pruebas de T010; reutiliza `sumEntries` de `mealTotals.ts` (devuelve la suma sin redondear) y redondea **una sola vez** para `registered` y `pending`
+- [X] T012 [P] Pruebas unitarias en `app/tests/unit/goalCopy.test.ts` (escribir primero, deben fallar): recorrer **todos** los textos de `copy.goal` (cadenas y funciones de texto llamadas con valores de ejemplo para cada estado: `under`, `met`, `over`, con y sin ítems sin dato, con estimados, con y sin objetivo, las cuatro validaciones y la nota de menos de 1.200 kcal) y exigir que `findForbidden` devuelva vacío; exigir además que existan los textos de `contracts/ui-routes.md` (frases de los tres estados, "Restan como máximo…", "Registraste al menos…", "Incluye … estimadas…", "Registrado: al menos…", los cuatro mensajes de validación, la nota informativa y el texto del desplegable); y que ningún texto use "tú"-imperativo coercitivo ("debes", "tienes que")
+- [X] T013 Textos en español de la spec en `app/src/copy/es.ts` bajo la clave `goal`, con el contenido de `contracts/ui-routes.md` (pantalla, tarjeta, estados, aclaraciones, "Cómo se calcula", validaciones, diálogo de quitar, nota informativa, estados de carga/vacío/error). Las cifras se formatean con el formateador de kcal de `features/foods/nutrition.ts`. Hace pasar T012
 
 ### Caché de consultas por sesión (FR-029, `research.md` Decisión 9)
 
-- [ ] T014 Prueba de componente en `app/tests/component/AuthProvider.test.tsx` (ampliar; escribir primero, debe fallar), con un `QueryClient` real dentro del proveedor y datos sembrados en la caché:
+- [X] T014 Prueba de componente en `app/tests/component/AuthProvider.test.tsx` (ampliar; escribir primero, debe fallar), con un `QueryClient` real dentro del proveedor y datos sembrados en la caché:
   - tras `SIGNED_OUT` la caché queda vacía;
   - tras sesión vencida (`session_expired`) la caché queda vacía;
   - tras `SIGNED_IN` con **otro** `user.id` la caché queda vacía antes de que los componentes lean datos nuevos;
   - `SIGNED_IN` / `TOKEN_REFRESHED` del **mismo** usuario no vacía la caché (no se tira la carga por cada renovación de token);
   - una consulta de la cuenta anterior que sigue en curso y resuelve **después** del cierre de sesión no vuelve a llenar la caché.
-- [ ] T015 Implementar en `app/src/features/auth/AuthProvider.tsx`: usar `useQueryClient()` (el proveedor ya está dentro de `QueryClientProvider` en `main.tsx`) y llamar `queryClient.cancelQueries()` y luego `queryClient.clear()` al cerrar sesión, al vencer la sesión y al cambiar el `user.id`; recordar el último `user.id` en una referencia. No se cambian las claves de caché. Hace pasar T014 y no rompe `AuthProvider.test.tsx` ni `session-ui.test.tsx`
+- [X] T015 Implementar en `app/src/features/auth/AuthProvider.tsx`: usar `useQueryClient()` (el proveedor ya está dentro de `QueryClientProvider` en `main.tsx`) y llamar `queryClient.cancelQueries()` y luego `queryClient.clear()` al cerrar sesión, al vencer la sesión y al cambiar el `user.id`; recordar el último `user.id` en una referencia. No se cambian las claves de caché. Hace pasar T014 y no rompe `AuthProvider.test.tsx` ni `session-ui.test.tsx`
 
 **Checkpoint**: tabla y seguridad listas; `goalOn`, `summarizeDay` y los textos probados; la caché ya no se filtra entre cuentas.
 
