@@ -2,6 +2,7 @@ import { es } from '../../copy/es'
 import { supabase } from '../../lib/supabase'
 import type { OriginScope } from '../../components/OriginTabs'
 import type { Equipment, MeasurementType, Muscle } from './exerciseLists'
+import type { ExercisePayload } from './schema'
 
 export type ExerciseOrigin = 'imported' | 'own'
 export type TextStatus = 'original' | 'machine_translated' | 'reviewed'
@@ -167,4 +168,14 @@ export function exerciseErrorMessage(error: unknown): string | null {
     return EXERCISE_ERRORS[reason] ?? es.exercises.errors.saveFailed
   }
   return null
+}
+
+/** Crea un ejercicio propio, de forma atómica e idempotente por `requestId`. Devuelve su identificador. */
+export async function createExercise(payload: ExercisePayload, requestId: string): Promise<string> {
+  const { data, error } = await supabase.rpc('create_exercise', {
+    exercise: payload,
+    request_id: requestId,
+  })
+  if (error) throw error
+  return data as string
 }
