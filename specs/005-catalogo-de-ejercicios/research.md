@@ -117,7 +117,7 @@ Versión analizada de free-exercise-db: commit `f00c92c7dcf1216a928a52c3706c7ce8
 ## Decisión 8: pipeline de carga
 
 - **Decisión**: el mismo esquema de la 002 (`supabase/import/`): extraer a un formato intermedio normalizado (NDJSON), normalizar y validar con funciones puras y probadas, y cargar en lotes con la clave de servicio, por funciones exclusivas de `service_role`. Archivos nuevos: `extract-exercises.ts`, `normalize-exercises.ts` y `load-exercises.ts`, y los datos `ejercicios-es.json`, `ejercicios-medicion.csv` y `ejercicios-base.json`.
-- **Fuente fijada**: la carga descarga `dist/exercises.json` del commit `f00c92c7…` y **verifica su SHA-256**; si no coincide, se detiene. Así la carga es reproducible y un cambio en el repositorio de origen no entra sin que el autor suba la versión a propósito.
+- **Fuente fijada**: `dist/exercises.json` del commit `f00c92c7…` se **versiona en el repositorio** (≈ 1 MB, con su `LICENSE.md`; la Unlicense lo permite) y la carga **verifica su SHA-256**; si no coincide, se detiene. Así la carga y las pruebas no necesitan red, son reproducibles y un cambio en el repositorio de origen no entra sin que el autor suba la versión a propósito.
 - **Idempotencia**: clave `(fuente, source_item_id)`. Repetir la carga no duplica ni toca ejercicios propios, copias ni traducciones marcadas como revisadas.
 - **Garantías heredadas**: sin licencia registrada, la carga se rechaza; los faltantes son `null`; los registros inválidos se omiten con motivo y no detienen el resto; sin datos personales en informes.
 
@@ -146,7 +146,7 @@ Versión analizada de free-exercise-db: commit `f00c92c7dcf1216a928a52c3706c7ce8
 2. **Volumen de traducción**: unos 876 nombres y 3.000 frases. Se hace en lotes durante la implementación, con una prueba que verifica que todo ejercicio importado tiene traducción y que ninguna entrada mezcla inglés sin marcar.
 3. **Clasificación del tipo de medición** (Decisión 3): unos 110 casos dudosos que hay que resolver a mano; la carga informa cuántos quedan sin excepción.
 4. **Cobertura de resistencia**: 14 ejercicios de cardio en la base; lo cubre `myguide-base` y, si falta algo, cada persona crea el suyo.
-5. **Dependencia de la fuente fijada**: si el repositorio de origen desaparece, la carga ya hecha sigue funcionando; para recargar hace falta la copia local del archivo con su SHA-256.
+5. **Dependencia de la fuente fijada**: ninguna en ejecución; la copia con su SHA-256 vive en el repositorio.
 6. **Pruebas dependientes de datos locales**: lección de las specs 002 y 003. Las pruebas pgTAP del catálogo empiezan con `delete from public.exercises` dentro de su transacción.
 7. **Estado de las listas cerradas entre cliente y base**: una prueba verifica que coinciden (Decisión 5).
 

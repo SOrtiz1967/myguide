@@ -28,7 +28,7 @@
 
 | Archivo | Quién lo mantiene | Contenido |
 |---|---|---|
-| `dist/exercises.json` de free-exercise-db (commit fijado) | la fuente | 876 ejercicios en inglés; se descarga y se **verifica su SHA-256** antes de usarlo |
+| `supabase/import/data/fuentes/free-exercise-db/exercises.json` (copia fijada del commit `f00c92c7…`, con su `LICENSE.md`) | la fuente | 876 ejercicios en inglés; la copia vive en el repositorio (la Unlicense lo permite) y se **verifica su SHA-256** antes de usarla; las imágenes no se copian |
 | `supabase/import/data/ejercicios-es.json` | el autor (con asistencia) | por `source_item_id`: `nombre`, `sinonimos`, `pasos`, `nombre_estado`, `pasos_estado` |
 | `supabase/import/data/ejercicios-medicion.csv` | el autor | excepciones al tipo de medición: `source_item_id,tipo,motivo` |
 | `supabase/import/data/ejercicios-base.json` | el autor (obra propia, CC0) | ejercicios de la fuente `myguide-base`, ya en español |
