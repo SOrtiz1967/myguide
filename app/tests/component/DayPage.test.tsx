@@ -15,6 +15,10 @@ vi.mock('../../src/features/meals/api', () => ({
   fetchPhotos: vi.fn().mockResolvedValue([]),
   startLogDay: vi.fn(),
 }))
+vi.mock('../../src/features/goals/api', () => ({
+  fetchGoalHistory: vi.fn().mockResolvedValue([]),
+  saveGoal: vi.fn(),
+}))
 vi.mock('../../src/features/foods/api', () => ({ createFood: vi.fn() }))
 vi.mock('../../src/features/profile/api', () => ({ fetchProfile: vi.fn(), updateProfile: vi.fn() }))
 
@@ -103,6 +107,26 @@ beforeEach(() => {
 
 afterEach(() => {
   vi.useRealTimers()
+})
+
+describe('DayPage: tarjeta del objetivo (spec 004)', () => {
+  it('la tarjeta "Objetivo del día" va arriba del total del día, que no cambia', async () => {
+    mockedDay.mockResolvedValue([entry()])
+    renderDay()
+    const card = await screen.findByRole('region', { name: es.goal.cardTitle })
+    const total = await section(es.meals.day.total)
+    expect(card.compareDocumentPosition(total) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(within(total).getByText(/195 kcal/)).toBeVisible()
+  })
+
+  it('sin objetivo la tarjeta solo informa lo registrado e invita a fijar uno', async () => {
+    mockedDay.mockResolvedValue([entry()])
+    renderDay()
+    const card = await screen.findByRole('region', { name: es.goal.cardTitle })
+    expect(await within(card).findByText(es.goal.registered(195, false))).toBeVisible()
+    expect(within(card).getByRole('link', { name: es.goal.invite })).toBeVisible()
+    expect(within(card).queryByText(/restan/i)).not.toBeInTheDocument()
+  })
 })
 
 describe('DayPage: comidas, subtotales y total (FR-014, FR-015, FR-016)', () => {

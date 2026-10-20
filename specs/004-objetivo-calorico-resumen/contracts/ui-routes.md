@@ -9,7 +9,7 @@
 | `/objetivo` | Ver, fijar, cambiar y quitar el objetivo de energía diaria | 1, 4 (nota), 5 |
 | `/comidas/:fecha` (spec 003) | Se agrega la tarjeta **"Objetivo del día"** arriba del total del día | 1, 2, 3, 4, 5 |
 
-`/objetivo?volver=AAAA-MM-DD` vuelve a ese día al terminar; sin parámetro vuelve a `/comidas`. No hay un enlace nuevo en la cabecera: el objetivo se abre desde la tarjeta del día.
+`/objetivo?volver=AAAA-MM-DD` vuelve a ese día al terminar; sin parámetro (o con uno inválido) vuelve al día de hoy (no pasa por `/comidas`, que redirige y perdería el mensaje de confirmación). No hay un enlace nuevo en la cabecera: el objetivo se abre desde la tarjeta del día.
 
 ## La tarjeta "Objetivo del día" (`GoalSummary`)
 

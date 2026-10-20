@@ -26,6 +26,10 @@ vi.mock('../../src/features/meals/api', () => ({
   startLogDay: vi.fn(),
   addEntry: vi.fn(),
 }))
+vi.mock('../../src/features/goals/api', () => ({
+  fetchGoalHistory: vi.fn().mockResolvedValue([]),
+  saveGoal: vi.fn(),
+}))
 vi.mock('../../src/features/foods/api', () => ({
   createFood: vi.fn(),
   searchFoods: vi.fn().mockResolvedValue([]),

@@ -78,6 +78,12 @@ export function formatDay(date: string): string {
   return `${WEEKDAYS[utc.getUTCDay()]} ${utc.getUTCDate()} de ${MONTHS[utc.getUTCMonth()]}`
 }
 
+/** "19 de octubre" */
+export function formatDayMonth(date: string): string {
+  const utc = toUtc(date)
+  return `${utc.getUTCDate()} de ${MONTHS[utc.getUTCMonth()]}`
+}
+
 /** "lunes 19" */
 export function formatDayShort(date: string): string {
   const utc = toUtc(date)

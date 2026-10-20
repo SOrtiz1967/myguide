@@ -9,6 +9,7 @@ import { FoodDetailPage } from '../features/foods/FoodDetailPage'
 import { FoodEditPage } from '../features/foods/FoodEditPage'
 import { FoodSearchPage } from '../features/foods/FoodSearchPage'
 import { SourcesPage } from '../features/foods/SourcesPage'
+import { GoalPage } from '../features/goals/GoalPage'
 import { AddEntryPage } from '../features/meals/AddEntryPage'
 import { DayPage } from '../features/meals/DayPage'
 import { EntryDetailPage } from '../features/meals/EntryDetailPage'
@@ -43,6 +44,7 @@ export const routes: RouteObject[] = [
           { path: '/comidas/:fecha', element: <DayPage /> },
           { path: '/comidas/:fecha/agregar', element: <AddEntryPage /> },
           { path: '/comidas/item/:id', element: <EntryDetailPage /> },
+          { path: '/objetivo', element: <GoalPage /> },
           { path: '/alimentos', element: <FoodSearchPage /> },
           { path: '/alimentos/nuevo', element: <FoodCreatePage /> },
           { path: '/alimentos/:id', element: <FoodDetailPage /> },

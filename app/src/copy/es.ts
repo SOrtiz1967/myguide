@@ -519,6 +519,8 @@ export const es = {
       saved: 'Objetivo guardado. Rige desde hoy.',
       removed: 'Objetivo quitado. Rige desde hoy.',
       notSaved: 'No se guardó el objetivo.',
+      draftRestored: 'Recuperamos lo que habías escrito.',
+      draftDiscard: 'Descartar',
       back: 'Volver al día',
       removeDialog: {
         title: '¿Quitar el objetivo?',

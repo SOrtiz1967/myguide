@@ -4,6 +4,7 @@ import { LoadingState } from '../../components/LoadingState'
 import { SuccessMessage } from '../../components/SuccessMessage'
 import { es } from '../../copy/es'
 import { isNetworkError } from '../../lib/errors'
+import { GoalSummary } from '../goals/GoalSummary'
 import { MealPhoto } from './MealPhoto'
 import { addDays, formatDay, formatDayShort, isDateInRange, MEALS, parseDate } from './meals'
 import { ClosingDayNotice } from './ClosingDayNotice'
@@ -106,6 +107,7 @@ function Day({ date, today }: { date: string; today: string }) {
 
       {query.isSuccess ? (
         <>
+          <GoalSummary date={date} today={today} entries={entries} />
           {entries.length === 0 ? (
             <div className="rounded-lg border border-line bg-surface p-4">
               <p className="font-medium">{es.meals.day.empty}</p>

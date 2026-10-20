@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 import {
   addDays,
   formatDay,
+  formatDayMonth,
   formatDayShort,
   groupByMeal,
   isDateInRange,
@@ -90,6 +91,11 @@ describe('formato del día', () => {
     expect(formatDay('2026-10-19')).toBe('lunes 19 de octubre')
     expect(formatDay('2026-10-18')).toBe('domingo 18 de octubre')
     expect(formatDay('2026-01-01')).toBe('jueves 1 de enero')
+  })
+
+  it('formatDayMonth: día y mes', () => {
+    expect(formatDayMonth('2026-10-12')).toBe('12 de octubre')
+    expect(formatDayMonth('2026-01-01')).toBe('1 de enero')
   })
 
   it('formatDayShort: día de la semana y número', () => {
