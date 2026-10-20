@@ -1,14 +1,14 @@
 import { Link, useLocation, useNavigate } from 'react-router'
 import { EmptyState } from '../../components/EmptyState'
 import { ErrorState } from '../../components/ErrorState'
+import { OriginTabs } from '../../components/OriginTabs'
+import { RESULTS_PANEL_ID, tabId } from '../../components/tabIds'
 import { LoadingState } from '../../components/LoadingState'
 import { SuccessMessage } from '../../components/SuccessMessage'
 import { es } from '../../copy/es'
 import { isNetworkError } from '../../lib/errors'
 import type { FoodSummary } from './api'
 import { basisLabel, formatValue } from './nutrition'
-import { OriginTabs } from './OriginTabs'
-import { RESULTS_PANEL_ID, tabId } from './tabIds'
 import { useFoodSearch } from './useFoodSearch'
 
 function originBadge(food: FoodSummary): string {
@@ -73,7 +73,12 @@ export function FoodSearchPage() {
         />
       </div>
 
-      <OriginTabs value={search.scope} onChange={search.setScope} />
+      <OriginTabs
+        value={search.scope}
+        onChange={search.setScope}
+        labels={es.foods.tabs}
+        ariaLabel={es.foods.tabsLabel}
+      />
 
       <div
         id={RESULTS_PANEL_ID}

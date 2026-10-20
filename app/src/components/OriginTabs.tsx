@@ -1,22 +1,26 @@
 import { useRef, type KeyboardEvent } from 'react'
-import { es } from '../../copy/es'
-import type { SearchScope } from './api'
 import { RESULTS_PANEL_ID, tabId } from './tabIds'
 
-const TABS: { scope: SearchScope; label: string }[] = [
-  { scope: 'all', label: es.foods.tabs.all },
-  { scope: 'catalog', label: es.foods.tabs.catalog },
-  { scope: 'own', label: es.foods.tabs.own },
-]
+export type OriginScope = 'all' | 'catalog' | 'own'
 
-/** Pestañas con rol y estado accesibles; se recorren con las flechas, Inicio y Fin (FR-030). */
+const SCOPES: readonly OriginScope[] = ['all', 'catalog', 'own']
+
+/**
+ * Pestañas de origen (todos, del catálogo, propios) con rol y estado accesibles; se recorren con las
+ * flechas, Inicio y Fin. Las usan la búsqueda de alimentos y la de ejercicios, cada una con sus etiquetas.
+ */
 export function OriginTabs({
   value,
   onChange,
+  labels,
+  ariaLabel,
 }: {
-  value: SearchScope
-  onChange: (scope: SearchScope) => void
+  value: OriginScope
+  onChange: (scope: OriginScope) => void
+  labels: Record<OriginScope, string>
+  ariaLabel: string
 }) {
+  const TABS = SCOPES.map((scope) => ({ scope, label: labels[scope] }))
   const buttons = useRef<(HTMLButtonElement | null)[]>([])
 
   function onKeyDown(event: KeyboardEvent<HTMLButtonElement>, index: number) {
@@ -37,7 +41,7 @@ export function OriginTabs({
   return (
     <div
       role="tablist"
-      aria-label={es.foods.tabsLabel}
+      aria-label={ariaLabel}
       className="flex gap-1 overflow-x-auto border-b border-line"
     >
       {TABS.map((tab, index) => {

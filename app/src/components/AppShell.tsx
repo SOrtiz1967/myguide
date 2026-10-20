@@ -28,6 +28,9 @@ export function AppShell({ children }: { children: ReactNode }) {
               <Link to="/alimentos" className="inline-flex min-h-11 items-center underline">
                 {es.foods.navLink}
               </Link>
+              <Link to="/ejercicios" className="inline-flex min-h-11 items-center underline">
+                {es.exercises.navLink}
+              </Link>
               <Link to="/perfil" className="inline-flex min-h-11 items-center underline">
                 Perfil
               </Link>

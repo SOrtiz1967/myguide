@@ -45,6 +45,11 @@ export default defineConfig(({ mode }) => ({
         },
       }),
   ],
+  server: {
+    // Una prueba lee la migración de ejercicios (`?raw`) para comprobar que las listas cerradas coinciden;
+    // solo esa carpeta, que no tiene secretos.
+    fs: { allow: ['.', '../supabase/migrations'] },
+  },
   test: {
     environment: 'jsdom',
     testTimeout: 15000,
