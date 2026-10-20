@@ -39,7 +39,7 @@ Versión analizada de free-exercise-db: commit `f00c92c7dcf1216a928a52c3706c7ce8
 - **Lo que está claro**: free-exercise-db declara la Unlicense. Es la licencia más permisiva: se puede copiar, modificar y redistribuir sin atribuir. Aun así se muestra la fuente y su licencia en la pantalla de fuentes (transparencia, Principio X).
 - **El riesgo que no se puede cerrar desde aquí**: ni free-exercise-db ni su origen documentan de dónde sacaron los **textos de los pasos**. Una dedicación al dominio público solo vale si quien la hizo era dueño del contenido. Para los hechos (nombre del ejercicio, músculo, equipamiento, categoría) el riesgo es mínimo: son datos y no obra creativa. Para los pasos redactados (unas 3.000 frases) no se puede asegurar.
 - **Mitigación en el diseño**: la **descripción es un dato opcional y separado** (con su propio estado y su propia fuente de texto), así que el catálogo funciona igual si el autor decide retirarla. La importación puede omitir la descripción de una fuente con un parámetro (`--sin-descripcion`) y la carga siguiente la quita sin tocar el resto. Las imágenes de la fuente **no se importan** (la spec las deja fuera y su procedencia es todavía menos clara).
-- **Tareas para el autor**, anotadas en `Documentacion/issues-autor/05-ejercicios-licencias.md` al implementar:
+- **Tareas para el autor**, anotadas en `Documentacion/issues-autor/08-ejercicios-licencias.md` al implementar:
   1. Aceptar o revisar el riesgo de procedencia de los pasos de free-exercise-db antes de abrir la aplicación a terceros (el mismo tipo de revisión pendiente para ODbL en la spec 002). Para el MVP personal el riesgo es bajo.
   2. Confirmar la dedicación CC0 de `myguide-base` (es obra propia).
   3. Ir revisando las traducciones (Decisión 4).

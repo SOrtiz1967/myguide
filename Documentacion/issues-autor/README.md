@@ -11,6 +11,7 @@ Cada archivo `NN-*.md` es un issue listo para publicar en GitHub: la primera lí
 | 05 | Cargar el catálogo de alimentos en producción | Usar el catálogo en la app publicada |
 | 06 | Revisión legal de la licencia de Open Food Facts (ODbL) | Abrir la app a otras personas |
 | 07 | (Opcional) Instalar las skills de fitness | Nada |
+| 08 | Revisar las licencias y las traducciones del catálogo de ejercicios | Abrir la app a otras personas (no bloquea el desarrollo) |
 
 ## Publicarlos como issues
 

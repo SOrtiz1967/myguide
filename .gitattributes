@@ -1,0 +1,2 @@
+# Las copias fijadas de las fuentes se verifican por SHA-256: git no debe convertir sus finales de línea.
+supabase/import/data/fuentes/** -text

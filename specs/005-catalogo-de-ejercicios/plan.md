@@ -106,7 +106,7 @@ supabase/import/
     ├── ejercicios-base.json       # fuente propia myguide-base (CC0)
     └── ejercicios-muestra.ndjson  # muestra para desarrollo y pruebas
 Documentacion/fuentes-datos.md             # se agrega la sección de ejercicios
-Documentacion/issues-autor/05-ejercicios-licencias.md   # tareas del autor
+Documentacion/issues-autor/08-ejercicios-licencias.md   # tareas del autor
 ```
 
 **Structure Decision**: se agrega `features/exercises` junto a `features/foods` y se amplía `supabase/import/` con los archivos de ejercicios. Se reutilizan tal cual `OriginTabs`, `Field`, `ConfirmDialog`, `useDraft`, `saveRemotely` y `newRequestId`; solo se extraen a un lugar común las piezas de `features/foods` que se usan en dos sitios (pestañas de origen y procedencia).

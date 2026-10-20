@@ -61,4 +61,4 @@ npm run check:secrets --prefix app
 
 ## Criterio de terminado
 
-Todos los comandos de verificación pasan y los 32 escenarios se cumplen. Además, la revisión de licencias del autor (`Documentacion/issues-autor/05-ejercicios-licencias.md`) está registrada antes de abrir la aplicación a terceros.
+Todos los comandos de verificación pasan y los 32 escenarios se cumplen. Además, la revisión de licencias del autor (`Documentacion/issues-autor/08-ejercicios-licencias.md`) está registrada antes de abrir la aplicación a terceros.
