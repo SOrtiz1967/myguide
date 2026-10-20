@@ -4,6 +4,8 @@ import { LoginPage } from '../features/auth/pages/LoginPage'
 import { RecoverPage } from '../features/auth/pages/RecoverPage'
 import { RegisterPage } from '../features/auth/pages/RegisterPage'
 import { ResetPage } from '../features/auth/pages/ResetPage'
+import { ExerciseDetailPage } from '../features/exercises/ExerciseDetailPage'
+import { ExerciseSearchPage } from '../features/exercises/ExerciseSearchPage'
 import { FoodCreatePage } from '../features/foods/FoodCreatePage'
 import { FoodDetailPage } from '../features/foods/FoodDetailPage'
 import { FoodEditPage } from '../features/foods/FoodEditPage'
@@ -49,6 +51,8 @@ export const routes: RouteObject[] = [
           { path: '/alimentos/nuevo', element: <FoodCreatePage /> },
           { path: '/alimentos/:id', element: <FoodDetailPage /> },
           { path: '/alimentos/:id/editar', element: <FoodEditPage /> },
+          { path: '/ejercicios', element: <ExerciseSearchPage /> },
+          { path: '/ejercicios/:id', element: <ExerciseDetailPage /> },
           { path: '/fuentes', element: <SourcesPage /> },
         ],
       },

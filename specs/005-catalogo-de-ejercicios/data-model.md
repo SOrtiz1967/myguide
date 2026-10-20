@@ -95,7 +95,7 @@ Solo `service_role`.
 
 | Función | Quién la invoca | Qué hace |
 |---|---|---|
-| `public.search_exercises(q, scope, muscle, equipment, page_size, page_offset)` | cliente autenticado (`security invoker`, así aplica RLS) | busca, filtra y ordena por relevancia; `q` es opcional si hay un filtro |
+| `public.search_exercises(q, scope, muscle_filter, equipment_filter, page_size, page_offset)` | cliente autenticado (`security invoker`, así aplica RLS) | busca, filtra y ordena por relevancia; `q` es opcional si hay un filtro |
 | `public.create_exercise(exercise, request_id)` | cliente (`security definer`) | crea un ejercicio propio, atómico e idempotente |
 | `public.update_exercise(id, exercise)` | cliente (`security definer`) | actualiza un ejercicio propio |
 | `public.copy_exercise(id, request_id)` | cliente (`security definer`) | crea la copia propia de cualquier ejercicio visible, idempotente |

@@ -6,7 +6,7 @@ El frontend usa `supabase-js` contra tablas y funciones protegidas por RLS. No h
 
 ## `search_exercises`
 
-- **Entrada**: `q text` (opcional; si viene, 2 o más caracteres tras recortar), `scope text` (`all` | `catalog` | `own`, por defecto `all`), `muscle text` (código de músculo, opcional), `equipment text` (código de equipamiento, opcional), `page_size int` (1 a 50, por defecto 20), `page_offset int` (≥ 0).
+- **Entrada**: `q text` (opcional; si viene, 2 o más caracteres tras recortar), `scope text` (`all` | `catalog` | `own`, por defecto `all`), `muscle_filter text` (código de músculo, opcional), `equipment_filter text` (código de equipamiento, opcional; el parámetro no se llama `equipment` porque la columna de salida ya usa ese nombre), `page_size int` (1 a 50, por defecto 20), `page_offset int` (≥ 0).
 - **Salida**: filas con `id, name, name_status, measurement_type, primary_muscles, equipment, origin, based_on_exercise_id, source_name` (la fuente solo si es importado), más `total_estimate`.
 - **Reglas**:
   - Ignora acentos y mayúsculas; coincidencias parciales de palabras; busca en el nombre, el nombre original y los alias (FR-013).
