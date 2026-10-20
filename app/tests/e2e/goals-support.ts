@@ -42,10 +42,10 @@ export function seedGoal(
   )
 }
 
-/** Los valores guardados de la cuenta, del más viejo al más nuevo ('' = se quitó). */
+/** Los valores guardados de la cuenta, del más viejo al más nuevo ('quitado' = se quitó el objetivo). */
 export function savedGoals(email: string): string[] {
   const rows = dbQuery(
-    `select coalesce(kcal::text, '') from public.energy_goals where user_id = '${userId(email)}' order by created_at`,
+    `select coalesce(kcal::text, 'quitado') from public.energy_goals where user_id = '${userId(email)}' order by created_at`,
   )
   return rows === '' ? [] : rows.split('\n')
 }

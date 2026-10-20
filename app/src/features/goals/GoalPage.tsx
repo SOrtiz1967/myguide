@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { useNavigate, useSearchParams } from 'react-router'
 import { z } from 'zod'
+import { ConfirmDialog } from '../../components/ConfirmDialog'
 import { ErrorState } from '../../components/ErrorState'
 import { Field } from '../../components/Field'
 import { LoadingState } from '../../components/LoadingState'
@@ -31,6 +32,9 @@ const goalDraftSchema = z.object({ kcal: z.string() })
 export function GoalPage() {
   const today = useToday()
   const history = useGoalHistory()
+  const [params] = useSearchParams()
+  // Sin día de vuelta se va directo al de hoy: pasar por /comidas perdería el mensaje de confirmación.
+  const backTo = `/comidas/${parseDate(params.get('volver') ?? '') ?? today}`
 
   if (history.isPending) return <LoadingState label={es.goal.page.loading} />
   if (history.isError) {
@@ -52,20 +56,18 @@ export function GoalPage() {
 
       {current && current.kcal < LOW_GOAL_KCAL ? <LowGoalNote /> : null}
 
-      <GoalForm today={today} />
+      <GoalForm backTo={backTo} />
+
+      {current ? <RemoveGoal backTo={backTo} /> : null}
     </div>
   )
 }
 
-function GoalForm({ today }: { today: string }) {
+function GoalForm({ backTo }: { backTo: string }) {
   const { session } = useAuth()
   const userId = session?.user.id ?? ''
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const [params] = useSearchParams()
-  const backDay = parseDate(params.get('volver') ?? '')
-  // Sin día de vuelta se va directo al de hoy: pasar por /comidas perdería el mensaje de confirmación.
-  const backTo = `/comidas/${backDay ?? today}`
 
   const draft = useDraft({ userId, formId: FORM_ID, schema: goalDraftSchema })
   const [requestId] = useState(newRequestId)
@@ -147,5 +149,51 @@ function GoalForm({ today }: { today: string }) {
         </button>
       </div>
     </form>
+  )
+}
+
+/** «Quitar objetivo»: desde hoy no hay objetivo; los días anteriores conservan el suyo (FR-010). */
+function RemoveGoal({ backTo }: { backTo: string }) {
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
+  const [open, setOpen] = useState(false)
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  // El mismo identificador en cada reintento: si la primera solicitud sí llegó, no se duplica.
+  const [requestId] = useState(newRequestId)
+
+  async function remove() {
+    setBusy(true)
+    setError(null)
+    try {
+      await saveGoal(null, requestId)
+      await queryClient.invalidateQueries({ queryKey: goalHistoryKey })
+      void navigate(backTo, { state: { added: es.goal.page.removed } })
+    } catch (e) {
+      setError(e instanceof WriteError ? e.message : es.errors.generic)
+      setBusy(false)
+    }
+  }
+
+  return (
+    <>
+      <div>
+        <button type="button" className="btn-secondary" onClick={() => setOpen(true)}>
+          {es.goal.page.remove}
+        </button>
+      </div>
+      {open ? (
+        <ConfirmDialog
+          title={es.goal.page.removeDialog.title}
+          description={es.goal.page.removeDialog.description}
+          confirmLabel={es.goal.page.removeDialog.confirm}
+          cancelLabel={es.goal.page.removeDialog.cancel}
+          busy={busy}
+          error={error}
+          onConfirm={() => void remove()}
+          onCancel={() => setOpen(false)}
+        />
+      ) : null}
+    </>
   )
 }

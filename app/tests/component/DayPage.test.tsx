@@ -457,3 +457,66 @@ describe('DayPage: estados (FR-038)', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent(es.meals.day.offlineLoad)
   })
 })
+
+// T041 (spec 004, FR-008, FR-010, FR-011): cada día usa el objetivo que regía ese día.
+describe('DayPage: el objetivo de cada día (US5)', () => {
+  const twoValues = [
+    { effective_from: '2026-10-01', kcal: 2000, created_at: '2026-10-01T09:00:00Z' },
+    { effective_from: '2026-10-19', kcal: 1800, created_at: '2026-10-19T09:00:00Z' },
+  ]
+
+  it('hoy usa el valor nuevo y ayer el anterior', async () => {
+    vi.mocked(fetchGoalHistory).mockResolvedValue(twoValues)
+    renderDay('/comidas/2026-10-19')
+    expect(await screen.findByText(es.goal.goalLine(1800))).toBeVisible()
+    renderDay('/comidas/2026-10-18')
+    expect((await screen.findAllByText(es.goal.goalLine(2000))).length).toBeGreaterThan(0)
+  })
+
+  it('un día anterior a la primera vez que se fijó solo muestra lo registrado', async () => {
+    vi.mocked(fetchGoalHistory).mockResolvedValue(twoValues)
+    mockedDay.mockResolvedValue([entry({ log_date: '2026-09-20', energy_kcal: 400 })])
+    renderDay('/comidas/2026-09-20')
+    const card = await screen.findByRole('region', { name: es.goal.cardTitle })
+    expect(await within(card).findByText(es.goal.registered(400, false))).toBeVisible()
+    expect(within(card).queryByText(/restan/i)).not.toBeInTheDocument()
+    expect(within(card).queryByRole('link', { name: es.goal.invite })).not.toBeInTheDocument()
+  })
+
+  it('una fecha futura (hasta 7 días) muestra el objetivo vigente hoy', async () => {
+    vi.mocked(fetchGoalHistory).mockResolvedValue(twoValues)
+    renderDay('/comidas/2026-10-24')
+    expect(await screen.findByText(es.goal.goalLine(1800))).toBeVisible()
+  })
+
+  it('si se quitó el objetivo, hoy no muestra restantes y ayer conserva el suyo', async () => {
+    vi.mocked(fetchGoalHistory).mockResolvedValue([
+      ...twoValues,
+      { effective_from: '2026-10-19', kcal: null, created_at: '2026-10-19T10:00:00Z' },
+    ])
+    renderDay('/comidas/2026-10-19')
+    const card = await screen.findByRole('region', { name: es.goal.cardTitle })
+    expect(await within(card).findByRole('link', { name: es.goal.invite })).toBeVisible()
+    expect(within(card).queryByText(/restan/i)).not.toBeInTheDocument()
+  })
+
+  it('al recuperar el foco, con el historial vencido, vuelve a pedirlo (cambio hecho en otra pestaña)', async () => {
+    vi.mocked(fetchGoalHistory).mockResolvedValue(twoValues)
+    renderDay('/comidas/2026-10-19', undefined, 5 * 60_000)
+    expect(await screen.findByText(es.goal.goalLine(1800))).toBeVisible()
+    expect(vi.mocked(fetchGoalHistory)).toHaveBeenCalledTimes(1)
+
+    // otra pestaña cambió el objetivo; pasan más de 30 s y la ventana vuelve a tener el foco
+    vi.mocked(fetchGoalHistory).mockResolvedValue([
+      ...twoValues,
+      { effective_from: '2026-10-19', kcal: 1500, created_at: '2026-10-19T11:00:00Z' },
+    ])
+    await act(async () => {
+      vi.setSystemTime(new Date('2026-10-19T15:01:00Z'))
+      window.dispatchEvent(new Event('visibilitychange'))
+      window.dispatchEvent(new Event('focus'))
+    })
+    expect(await screen.findByText(es.goal.goalLine(1500))).toBeVisible()
+    expect(vi.mocked(fetchGoalHistory)).toHaveBeenCalledTimes(2)
+  })
+})

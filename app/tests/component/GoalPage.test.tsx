@@ -1,6 +1,6 @@
-// T019 (spec 004, FR-001, FR-003 a FR-006, FR-025, FR-026): fijar el objetivo de energía diaria.
+﻿// T019 (spec 004, FR-001, FR-003 a FR-006, FR-025, FR-026): fijar el objetivo de energía diaria.
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
@@ -268,5 +268,100 @@ describe('GoalPage: nota informativa (FR-005)', () => {
     renderPage()
     await screen.findByText(g.page.none)
     expect(screen.queryByText(g.lowGoalNote)).not.toBeInTheDocument()
+  })
+})
+
+// T040 (spec 004, FR-001, FR-007, FR-010): revisar, cambiar y quitar el objetivo.
+describe('GoalPage: revisar, cambiar y quitar (US5)', () => {
+  const withGoal = [change('2026-10-12', 1800, '2026-10-12T21:30:00Z')]
+
+  it('tras un cambio muestra el valor vigente y desde cuándo rige', async () => {
+    mockedHistory.mockResolvedValue([
+      change('2026-10-01', 2000, '2026-10-01T09:00:00Z'),
+      change('2026-10-12', 1800, '2026-10-12T21:30:00Z'),
+    ])
+    renderPage()
+    expect(await screen.findByText(g.page.current(1800, '12 de octubre'))).toBeVisible()
+  })
+
+  it('guardar el mismo valor otra vez no mueve la fecha de vigencia', async () => {
+    mockedHistory.mockResolvedValue([
+      change('2026-10-01', 2000, '2026-10-01T09:00:00Z'),
+      change('2026-10-12', 2000, '2026-10-12T09:00:00Z'),
+    ])
+    renderPage()
+    expect(await screen.findByText(g.page.current(2000, '1 de octubre'))).toBeVisible()
+  })
+
+  it('«Quitar objetivo» aparece solo si hay un objetivo vigente', async () => {
+    const first = renderPage()
+    await screen.findByText(g.page.none)
+    expect(screen.queryByRole('button', { name: g.page.remove })).not.toBeInTheDocument()
+    first.unmount()
+
+    mockedHistory.mockResolvedValue(withGoal)
+    renderPage()
+    expect(await screen.findByRole('button', { name: g.page.remove })).toBeVisible()
+  })
+
+  it('pide confirmación: el foco empieza en «Cancelar», Escape cierra y el foco vuelve al botón', async () => {
+    mockedHistory.mockResolvedValue(withGoal)
+    renderPage()
+    const trigger = await screen.findByRole('button', { name: g.page.remove })
+    await userEvent.click(trigger)
+
+    const dialog = await screen.findByRole('dialog', { name: g.page.removeDialog.title })
+    expect(dialog).toHaveTextContent(g.page.removeDialog.description)
+    expect(screen.getByRole('button', { name: g.page.removeDialog.cancel })).toHaveFocus()
+    expect(mockedSave).not.toHaveBeenCalled()
+
+    await userEvent.keyboard('{Escape}')
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(trigger).toHaveFocus()
+    expect(mockedSave).not.toHaveBeenCalled()
+  })
+
+  it('al confirmar guarda kcal nulo, vuelve al día y avisa que se quitó', async () => {
+    mockedHistory.mockResolvedValue(withGoal)
+    mockedSave.mockResolvedValue({ effective_from: '2026-10-19', kcal: null })
+    renderPage('/objetivo?volver=2026-10-18')
+    await userEvent.click(await screen.findByRole('button', { name: g.page.remove }))
+    await userEvent.click(
+      within(await screen.findByRole('dialog')).getByRole('button', {
+        name: g.page.removeDialog.confirm,
+      }),
+    )
+
+    expect(await screen.findByRole('heading', { name: 'Día /comidas/2026-10-18' })).toBeVisible()
+    expect(screen.getByRole('status')).toHaveTextContent(g.page.removed)
+    expect(mockedSave).toHaveBeenCalledTimes(1)
+    expect(mockedSave.mock.calls[0]![0]).toBeNull()
+    expect(mockedSave.mock.calls[0]![1]).toMatch(/^[0-9a-f-]{36}$/)
+  })
+
+  it('si no se pudo quitar, el diálogo sigue abierto con el motivo y el reintento usa la misma solicitud', async () => {
+    mockedHistory.mockResolvedValue(withGoal)
+    mockedSave.mockRejectedValueOnce(new WriteError(true, es.errors.offline))
+    renderPage()
+    await userEvent.click(await screen.findByRole('button', { name: g.page.remove }))
+    const confirm = () =>
+      within(screen.getByRole('dialog')).getByRole('button', { name: g.page.removeDialog.confirm })
+    await userEvent.click(confirm())
+
+    expect(
+      await within(screen.getByRole('dialog')).findByText(es.errors.offline, { exact: false }),
+    ).toBeVisible()
+    await userEvent.click(confirm())
+    await waitFor(() => expect(mockedSave).toHaveBeenCalledTimes(2))
+    expect(mockedSave.mock.calls[1]![1]).toBe(mockedSave.mock.calls[0]![1])
+    expect(await screen.findByRole('heading', { name: 'Día /comidas/2026-10-19' })).toBeVisible()
+  })
+
+  it('FR-007: la aplicación nunca guarda ni cambia el objetivo por sí sola', async () => {
+    mockedHistory.mockResolvedValue(withGoal)
+    renderPage()
+    await screen.findByText(g.page.current(1800, '12 de octubre'))
+    await new Promise((resolve) => setTimeout(resolve, 50))
+    expect(mockedSave).not.toHaveBeenCalled()
   })
 })

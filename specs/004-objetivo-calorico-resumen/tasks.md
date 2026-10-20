@@ -233,25 +233,25 @@ description: "Lista de tareas de la spec 004: objetivo calórico y resumen diari
 
 ### Tests for User Story 5 ⚠️
 
-- [ ] T039 [P] [US5] Prueba pgTAP de caracterización (pasa desde el inicio porque T022 ya implementó la función; fija la regla del historial contra regresiones) en `supabase/tests/energy_goal_history.test.sql` (hora simulada con `private.set_energy_goal_at`; FR-008 a FR-010, SC-004, riesgos 1 y 2 del plan):
+- [X] T039 [P] [US5] Prueba pgTAP de caracterización (pasa desde el inicio porque T022 ya implementó la función; fija la regla del historial contra regresiones) en `supabase/tests/energy_goal_history.test.sql` (hora simulada con `private.set_energy_goal_at`; FR-008 a FR-010, SC-004, riesgos 1 y 2 del plan):
   - cambiar de 2.000 a 1.800 agrega una fila y **no modifica** la anterior (el recuento y el contenido de las filas previas no cambian);
   - dos cambios el mismo día: ambas filas existen y la de `created_at` mayor es el último;
   - quitar (`null`) agrega una fila nula sin tocar las anteriores; volver a fijar rige desde ese día;
   - **01:00 del día nuevo en la zona del perfil** mientras se registra el día que se cierra: `effective_from` es el día nuevo;
   - **cambio de zona del perfil** (p. ej. de `Pacific/Auckland` a `America/Argentina/Buenos_Aires`): las filas ya guardadas conservan su `effective_from`, y un cambio posterior con zona que retrocede queda ordenado por `created_at`;
   - la cuenta B no ve el historial de A.
-- [ ] T040 [P] [US5] Ampliar `app/tests/component/GoalPage.test.tsx` (FR-001, FR-007, FR-010):
+- [X] T040 [P] [US5] Ampliar `app/tests/component/GoalPage.test.tsx` (FR-001, FR-007, FR-010):
   - "Vigente: 1.800 kcal, desde el 12 de octubre" tras un cambio; guardar el mismo valor otra vez no mueve la fecha;
   - "Quitar objetivo" aparece solo si hay objetivo, abre `ConfirmDialog` (foco inicial en "Cancelar", Escape cancela, el foco vuelve al disparador) y al confirmar guarda `kcal = null` y muestra "Objetivo quitado. Rige desde hoy.";
   - tras quitar, la pantalla vuelve a "Todavía no fijaste un objetivo" y se puede fijar de nuevo;
   - ninguna parte de la interfaz llama a `set_energy_goal` por sí sola (la app nunca cambia el valor: se verifica que solo se invoca por la acción explícita de la persona).
-- [ ] T041 [P] [US5] Ampliar `app/tests/component/DayPage.test.tsx`: con un historial de dos valores, el día de hoy usa el nuevo y el de ayer el anterior; un día anterior a la primera fila muestra solo lo registrado; una fecha futura (hasta 7 días) muestra el objetivo vigente hoy; al recuperar el foco de la ventana, con el historial ya vencido (reloj simulado más allá de los 30 s), se vuelve a pedir (cambio hecho en otra pestaña, `refetchOnWindowFocus`); comprobar que el valor por defecto de `main.tsx` no lo desactiva
-- [ ] T042 [US5] Prueba e2e en `app/tests/e2e/goals-history.spec.ts` (escenarios 21 a 27): cambiar de 2.000 a 1.800 con filas sembradas hace una semana (`tests.create_energy_goal`) → hoy 1.800 y ayer 2.000; dos cambios el mismo día; quitar y volver a fijar con los días intermedios sin objetivo; días anteriores a la primera vez sin objetivo; fecha futura cercana; cambiar la zona del perfil y comprobar que los días ya vividos conservan su objetivo; cambiar el objetivo a la una de la madrugada con el día que se cierra (`zoneWhereItIsOneAm`)
+- [X] T041 [P] [US5] Ampliar `app/tests/component/DayPage.test.tsx`: con un historial de dos valores, el día de hoy usa el nuevo y el de ayer el anterior; un día anterior a la primera fila muestra solo lo registrado; una fecha futura (hasta 7 días) muestra el objetivo vigente hoy; al recuperar el foco de la ventana, con el historial ya vencido (reloj simulado más allá de los 30 s), se vuelve a pedir (cambio hecho en otra pestaña, `refetchOnWindowFocus`); comprobar que el valor por defecto de `main.tsx` no lo desactiva
+- [X] T042 [US5] Prueba e2e en `app/tests/e2e/goals-history.spec.ts` (escenarios 21 a 27): cambiar de 2.000 a 1.800 con filas sembradas hace una semana (`tests.create_energy_goal`) → hoy 1.800 y ayer 2.000; dos cambios el mismo día; quitar y volver a fijar con los días intermedios sin objetivo; días anteriores a la primera vez sin objetivo; fecha futura cercana; cambiar la zona del perfil y comprobar que los días ya vividos conservan su objetivo; cambiar el objetivo a la una de la madrugada con el día que se cierra (`zoneWhereItIsOneAm`)
 
 ### Implementation for User Story 5
 
-- [ ] T043 [US5] En `GoalPage.tsx`: "Quitar objetivo" con `components/ConfirmDialog.tsx` (guarda `kcal = null` con un `request_id` nuevo), mensaje "Objetivo quitado. Rige desde hoy." y la aclaración "El cambio rige desde hoy. Los días anteriores conservan el objetivo que tenían.". Hace pasar T040
-- [ ] T044 [US5] Verificar y, si hace falta, ajustar `GoalSummary.tsx` / `DayPage.tsx` / `main.tsx` para que cada día use `goalOn(history, día)` (sin objetivo antes de la primera fila, vigente hoy en fechas futuras) y para que la recuperación de foco vuelva a pedir el historial. Hace pasar T041. Con T039 ya verde por T022, ejecutar T042
+- [X] T043 [US5] En `GoalPage.tsx`: "Quitar objetivo" con `components/ConfirmDialog.tsx` (guarda `kcal = null` con un `request_id` nuevo), mensaje "Objetivo quitado. Rige desde hoy." y la aclaración "El cambio rige desde hoy. Los días anteriores conservan el objetivo que tenían.". Hace pasar T040
+- [X] T044 [US5] Verificar y, si hace falta, ajustar `GoalSummary.tsx` / `DayPage.tsx` / `main.tsx` para que cada día use `goalOn(history, día)` (sin objetivo antes de la primera fila, vigente hoy en fechas futuras) y para que la recuperación de foco vuelva a pedir el historial. Hace pasar T041. Con T039 ya verde por T022, ejecutar T042
 
 **Checkpoint**: escenarios 21 a 27. Todas las historias funcionan.
 
