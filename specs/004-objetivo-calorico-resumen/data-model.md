@@ -15,7 +15,7 @@ Una fila por **cambio**. Nunca se actualiza ni se borra una fila (salvo al elimi
 | `effective_from` | date, no nulo | el día, en la zona horaria de la persona, desde el que rige; lo fija el servidor con el "hoy" de la persona (no lo elige el cliente) |
 | `kcal` | integer, **nulo** | de 1.000 a 6.000, ambos incluidos; **nulo = la persona quitó el objetivo** |
 | `client_request_id` | uuid, no nulo | único por `(user_id, client_request_id)` |
-| `created_at` | timestamptz, no nulo | `now()`; define cuál cambio es el último |
+| `created_at` | timestamptz, no nulo | la hora con la que se llamó a la función (`now()` en la versión pública; un parámetro en la de pruebas); define cuál cambio es el último |
 
 **Restricciones**:
 
