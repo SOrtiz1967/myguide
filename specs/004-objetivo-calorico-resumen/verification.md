@@ -71,12 +71,20 @@ Ejecutada el 2026-10-20 sobre el stack local.
 | `npm run check:secrets` | Sin secretos |
 | `npm run e2e` (Playwright, por partes) | Ver abajo |
 
-**e2e de la spec 004 (corridas individuales, todas en verde al final):** `goals-set` (6), `goals-summary` (5), `goals-uncertainty` (4), `goals-over` (4), `goals-history` (7), `goals-isolation` (1), `session-switch` (1), `a11y-goals` (4) y `responsive-goals` (2), más las mediciones de `goals-measure` (2). Algunas pasaron tras una segunda corrida por lentitud del servidor de desarrollo o por un selector corregido (ver Observaciones).
+**e2e (Playwright, por partes, el 2026-10-20 con 3 GB libres):**
 
-**Pendiente: regresión e2e completa de las specs 001 a 003.** Se lanzó la parte A (autenticación, perfil y alimentos) en segundo plano y el sistema la detuvo por memoria insuficiente: 10 pruebas pasaron, 10 figuran como fallidas con 0 ms (no llegaron a ejecutarse bien: es el efecto del corte, no un resultado) y 26 no se ejecutaron. **No se volvió a lanzar.** Falta ejecutar por partes y con memoria libre: `auth access profile a11y a11y-foods foods-* responsive responsive-foods` y `a11y-meals meals-* responsive-meals`, además de los proyectos `mobile` y `pwa`. Hasta entonces T053 queda abierta.
+| Parte | Qué cubre | Resultado |
+|---|---|---|
+| A | auth, access, profile, a11y-foods, foods-*, responsive-foods (specs 001 y 002) | 45 de 46; `foods-sources` falló una vez al registrar y pasó al repetirla sola (2 de 2) |
+| B | a11y-meals, meals-add, meals-day-rule, meals-day, meals-edit, meals-isolation, meals-manual, meals-repeat, responsive-meals (spec 003) | 30 de 30 |
+| C | meals-photo (desktop), a11y y responsive (mobile), pwa-install y pwa-offline (pwa) | 4 + 24 + 6, todas |
+| D | las e2e de la spec 004: goals-set, summary, uncertainty, over, history, isolation, session-switch, a11y-goals y responsive-goals | 33 de 34; `goals-isolation` falló una vez al registrar y pasó al repetirla sola |
+| Mediciones | `goals-measure` (SC-001 y SC-002) | Ver `research.md` |
+
+Las dos fallas intermitentes fueron esperas de la pantalla de inicio tras registrar la cuenta (lentitud del arranque del servidor de desarrollo en este equipo), no aserciones de la funcionalidad. La primera corrida de la parte A falló por completo porque Docker Desktop y el contenedor de las Edge Functions estaban apagados (registrar una cuenta necesita la función `register`); se levantaron y se repitió.
 
 ## Observaciones
 
 - **Orden de las pruebas.** Las pruebas puras (`goalOn`, `summarizeDay`, la lectura del número, la lista de términos) se escribieron junto a su implementación en el mismo paso, no antes como sí se hizo con las de base de datos, componentes y e2e; en esos casos no se observó el fallo previo. `energy_goal_history.test.sql` es de caracterización y pasa de inicio, como anticipó el análisis.
-- **Variación del equipo.** Algunas corridas e2e aisladas fallaron una vez por lentitud del servidor de desarrollo (la vista del día quedó en «Cargando el día…» más de 15 s) y pasaron al repetirlas; no se asocian a un defecto de la spec.
+- **Variación del equipo.** Algunas corridas e2e fallaron una vez por lentitud del servidor de desarrollo (la vista del día quedó en «Cargando el día…» más de 15 s, o el registro tardó en mostrar el inicio) y pasaron al repetirlas; no se asocian a un defecto de la spec. Además, una corrida se detuvo por memoria insuficiente y hubo que liberar memoria y volver a lanzarla.
 - **Hecho aparte.** El caso «la sesión vence mientras se edita el objetivo» se verifica en `GoalPage.test.tsx` (se conserva el borrador y se muestra el aviso de sesión vencida) y en la prueba de `AuthProvider` (se vacía la caché); no hay una e2e que dispare un vencimiento a mitad de la edición.

@@ -38,7 +38,7 @@ Basado en la Constitution v1.2.1. Este documento solo define el corte y el conte
 - Objetivo configurable y calorías restantes, con incertidumbre explícita.
 - Mensajes neutrales al superar el objetivo, sin lenguaje culpabilizante.
 - Principios: IV.
-- **Estado (2026-10-20): implementada** (verificación final en curso). Historial de solo altas del objetivo (cada día conserva el que regía), tarjeta «Objetivo del día» en la vista del día, restante «como máximo» cuando faltan datos de energía, estimados sin confirmar aparte, frase neutral al superar el objetivo y nota informativa por debajo de 1.200 kcal (rango 1.000 a 6.000). Corrige además un defecto heredado: la caché de consultas ya no se comparte entre cuentas en una misma pestaña. Decisiones y mediciones en [`specs/004-objetivo-calorico-resumen/research.md`](../specs/004-objetivo-calorico-resumen/research.md).
+- **Estado (2026-10-20): implementada y verificada.** Historial de solo altas del objetivo (cada día conserva el que regía), tarjeta «Objetivo del día» en la vista del día, restante «como máximo» cuando faltan datos de energía, estimados sin confirmar aparte, frase neutral al superar el objetivo y nota informativa por debajo de 1.200 kcal (rango 1.000 a 6.000). Corrige además un defecto heredado: la caché de consultas ya no se comparte entre cuentas en una misma pestaña. Decisiones y mediciones en [`specs/004-objetivo-calorico-resumen/research.md`](../specs/004-objetivo-calorico-resumen/research.md).
 - **Queda fuera a propósito (para la spec 007/008):** una referencia calórica sugerida o calculadora de mantenimiento; el perfil no guarda peso y el método necesita ser documentado y revisable (Principio V).
 
 ### 005 — Catálogo de ejercicios

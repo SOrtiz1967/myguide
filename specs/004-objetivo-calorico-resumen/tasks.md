@@ -282,7 +282,7 @@ description: "Lista de tareas de la spec 004: objetivo calórico y resumen diari
   - `Documentacion/roadmap-specs.md`: spec 004 integrada y fuera de alcance que queda para 007/008 (referencia calórica, mantenimiento);
   - `specs/003-registro-de-comidas/research.md` o `verification.md`: nota de que el defecto de la caché global se corrigió en la spec 004.
 - [X] T052 Ejecutar los 31 escenarios del `quickstart.md` y registrar el resultado en `specs/004-objetivo-calorico-resumen/verification.md`
-- [ ] T053 Ejecutar `format:check`, `lint`, `typecheck`, `test`, `e2e` (por partes), `test:db`, `test:functions`, `test:import`, `test:config` y `check:secrets`; todo en verde antes de dar la spec por terminada
+- [X] T053 Ejecutar `format:check`, `lint`, `typecheck`, `test`, `e2e` (por partes), `test:db`, `test:functions`, `test:import`, `test:config` y `check:secrets`; todo en verde antes de dar la spec por terminada
 
 ---
 
