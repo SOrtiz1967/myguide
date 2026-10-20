@@ -91,3 +91,8 @@ Criterios de éxito medidos (T069, detalle en `research.md`): SC-001 cumple (4 y
 | Despliegue en producción: crear el bucket (lo hace la migración `20261019000900`), desplegar `meal-photo` con *Verify JWT* apagado y agregar el dominio a `ALLOWED_ORIGINS` | Pasos en `Documentacion/despliegue.md`; el autor lo hace con el issue 04 |
 | Eliminar los archivos de `meal-photos/<user_id>/` al eliminar una cuenta | Debe construirse junto con la eliminación de cuentas (Principio I); documentado |
 | Probar una foto real de teléfono (HEIC y JPEG) en el dispositivo | Escenario 22 con una cámara real; lo verificado fue con imágenes sintéticas y con el decodificador de Chromium (el HEIC se informa con un mensaje claro cuando el navegador no lo lee) |
+
+## Nota posterior (spec 004): caché de consultas entre cuentas
+
+Al planificar la spec 004 se detectó un defecto heredado de esta spec (y de la 002): la aplicación usa un único `QueryClient` global cuya caché no se vaciaba y cuyas claves no incluyen la cuenta, de modo que, si una persona cerraba sesión y otra entraba en la misma pestaña, la segunda veía por un instante los ítems, las fotos firmadas y el catálogo propio de la primera. Se corrigió en la spec 004 (el `AuthProvider` cancela y vacía la caché al cerrar sesión, al vencer la sesión y al cambiar de cuenta; FR-029) y se verifica con una prueba de componente y la e2e `session-switch.spec.ts`. Ver `specs/004-objetivo-calorico-resumen/research.md`, Decisión 9.
+

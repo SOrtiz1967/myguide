@@ -131,6 +131,8 @@ describe('rendimiento', () => {
     )
     const start = performance.now()
     for (let i = 0; i < 20; i++) summarizeDay(entries, 2000)
-    expect((performance.now() - start) / 20).toBeLessThan(5)
+    const average = (performance.now() - start) / 20
+    console.log(`MEDICION summarizeDay con 60 ítems: ${average.toFixed(4)} ms`)
+    expect(average).toBeLessThan(5)
   })
 })

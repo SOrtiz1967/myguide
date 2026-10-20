@@ -213,3 +213,32 @@ La zona horaria para el corte del día es la del perfil; si no hay, la del naveg
 ### Pruebas
 
 `tests/meal_entries_schema`, `meal_rls`, `add_meal_entry`, `manual_meal_entry`, `recent_meal_items`, `update_meal_entry`, `log_day_status`, `repeat_meal` y `meal_photos_storage` (pgTAP, todos `*.test.sql`) cubren el aislamiento, la instantánea, la idempotencia, la regla del día con hora simulada y las políticas del bucket; `functions/meal-photo/*.test.ts` (Deno) cubre la limpieza del JPEG y el manejador. La suite de la función usa `--allow-read` sobre sus fixtures: se ejecuta con `npm run test:functions`.
+
+## Objetivo de energía diaria (spec 004)
+
+### Tabla
+
+| Tabla | Qué guarda | Quién la ve y qué puede hacer |
+|---|---|---|
+| `public.energy_goals` | Historial de **solo altas** del objetivo: una fila por cambio (`kcal` de 1.000 a 6.000, o nulo = se quitó el objetivo), el día desde el que rige (`effective_from`), la hora en que se guardó (`created_at`) y el identificador de la solicitud | Solo su dueño, **solo lectura**; la escribe `set_energy_goal`. Es un dato de salud |
+
+Nunca se actualiza ni se borra una fila (salvo la cascada al eliminar la cuenta, FR-028): cambiar o quitar el objetivo agrega otra, así un cambio no reescribe lo que regía en un día pasado (Principio II).
+
+### Regla de resolución por día
+
+El objetivo de un día `D` es el `kcal` de la fila de `created_at` **más reciente** entre las que tienen `effective_from <= D`. Si no hay filas, o esa fila tiene `kcal` nulo, ese día no tiene objetivo. Se ordena por `created_at` y no por `effective_from` para que «gana el último guardado» valga también si la zona horaria del perfil retrocede.
+
+**No hay una versión SQL de esta regla:** la resuelve el cliente con la función pura `goalOn` (`app/src/features/goals/goalHistory.ts`) sobre el historial completo, que se pide en una sola consulta (tope de 1.000 filas). Si otra función del servidor la necesitara (por ejemplo un resumen semanal), debe agregarse allí con una prueba que verifique que coincide con la del cliente.
+
+### Función
+
+| Función | Qué hace |
+|---|---|
+| `set_energy_goal(kcal, request_id, client_timezone)` | Fija, cambia o quita (`kcal` nulo) el objetivo. Devuelve `{effective_from, kcal}`. Idempotente por `request_id`, también ante un reintento tardío (devuelve la fila original y no pisa un cambio posterior). El día de vigencia lo fija el servidor con el «hoy» de la persona (la columna `today` de `private.log_day_status_at`), aunque esté registrando el día que se cierra. Errores: `session_expired`, `invalid_goal:out_of_range:kcal`, `invalid_goal:request_required:request_id` |
+
+`private.set_energy_goal_at(usuario, kcal, request_id, ahora, zona)` recibe la hora y la zona como parámetros para probarla con hora simulada y no tiene permiso para el cliente. Ningún registro técnico contiene el valor del objetivo.
+
+### Pruebas
+
+`tests/energy_goals_schema`, `energy_goals_rls`, `set_energy_goal` y `energy_goal_history` (pgTAP, `*.test.sql`) cubren el rango, la idempotencia (incluido el reintento tardío), la zona horaria con hora simulada, el aislamiento entre cuentas y la cascada. La prueba `rls_guardrail` de la spec 001 cubre la tabla sin cambios.
+

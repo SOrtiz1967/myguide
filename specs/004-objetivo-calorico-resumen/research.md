@@ -105,3 +105,17 @@ Decisiones técnicas de la spec 004. Se apoyan en el stack de las specs 001 a 00
 2. **Orden del historial**: una prueba con cambios en el mismo día, con una zona que retrocede y con un reintento tardío, para confirmar que gana el último guardado y que el reintento no pisa nada.
 3. **Rendimiento**: el resumen se calcula sobre los ítems que la vista del día ya trae; se mide con 60 ítems que no agrega más de unos milisegundos a la carga (SC-002).
 4. **Lenguaje**: la lista de términos prohibidos se aplica a todo el texto del objetivo y del resumen en las tres capas de prueba.
+
+## Resultados de mediciones (T049)
+
+Sobre la compilación de producción (`vite preview`, puerto 4173), emulando un Pixel 7 con red 4G típica (9 Mbps de bajada, 1,5 Mbps de subida, 170 ms de latencia por pedido). Prueba: `app/tests/e2e/goals-measure.spec.ts`.
+
+| Criterio | Resultado | Tope de la spec |
+|---|---|---|
+| SC-001: fijar un objetivo por primera vez desde el día | 3 interacciones (abrir el objetivo, escribir el valor, guardar) y 472 ms (red sin limitar) | 3 interacciones y menos de 20 s |
+| SC-002: día con 60 ítems y objetivo, **dentro de la app** (30 navegaciones entre días) | p95 **819 ms** (mediana unos 480 ms) | p95 menor a 2 s |
+| SC-002: día con 60 ítems y objetivo, **carga en frío** (20 recargas completas) | p95 **1.472 ms** (mediana 1.257 ms) | p95 menor a 2 s |
+| Costo de `summarizeDay` con 60 ítems | 0,04 ms | unos pocos milisegundos |
+
+Ambas mediciones cumplen el tope, con margen. Frente a las de la spec 003 (dentro de la app: mediana 0,45 s y p95 0,64 s; en frío: mediana 1,14 s y p95 1,2 s) los números son algo mayores: p95 de 0,82 s dentro de la app y de 1,47 s en frío. La diferencia coincide con lo esperable de un pedido más (el historial del objetivo, una sola vez por carga; la consulta es de unas pocas filas) y con la variación entre corridas de este equipo, que en la spec 003 llegó a producir muestras sueltas de casi 2 s; el resumen en sí cuesta 0,04 ms. Navegar entre días no agrega pedidos (el historial se reutiliza durante 30 s de `staleTime` y se conserva en la caché). En la medición se usó un objetivo de 6.000 kcal, el máximo admitido: con 60 ítems de más de 100 kcal el día queda por encima del objetivo, lo que ejercita además el estado «superado».
+

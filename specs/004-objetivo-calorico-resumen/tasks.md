@@ -259,15 +259,15 @@ description: "Lista de tareas de la spec 004: objetivo calórico y resumen diari
 
 ## Phase 8: Polish & Cross-Cutting Concerns
 
-- [ ] T045 [P] Accesibilidad en `app/tests/e2e/a11y-goals.spec.ts` (escenario 30):
+- [X] T045 [P] Accesibilidad en `app/tests/e2e/a11y-goals.spec.ts` (escenario 30):
   - axe en `/objetivo` (sin objetivo, con objetivo, con la nota de menos de 1.200 kcal, con el diálogo de quitar abierto) y en el día con la tarjeta (sin objetivo, `under`, `over`, con faltantes y con estimados);
   - recorrido por teclado: invitación, "Cambiar objetivo", "Cómo se calcula" y el diálogo, con el foco devuelto al disparador;
   - el estado se entiende sin color (comprobación en escala de grises o sin estilos de color).
-- [ ] T046 [P] Responsive en `app/tests/e2e/responsive-goals.spec.ts` (escenario 30): 375 px y escritorio sin desplazamiento horizontal, la cuenta no desborda, áreas táctiles de 44 px o más (SC-008)
-- [ ] T047 [P] Aislamiento por la API real en `app/tests/e2e/goals-isolation.spec.ts` (escenario 28, SC-007): con sesiones reales, la cuenta A no puede leer, insertar, modificar ni borrar el historial de B por la tabla; `set_energy_goal` solo escribe para quien llama; una petición anónima falla; `private.set_energy_goal_at` responde 406 por la API REST
-- [ ] T048 [P] Cambio de cuenta en la misma pestaña en `app/tests/e2e/session-switch.spec.ts` (escenario 31, FR-029, SC-007): la cuenta A ve su objetivo, sus ítems y una foto firmada; cierra sesión y entra la cuenta B **sin recargar** → B no ve nada de A en ningún momento (se registra el DOM desde el inicio de sesión con un observador para detectar un solo cuadro con datos de A); repetir con sesión vencida
-- [ ] T049 Medición (SC-001 y SC-002; escenario 29), sobre la compilación de producción (`vite preview`, puerto 4173), registrada en `research.md`: fijar un objetivo por primera vez desde el día en 3 interacciones y menos de 20 s; día con 60 ítems y objetivo en un teléfono emulado (Pixel 7, red móvil limitada) carga completo en menos de 2 s en el percentil 95 (mismo método que `meals-measure.spec.ts`: calentamiento, 30 navegaciones con caché y 20 cargas en frío); costo de `summarizeDay` con 60 ítems
-- [ ] T050 Revisión de seguridad dirigida, registrada en `verification.md` (FR-023, FR-027, FR-029):
+- [X] T046 [P] Responsive en `app/tests/e2e/responsive-goals.spec.ts` (escenario 30): 375 px y escritorio sin desplazamiento horizontal, la cuenta no desborda, áreas táctiles de 44 px o más (SC-008)
+- [X] T047 [P] Aislamiento por la API real en `app/tests/e2e/goals-isolation.spec.ts` (escenario 28, SC-007): con sesiones reales, la cuenta A no puede leer, insertar, modificar ni borrar el historial de B por la tabla; `set_energy_goal` solo escribe para quien llama; una petición anónima falla; `private.set_energy_goal_at` responde 406 por la API REST
+- [X] T048 [P] Cambio de cuenta en la misma pestaña en `app/tests/e2e/session-switch.spec.ts` (escenario 31, FR-029, SC-007): la cuenta A ve su objetivo, sus ítems y una foto firmada; cierra sesión y entra la cuenta B **sin recargar** → B no ve nada de A en ningún momento (se registra el DOM desde el inicio de sesión con un observador para detectar un solo cuadro con datos de A); repetir con sesión vencida
+- [X] T049 Medición (SC-001 y SC-002; escenario 29), sobre la compilación de producción (`vite preview`, puerto 4173), registrada en `research.md`: fijar un objetivo por primera vez desde el día en 3 interacciones y menos de 20 s; día con 60 ítems y objetivo en un teléfono emulado (Pixel 7, red móvil limitada) carga completo en menos de 2 s en el percentil 95 (mismo método que `meals-measure.spec.ts`: calentamiento, 30 navegaciones con caché y 20 cargas en frío); costo de `summarizeDay` con 60 ítems
+- [X] T050 Revisión de seguridad dirigida, registrada en `verification.md` (FR-023, FR-027, FR-029):
   - el cliente solo puede leer `energy_goals`; ninguna escritura sin `set_energy_goal`;
   - ningún `console.*`, registro ni mensaje de error contiene el valor del objetivo (buscar en `app/src` y en las migraciones);
   - `saveRemotely` no muestra el texto del servidor;
@@ -276,12 +276,12 @@ description: "Lista de tareas de la spec 004: objetivo calórico y resumen diari
   - `npm run check:secrets --prefix app`.
   
   Corregir los hallazgos con TDD.
-- [ ] T051 [P] Documentación:
+- [X] T051 [P] Documentación:
   - `supabase/README.md`: tabla `energy_goals`, `set_energy_goal`, la regla de resolución por día (sin versión SQL; Decisión 3) y la cascada al eliminar la cuenta;
   - `README.md`: estado;
   - `Documentacion/roadmap-specs.md`: spec 004 integrada y fuera de alcance que queda para 007/008 (referencia calórica, mantenimiento);
   - `specs/003-registro-de-comidas/research.md` o `verification.md`: nota de que el defecto de la caché global se corrigió en la spec 004.
-- [ ] T052 Ejecutar los 31 escenarios del `quickstart.md` y registrar el resultado en `specs/004-objetivo-calorico-resumen/verification.md`
+- [X] T052 Ejecutar los 31 escenarios del `quickstart.md` y registrar el resultado en `specs/004-objetivo-calorico-resumen/verification.md`
 - [ ] T053 Ejecutar `format:check`, `lint`, `typecheck`, `test`, `e2e` (por partes), `test:db`, `test:functions`, `test:import`, `test:config` y `check:secrets`; todo en verde antes de dar la spec por terminada
 
 ---
