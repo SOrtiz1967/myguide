@@ -1,0 +1,81 @@
+source_item_id,tipo,motivo
+Ab_Roller,reps_bodyweight,"Con el peso del cuerpo (barras, anillas, paralelas, suspensión, máquina sin carga)"
+Backward_Drag,distance_duration,Acarreo o trineo: se mide por distancia y tiempo (la carga no se registra con este tipo)
+Backward_Medicine_Ball_Throw,reps_weight,"Pliometría con carga (pelota medicinal, mancuernas o martillo): repeticiones y peso"
+Balance_Board,duration,Isométrico o sostenido: se mide por tiempo
+Band_Assisted_Pull-Up,reps_bodyweight,"Con el peso del cuerpo (barras, anillas, paralelas, suspensión, máquina sin carga)"
+Battling_Ropes,duration,Isométrico o sostenido: se mide por tiempo
+Bear_Crawl_Sled_Drags,distance_duration,Acarreo o trineo: se mide por distancia y tiempo (la carga no se registra con este tipo)
+Bicycling,distance_duration,Cardio que avanza: se mide por distancia y tiempo
+Bicycling_Stationary,distance_duration,Cardio que avanza: se mide por distancia y tiempo
+Bodyweight_Mid_Row,reps_bodyweight,"Con el peso del cuerpo (barras, anillas, paralelas, suspensión, máquina sin carga)"
+Bodyweight_Walking_Lunge,reps_bodyweight,"Con el peso del cuerpo (barras, anillas, paralelas, suspensión, máquina sin carga)"
+Catch_and_Overhead_Throw,reps_weight,"Pliometría con carga (pelota medicinal, mancuernas o martillo): repeticiones y peso"
+Chest_Push_from_3_point_stance,reps_weight,"Pliometría con carga (pelota medicinal, mancuernas o martillo): repeticiones y peso"
+Chest_Push_multiple_response,reps_weight,"Pliometría con carga (pelota medicinal, mancuernas o martillo): repeticiones y peso"
+Chest_Push_single_response,reps_weight,"Pliometría con carga (pelota medicinal, mancuernas o martillo): repeticiones y peso"
+Chest_Push_with_Run_Release,reps_weight,"Pliometría con carga (pelota medicinal, mancuernas o martillo): repeticiones y peso"
+Crucifix,duration,Isométrico o sostenido: se mide por tiempo
+Decline_Push-Up,reps_bodyweight,"Con el peso del cuerpo (barras, anillas, paralelas, suspensión, máquina sin carga)"
+Dips_-_Chest_Version,reps_bodyweight,"Con el peso del cuerpo (barras, anillas, paralelas, suspensión, máquina sin carga)"
+Donkey_Calf_Raises,reps_bodyweight,"Con el peso del cuerpo (barras, anillas, paralelas, suspensión, máquina sin carga)"
+Dumbbell_Seated_Box_Jump,reps_weight,"Pliometría con carga (pelota medicinal, mancuernas o martillo): repeticiones y peso"
+Farmers_Walk,distance_duration,Acarreo o trineo: se mide por distancia y tiempo (la carga no se registra con este tipo)
+Floor_Glute-Ham_Raise,reps_bodyweight,"Con el peso del cuerpo (barras, anillas, paralelas, suspensión, máquina sin carga)"
+Gironda_Sternum_Chins,reps_bodyweight,"Con el peso del cuerpo (barras, anillas, paralelas, suspensión, máquina sin carga)"
+Hyperextensions_Back_Extensions,reps_bodyweight,"Con el peso del cuerpo (barras, anillas, paralelas, suspensión, máquina sin carga)"
+Inverted_Row,reps_bodyweight,"Con el peso del cuerpo (barras, anillas, paralelas, suspensión, máquina sin carga)"
+Inverted_Row_with_Straps,reps_bodyweight,"Con el peso del cuerpo (barras, anillas, paralelas, suspensión, máquina sin carga)"
+Isometric_Chest_Squeezes,duration,Isométrico o sostenido: se mide por tiempo
+Isometric_Neck_Exercise_-_Front_And_Back,duration,Isométrico o sostenido: se mide por tiempo
+Isometric_Neck_Exercise_-_Sides,duration,Isométrico o sostenido: se mide por tiempo
+Isometric_Wipers,duration,Isométrico o sostenido: se mide por tiempo
+Jogging_Treadmill,distance_duration,Cardio que avanza: se mide por distancia y tiempo
+Kipping_Muscle_Up,reps_bodyweight,"Con el peso del cuerpo (barras, anillas, paralelas, suspensión, máquina sin carga)"
+Knee_Hip_Raise_On_Parallel_Bars,reps_bodyweight,"Con el peso del cuerpo (barras, anillas, paralelas, suspensión, máquina sin carga)"
+London_Bridges,reps_bodyweight,"Con el peso del cuerpo (barras, anillas, paralelas, suspensión, máquina sin carga)"
+Medicine_Ball_Chest_Pass,reps_weight,"Pliometría con carga (pelota medicinal, mancuernas o martillo): repeticiones y peso"
+Medicine_Ball_Full_Twist,reps_weight,"Pliometría con carga (pelota medicinal, mancuernas o martillo): repeticiones y peso"
+Medicine_Ball_Scoop_Throw,reps_weight,"Pliometría con carga (pelota medicinal, mancuernas o martillo): repeticiones y peso"
+Mixed_Grip_Chin,reps_bodyweight,"Con el peso del cuerpo (barras, anillas, paralelas, suspensión, máquina sin carga)"
+Mountain_Climbers,duration,Isométrico o sostenido: se mide por tiempo
+Muscle_Up,reps_bodyweight,"Con el peso del cuerpo (barras, anillas, paralelas, suspensión, máquina sin carga)"
+One_Arm_Chin-Up,reps_bodyweight,"Con el peso del cuerpo (barras, anillas, paralelas, suspensión, máquina sin carga)"
+Otis-Up,reps_bodyweight,"Con el peso del cuerpo (barras, anillas, paralelas, suspensión, máquina sin carga)"
+Overhead_Slam,reps_weight,"Pliometría con carga (pelota medicinal, mancuernas o martillo): repeticiones y peso"
+Parallel_Bar_Dip,reps_bodyweight,"Con el peso del cuerpo (barras, anillas, paralelas, suspensión, máquina sin carga)"
+Plank,duration,Isométrico o sostenido: se mide por tiempo
+Plate_Pinch,duration,Isométrico o sostenido: se mide por tiempo
+Platform_Hamstring_Slides,reps_bodyweight,"Con el peso del cuerpo (barras, anillas, paralelas, suspensión, máquina sin carga)"
+Prone_Manual_Hamstring,reps_bodyweight,"Con el peso del cuerpo (barras, anillas, paralelas, suspensión, máquina sin carga)"
+Prowler_Sprint,distance_duration,Cardio que avanza: se mide por distancia y tiempo
+Recumbent_Bike,distance_duration,Cardio que avanza: se mide por distancia y tiempo
+Return_Push_from_Stance,reps_weight,"Pliometría con carga (pelota medicinal, mancuernas o martillo): repeticiones y peso"
+Rickshaw_Carry,distance_duration,Acarreo o trineo: se mide por distancia y tiempo (la carga no se registra con este tipo)
+Ring_Dips,reps_bodyweight,"Con el peso del cuerpo (barras, anillas, paralelas, suspensión, máquina sin carga)"
+Rocky_Pull-Ups_Pulldowns,reps_bodyweight,"Con el peso del cuerpo (barras, anillas, paralelas, suspensión, máquina sin carga)"
+Rope_Climb,reps_bodyweight,"Con el peso del cuerpo (barras, anillas, paralelas, suspensión, máquina sin carga)"
+Rowing_Stationary,distance_duration,Cardio que avanza: se mide por distancia y tiempo
+Running_Treadmill,distance_duration,Cardio que avanza: se mide por distancia y tiempo
+Scapular_Pull-Up,reps_bodyweight,"Con el peso del cuerpo (barras, anillas, paralelas, suspensión, máquina sin carga)"
+Side_Bridge,duration,Isométrico o sostenido: se mide por tiempo
+Side_To_Side_Chins,reps_bodyweight,"Con el peso del cuerpo (barras, anillas, paralelas, suspensión, máquina sin carga)"
+Single-Leg_High_Box_Squat,reps_bodyweight,"Con el peso del cuerpo (barras, anillas, paralelas, suspensión, máquina sin carga)"
+Skating,distance_duration,Cardio que avanza: se mide por distancia y tiempo
+Sled_Drag_-_Harness,distance_duration,Acarreo o trineo: se mide por distancia y tiempo (la carga no se registra con este tipo)
+Sled_Overhead_Backward_Walk,distance_duration,Acarreo o trineo: se mide por distancia y tiempo (la carga no se registra con este tipo)
+Sled_Push,distance_duration,Acarreo o trineo: se mide por distancia y tiempo (la carga no se registra con este tipo)
+Sledgehammer_Swings,reps_weight,"Pliometría con carga (pelota medicinal, mancuernas o martillo): repeticiones y peso"
+Standing_Two-Arm_Overhead_Throw,reps_weight,"Pliometría con carga (pelota medicinal, mancuernas o martillo): repeticiones y peso"
+Supine_Chest_Throw,reps_weight,"Pliometría con carga (pelota medicinal, mancuernas o martillo): repeticiones y peso"
+Supine_One-Arm_Overhead_Throw,reps_weight,"Pliometría con carga (pelota medicinal, mancuernas o martillo): repeticiones y peso"
+Supine_Two-Arm_Overhead_Throw,reps_weight,"Pliometría con carga (pelota medicinal, mancuernas o martillo): repeticiones y peso"
+Suspended_Fallout,reps_bodyweight,"Con el peso del cuerpo (barras, anillas, paralelas, suspensión, máquina sin carga)"
+Suspended_Push-Up,reps_bodyweight,"Con el peso del cuerpo (barras, anillas, paralelas, suspensión, máquina sin carga)"
+Suspended_Reverse_Crunch,reps_bodyweight,"Con el peso del cuerpo (barras, anillas, paralelas, suspensión, máquina sin carga)"
+Suspended_Row,reps_bodyweight,"Con el peso del cuerpo (barras, anillas, paralelas, suspensión, máquina sin carga)"
+Suspended_Split_Squat,reps_bodyweight,"Con el peso del cuerpo (barras, anillas, paralelas, suspensión, máquina sin carga)"
+Trail_Running_Walking,distance_duration,Cardio que avanza: se mide por distancia y tiempo
+Vertical_Swing,reps_weight,"Pliometría con carga (pelota medicinal, mancuernas o martillo): repeticiones y peso"
+Walking_Treadmill,distance_duration,Cardio que avanza: se mide por distancia y tiempo
+Yoke_Walk,distance_duration,Acarreo o trineo: se mide por distancia y tiempo (la carga no se registra con este tipo)

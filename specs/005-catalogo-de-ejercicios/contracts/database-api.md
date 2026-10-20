@@ -46,7 +46,7 @@ Un ejercicio ajeno se comporta como inexistente (resultado vacío). Sin sesión 
 
 ## Funciones exclusivas de `service_role` (carga del catálogo)
 
-- `import_exercises(source_slug text, items jsonb)` → `{created, updated, skipped}`. Crea o actualiza **solo** filas con `origin = 'imported'`. Rechaza (`license_missing`) si la fuente no tiene licencia y atribución. Rechaza elementos que violan las restricciones y los cuenta en `skipped` con el motivo. No reemplaza `name`, `aliases` ni `description` cuya entrada guardada esté `reviewed` por una traducción `machine_translated`.
+- `import_exercises(source_slug text, items jsonb, drop_descriptions boolean default false)` → `{created, updated, skipped, skipped_reasons}`. Crea o actualiza **solo** filas con `origin = 'imported'`. Rechaza (`license_missing`) si la fuente no tiene licencia y atribución. Rechaza elementos que violan las restricciones y los cuenta en `skipped` con el motivo. No reemplaza `name`, `aliases` ni `description` cuya entrada guardada esté `reviewed` por una traducción `machine_translated`.
 - `finish_exercise_import(source_slug text, report jsonb)` → registra el informe en `private.exercise_import_runs` y actualiza `exercise_sources.last_imported_at` y `exercise_count`.
 
 Ninguna es ejecutable por `anon` ni `authenticated`.

@@ -233,6 +233,16 @@ values (
   'https://example.test/muestra'
 ) on conflict (slug) do nothing;
 
+-- Fuente de la muestra de ejercicios de desarrollo (spec 005, T043). Solo existe en local: la carga de
+-- producción no la usa. Los datos de la muestra son de ejemplo, no son datos reales.
+insert into public.exercise_sources (slug, name, license_name, license_url, attribution, source_url)
+values (
+  'muestra-desarrollo-ejercicios', 'Ejercicios de ejemplo (desarrollo)', 'CC0 1.0',
+  'https://creativecommons.org/publicdomain/zero/1.0/',
+  'Ejercicios de ejemplo para desarrollo y pruebas de MyGuide. No son datos reales.',
+  'https://example.test/muestra-ejercicios'
+) on conflict (slug) do nothing;
+
 -- Ayudantes de la spec 003 (registro de comidas). Se ejecutan como administrador de pruebas y escriben
 -- directamente, sin pasar por las funciones del cliente.
 

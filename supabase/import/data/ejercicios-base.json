@@ -1,0 +1,212 @@
+[
+  {
+    "id": "base-caminar",
+    "nombre": "Caminar",
+    "sinonimos": ["Caminata"],
+    "tipo_medicion": "distance_duration",
+    "musculos_principales": ["quadriceps"],
+    "musculos_secundarios": ["glutes", "calves", "hamstrings"],
+    "equipamiento": "body only",
+    "descripcion": "Caminata a ritmo cómodo, al aire libre o en cinta. Se registra el tiempo y, si quieres, la distancia."
+  },
+  {
+    "id": "base-caminata-rapida",
+    "nombre": "Caminata rápida",
+    "sinonimos": ["Caminar a paso rápido"],
+    "tipo_medicion": "distance_duration",
+    "musculos_principales": ["quadriceps", "glutes"],
+    "musculos_secundarios": ["calves", "hamstrings"],
+    "equipamiento": "body only",
+    "descripcion": "Caminata a un ritmo en el que se puede hablar pero no cantar. Se registra el tiempo y la distancia."
+  },
+  {
+    "id": "base-trote",
+    "nombre": "Trotar",
+    "sinonimos": ["Trote suave", "Jogging"],
+    "tipo_medicion": "distance_duration",
+    "musculos_principales": ["quadriceps", "calves"],
+    "musculos_secundarios": ["glutes", "hamstrings"],
+    "equipamiento": "body only",
+    "descripcion": "Carrera suave y sostenida, al aire libre o en cinta. Se registra el tiempo y la distancia."
+  },
+  {
+    "id": "base-correr",
+    "nombre": "Correr al aire libre",
+    "sinonimos": ["Correr", "Running"],
+    "tipo_medicion": "distance_duration",
+    "musculos_principales": ["quadriceps", "hamstrings", "calves"],
+    "musculos_secundarios": ["glutes", "abdominals"],
+    "equipamiento": "body only",
+    "descripcion": "Carrera por calle, parque o sendero, a ritmo constante o con cambios de ritmo. Se registra el tiempo y la distancia."
+  },
+  {
+    "id": "base-senderismo",
+    "nombre": "Senderismo",
+    "sinonimos": ["Trekking", "Caminata en la montaña"],
+    "tipo_medicion": "distance_duration",
+    "musculos_principales": ["quadriceps", "glutes"],
+    "musculos_secundarios": ["calves", "hamstrings", "lower back"],
+    "equipamiento": "body only",
+    "descripcion": "Caminata por terreno natural, con subidas y bajadas. Se registra el tiempo y la distancia."
+  },
+  {
+    "id": "base-ciclismo",
+    "nombre": "Ciclismo al aire libre",
+    "sinonimos": ["Bicicleta", "Andar en bici"],
+    "tipo_medicion": "distance_duration",
+    "musculos_principales": ["quadriceps"],
+    "musculos_secundarios": ["glutes", "calves", "hamstrings"],
+    "equipamiento": "other",
+    "descripcion": "Salida en bicicleta por calle, ciclovía o ruta. Se registra el tiempo y la distancia."
+  },
+  {
+    "id": "base-natacion-crol",
+    "nombre": "Natación (estilo crol)",
+    "sinonimos": ["Nadar crol", "Crol"],
+    "tipo_medicion": "distance_duration",
+    "musculos_principales": ["full_body"],
+    "musculos_secundarios": [],
+    "equipamiento": null,
+    "descripcion": "Nado continuo en pileta o aguas abiertas, alternando los brazos. Se registra el tiempo y la distancia."
+  },
+  {
+    "id": "base-natacion-pecho",
+    "nombre": "Natación (estilo pecho)",
+    "sinonimos": ["Nadar pecho", "Braza"],
+    "tipo_medicion": "distance_duration",
+    "musculos_principales": ["full_body"],
+    "musculos_secundarios": [],
+    "equipamiento": null,
+    "descripcion": "Nado continuo en pileta con el movimiento simultáneo de brazos y piernas. Se registra el tiempo y la distancia."
+  },
+  {
+    "id": "base-remo-aire-libre",
+    "nombre": "Remo al aire libre",
+    "sinonimos": ["Remo en bote", "Canotaje"],
+    "tipo_medicion": "distance_duration",
+    "musculos_principales": ["lats", "middle back"],
+    "musculos_secundarios": ["biceps", "quadriceps", "abdominals"],
+    "equipamiento": "other",
+    "descripcion": "Remo en bote, kayak o canoa. Se registra el tiempo y la distancia."
+  },
+  {
+    "id": "base-patinaje",
+    "nombre": "Patinaje",
+    "sinonimos": ["Patinar", "Rollers"],
+    "tipo_medicion": "distance_duration",
+    "musculos_principales": ["quadriceps", "glutes"],
+    "musculos_secundarios": ["calves", "abductors", "adductors"],
+    "equipamiento": "other",
+    "descripcion": "Patinaje sobre ruedas o sobre hielo. Se registra el tiempo y la distancia."
+  },
+  {
+    "id": "base-escaleras",
+    "nombre": "Subir escaleras",
+    "sinonimos": ["Escalones"],
+    "tipo_medicion": "duration",
+    "musculos_principales": ["quadriceps", "glutes"],
+    "musculos_secundarios": ["calves", "hamstrings"],
+    "equipamiento": "body only",
+    "descripcion": "Subir y bajar escaleras de forma continua. Se registra el tiempo."
+  },
+  {
+    "id": "base-futbol",
+    "nombre": "Fútbol",
+    "sinonimos": ["Partido de fútbol", "Fulbito"],
+    "tipo_medicion": "duration",
+    "musculos_principales": ["full_body"],
+    "musculos_secundarios": [],
+    "equipamiento": null,
+    "descripcion": "Partido o práctica de fútbol, en cancha de once, de siete o de salón. Se registra el tiempo."
+  },
+  {
+    "id": "base-padel",
+    "nombre": "Pádel",
+    "sinonimos": ["Partido de pádel"],
+    "tipo_medicion": "duration",
+    "musculos_principales": ["full_body"],
+    "musculos_secundarios": [],
+    "equipamiento": "other",
+    "descripcion": "Partido o práctica de pádel. Se registra el tiempo."
+  },
+  {
+    "id": "base-tenis",
+    "nombre": "Tenis",
+    "sinonimos": ["Partido de tenis"],
+    "tipo_medicion": "duration",
+    "musculos_principales": ["full_body"],
+    "musculos_secundarios": [],
+    "equipamiento": "other",
+    "descripcion": "Partido o práctica de tenis. Se registra el tiempo."
+  },
+  {
+    "id": "base-basquet",
+    "nombre": "Básquet",
+    "sinonimos": ["Baloncesto", "Básquetbol"],
+    "tipo_medicion": "duration",
+    "musculos_principales": ["full_body"],
+    "musculos_secundarios": [],
+    "equipamiento": "other",
+    "descripcion": "Partido o práctica de básquet. Se registra el tiempo."
+  },
+  {
+    "id": "base-baile",
+    "nombre": "Baile",
+    "sinonimos": ["Bailar", "Clase de baile"],
+    "tipo_medicion": "duration",
+    "musculos_principales": ["full_body"],
+    "musculos_secundarios": [],
+    "equipamiento": null,
+    "descripcion": "Clase o práctica de baile, de cualquier estilo. Se registra el tiempo."
+  },
+  {
+    "id": "base-boxeo",
+    "nombre": "Boxeo recreativo",
+    "sinonimos": ["Boxeo", "Bolsa de boxeo"],
+    "tipo_medicion": "duration",
+    "musculos_principales": ["shoulders", "abdominals"],
+    "musculos_secundarios": ["triceps", "chest", "quadriceps"],
+    "equipamiento": "other",
+    "descripcion": "Entrenamiento de boxeo con bolsa, guantes o sombra, sin combate. Se registra el tiempo."
+  },
+  {
+    "id": "base-circuito",
+    "nombre": "Entrenamiento en circuito",
+    "sinonimos": ["Circuito", "HIIT"],
+    "tipo_medicion": "duration",
+    "musculos_principales": ["full_body"],
+    "musculos_secundarios": [],
+    "equipamiento": null,
+    "descripcion": "Serie de ejercicios seguidos con pausas cortas, en una clase o por tu cuenta. Se registra el tiempo total."
+  },
+  {
+    "id": "base-yoga",
+    "nombre": "Yoga",
+    "sinonimos": ["Clase de yoga"],
+    "tipo_medicion": "duration",
+    "musculos_principales": ["full_body"],
+    "musculos_secundarios": [],
+    "equipamiento": "other",
+    "descripcion": "Clase o práctica de yoga, con posturas, respiración y movilidad. Se registra el tiempo."
+  },
+  {
+    "id": "base-pilates",
+    "nombre": "Pilates",
+    "sinonimos": ["Clase de pilates"],
+    "tipo_medicion": "duration",
+    "musculos_principales": ["abdominals"],
+    "musculos_secundarios": ["lower back", "glutes"],
+    "equipamiento": "other",
+    "descripcion": "Clase o práctica de pilates, en colchoneta o con máquinas. Se registra el tiempo."
+  },
+  {
+    "id": "base-estiramiento-general",
+    "nombre": "Estiramiento general",
+    "sinonimos": ["Elongación", "Movilidad"],
+    "tipo_medicion": "duration",
+    "musculos_principales": ["full_body"],
+    "musculos_secundarios": [],
+    "equipamiento": "body only",
+    "descripcion": "Rutina de estiramientos y movilidad articular, sin carga. Se registra el tiempo."
+  }
+]

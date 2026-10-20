@@ -66,7 +66,7 @@ Se imponen con restricciones `check` sobre los códigos (ver `research.md`, Deci
 - `primary_muscles` y `secondary_muscles` contenidos en la lista de músculos (`<@`) y sin elementos en común; `equipment` en su lista (o nulo).
 - `original_name` nulo si `origin = 'own'`.
 - Los alias cumplen su límite con la función inmutable `private.valid_aliases(text[])` (un `check` no admite subconsultas).
-- Un disparador impide cambiar `origin`, `user_id`, `source_id`, `source_item_id` y `imported_at` después de creado.
+- Un disparador impide cambiar `origin`, `user_id`, `source_id` y `source_item_id` después de creado (`imported_at` se actualiza con cada carga que toca el ejercicio).
 
 **Índices**: GIN de trigramas sobre `search_text`; `name_norm` con `text_pattern_ops` (prefijos y orden por nombre); `(user_id)`; `(origin)`. Los filtros por músculo y equipamiento no necesitan índice propio a esta escala (cientos de filas); se miden en el prototipo.
 
@@ -99,7 +99,7 @@ Solo `service_role`.
 | `public.create_exercise(exercise, request_id)` | cliente (`security definer`) | crea un ejercicio propio, atómico e idempotente |
 | `public.update_exercise(id, exercise)` | cliente (`security definer`) | actualiza un ejercicio propio |
 | `public.copy_exercise(id, request_id)` | cliente (`security definer`) | crea la copia propia de cualquier ejercicio visible, idempotente |
-| `public.import_exercises(source_slug, items jsonb)` | solo `service_role` | crea o actualiza ejercicios del catálogo en lote, por `(fuente, identificador)`; respeta las traducciones `reviewed` |
+| `public.import_exercises(source_slug, items jsonb, drop_descriptions)` | solo `service_role` | crea o actualiza ejercicios del catálogo en lote, por `(fuente, identificador)`; respeta las traducciones `reviewed` |
 | `public.finish_exercise_import(source_slug, report jsonb)` | solo `service_role` | actualiza `last_imported_at`, `exercise_count` y registra el informe |
 
 Las funciones del cliente verifican `auth.uid()` y `private.is_session_fresh()` (`session_expired` si no), y tienen `search_path` vacío.
