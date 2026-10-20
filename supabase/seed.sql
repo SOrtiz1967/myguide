@@ -160,6 +160,67 @@ begin
 end;
 $$;
 
+-- Ayudantes de la spec 005 (catálogo de ejercicios). Escriben directamente, sin pasar por las funciones
+-- del cliente.
+
+-- Crea un ejercicio propio. Devuelve su id.
+create or replace function tests.create_exercise(
+  p_user_id uuid,
+  p_name text,
+  p_measurement_type text default 'reps_weight',
+  p_primary_muscles text[] default '{}',
+  p_equipment text default null,
+  p_description text default null
+) returns uuid
+language plpgsql
+as $$
+declare
+  v_id uuid := gen_random_uuid();
+begin
+  insert into public.exercises (
+    id, origin, user_id, name, measurement_type, primary_muscles, equipment, description, description_status
+  )
+  values (
+    v_id, 'own', p_user_id, p_name, p_measurement_type, p_primary_muscles, p_equipment, p_description,
+    case when p_description is null then null else 'original' end
+  );
+  return v_id;
+end;
+$$;
+
+-- Crea un ejercicio del catálogo en una fuente (por su slug). Devuelve su id.
+create or replace function tests.create_catalog_exercise(
+  p_source_slug text,
+  p_item_id text,
+  p_name text,
+  p_measurement_type text default 'reps_weight',
+  p_original_name text default null,
+  p_aliases text[] default '{}',
+  p_primary_muscles text[] default '{}',
+  p_secondary_muscles text[] default '{}',
+  p_equipment text default null,
+  p_description text default null,
+  p_name_status text default 'machine_translated',
+  p_description_status text default 'machine_translated'
+) returns uuid
+language plpgsql
+as $$
+declare
+  v_id uuid := gen_random_uuid();
+begin
+  insert into public.exercises (
+    id, origin, source_id, source_item_id, imported_at, name, name_status, original_name, aliases,
+    measurement_type, primary_muscles, secondary_muscles, equipment, description, description_status
+  )
+  select v_id, 'imported', s.id, p_item_id, now(), p_name, p_name_status, p_original_name, p_aliases,
+         p_measurement_type, p_primary_muscles, p_secondary_muscles, p_equipment, p_description,
+         case when p_description is null then null else p_description_status end
+  from public.exercise_sources s
+  where s.slug = p_source_slug;
+  return v_id;
+end;
+$$;
+
 grant execute on all functions in schema tests to anon, authenticated;
 
 -- Fuente de la muestra de desarrollo (spec 002, T043). Solo existe en local: la carga de producción

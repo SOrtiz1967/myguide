@@ -53,7 +53,7 @@ description: "Lista de tareas de la spec 005: catálogo de ejercicios"
 
 ### Base de datos (skill `database-design`)
 
-- [ ] T004 Prueba pgTAP en `supabase/tests/exercises_schema.test.sql` (escribir primero, debe fallar). Debe cubrir `data-model.md`:
+- [X] T004 Prueba pgTAP en `supabase/tests/exercises_schema.test.sql` (escribir primero, debe fallar). Debe cubrir `data-model.md`:
   - columnas y tipos; `measurement_type` solo `reps_weight`, `reps_bodyweight`, `duration` o `distance_duration`; `name_status` y `description_status` solo `original`, `machine_translated` o `reviewed`;
   - `primary_muscles`, `secondary_muscles` y `equipment` solo con los códigos de las listas cerradas (cada código se acepta y uno inventado se rechaza); principales y secundarios sin elementos en común; hasta 5 principales y 8 secundarios;
   - `origin = 'imported'` ⇔ `user_id` nulo y fuente e identificador presentes; `origin = 'own'` ⇔ `user_id` presente y sin fuente; `original_name` nulo en lo propio;
@@ -65,17 +65,17 @@ description: "Lista de tareas de la spec 005: catálogo de ejercicios"
   - `based_on_exercise_id` usa `on delete set null`: eliminar el ejercicio original deja la copia intacta;
   - **guardián de claves foráneas**: ninguna clave foránea hacia `exercises` es `on delete cascade` (FR-030);
   - eliminar la cuenta borra sus ejercicios propios y deja intactos el catálogo y los de otra cuenta (FR-041).
-- [ ] T005 Migración `supabase/migrations/20261021000100_exercise_tables.sql`: `public.exercise_sources`, `public.exercises` y `private.exercise_import_runs` con las columnas, restricciones, índices (GIN de trigramas sobre `search_text`, `name_norm` con `text_pattern_ops`, `(user_id)`, `(origin)`) y los disparadores de `data-model.md` (campos de búsqueda con `extensions.immutable_unaccent`, inmutabilidad, `updated_at`); **RLS activado sin políticas** y `revoke all` para `anon` y `authenticated`
-- [ ] T006 [P] Ampliar `supabase/tests/rls_guardrail.test.sql` (escribir primero, debe fallar mientras la tabla no exista): agregar `exercise_sources` a `reference_tables` (solo lectura, una única política `SELECT`, sin permisos de escritura para el cliente). La tabla `exercises` debe seguir cumpliendo el guardián general (RLS, `user_id`, vigencia de sesión evaluada una vez por consulta)
-- [ ] T007 [P] Prueba pgTAP en `supabase/tests/exercises_rls.test.sql` (escribir primero, debe fallar). Debe cubrir:
+- [X] T005 Migración `supabase/migrations/20261021000100_exercise_tables.sql`: `public.exercise_sources`, `public.exercises` y `private.exercise_import_runs` con las columnas, restricciones, índices (GIN de trigramas sobre `search_text`, `name_norm` con `text_pattern_ops`, `(user_id)`, `(origin)`) y los disparadores de `data-model.md` (campos de búsqueda con `extensions.immutable_unaccent`, inmutabilidad, `updated_at`); **RLS activado sin políticas** y `revoke all` para `anon` y `authenticated`
+- [X] T006 [P] Ampliar `supabase/tests/rls_guardrail.test.sql` (escribir primero, debe fallar mientras la tabla no exista): agregar `exercise_sources` a `reference_tables` (solo lectura, una única política `SELECT`, sin permisos de escritura para el cliente). La tabla `exercises` debe seguir cumpliendo el guardián general (RLS, `user_id`, vigencia de sesión evaluada una vez por consulta)
+- [X] T007 [P] Prueba pgTAP en `supabase/tests/exercises_rls.test.sql` (escribir primero, debe fallar). Debe cubrir:
   - la cuenta B no ve, modifica ni borra los ejercicios propios de A; ambas ven el catálogo;
   - el cliente **no puede insertar ni actualizar** `exercises` directamente; sí puede borrar lo propio y no puede borrar el catálogo (FR-028);
   - con la sesión vencida no se ve nada, ni el catálogo; `anon` no accede (FR-039);
   - `exercise_sources` se lee con sesión vigente y no se escribe desde el cliente.
-- [ ] T008 Migración `supabase/migrations/20261021000200_exercise_rls.sql`: permisos mínimos y políticas de lectura de `exercises` (catálogo y lo propio) y de borrado de lo propio, y de lectura de `exercise_sources`, todo con `(select auth.uid())` y `(select private.is_session_fresh())`
-- [ ] T009 [P] Prueba pgTAP en `supabase/tests/exercise_sources_seed.test.sql` (escribir primero, debe fallar): existen las fuentes `free-exercise-db` (Unlicense) y `myguide-base` (CC0 1.0), cada una con licencia, dirección de la licencia, atribución y dirección de la fuente no vacías (FR-019)
-- [ ] T010 Migración `supabase/migrations/20261021000300_exercise_sources_seed.sql`: inserta las dos fuentes con los datos documentados en T002
-- [ ] T011 [P] Ayudantes de prueba en `supabase/seed.sql` (solo local): `tests.create_exercise(user_id, name, measurement_type, primary_muscles, equipment, description)` y `tests.create_catalog_exercise(source_slug, item_id, name, measurement_type, …)` (con nombre original, alias, músculos, equipamiento, descripción y estados opcionales). Comprobar que `rls_guardrail.test.sql` y las pruebas de rendimiento de políticas siguen en verde
+- [X] T008 Migración `supabase/migrations/20261021000200_exercise_rls.sql`: permisos mínimos y políticas de lectura de `exercises` (catálogo y lo propio) y de borrado de lo propio, y de lectura de `exercise_sources`, todo con `(select auth.uid())` y `(select private.is_session_fresh())`
+- [X] T009 [P] Prueba pgTAP en `supabase/tests/exercise_sources_seed.test.sql` (escribir primero, debe fallar): existen las fuentes `free-exercise-db` (Unlicense) y `myguide-base` (CC0 1.0), cada una con licencia, dirección de la licencia, atribución y dirección de la fuente no vacías (FR-019)
+- [X] T010 Migración `supabase/migrations/20261021000300_exercise_sources_seed.sql`: inserta las dos fuentes con los datos documentados en T002
+- [X] T011 [P] Ayudantes de prueba en `supabase/seed.sql` (solo local): `tests.create_exercise(user_id, name, measurement_type, primary_muscles, equipment, description)` y `tests.create_catalog_exercise(source_slug, item_id, name, measurement_type, …)` (con nombre original, alias, músculos, equipamiento, descripción y estados opcionales). Comprobar que `rls_guardrail.test.sql` y las pruebas de rendimiento de políticas siguen en verde
 
 ### Listas cerradas y utilidades del frontend (skill `nutrition-domain-rules`)
 

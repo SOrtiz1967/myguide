@@ -2,7 +2,7 @@
 
 **Feature**: 005-catalogo-de-ejercicios | Base de datos: Postgres (Supabase)
 
-Hereda la convención de propiedad de la spec 001 (`supabase/README.md`) con la misma excepción que la spec 002 (`research.md` de aquella spec, Decisión 5): en `exercises`, `user_id` nulo identifica filas del catálogo común. Reutiliza las extensiones `unaccent` y `pg_trgm` y la función `extensions.immutable_unaccent` de la spec 002.
+Hereda la convención de propiedad de la spec 001 (`supabase/README.md`) con la misma excepción que la spec 002 (`research.md` de aquella spec, Decisión 5): en `exercises`, `user_id` nulo identifica filas del catálogo común. Reutiliza las extensiones `unaccent` y `pg_trgm` y la función `private.immutable_unaccent` de la spec 002.
 
 ## Listas cerradas
 

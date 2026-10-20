@@ -8,7 +8,7 @@ begin;
 select plan(7);
 
 create temp table reference_tables (name text primary key) on commit drop;
-insert into reference_tables (name) values ('food_sources');
+insert into reference_tables (name) values ('food_sources'), ('exercise_sources');
 
 select is(
   (select count(*) from pg_tables where schemaname = 'public' and not rowsecurity),
