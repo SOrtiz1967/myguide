@@ -10,7 +10,7 @@ import { parseTranslations } from './extract-exercises.ts'
 import type { SourceExercise } from './normalize-exercises.ts'
 
 /** Se pone en `true` al terminar el último tramo de la traducción (T047). */
-const TRADUCCION_COMPLETA = false
+const TRADUCCION_COMPLETA = true
 
 /** Nombres que son idénticos en inglés y en español (préstamos o nombres propios). */
 const SAME_AS_ENGLISH_OK = new Set<string>([])
