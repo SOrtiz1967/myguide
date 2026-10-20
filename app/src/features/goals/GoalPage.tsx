@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useQueryClient } from '@tanstack/react-query'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { useNavigate, useSearchParams } from 'react-router'
 import { z } from 'zod'
@@ -67,7 +67,6 @@ function GoalForm({ today }: { today: string }) {
   const draft = useDraft({ userId, formId: FORM_ID, schema: goalDraftSchema })
   const [requestId] = useState(newRequestId)
   const [error, setError] = useState<string | null>(null)
-  const sending = useRef(false)
 
   const {
     register,
@@ -89,8 +88,6 @@ function GoalForm({ today }: { today: string }) {
   }, [kcalText, saveDraft, userId])
 
   const submit = handleSubmit(async ({ kcal }) => {
-    if (sending.current) return // un doble clic no envía dos veces
-    sending.current = true
     setError(null)
     try {
       await saveGoal(kcal, requestId)
@@ -100,8 +97,6 @@ function GoalForm({ today }: { today: string }) {
     } catch (e) {
       // Nada se muestra como guardado si no llegó al servidor; lo escrito y el borrador quedan.
       setError(e instanceof WriteError ? e.message : es.errors.generic)
-    } finally {
-      sending.current = false
     }
   })
 

@@ -1,41 +1,10 @@
 // T021 (spec 004, escenarios 1 a 7 del quickstart): fijar el objetivo de energía diaria.
 import { expect, test, type Page } from '@playwright/test'
 import { es } from '../../src/copy/es'
-import {
-  dbQuery,
-  login,
-  PASSWORD,
-  register,
-  resetRateLimits,
-  stubTurnstile,
-  uniqueEmail,
-} from './support'
+import { login, PASSWORD, register, resetRateLimits, stubTurnstile, uniqueEmail } from './support'
+import { localDate, savedGoals, seedEntry } from './goals-support'
 
 const g = es.goal
-
-function localDate(offsetDays = 0): string {
-  const date = new Date()
-  date.setDate(date.getDate() + offsetDays)
-  return new Intl.DateTimeFormat('en-CA').format(date)
-}
-
-function userId(email: string): string {
-  return dbQuery(`select id from auth.users where email = '${email}'`)
-}
-
-function seedEntry(email: string, name: string, energy: number) {
-  dbQuery(
-    `insert into public.meal_entries (user_id, log_date, meal, origin, food_name, energy_kcal) values ('${userId(email)}', '${localDate()}', 'lunch', 'manual', '${name}', ${energy})`,
-  )
-}
-
-/** Los valores guardados de la cuenta, del más viejo al más nuevo ('' = se quitó). */
-function savedGoals(email: string): string[] {
-  const rows = dbQuery(
-    `select coalesce(kcal::text, '') from public.energy_goals where user_id = '${userId(email)}' order by created_at`,
-  )
-  return rows === '' ? [] : rows.split('\n')
-}
 
 async function registerUser(page: Page) {
   const email = uniqueEmail('goal')
@@ -55,7 +24,7 @@ test('escenarios 1 y 2: sin objetivo no hay restantes; fijar 2.000 en tres inter
   page,
 }) => {
   const email = await registerUser(page)
-  seedEntry(email, 'Guiso objetivo e2e', 1350)
+  seedEntry(email, { name: 'Guiso objetivo e2e', energy: 1350 })
 
   await page.goto('/comidas')
   const card = page.getByRole('region', { name: g.cardTitle })

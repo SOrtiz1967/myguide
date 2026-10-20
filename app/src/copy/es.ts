@@ -486,8 +486,9 @@ export const es = {
       count === 1
         ? '1 ítem no tiene dato de energía y no suma.'
         : `${kcal(count)} ítems no tienen dato de energía y no suman.`,
-    pendingNote: (pending: number) =>
-      `Incluye ${kcal(pending)} kcal estimadas que todavía no confirmaste. Lo que resta depende de esa estimación.`,
+    /** Sin objetivo no hay "lo que resta": la frase final solo acompaña al resumen con objetivo. */
+    pendingNote: (pending: number, withGoal = true) =>
+      `Incluye ${kcal(pending)} kcal estimadas que todavía no confirmaste.${withGoal ? ' Lo que resta depende de esa estimación.' : ''}`,
     howTitle: 'Cómo se calcula',
     how: [
       'Restan = objetivo − registrado.',

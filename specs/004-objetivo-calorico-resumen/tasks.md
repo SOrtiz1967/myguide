@@ -160,17 +160,17 @@ description: "Lista de tareas de la spec 004: objetivo calórico y resumen diari
 
 ### Tests for User Story 2 ⚠️
 
-- [ ] T027 [P] [US2] Ampliar `app/tests/component/GoalSummary.test.tsx` (parte "con objetivo", estados `under` y `met`; FR-012, FR-013, FR-021): objetivo, registrado, "Restan 650 kcal", cuenta "2.000 − 1.350 = 650 kcal", "68 % del objetivo" como texto; la barra mide `min(percent, 100)` %, está `aria-hidden` y no es un `progressbar`; `met` dice "Restan 0 kcal. Lo registrado coincide con el objetivo." con la cuenta "2.000 − 2.000 = 0 kcal" y sin frase de exceso; día vacío → 0 registradas y el objetivo completo como restante, sin tono de fallo; enlace "Cambiar objetivo" a `/objetivo?volver=<día>`
-- [ ] T028 [P] [US2] Ampliar `app/tests/component/DayPage.test.tsx` (FR-014):
+- [X] T027 [P] [US2] Ampliar `app/tests/component/GoalSummary.test.tsx` (parte "con objetivo", estados `under` y `met`; FR-012, FR-013, FR-021): objetivo, registrado, "Restan 650 kcal", cuenta "2.000 − 1.350 = 650 kcal", "68 % del objetivo" como texto; la barra mide `min(percent, 100)` %, está `aria-hidden` y no es un `progressbar`; `met` dice "Restan 0 kcal. Lo registrado coincide con el objetivo." con la cuenta "2.000 − 2.000 = 0 kcal" y sin frase de exceso; día vacío → 0 registradas y el objetivo completo como restante, sin tono de fallo; enlace "Cambiar objetivo" a `/objetivo?volver=<día>`
+- [X] T028 [P] [US2] Ampliar `app/tests/component/DayPage.test.tsx` (FR-014):
   - el resumen se recalcula cuando cambian los ítems del día (agregar, editar, mover y eliminar con los mismos datos de la vista);
   - al navegar al día anterior y volver (dentro del `staleTime` de 30 s), cada día usa **su** objetivo (`goalOn`) y su total, sin pedidos de red extra del historial;
   - el día que se cierra (regla de la una de la madrugada, spec 003) muestra el resumen de ese día con su fecha visible;
   - si falla solo la consulta del historial, el día se ve igual y la tarjeta muestra "No pudimos cargar el objetivo" con "Reintentar" que vuelve a pedir el historial.
-- [ ] T029 [US2] Prueba e2e en `app/tests/e2e/goals-summary.spec.ts` (escenarios 8 a 12): ítems sembrados por SQL y objetivo fijado por la interfaz; cifras y cuenta de 650; agregar un ítem y ver el cambio sin recargar; ir al día anterior y volver; día vacío con objetivo; a la una de la madrugada (`zoneWhereItIsOneAm`) con el día que se cierra
+- [X] T029 [US2] Prueba e2e en `app/tests/e2e/goals-summary.spec.ts` (escenarios 8 a 12): ítems sembrados por SQL y objetivo fijado por la interfaz; cifras y cuenta de 650; agregar un ítem y ver el cambio sin recargar; ir al día anterior y volver; día vacío con objetivo; a la una de la madrugada (`zoneWhereItIsOneAm`) con el día que se cierra
 
 ### Implementation for User Story 2
 
-- [ ] T030 [US2] Completar `GoalSummary.tsx` con la variante **con objetivo** (estados `under` y `met`, cuenta visible, porcentaje como texto, barra decorativa, enlace "Cambiar objetivo", estado de error de carga con "Reintentar") alimentada por `useGoalHistory`, `goalOn` y `summarizeDay` sobre los ítems que ya trae `useDay` (sin consultas nuevas por día); ajustar `DayPage.tsx` para pasar el día y los ítems. Hace pasar T027 y T028
+- [X] T030 [US2] Completar `GoalSummary.tsx` con la variante **con objetivo** (estados `under` y `met`, cuenta visible, porcentaje como texto, barra decorativa, enlace "Cambiar objetivo", estado de error de carga con "Reintentar") alimentada por `useGoalHistory`, `goalOn` y `summarizeDay` sobre los ítems que ya trae `useDay` (sin consultas nuevas por día); ajustar `DayPage.tsx` para pasar el día y los ítems. Hace pasar T027 y T028
 
 **Checkpoint**: escenarios 8 a 12. US1 y US2 juntas son el MVP.
 
@@ -184,17 +184,17 @@ description: "Lista de tareas de la spec 004: objetivo calórico y resumen diari
 
 ### Tests for User Story 3 ⚠️
 
-- [ ] T031 [P] [US3] Ampliar `app/tests/component/GoalSummary.test.tsx` (aclaraciones de incertidumbre; FR-015 a FR-018):
+- [X] T031 [P] [US3] Ampliar `app/tests/component/GoalSummary.test.tsx` (aclaraciones de incertidumbre; FR-015 a FR-018):
   - `missing > 0`: "Restan como máximo 650 kcal. 2 ítems no tienen dato de energía y no suman." (y en singular "1 ítem no tiene dato de energía y no suma."), también en `met` ("Restan como máximo 0 kcal.");
   - `pending > 0`: "Incluye 300 kcal estimadas que todavía no confirmaste. Lo que resta depende de esa estimación.";
   - sin objetivo y con ítems sin dato: "Registrado: al menos 1.350 kcal. 2 ítems no tienen dato de energía y no suman." (sigue sin restantes ni porcentaje);
   - **todos con energía y confirmados: ninguna aclaración** (FR-017); un ítem con energía 0 no cuenta como faltante;
   - el desplegable "Cómo se calcula" se abre con el teclado y contiene las cuatro explicaciones de `contracts/ui-routes.md`.
-- [ ] T032 [US3] Prueba e2e en `app/tests/e2e/goals-uncertainty.spec.ts` (escenarios 13 a 16): ítem manual sin energía → "Restan como máximo…" con la cuenta de ítems faltantes; ítem estimado pendiente sembrado por SQL (`origin = 'estimated'`, `status = 'pending'`) → entra en lo registrado y se muestra aparte con su aclaración; día completo y confirmado → ninguna aclaración; abrir "Cómo se calcula"
+- [X] T032 [US3] Prueba e2e en `app/tests/e2e/goals-uncertainty.spec.ts` (escenarios 13 a 16): ítem manual sin energía → "Restan como máximo…" con la cuenta de ítems faltantes; ítem estimado pendiente sembrado por SQL (`origin = 'estimated'`, `status = 'pending'`) → entra en lo registrado y se muestra aparte con su aclaración; día completo y confirmado → ninguna aclaración; abrir "Cómo se calcula"
 
 ### Implementation for User Story 3
 
-- [ ] T033 [US3] En `GoalSummary.tsx`: aclaraciones "como máximo" / "al menos" según `lowerBound`, subtotal estimado con su aclaración, variante sin objetivo con "al menos", y el desplegable `<details>` "Cómo se calcula" con los textos de `copy.goal`. Hace pasar T031
+- [X] T033 [US3] En `GoalSummary.tsx`: aclaraciones "como máximo" / "al menos" según `lowerBound`, subtotal estimado con su aclaración, variante sin objetivo con "al menos", y el desplegable `<details>` "Cómo se calcula" con los textos de `copy.goal`. Hace pasar T031
 
 **Checkpoint**: escenarios 13 a 16.
 

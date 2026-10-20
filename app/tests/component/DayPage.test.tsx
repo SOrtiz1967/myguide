@@ -1,10 +1,11 @@
 // T031 (spec 003, FR-012 a FR-018): la vista del día con sus comidas, subtotales y totales.
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { fireEvent, render, screen, within } from '@testing-library/react'
+import { act, fireEvent, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { es } from '../../src/copy/es'
+import { fetchGoalHistory } from '../../src/features/goals/api'
 import { fetchDayEntries, fetchDayStatus, type MealEntry } from '../../src/features/meals/api'
 import { DayPage } from '../../src/features/meals/DayPage'
 import { fetchProfile, type Profile } from '../../src/features/profile/api'
@@ -76,8 +77,11 @@ function entry(overrides: Partial<MealEntry> = {}): MealEntry {
   }
 }
 
-function renderDay(path = '/comidas/2026-10-19', state?: unknown) {
-  const client = new QueryClient({ defaultOptions: { queries: { retry: false, gcTime: 0 } } })
+let lastClient: QueryClient
+
+function renderDay(path = '/comidas/2026-10-19', state?: unknown, gcTime = 0) {
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false, gcTime } } })
+  lastClient = client
   return render(
     <QueryClientProvider client={client}>
       <MemoryRouter initialEntries={[{ pathname: path, state }]}>
@@ -99,6 +103,7 @@ beforeEach(() => {
   // Solo se simula la fecha: "hoy" es el 19/10/2026 en Buenos Aires.
   vi.useFakeTimers({ toFake: ['Date'], now: new Date('2026-10-19T15:00:00Z') })
   mockedDay.mockReset().mockResolvedValue([])
+  vi.mocked(fetchGoalHistory).mockReset().mockResolvedValue([])
   vi.mocked(fetchDayStatus)
     .mockReset()
     .mockResolvedValue({ today: '2026-10-19', proposed_date: '2026-10-19', closing: false })
@@ -126,6 +131,84 @@ describe('DayPage: tarjeta del objetivo (spec 004)', () => {
     expect(await within(card).findByText(es.goal.registered(195, false))).toBeVisible()
     expect(within(card).getByRole('link', { name: es.goal.invite })).toBeVisible()
     expect(within(card).queryByText(/restan/i)).not.toBeInTheDocument()
+  })
+})
+
+describe('DayPage: resumen con objetivo (spec 004, FR-012 a FR-014)', () => {
+  const history = [
+    { effective_from: '2026-10-01', kcal: 2000, created_at: '2026-10-01T09:00:00Z' },
+    { effective_from: '2026-10-19', kcal: 1800, created_at: '2026-10-19T09:00:00Z' },
+  ]
+
+  it('el resumen se recalcula cuando cambian los ítems del día', async () => {
+    vi.mocked(fetchGoalHistory).mockResolvedValue(history)
+    mockedDay.mockResolvedValue([entry({ energy_kcal: 800 })])
+    renderDay()
+    expect(await screen.findByText('Restan 1.000 kcal')).toBeVisible()
+
+    // agregar, editar, mover o eliminar un ítem invalida las comidas: el día vuelve a pedirse
+    mockedDay.mockResolvedValue([
+      entry({ energy_kcal: 800 }),
+      entry({ id: 'e2', energy_kcal: 300 }),
+    ])
+    await act(async () => {
+      await lastClient.invalidateQueries({ queryKey: ['meals'] })
+    })
+    expect(await screen.findByText('Restan 700 kcal')).toBeVisible()
+    expect(screen.getByText('1.800 − 1.100 = 700 kcal')).toBeVisible()
+
+    mockedDay.mockResolvedValue([])
+    await act(async () => {
+      await lastClient.invalidateQueries({ queryKey: ['meals'] })
+    })
+    expect(await screen.findByText('Restan 1.800 kcal')).toBeVisible()
+  })
+
+  it('cada día usa su total y el objetivo que regía ese día, sin pedir el historial otra vez', async () => {
+    vi.mocked(fetchGoalHistory).mockResolvedValue(history)
+    mockedDay.mockImplementation(async (date: string) =>
+      date === '2026-10-18'
+        ? [entry({ id: 'ayer', log_date: date, energy_kcal: 1500 })]
+        : [entry({ energy_kcal: 800 })],
+    )
+    renderDay('/comidas/2026-10-19', undefined, 5 * 60_000) // la caché por defecto de la aplicación
+    expect(await screen.findByText(es.goal.goalLine(1800))).toBeVisible()
+    expect(screen.getByText('Restan 1.000 kcal')).toBeVisible()
+
+    await userEvent.click(screen.getByRole('link', { name: /Día anterior/ }))
+    expect(await screen.findByText(es.goal.goalLine(2000))).toBeVisible()
+    expect(screen.getByText('Restan 500 kcal')).toBeVisible()
+
+    await userEvent.click(screen.getByRole('link', { name: /Día siguiente/ }))
+    expect(await screen.findByText(es.goal.goalLine(1800))).toBeVisible()
+    expect(vi.mocked(fetchGoalHistory)).toHaveBeenCalledTimes(1)
+  })
+
+  it('el día que se cierra muestra su propio resumen con su fecha visible', async () => {
+    vi.mocked(fetchGoalHistory).mockResolvedValue(history)
+    vi.mocked(fetchDayStatus).mockResolvedValue({
+      today: '2026-10-19',
+      proposed_date: '2026-10-18',
+      closing: true,
+    })
+    mockedDay.mockResolvedValue([entry({ log_date: '2026-10-18', energy_kcal: 600 })])
+    renderDay('/comidas/2026-10-18')
+    expect(await screen.findByText(es.goal.goalLine(2000))).toBeVisible()
+    expect(screen.getByText('Restan 1.400 kcal')).toBeVisible()
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('domingo 18 de octubre')
+  })
+
+  it('si falla solo el historial del objetivo, el día se ve igual y la tarjeta permite reintentar', async () => {
+    vi.mocked(fetchGoalHistory).mockRejectedValueOnce(new Error('boom'))
+    mockedDay.mockResolvedValue([entry()])
+    renderDay()
+    expect(await screen.findByText('Arroz blanco')).toBeVisible()
+    const card = await screen.findByRole('region', { name: es.goal.cardTitle })
+    expect(await within(card).findByText(es.goal.loadError)).toBeVisible()
+
+    vi.mocked(fetchGoalHistory).mockResolvedValue(history)
+    await userEvent.click(within(card).getByRole('button', { name: es.common.retry }))
+    expect(await screen.findByText(es.goal.goalLine(1800))).toBeVisible()
   })
 })
 

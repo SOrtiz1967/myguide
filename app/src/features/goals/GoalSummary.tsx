@@ -51,11 +51,24 @@ export function GoalSummary({ date, today, entries }: GoalSummaryProps) {
   )
 }
 
+/** Las aclaraciones de incertidumbre: solo cuando corresponden (FR-015 a FR-017). */
+function Notes({ summary }: { summary: DaySummary }) {
+  const withGoal = summary.state !== 'none'
+  if (summary.missing === 0 && summary.pending === 0) return null
+  return (
+    <div className="flex flex-col gap-1 text-sm text-muted">
+      {summary.missing > 0 ? <p>{es.goal.missingNote(summary.missing)}</p> : null}
+      {summary.pending > 0 ? <p>{es.goal.pendingNote(summary.pending, withGoal)}</p> : null}
+    </div>
+  )
+}
+
 function Body({ summary, date, today }: { summary: DaySummary; date: string; today: string }) {
   if (summary.state === 'none') {
     return (
       <>
         <p className="font-medium">{es.goal.registered(summary.registered, summary.lowerBound)}</p>
+        <Notes summary={summary} />
         {date >= today ? (
           <Link to={`/objetivo?volver=${date}`} className={linkClass}>
             {es.goal.invite}
@@ -64,5 +77,49 @@ function Body({ summary, date, today }: { summary: DaySummary; date: string; tod
       </>
     )
   }
-  return null
+
+  const statement =
+    summary.state === 'over'
+      ? es.goal.statement({
+          state: 'over',
+          difference: summary.difference ?? 0,
+          lowerBound: summary.lowerBound,
+        })
+      : es.goal.statement({
+          state: summary.state,
+          remaining: summary.remaining,
+          lowerBound: summary.lowerBound,
+        })
+
+  return (
+    <>
+      <p>{es.goal.goalLine(summary.goal)}</p>
+      <p>{es.goal.registered(summary.registered, summary.lowerBound)}</p>
+      <p className="text-lg font-semibold">{statement}</p>
+      <p className="text-muted">{es.goal.equation(summary)}</p>
+      <p>{es.goal.percent(summary.percent)}</p>
+      {/* La barra es decorativa: lo que importa está dicho en texto. Llega al tope sin cambiar de estilo. */}
+      <div aria-hidden="true" className="h-2 w-full overflow-hidden rounded-full bg-line">
+        <div
+          data-goal-bar
+          className="h-full rounded-full bg-accent"
+          style={{ width: `${Math.min(summary.percent, 100)}%` }}
+        />
+      </div>
+      <Notes summary={summary} />
+      <Link to={`/objetivo?volver=${date}`} className={linkClass}>
+        {es.goal.change}
+      </Link>
+      <details className="text-sm">
+        <summary className="inline-flex min-h-11 cursor-pointer items-center underline">
+          {es.goal.howTitle}
+        </summary>
+        <ul className="mt-1 flex list-disc flex-col gap-1 pl-5 text-muted">
+          {es.goal.how.map((line) => (
+            <li key={line}>{line}</li>
+          ))}
+        </ul>
+      </details>
+    </>
+  )
 }
