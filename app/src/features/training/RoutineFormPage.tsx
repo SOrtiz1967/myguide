@@ -98,7 +98,7 @@ function RoutineForm({ initial, routineId }: { initial: RoutineFormInput; routin
     else saveDraft(current.data)
   }, [values, start, saveDraft, userId, formId])
 
-  const submit = handleSubmit(async (payload) => {
+  async function onValid(payload: RoutinePayload) {
     if (submitting.current) return
     submitting.current = true
     setError(null)
@@ -115,7 +115,7 @@ function RoutineForm({ initial, routineId }: { initial: RoutineFormInput; routin
     } finally {
       submitting.current = false
     }
-  })
+  }
 
   function onPick(exercise: ExerciseSummary) {
     if (picking?.mode === 'replace') {
@@ -142,7 +142,11 @@ function RoutineForm({ initial, routineId }: { initial: RoutineFormInput; routin
     errors.exercises?.root?.message
 
   return (
-    <form onSubmit={submit} noValidate className="flex flex-col gap-5">
+    <form
+      onSubmit={(event) => void handleSubmit(onValid)(event)}
+      noValidate
+      className="flex flex-col gap-5"
+    >
       {draft.restored ? (
         <div
           role="status"
