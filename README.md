@@ -12,7 +12,8 @@ Desarrollada con **Spec-Driven Development** (Spec Kit). Los principios del proy
 | 002 Catálogo de alimentos              | Implementada y verificada; pendiente cargar los genéricos de USDA (traducción de nombres) y la carga en producción. Ver [`verification.md`](specs/002-catalogo-de-alimentos/verification.md)                |
 | 003 Registro de comidas                | Implementada y verificada; pendiente el despliegue (bucket `meal-photos` y función `meal-photo`) y probar una foto real de teléfono. Ver [`verification.md`](specs/003-registro-de-comidas/verification.md) |
 | 004 Objetivo calórico y resumen diario | Implementada y verificada. Sin pasos de despliegue propios (una tabla y una función de base de datos). Ver [`verification.md`](specs/004-objetivo-calorico-resumen/verification.md)         |
-| 005 a 011                              | Pendientes                                                                                                                                                                                                  |
+| 005 Catálogo de ejercicios | Implementada y verificada; pendiente la carga en producción y la revisión de licencias del autor (los pasos de free-exercise-db). Ver [`verification.md`](specs/005-catalogo-de-ejercicios/verification.md) |
+| 006 a 011 | Pendientes |
 
 ## Stack
 

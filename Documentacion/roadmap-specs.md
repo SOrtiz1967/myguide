@@ -46,6 +46,10 @@ Basado en la Constitution v1.2.1. Este documento solo define el corte y el conte
 - Ejercicios propios, copia editable, tipo de medición.
 - Decisión pendiente #4 (parte de ejercicios): fuentes y licencias.
 - Principios: II, X.
+- **Estado (2026-10-21): implementada y verificada.** Catálogo local de 897 ejercicios en español (876 de free-exercise-db, de dominio público, con traducción automática sin revisar, y 21 propios de MyGuide en CC0), búsqueda sin acentos por nombre, nombre original o sinónimo, filtros por músculo y equipamiento, ejercicios propios, copia editable, editar y eliminar, y pantalla de fuentes. Con 20.000 filas la búsqueda responde en menos de 60 ms. Decisiones y mediciones en [`specs/005-catalogo-de-ejercicios/research.md`](../specs/005-catalogo-de-ejercicios/research.md).
+- **Para la spec 006:** cada ejercicio tiene un `id` (uuid) que no cambia nunca; la sesión debe **copiar** el nombre y el tipo de medición (`reps_weight`, `reps_bodyweight`, `duration`, `distance_duration`) en su propio registro y no depender de la fila del ejercicio, porque un ejercicio propio se puede editar o eliminar. La referencia al ejercicio en la sesión no debe borrar ni bloquear nada (`on delete set null` o sin clave foránea). El selector de ejercicios puede reutilizar `search_exercises`.
+- **Queda fuera a propósito:** imágenes y videos, dificultad y mecánica, calorías por ejercicio (spec 007/008), recomendaciones automáticas.
+- **Pendiente del autor** (en [`Documentacion/issues-autor/08-ejercicios-licencias.md`](issues-autor/08-ejercicios-licencias.md)): confirmar la procedencia de los pasos de free-exercise-db antes de abrir la aplicación a terceros, la dedicación CC0 de `myguide-base` y la carga en producción.
 
 ### 006 — Rutinas, calendario y sesiones
 - Rutina planificada, sesión realizada, modificada, reprogramada y cancelada.

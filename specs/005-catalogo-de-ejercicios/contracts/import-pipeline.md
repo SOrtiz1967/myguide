@@ -64,6 +64,10 @@
 - **Sin datos personales**: los informes y registros contienen solo identificadores de la fuente y motivos.
 - **`--sin-descripcion`**: carga el ejercicio sin su descripción (ni su estado) y quita la que hubiera, si el autor decide retirar los textos de una fuente (`research.md`, Decisión 2).
 
+## Ajuste de la copia fijada en el repositorio
+
+El SHA-256 se calcula sobre los bytes exactos del archivo. En Windows, git convierte por defecto los finales de línea al sacar los archivos (`LF` a `CRLF`), y eso cambiaría el SHA-256 y detendría la carga. Por eso `.gitattributes` marca `supabase/import/data/fuentes/**` como `-text`: git no toca esos archivos y la copia en el repositorio es idéntica a la de la fuente en cualquier equipo. Si se actualiza la versión fijada, se reemplazan el archivo, el commit y el SHA-256 juntos (en `supabase/import/` y en `Documentacion/fuentes-datos.md`) y se repiten las pruebas de `test:import`.
+
 ## Configuración
 
 Variables en `supabase/.env` (secretos del servidor; nunca en `app/`): `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`. Parámetros: `--source` (`free-exercise-db` | `myguide-base`), `--dry-run` (valida y cuenta sin escribir), `--sin-descripcion`.

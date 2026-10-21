@@ -63,16 +63,20 @@ La ODbL exige que una **base de datos derivada que se distribuya o se ponga a di
 
 # Fuentes de datos del catálogo de ejercicios (spec 005)
 
-Misma regla del Principio X: **la licencia y las obligaciones de cada fuente se documentan antes de importarla** y la carga rechaza una fuente sin licencia y atribución registradas (spec 005, FR-019). Última revisión: 2026-10-20.
+Misma regla del Principio X: **la licencia y las obligaciones de cada fuente se documentan antes de importarla** y la carga rechaza una fuente sin licencia y atribución registradas (spec 005, FR-019). Última revisión: 2026-10-21, contra lo realmente cargado en la base local.
 
 ## Resumen
 
 | Fuente | Qué aporta | Licencia | Obligaciones | Se importa |
 |---|---|---|---|---|
 | **free-exercise-db** ([yuhonas/free-exercise-db](https://github.com/yuhonas/free-exercise-db)) | 876 ejercicios de fuerza, peso corporal, pliometría, halterofilia, movilidad y algo de cardio, en inglés | **Unlicense** (dominio público) | Ninguna. Igual se muestra la fuente y la licencia en la pantalla de fuentes | Nombre, categoría, músculos, equipamiento y pasos. **No** las imágenes |
-| **MyGuide, ejercicios base** (`myguide-base`) | Unos 20 ejercicios de resistencia, deporte y movilidad que la fuente anterior no cubre, ya en español | **CC0 1.0** (obra del autor del proyecto, dedicada al dominio público) | Ninguna | Todo |
+| **MyGuide, ejercicios base** (`myguide-base`) | 21 ejercicios de resistencia, deporte y movilidad que la fuente anterior no cubre, ya en español | **CC0 1.0** (obra del autor del proyecto, dedicada al dominio público) | Ninguna | Todo |
 
 Versión fijada de free-exercise-db: commit `f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5` (2026-09-27), `dist/exercises.json` con SHA-256 `5bb747e3fc658f095a60dcbf6d53c96627acdcc6ffb6fffde86f7e26995d40bf`. La copia vive en `supabase/import/data/fuentes/free-exercise-db/` junto con su `LICENSE.md`, y la carga se detiene si el SHA-256 no coincide.
+
+## Lo que está cargado
+
+Carga real en la base local del 2026-10-21 (`npm run import:ejercicios`): **876 ejercicios de free-exercise-db** (los 876 de la copia fijada, ninguno omitido ni repetido) y **21 de `myguide-base`**. Los 876 tienen nombre y pasos traducidos al español, todos marcados «traducción sin revisar» (`machine_translated`); ninguno está «revisado». Cinco no tienen pasos en la fuente y se muestran «sin dato». La carga en producción (`npm run import:ejercicios:prod`) todavía no se hizo.
 
 ## free-exercise-db
 

@@ -242,3 +242,73 @@ El objetivo de un día `D` es el `kcal` de la fila de `created_at` **más recien
 
 `tests/energy_goals_schema`, `energy_goals_rls`, `set_energy_goal` y `energy_goal_history` (pgTAP, `*.test.sql`) cubren el rango, la idempotencia (incluido el reintento tardío), la zona horaria con hora simulada, el aislamiento entre cuentas y la cascada. La prueba `rls_guardrail` de la spec 001 cubre la tabla sin cambios.
 
+## Catálogo de ejercicios (spec 005)
+
+### Tablas
+
+| Tabla | Qué guarda | Quién la ve y qué puede hacer |
+|---|---|---|
+| `public.exercises` | Ejercicios del catálogo (`user_id` nulo, `origin = 'imported'`) y ejercicios propios (`origin = 'own'`, con dueño; incluye las copias, con `based_on_exercise_id`) | El catálogo, cualquier cuenta con sesión vigente (solo lectura); lo propio, solo su dueño, que puede leerlo y borrarlo. **Nadie inserta ni actualiza directamente**: se hace por las funciones |
+| `public.exercise_sources` | Fuentes con licencia, atribución, fecha de la última importación y cantidad | Cualquier cuenta con sesión (solo lectura) |
+| `private.exercise_import_runs` | Informe de cada carga | Solo `service_role` |
+
+`exercise_sources` es una **tabla de referencia** sin `user_id`: está en la lista explícita de `tests/rls_guardrail.test.sql`. El identificador `exercises.id` (uuid) no cambia nunca y es el que referenciará la spec 006: el origen, el dueño, la fuente y la fecha de importación están protegidos por un disparador (`exercises_protect_identity`).
+
+### Listas cerradas y límites
+
+Se imponen con `check` en la tabla, se repiten en las funciones para dar un motivo claro, y el cliente tiene la misma lista en `app/src/features/exercises/exerciseLists.ts` (y la carga en `supabase/import/exercise-lists.ts`); una prueba verifica que las tres coinciden.
+
+| Dato | Valores o límite |
+|---|---|
+| Tipo de medición (`measurement_type`) | `reps_weight`, `reps_bodyweight`, `duration`, `distance_duration` |
+| Músculos (18) | `abdominals`, `abductors`, `adductors`, `biceps`, `calves`, `chest`, `forearms`, `glutes`, `hamstrings`, `lats`, `lower back`, `middle back`, `neck`, `quadriceps`, `shoulders`, `traps`, `triceps`, `full_body` |
+| Equipamiento (12) | `body only`, `barbell`, `dumbbell`, `cable`, `machine`, `e-z curl bar`, `kettlebells`, `bands`, `medicine ball`, `exercise ball`, `foam roll`, `other` (o sin dato) |
+| Músculos principales / secundarios | hasta 5 / hasta 10, sin repetir ni estar en ambos |
+| Nombre / otro nombre / otros nombres | 1 a 120 caracteres / hasta 80 / hasta 10 (el formulario ofrece 5) |
+| Descripción | hasta 4.000 caracteres |
+
+### Funciones
+
+| Función | Quién la ejecuta | Qué hace |
+|---|---|---|
+| `search_exercises(q, scope, muscle_filter, equipment_filter, page_size, page_offset)` | Cuentas con sesión | Búsqueda sin acentos ni mayúsculas, por palabras parciales y por nombre original o sinónimo; filtro por músculo (principal o secundario) y por equipamiento; ordenada por relevancia, con tandas de hasta 50 |
+| `create_exercise(exercise, request_id)` | Cuentas con sesión | Crea un ejercicio propio, atómico e idempotente |
+| `update_exercise(id, exercise)` | Cuentas con sesión | Edita un ejercicio **propio** (incluidas las copias); el catálogo y lo ajeno dan `not_found` |
+| `copy_exercise(id, request_id)` | Cuentas con sesión | Crea una copia propia y editable de un ejercicio visible (`based_on_exercise_id`); los textos pasan a `original` |
+| `import_exercises(source_slug, items, drop_descriptions)` · `finish_exercise_import(source_slug, report)` | **Solo `service_role`** | Cargan y cierran la carga del catálogo; nunca tocan ejercicios propios ni copias |
+
+Las funciones del cliente son `security definer` con `search_path` vacío: verifican `auth.uid()` y la sesión vigente, y toman el dueño de la sesión. Los errores de validación tienen la forma `invalid_exercise:<motivo>:<campo>`. Borrar un ejercicio propio es un `delete` directo (lo permite RLS solo sobre lo propio); sus copias quedan intactas, con `based_on_exercise_id` nulo.
+
+### Cargar el catálogo
+
+La carga la hace el autor desde su equipo, igual que la de alimentos: necesita `SUPABASE_URL` y `SUPABASE_SERVICE_ROLE_KEY` (para local, en `supabase/.env.local`; para producción, en `supabase/.env`; **la clave `service_role` es un secreto: nunca en `app/` ni en Git**).
+
+```powershell
+npm run import:ejercicios-muestra                 # ≈30 ejercicios de ejemplo (solo desarrollo)
+npm run import:ejercicios                         # myguide-base y luego free-exercise-db, en local
+npm run import:ejercicios -- --dry-run            # igual, pero free-exercise-db solo valida y cuenta
+npm run import:ejercicios -- --sin-descripcion    # free-exercise-db sin los pasos (si el autor decide retirarlos)
+npm run import:ejercicios:prod                    # lo mismo contra producción: lee supabase/.env
+```
+
+El script ejecuta las dos fuentes en orden; las opciones que se agregan después de `--` llegan solo a la última (free-exercise-db), que es la que las necesita.
+
+- Las fuentes viven en el repositorio: la copia fijada de free-exercise-db (commit `f00c92c7…`, con su `LICENSE.md`; su SHA-256 se verifica y la carga se detiene si no coincide) y `ejercicios-base.json`. La carga **no necesita red** ni consulta a un tercero.
+- Repetir la carga no duplica nada: la clave es (fuente, código de origen). No toca ejercicios propios ni copias.
+- Se rechaza si la fuente no tiene licencia, enlace de licencia y atribución registrados. Se omite, con su motivo, todo ejercicio inválido o sin traducción. El informe queda en `supabase/import/out/informe-ejercicios-<fuente>.json` (no se versiona).
+- Un dato que la fuente no informa queda **sin dato** (`null`): nunca se completa con un supuesto (por ejemplo, un equipamiento ausente no se convierte en «peso corporal»).
+- Detalle del formato y las reglas: [`contracts/import-pipeline.md`](../specs/005-catalogo-de-ejercicios/contracts/import-pipeline.md).
+
+### Marcar una traducción como revisada
+
+Los nombres y los pasos en español están en `supabase/import/data/ejercicios-es.json` (por código de origen: `nombre`, `sinonimos`, `pasos`, `nombre_estado`, `pasos_estado`). Hoy todos están en `machine_translated` y la pantalla lo avisa («traducción sin revisar»).
+
+1. Corregir el texto en `ejercicios-es.json`.
+2. Cambiar `nombre_estado` o `pasos_estado` de esa entrada a `reviewed`.
+3. Volver a ejecutar `npm run import:ejercicios`. La carga actualiza el texto y el estado sin duplicar.
+
+Una vez `reviewed`, una recarga posterior **nunca** lo reemplaza por una traducción automática. Las personas no editan el catálogo: corrigen lo suyo creando una copia propia.
+
+### Pruebas
+
+`tests/exercises_schema`, `exercises_rls`, `exercise_sources_seed`, `search_exercises`, `create_exercise`, `copy_exercise`, `update_delete_exercise` e `import_exercises` (pgTAP, `*.test.sql`) cubren las restricciones, el aislamiento entre cuentas, el catálogo de solo lectura, la búsqueda, la idempotencia y la carga. La normalización, las reglas de medición, las traducciones y la carga se prueban con `npm run test:import` (Deno). Las mediciones de rendimiento (20.000 filas) están en [`research.md`](../specs/005-catalogo-de-ejercicios/research.md), con su script en `specs/005-catalogo-de-ejercicios/mediciones/`.

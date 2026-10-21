@@ -1,6 +1,6 @@
 -- T019 (spec 005, FR-001 a FR-005, FR-011 a FR-013): búsqueda de ejercicios.
 begin;
-select plan(36);
+select plan(39);
 
 -- La base local puede tener el catálogo cargado: la prueba parte de una base sin ejercicios (todo se deshace al final).
 delete from public.exercises;
@@ -130,6 +130,17 @@ select is((select count(*) from public.search_exercises('ejercicio', 'own', null
 select is(
   (select source_name from public.search_exercises('plancha lateral') limit 1), 'free-exercise-db',
   'un ejercicio del catálogo trae el nombre de su fuente'
+);
+
+-- T066: texto y filtros con comillas o SQL no se interpretan, solo se buscan o se rechazan -----------------------
+select is(
+  (select count(*) from public.search_exercises($$zz'; delete from public.exercises; --$$)), 0::bigint,
+  'T066: una comilla y SQL en el texto no rompen la búsqueda ni encuentran nada'
+);
+select ok((select count(*) from public.exercises) > 0, 'T066: y la tabla sigue intacta');
+select throws_ilike(
+  $$ select * from public.search_exercises('plancha', 'all', $x$chest'; delete from public.exercises; --$x$) $$,
+  '%invalid_filter%', 'T066: un músculo con SQL se rechaza antes de armar la consulta'
 );
 
 select * from finish();

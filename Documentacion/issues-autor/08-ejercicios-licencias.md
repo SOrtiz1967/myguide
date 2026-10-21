@@ -12,7 +12,7 @@ El catálogo de ejercicios se carga desde [free-exercise-db](https://github.com/
 
 ## 2. Confirmar la dedicación CC0 de `myguide-base`
 
-La fuente propia (`supabase/import/data/ejercicios-base.json`, unos 20 ejercicios de resistencia y deporte) es obra del proyecto y se publica bajo CC0 1.0.
+La fuente propia (`supabase/import/data/ejercicios-base.json`, 21 ejercicios de resistencia y deporte) es obra del proyecto y se publica bajo CC0 1.0.
 
 - [ ] Confirmar que quedas de acuerdo con dedicarla al dominio público. Si prefieres otra licencia, se cambia en `exercise_sources` antes de cargarla.
 
@@ -23,3 +23,12 @@ Los nombres y los pasos se tradujeron de forma asistida y quedan marcados **«tr
 - [ ] Ir revisando `supabase/import/data/ejercicios-es.json`: corregir lo que no suene bien y poner `reviewed` en `nombre_estado` / `pasos_estado`. Una carga posterior **no pisa** lo marcado `reviewed`.
 - [ ] Revisar las excepciones del tipo de medición en `supabase/import/data/ejercicios-medicion.csv` (unas 110, con el criterio de cada grupo anotado).
 - [ ] Volver a cargar: `npm run import:ejercicios`.
+
+## 4. Cargar el catálogo en producción
+
+Hecho en local el 2026-10-21 (876 de free-exercise-db y 21 de `myguide-base`, sin omitidos). Falta producción, cuando exista el proyecto de Supabase (ver `04-despliegue.md`).
+
+- [ ] Aplicar las migraciones de la spec 005 en producción (`npx supabase db push`).
+- [ ] Con `supabase/.env` completo (la clave `service_role` es un secreto: no se pega en ningún chat ni en Git), ejecutar `npm run import:ejercicios:prod`. Antes se puede probar con `-- --dry-run`.
+- [ ] Revisar el informe en `supabase/import/out/informe-ejercicios-free-exercise-db.json` (0 omitidos, 0 duplicados) y abrir `/fuentes` para comprobar las dos fuentes de ejercicios.
+- [ ] Repetir la carga una vez: debe dar 0 creados y 0 duplicados.
