@@ -259,6 +259,8 @@ test('escenario 45: la misma sesión en dos pestañas avisa del conflicto y deja
   await expect(indicator(page)).toHaveText(t.saveIndicator.saved, { timeout: 15_000 })
 
   // la segunda, que quedó con la revisión anterior, escribe otra cosa
+  // la serie vacía no se guarda: al abrir la sesión de nuevo, el ejercicio no trae series
+  await card(other, 'Flexiones e2e').getByRole('button', { name: e.addSet }).click()
   await field(other, 'Flexiones e2e', t.fields.reps, 1).fill('22')
   await expect(other.getByText(e.conflictTitle)).toBeVisible({ timeout: 15_000 })
   expect(
