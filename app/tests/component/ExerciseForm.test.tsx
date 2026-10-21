@@ -134,7 +134,7 @@ describe('crear con lo obligatorio y completo (escenarios 15 y 16)', () => {
 describe('estructura accesible (FR-024)', () => {
   it('el tipo de medición son botones de radio, cada uno con su explicación', () => {
     renderPage()
-    const group = screen.getByRole('group', { name: f.measurementLegend })
+    const group = screen.getByRole('radiogroup', { name: f.measurementLegend })
     expect(within(group).getAllByRole('radio')).toHaveLength(4)
     expect(within(group).getByText('Se registra con repeticiones y peso')).toBeVisible()
     expect(within(group).getByText('Se registra con distancia y tiempo')).toBeVisible()

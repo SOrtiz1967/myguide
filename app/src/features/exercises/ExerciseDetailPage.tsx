@@ -231,7 +231,7 @@ export function ExerciseDetailPage() {
   const nameLabel = translationLabel(exercise.name_status)
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex min-w-0 flex-col gap-6 break-words">
       <div>{back}</div>
       {state?.saved ? <SuccessMessage>{t.form.saved}</SuccessMessage> : null}
       <header className="flex flex-col gap-1">
@@ -243,7 +243,9 @@ export function ExerciseDetailPage() {
         <Section id="otros-nombres-titulo" title={t.detail.alsoKnownAs}>
           <ul className="flex flex-wrap gap-x-4">
             {others.map((name) => (
-              <li key={name}>{name}</li>
+              <li key={name} className="min-w-0 [overflow-wrap:anywhere]">
+                {name}
+              </li>
             ))}
           </ul>
         </Section>

@@ -200,7 +200,7 @@ export function ExerciseForm({
         ) : null}
       </div>
 
-      <fieldset className="flex flex-col gap-2" aria-required="true">
+      <fieldset className="flex flex-col gap-2" role="radiogroup" aria-required="true">
         <legend className="font-medium">{f.measurementLegend}</legend>
         {MEASUREMENT_TYPES.map((type) => (
           <label
