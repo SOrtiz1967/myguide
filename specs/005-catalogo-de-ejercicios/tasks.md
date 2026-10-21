@@ -234,12 +234,12 @@ description: "Lista de tareas de la spec 005: catálogo de ejercicios"
 
 ### Tests for User Story 6 ⚠️
 
-- [ ] T059 [P] [US6] Ampliar `app/tests/component/SourcesPage.test.tsx` (escenario 29, FR-018): dos secciones «Alimentos» y «Ejercicios», cada fuente con nombre, licencia, atribución, fecha de la última importación y cantidad; estado vacío por sección; fallo de una sección sin ocultar la otra, con «Reintentar»; las pruebas de alimentos existentes siguen en verde
-- [ ] T060 [US6] Prueba e2e en `app/tests/e2e/exercises-sources.spec.ts` (y ajustar `foods-sources.spec.ts` si la estructura de la pantalla cambia): `/fuentes` lista las fuentes de ejercicios con su licencia y atribución, y desde el detalle de un ejercicio del catálogo un clic lleva a las fuentes
+- [X] T059 [P] [US6] Ampliar `app/tests/component/SourcesPage.test.tsx` (escenario 29, FR-018): dos secciones «Alimentos» y «Ejercicios», cada fuente con nombre, licencia, atribución, fecha de la última importación y cantidad; estado vacío por sección; fallo de una sección sin ocultar la otra, con «Reintentar»; las pruebas de alimentos existentes siguen en verde
+- [X] T060 [US6] Prueba e2e en `app/tests/e2e/exercises-sources.spec.ts` (y ajustar `foods-sources.spec.ts` si la estructura de la pantalla cambia): `/fuentes` lista las fuentes de ejercicios con su licencia y atribución, y desde el detalle de un ejercicio del catálogo un clic lleva a las fuentes
 
 ### Implementation for User Story 6
 
-- [ ] T061 [US6] `fetchExerciseSources` en `app/src/features/exercises/api.ts` y `app/src/features/foods/SourcesPage.tsx` con las dos secciones (reutilizar `SourceCard`); textos en `copy/es.ts`. Hace pasar T059; el e2e de T060 queda en verde
+- [X] T061 [US6] `fetchExerciseSources` en `app/src/features/exercises/api.ts` y `app/src/features/foods/SourcesPage.tsx` con las dos secciones (reutilizar `SourceCard`); textos en `copy/es.ts`. Hace pasar T059; el e2e de T060 queda en verde
 
 **Checkpoint**: escenario 29. Todas las historias funcionan.
 

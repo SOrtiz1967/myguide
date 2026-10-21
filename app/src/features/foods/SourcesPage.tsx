@@ -1,11 +1,13 @@
 import { useQuery } from '@tanstack/react-query'
+import type { ReactNode } from 'react'
 import { EmptyState } from '../../components/EmptyState'
 import { ErrorState } from '../../components/ErrorState'
 import { LoadingState } from '../../components/LoadingState'
 import { es } from '../../copy/es'
 import { formatDate } from '../../lib/format'
 import { safeHttpUrl } from '../../lib/url'
-import { fetchSources, type FoodSource } from './api'
+import { fetchExerciseSources } from '../exercises/api'
+import { fetchSources } from './api'
 
 const externalLink = { target: '_blank', rel: 'noopener noreferrer' } as const
 
@@ -20,10 +22,29 @@ function ExternalLink({ href, children }: { href: string; children: string }) {
   )
 }
 
-function SourceCard({ source }: { source: FoodSource }) {
+interface SourceInfo {
+  id: string
+  name: string
+  license_name: string
+  license_url: string
+  attribution: string
+  source_url: string
+  last_imported_at: string | null
+}
+
+/** Una fuente con su licencia, su atribución y lo que aportó (compartida por alimentos y ejercicios). */
+function SourceCard({
+  source,
+  countLabel,
+  count,
+}: {
+  source: SourceInfo
+  countLabel: string
+  count: string
+}) {
   return (
     <article className="flex flex-col gap-2 rounded-lg border border-line bg-surface p-4">
-      <h2 className="text-lg font-semibold">{source.name}</h2>
+      <h3 className="text-lg font-semibold">{source.name}</h3>
       <p>{source.attribution}</p>
       <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
         <dt className="text-muted">{es.foods.sources.license}</dt>
@@ -36,8 +57,8 @@ function SourceCard({ source }: { source: FoodSource }) {
             ? formatDate(source.last_imported_at.slice(0, 10))
             : es.foods.sources.neverImported}
         </dd>
-        <dt className="text-muted">{es.foods.title}</dt>
-        <dd>{es.foods.sources.foodCount(source.food_count)}</dd>
+        <dt className="text-muted">{countLabel}</dt>
+        <dd>{count}</dd>
       </dl>
       <p>
         <ExternalLink href={source.source_url}>{es.foods.sources.siteLink}</ExternalLink>
@@ -46,24 +67,89 @@ function SourceCard({ source }: { source: FoodSource }) {
   )
 }
 
+/** Una sección con su propia carga, vacío y error: si una falla, la otra sigue visible. */
+function SourceSection({
+  id,
+  title,
+  isPending,
+  isError,
+  errorMessage,
+  emptyMessage,
+  isEmpty,
+  onRetry,
+  children,
+}: {
+  id: string
+  title: string
+  isPending: boolean
+  isError: boolean
+  errorMessage: string
+  emptyMessage: string
+  isEmpty: boolean
+  onRetry: () => void
+  children: ReactNode
+}) {
+  return (
+    <section aria-labelledby={id} className="flex flex-col gap-4">
+      <h2 id={id} className="text-xl font-semibold">
+        {title}
+      </h2>
+      {isPending ? <LoadingState /> : null}
+      {isError ? <ErrorState message={errorMessage} onRetry={onRetry} /> : null}
+      {!isPending && !isError && isEmpty ? <EmptyState title={emptyMessage} /> : null}
+      {children}
+    </section>
+  )
+}
+
 export function SourcesPage() {
-  const { data, isPending, isError, refetch } = useQuery({
-    queryKey: ['foods', 'sources'],
-    queryFn: fetchSources,
-  })
+  const foods = useQuery({ queryKey: ['foods', 'sources'], queryFn: fetchSources })
+  const exercises = useQuery({ queryKey: ['exercises', 'sources'], queryFn: fetchExerciseSources })
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-6">
       <h1 className="text-2xl font-semibold tracking-tight">{es.foods.sources.title}</h1>
       <p className="text-muted">{es.foods.sources.intro}</p>
-      {isPending ? <LoadingState /> : null}
-      {isError ? (
-        <ErrorState message={es.foods.sources.error} onRetry={() => void refetch()} />
-      ) : null}
-      {data && data.length === 0 ? <EmptyState title={es.foods.sources.empty} /> : null}
-      {data && data.length > 0
-        ? data.map((source) => <SourceCard key={source.id} source={source} />)
-        : null}
+
+      <SourceSection
+        id="fuentes-alimentos"
+        title={es.exercises.sources.foodsTitle}
+        isPending={foods.isPending}
+        isError={foods.isError}
+        errorMessage={es.foods.sources.error}
+        emptyMessage={es.foods.sources.empty}
+        isEmpty={foods.data?.length === 0}
+        onRetry={() => void foods.refetch()}
+      >
+        {foods.data?.map((source) => (
+          <SourceCard
+            key={source.id}
+            source={source}
+            countLabel={es.foods.title}
+            count={es.foods.sources.foodCount(source.food_count)}
+          />
+        ))}
+      </SourceSection>
+
+      <SourceSection
+        id="fuentes-ejercicios"
+        title={es.exercises.sources.exercisesTitle}
+        isPending={exercises.isPending}
+        isError={exercises.isError}
+        errorMessage={es.exercises.sources.error}
+        emptyMessage={es.exercises.sources.empty}
+        isEmpty={exercises.data?.length === 0}
+        onRetry={() => void exercises.refetch()}
+      >
+        {exercises.data?.map((source) => (
+          <SourceCard
+            key={source.id}
+            source={source}
+            countLabel={es.exercises.title}
+            count={es.exercises.sources.exerciseCount(source.exercise_count)}
+          />
+        ))}
+      </SourceSection>
     </div>
   )
 }

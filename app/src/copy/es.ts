@@ -237,7 +237,7 @@ export const es = {
     },
     sources: {
       title: 'Fuentes y licencias',
-      intro: 'El catálogo se armó con datos de estas fuentes. Cada una tiene su licencia.',
+      intro: 'Los catálogos se armaron con datos de estas fuentes. Cada una tiene su licencia.',
       license: 'Licencia',
       attribution: 'Atribución',
       lastImport: 'Última importación',
