@@ -78,8 +78,8 @@ El máximo de 30 ejercicios por rutina lo impone `create_routine`/`update_routin
 | Desde | Hacia | Quién | Condición |
 |---|---|---|---|
 | (nada) | `planned` | `plan_session` | fecha de hoy o futura |
-| (nada) | `in_progress` | `start_session` | fecha de hoy o pasada; sin otra sesión en curso |
-| `planned` | `in_progress` | `start_session` | fecha de hoy o anterior; sin otra en curso |
+| (nada) | `in_progress` | `start_session`, `start_session_from_routine` | fecha de hoy o pasada; sin otra sesión en curso |
+| `planned` | `in_progress` | `start_planned_session` | fecha de hoy o anterior; sin otra en curso |
 | `planned` | `planned` | `reschedule_session`, `set_session_routine` | nueva fecha de hoy o futura |
 | `planned` | `cancelled` | `cancel_session` | |
 | `cancelled` | `planned` | `reschedule_session` | nueva fecha de hoy o futura (volver a planificar) |

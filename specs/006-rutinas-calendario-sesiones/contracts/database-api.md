@@ -51,14 +51,23 @@
 - **Errores**: `invalid_transition` (`in_progress` o `completed`), `not_found`.
 - **Requisitos**: FR-025.
 
-### `start_session(session_id uuid, routine_id uuid, session_date date, request_id uuid, client_timezone text) → jsonb`
+### `start_session(session_date date, request_id uuid, client_timezone text) → jsonb`
 
-- **Efecto**:
-  - Con `session_id`: pasa una sesión `planned` de fecha de hoy o anterior a `in_progress` (conserva su fecha y su plan).
-  - Sin `session_id`: crea una sesión `in_progress` en `session_date` (por omisión hoy; no puede ser futura), vacía o con el plan de `routine_id`.
-  - Fija `started_at`. Devuelve `{ id, session_date, status, revision }`. Idempotente por `request_id` (cuando crea) y por el estado (cuando inicia una planificada).
-- **Errores**: `session_in_progress` (ya hay otra abierta; el mensaje lleva su identificador para ofrecer continuarla, FR-009), `invalid_date` (futura), `invalid_transition`, `not_found`.
+- **Efecto**: crea una sesión **vacía** `in_progress` en `session_date` (por omisión hoy; no puede ser futura) y fija `started_at`. Devuelve `{ id, session_date, status, revision }`. Idempotente por `request_id`.
+- **Errores**: `session_in_progress` (ya hay otra abierta; el mensaje lleva su identificador para ofrecer continuarla, FR-009), `invalid_date` (futura), `request_required`.
 - **Requisitos**: FR-007, FR-009, FR-010, FR-011.
+
+### `start_session_from_routine(routine_id uuid, session_date date, request_id uuid, client_timezone text) → jsonb`
+
+- **Efecto**: igual que `start_session`, pero la sesión nace con el plan de la rutina (copia de sus ítems con las instantáneas refrescadas, como en `plan_session`). Idempotente por `request_id`.
+- **Errores**: los de `start_session` y `not_found` (rutina ajena o inexistente).
+- **Requisitos**: FR-007, FR-015, FR-037.
+
+### `start_planned_session(id uuid, client_timezone text) → jsonb`
+
+- **Efecto**: pasa una sesión `planned` de fecha de hoy o anterior a `in_progress`, conservando su fecha y su plan, y fija `started_at`. Si la sesión ya está `in_progress` devuelve su estado actual sin cambiar nada (idempotente).
+- **Errores**: `session_in_progress` (otra distinta ya está abierta), `invalid_date` (la fecha es futura: primero hay que reprogramarla), `invalid_transition` (cancelada o realizada), `not_found`.
+- **Requisitos**: FR-009, FR-026.
 
 ### `save_session(id uuid, payload jsonb, expected_revision integer, finish boolean) → jsonb`
 

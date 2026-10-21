@@ -28,7 +28,7 @@ Enfoque técnico (detalle y alternativas en [research.md](research.md)): las mis
 
 **Constraints**: sin servicios de terceros; sin modo offline (borrador local hasta confirmación del servidor); los datos faltantes nunca se completan con supuestos; plan y realizado separados; el pasado no se reescribe; lenguaje neutral verificable; sin gráficos, sin calorías, sin recomendaciones.
 
-**Scale/Scope**: 8 pantallas nuevas (inicio con calendario, día, sesión con su editor, mis rutinas, nueva/editar rutina, detalle de rutina, historia de un ejercicio) y 7 tablas; 10 funciones públicas.
+**Scale/Scope**: 8 pantallas nuevas (inicio con calendario, día, sesión con su editor, mis rutinas, nueva/editar rutina, detalle de rutina, historia de un ejercicio) y 7 tablas; 12 funciones públicas.
 
 ## Constitution Check
 
@@ -79,7 +79,8 @@ app/src/features/training/
 ├── calendar.ts               # puras: cuadrícula del mes, nombres accesibles, rangos de fechas
 ├── useRoutines.ts · useRoutine.ts
 ├── useCalendarMonth.ts · useSessionsOfDay.ts · useSession.ts
-├── useSessionEditor.ts       # estado del editor, borrador local, autoguardado, revisión y conflicto (hook probado)
+├── sessionEditorState.ts     # puras: reductor del editor (agregar, quitar, reordenar, validar, diferencias con el plan)
+├── useSessionEditor.ts       # hook: borrador local, autoguardado, revisión y conflicto (probado)
 ├── useExerciseHistory.ts
 ├── TrainingHomePage.tsx · CalendarMonth.tsx · TodayPanel.tsx
 ├── DayPage.tsx
