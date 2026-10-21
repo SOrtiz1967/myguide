@@ -4,7 +4,7 @@ Basado en la Constitution v1.2.1. Este documento solo define el corte y el conte
 
 **Contexto del MVP:** el MVP lo usa solo el autor. Las reglas de privacidad y autenticación de la Constitution se mantienen igual. Lo que se pospone es el trabajo orientado a usuarios externos (ver spec 011).
 
-**Orden de implementación:** 001 → 002 → 003 → 004 → 005 → 006 → 007 → 008 → 009 → 010 → 011
+**Orden de implementación:** 001 → 002 → 003 → 004 → 005 → 006 → 007 → 008 → 009 → 010 → 011. La spec 012 (gráficos de progreso de entrenamiento) está redactada pero se desarrolla recién después de la 006 y cuando el autor lo decida; su número respeta el final del roadmap.
 
 ## Ola 1: base
 
@@ -57,6 +57,7 @@ Basado en la Constitution v1.2.1. Este documento solo define el corte y el conte
 - Mover sesiones sin perder historial ni duplicar; snapshots de ejercicios.
 - Persistencia de borrador de una sesión activa.
 - Principios: II, V, VI.
+- **Estado (2026-10-21): especificada y aclarada** (`specs/006-rutinas-calendario-sesiones/spec.md`), todavía sin plan. Decisiones del autor: las rutinas son un catálogo de entrenamientos sin días asignados ni repetición automática (cada día se elige cuál toca), el esfuerzo percibido es uno por ejercicio de la sesión (para todas sus series en conjunto) y los gráficos quedan fuera (spec 012).
 
 ### 007 — Sueño, pasos y actividad
 - Registro manual con fuente y fecha.
@@ -92,6 +93,14 @@ Basado en la Constitution v1.2.1. Este documento solo define el corte y el conte
 - Decisiones pendientes #7 y #9.
 - Obligatoria antes de publicar con usuarios reales; no bloquea el uso personal del MVP.
 - Principios: I, IX.
+
+### 012 — Gráficos de progreso de entrenamiento
+- Evolución de un ejercicio por sesión (medidas según su tipo de medición), elección de período y comparación de dos períodos, con unidades, fechas y cantidad de datos.
+- Resumen de sesiones realizadas por semana y por mes, sin metas ni rachas.
+- Sin conclusiones firmes a partir de una sola sesión; datos faltantes como faltantes; sin recomendaciones.
+- Depende de la 006. Comparte lenguaje visual con los gráficos de la 010, pero esta spec solo trata de entrenamiento.
+- Principios: II, IV, V, VI.
+- **Estado (2026-10-21): especificada (`specs/012-graficos-progreso-entrenamiento/spec.md`) y dejada para después**, sin rama ni plan.
 
 ## Notas de la spec 001 (cerrada el 2026-10-17)
 
