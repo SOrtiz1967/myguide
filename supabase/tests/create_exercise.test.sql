@@ -84,8 +84,8 @@ select throws_ilike(
   '%invalid_exercise:too_many_muscles:primary_muscles%', 'más de 5 músculos principales se rechazan'
 );
 select throws_ilike(
-  $$ select public.create_exercise('{"name": "X", "measurement_type": "duration", "secondary_muscles": ["chest","lats","traps","neck","calves","biceps","triceps","glutes","forearms"]}'::jsonb, gen_random_uuid()) $$,
-  '%invalid_exercise:too_many_muscles:secondary_muscles%', 'más de 8 músculos secundarios se rechazan'
+  $$ select public.create_exercise('{"name": "X", "measurement_type": "duration", "secondary_muscles": ["chest","lats","traps","neck","calves","biceps","triceps","glutes","forearms","abdominals","quadriceps"]}'::jsonb, gen_random_uuid()) $$,
+  '%invalid_exercise:too_many_muscles:secondary_muscles%', 'más de 10 músculos secundarios se rechazan'
 );
 select throws_ilike(
   $$ select public.create_exercise('{"name": "X", "measurement_type": "duration", "primary_muscles": ["chest"], "secondary_muscles": ["chest"]}'::jsonb, gen_random_uuid()) $$,

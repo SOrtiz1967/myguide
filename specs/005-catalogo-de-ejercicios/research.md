@@ -101,7 +101,7 @@ Versión analizada de free-exercise-db: commit `f00c92c7dcf1216a928a52c3706c7ce8
 ## Decisión 6: modelo de datos
 
 - **Decisión**: la misma forma que `foods`: **una tabla `exercises`** para el catálogo (`user_id` nulo) y los ejercicios propios, una tabla `exercise_sources` de solo lectura y un informe de cargas `private.exercise_import_runs`. Músculos y alias en **arreglos** (`text[]`) con restricciones, sin tablas intermedias.
-- **Por qué arreglos y no tablas de unión**: los músculos y los alias se leen siempre junto con el ejercicio, nunca se consultan sueltos y son pocos (hasta 8 y 10). Un arreglo con `check (primary_muscles <@ lista)` simplifica las funciones de crear, editar y copiar, que quedan atómicas con una sola fila. La búsqueda por músculo usa el operador de intersección de arreglos.
+- **Por qué arreglos y no tablas de unión**: los músculos y los alias se leen siempre junto con el ejercicio, nunca se consultan sueltos y son pocos (hasta 10 y 10). Un arreglo con `check (primary_muscles <@ lista)` simplifica las funciones de crear, editar y copiar, que quedan atómicas con una sola fila. La búsqueda por músculo usa el operador de intersección de arreglos.
 - **Fuentes**: tabla propia `exercise_sources` (no se generaliza `food_sources`), para no tocar nada de la spec 002. La pantalla de fuentes junta las dos listas.
 - **Cambios entre fuentes y copias**: `based_on_exercise_id` con `on delete set null`, igual que `based_on_food_id`.
 - **Alternativa**: generalizar `food_sources` a `catalog_sources` y renombrar (toca migraciones, funciones, pruebas y pantallas de la 002 por un beneficio mínimo).
@@ -152,4 +152,24 @@ Versión analizada de free-exercise-db: commit `f00c92c7dcf1216a928a52c3706c7ce8
 
 ## Resultados de prototipos
 
-*(Se completa durante la implementación, tareas T001 y siguientes.)*
+### Carga real en la base local (T048, 2026-10-21)
+
+Migraciones aplicadas con `supabase db reset --local`, luego `import:ejercicios-muestra` e `import:ejercicios`.
+
+| Fuente | Ejercicios |
+|---|---|
+| `muestra-desarrollo-ejercicios` (solo desarrollo) | 31 |
+| `myguide-base` | 21 |
+| `free-exercise-db` | 876 |
+
+- **Primera carga de free-exercise-db**: 876 recibidos, 876 válidos, 0 duplicados, 0 recortados, 876 creados, 0 omitidos (tras el ajuste descrito abajo).
+- **Repetición**: 0 creados, 876 actualizados, 0 duplicados, 0 omitidos. La carga es idempotente.
+- **Tamaño** (todas las fuentes): tabla 2.192 kB, índices 2.592 kB, total 4.784 kB.
+- **Tipo de medición** (free-exercise-db): `reps_weight` 576, `reps_bodyweight` 144, `duration` 138, `distance_duration` 18.
+- **Datos faltantes**, mostrados como faltantes y no completados: 77 sin equipamiento, 5 sin descripción, 0 sin músculos.
+- **Traducción**: 876 de 876 con nombre y pasos en español, todas `machine_translated`; ninguna `reviewed`, así que ninguna se protege de una recarga.
+- Informe completo: `supabase/import/out/informe-ejercicios-free-exercise-db.json` (no se versiona).
+
+**Hallazgo: tope de músculos secundarios.** La primera carga omitió 7 ejercicios con `invalid_muscle`: la restricción `exercises_secondary_muscles_check` permitía 8 y la fuente trae hasta 10. En lugar de recortar datos de la fuente, se subió el tope a **10** en la base, la función `create_exercise`, el esquema del cliente, `exercise-lists.ts`, las pruebas y los documentos. Los músculos principales siguen en 5 como máximo.
+
+Nota: en la base de desarrollo algunos nombres se repiten entre fuentes porque la muestra de desarrollo convive con las fuentes reales; no ocurre en producción, donde la muestra no se carga.

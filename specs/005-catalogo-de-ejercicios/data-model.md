@@ -48,7 +48,7 @@ Se imponen con restricciones `check` sobre los códigos (ver `research.md`, Deci
 | `aliases` | text[], no nulo | sinónimos (hasta 10, cada uno de 1 a 80 caracteres, sin repetir el nombre ni entre sí). Por defecto `{}`. El límite de 10 es de la base (los importados pueden traer varios); el formulario ofrece hasta 5 «Otros nombres» |
 | `measurement_type` | text, no nulo | uno de los cuatro tipos |
 | `primary_muscles` | text[], no nulo | códigos de músculo; hasta 5; por defecto `{}` (= «sin dato») |
-| `secondary_muscles` | text[], no nulo | códigos de músculo; hasta 8; sin repetir ninguno de los principales; por defecto `{}` |
+| `secondary_muscles` | text[], no nulo | códigos de músculo; hasta 10; sin repetir ninguno de los principales; por defecto `{}` |
 | `equipment` | text, nulo | código de equipamiento; `null` = «sin dato» |
 | `description` | text, nulo | pasos o descripción, hasta 4.000 caracteres; los pasos se separan con saltos de línea |
 | `description_status` | text, nulo | estado de la descripción; nulo si y solo si no hay descripción |

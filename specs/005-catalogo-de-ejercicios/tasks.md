@@ -55,7 +55,7 @@ description: "Lista de tareas de la spec 005: catálogo de ejercicios"
 
 - [X] T004 Prueba pgTAP en `supabase/tests/exercises_schema.test.sql` (escribir primero, debe fallar). Debe cubrir `data-model.md`:
   - columnas y tipos; `measurement_type` solo `reps_weight`, `reps_bodyweight`, `duration` o `distance_duration`; `name_status` y `description_status` solo `original`, `machine_translated` o `reviewed`;
-  - `primary_muscles`, `secondary_muscles` y `equipment` solo con los códigos de las listas cerradas (cada código se acepta y uno inventado se rechaza); principales y secundarios sin elementos en común; hasta 5 principales y 8 secundarios;
+  - `primary_muscles`, `secondary_muscles` y `equipment` solo con los códigos de las listas cerradas (cada código se acepta y uno inventado se rechaza); principales y secundarios sin elementos en común; hasta 5 principales y 10 secundarios;
   - `origin = 'imported'` ⇔ `user_id` nulo y fuente e identificador presentes; `origin = 'own'` ⇔ `user_id` presente y sin fuente; `original_name` nulo en lo propio;
   - nombre de 1 a 120 caracteres y sin espacios en los extremos; descripción de hasta 4.000 caracteres; `description_status` nulo si y solo si no hay descripción;
   - hasta 10 alias de 1 a 80 caracteres (`private.valid_aliases`);
@@ -178,7 +178,7 @@ description: "Lista de tareas de la spec 005: catálogo de ejercicios"
 - [X] T045 [US5] Traducciones, parte 2 (segunda cuarta parte) en `supabase/import/data/ejercicios-es.json`, con el mismo criterio de T044
 - [X] T046 [US5] Traducciones, parte 3 (tercera cuarta parte) en `supabase/import/data/ejercicios-es.json`, con el mismo criterio de T044
 - [X] T047 [US5] Traducciones, parte 4 (última cuarta parte) en `supabase/import/data/ejercicios-es.json`, con el mismo criterio de T044. Con esta parte se pone `TRADUCCION_COMPLETA = true` y la prueba de cobertura total queda en verde
-- [ ] T048 [US5] Carga real en la base local: aplicar migraciones, ejecutar `import:ejercicios-muestra` y `import:ejercicios` (ambas fuentes), repetir la segunda para comprobar 0 duplicados y registrar en `research.md`, sección «Resultados de prototipos»: cantidades creadas y omitidas con sus motivos, tamaño de la tabla y del índice, y el informe de la carga
+- [X] T048 [US5] Carga real en la base local: aplicar migraciones, ejecutar `import:ejercicios-muestra` y `import:ejercicios` (ambas fuentes), repetir la segunda para comprobar 0 duplicados y registrar en `research.md`, sección «Resultados de prototipos»: cantidades creadas y omitidas con sus motivos, tamaño de la tabla y del índice, y el informe de la carga
 
 **Checkpoint**: el catálogo completo está cargado y la carga es repetible. Escenarios 27 y 28.
 

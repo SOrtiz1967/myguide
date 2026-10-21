@@ -56,4 +56,4 @@ export const MAX_ALIAS = 80
 export const MAX_ALIASES = 10
 export const MAX_DESCRIPTION = 4000
 export const MAX_PRIMARY_MUSCLES = 5
-export const MAX_SECONDARY_MUSCLES = 8
+export const MAX_SECONDARY_MUSCLES = 10

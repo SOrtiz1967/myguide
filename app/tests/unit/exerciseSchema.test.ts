@@ -65,7 +65,7 @@ describe('lo obligatorio', () => {
 })
 
 describe('músculos y equipamiento (listas cerradas)', () => {
-  it('hasta 5 principales y 8 secundarios', () => {
+  it('hasta 5 principales y 10 secundarios', () => {
     expect(
       messages(valid({ primary_muscles: ['chest', 'lats', 'traps', 'neck', 'calves'] })),
     ).toEqual([])
@@ -85,6 +85,8 @@ describe('músculos y equipamiento (listas cerradas)', () => {
             'triceps',
             'glutes',
             'forearms',
+            'abdominals',
+            'quadriceps',
           ],
         }),
       ),

@@ -360,7 +360,7 @@ export const es = {
       nameTooLong: 'El nombre puede tener hasta 120 caracteres.',
       measurementRequired: 'Elige cómo se registra el ejercicio.',
       tooManyPrimary: 'Puedes elegir hasta 5 músculos principales.',
-      tooManySecondary: 'Puedes elegir hasta 8 músculos secundarios.',
+      tooManySecondary: 'Puedes elegir hasta 10 músculos secundarios.',
       muscleRepeated: 'Un músculo no puede ser principal y secundario a la vez.',
       descriptionTooLong: 'La descripción puede tener hasta 4.000 caracteres.',
       tooManyAliases: 'Puedes agregar hasta 5 otros nombres.',

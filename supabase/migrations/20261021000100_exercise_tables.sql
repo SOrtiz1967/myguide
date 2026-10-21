@@ -93,7 +93,7 @@ create table public.exercises (
       'abdominals', 'abductors', 'adductors', 'biceps', 'calves', 'chest', 'forearms', 'glutes', 'hamstrings',
       'lats', 'lower back', 'middle back', 'neck', 'quadriceps', 'shoulders', 'traps', 'triceps', 'full_body'
     ]::text[]
-    and cardinality(secondary_muscles) <= 8
+    and cardinality(secondary_muscles) <= 10
   ),
   constraint exercises_muscles_disjoint_check check (not (primary_muscles && secondary_muscles)),
   constraint exercises_equipment_check check (

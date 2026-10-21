@@ -147,8 +147,8 @@ select throws_ilike(
   '%violates check constraint%', 'más de 5 músculos principales se rechazan'
 );
 select throws_ilike(
-  format($$ select pg_temp.own(%L, 'secondary_muscles', %L) $$, :'uid', $q$array['chest','lats','traps','neck','calves','biceps','triceps','glutes','forearms']$q$),
-  '%violates check constraint%', 'más de 8 músculos secundarios se rechazan'
+  format($$ select pg_temp.own(%L, 'secondary_muscles', %L) $$, :'uid', $q$array['chest','lats','traps','neck','calves','biceps','triceps','glutes','forearms','abdominals','quadriceps']$q$),
+  '%violates check constraint%', 'más de 10 músculos secundarios se rechazan'
 );
 select throws_ilike(
   format($$ select pg_temp.own(%L, 'primary_muscles, secondary_muscles', %L) $$, :'uid', $q$array['chest'], array['chest','triceps']$q$),

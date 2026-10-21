@@ -105,7 +105,7 @@ begin
   if cardinality(v_primary) > 5 then
     raise exception 'invalid_exercise:too_many_muscles:primary_muscles' using errcode = '22023';
   end if;
-  if cardinality(v_secondary) > 8 then
+  if cardinality(v_secondary) > 10 then
     raise exception 'invalid_exercise:too_many_muscles:secondary_muscles' using errcode = '22023';
   end if;
   if v_primary && v_secondary then

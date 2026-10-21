@@ -12,7 +12,7 @@ export const MAX_ALIAS = 80
 /** El formulario ofrece hasta 5 «otros nombres»; la base admite 10 (los importados pueden traer más). */
 export const MAX_FORM_ALIASES = 5
 export const MAX_PRIMARY = 5
-export const MAX_SECONDARY = 8
+export const MAX_SECONDARY = 10
 
 const e = es.exercises.errors
 
