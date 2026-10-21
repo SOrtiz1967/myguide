@@ -1,6 +1,7 @@
 import type { MeasurementType } from '../exercises/exerciseLists'
 import type { SessionExercise, SessionSet } from './api'
 import { MAX_EXERCISES, MAX_SETS } from './limits'
+import { durationInput, numberInput } from './trainingText'
 import {
   emptySetInput,
   type SessionDraft,
@@ -128,20 +129,6 @@ export function editorReducer(state: SessionDraft, action: EditorAction): Sessio
 }
 
 // --- Del servidor al formulario -------------------------------------------------------------------------------------
-
-/** 62.5 → '62,5': como lo escribiría la persona. */
-const numberInput = (value: number | null): string =>
-  value === null ? '' : String(value).replace('.', ',')
-
-/** 90 → '1:30'; 3930 → '1:05:30' (los formatos que acepta `parseDuration`). */
-export function durationInput(totalSeconds: number | null): string {
-  if (totalSeconds === null) return ''
-  const hours = Math.floor(totalSeconds / 3600)
-  const minutes = Math.floor((totalSeconds % 3600) / 60)
-  const seconds = totalSeconds % 60
-  const pad = (n: number) => String(n).padStart(2, '0')
-  return hours > 0 ? `${hours}:${pad(minutes)}:${pad(seconds)}` : `${minutes}:${pad(seconds)}`
-}
 
 export function setInputFromValues(
   set: Pick<SessionSet, 'reps' | 'weight_kg' | 'duration_s' | 'distance_km'>,

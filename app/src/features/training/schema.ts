@@ -14,7 +14,11 @@ import {
   MAX_WEIGHT_KG,
   MIN_EFFORT,
 } from './limits'
+import type { Routine } from './api'
 import {
+  durationInput,
+  formatTargets,
+  numberInput,
   parseDecimal,
   parseDuration,
   setFields,
@@ -117,6 +121,10 @@ const routineItemSchema = z.object({
   /** «mm:ss», «h:mm:ss» o segundos. */
   target_duration: z.string(),
   target_distance_km: z.string(),
+  /** 'missing' (el ejercicio ya no existe) o 'type_changed' (cambió su tipo de medición): pide revisar. */
+  flag: z.string().optional(),
+  /** Los objetivos de antes, como texto, cuando cambió el tipo de medición (no se descartan en silencio). */
+  review: z.string().optional(),
 })
 
 /** Los campos de objetivo que admite cada tipo de medición (los mismos que una serie). */
@@ -157,6 +165,7 @@ export const routineFormSchema = z
 
     values.exercises.forEach((item, index) => {
       const at = (field: string) => ['exercises', index, field]
+      if (item.exercise_id.trim() === '') issue(at('exercise_id'), re.exercise_not_found)
       if (
         !/^\d+$/.test(item.sets.trim()) ||
         Number(item.sets) < 1 ||
@@ -215,6 +224,39 @@ export const routineFormSchema = z
   }))
 
 export type RoutineFormInput = z.input<typeof routineFormSchema>
+export type RoutineFormItem = RoutineFormInput['exercises'][number]
+
+/** El borrador local de una rutina guarda exactamente lo que se escribe en el formulario. */
+export const routineDraftSchema = z.object({
+  name: z.string(),
+  exercises: z.array(routineItemSchema),
+})
+
+/** Los valores del formulario para editar una rutina ya guardada, con los avisos de revisión por ítem. */
+export function routineToFormValues(routine: Routine): RoutineFormInput {
+  return {
+    name: routine.name,
+    exercises: [...routine.routine_exercises]
+      .sort((a, b) => a.position - b.position)
+      .map((item) => {
+        const current = item.exercise
+        const changed = current !== null && current.measurement_type !== item.measurement_type
+        return {
+          exercise_id: current?.id ?? '',
+          exercise_name: current?.name ?? item.exercise_name,
+          measurement_type: current?.measurement_type ?? item.measurement_type,
+          sets: String(item.sets),
+          // Si cambió el tipo, los objetivos de antes ya no corresponden: se muestran aparte para revisarlos.
+          target_reps: changed ? '' : numberInput(item.target_reps),
+          target_weight_kg: changed ? '' : numberInput(item.target_weight_kg),
+          target_duration: changed ? '' : durationInput(item.target_duration_s),
+          target_distance_km: changed ? '' : numberInput(item.target_distance_km),
+          flag: current === null ? 'missing' : changed ? 'type_changed' : '',
+          review: changed ? formatTargets(item.measurement_type, item) : '',
+        }
+      }),
+  }
+}
 
 export const emptyRoutineForm = (): RoutineFormInput => ({ name: '', exercises: [] })
 

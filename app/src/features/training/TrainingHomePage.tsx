@@ -96,7 +96,12 @@ export function TrainingHomePage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-semibold tracking-tight">{t.title}</h1>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h1 className="text-2xl font-semibold tracking-tight">{t.title}</h1>
+        <Link to="/entrenamiento/rutinas" className="btn-secondary">
+          {t.routines.title}
+        </Link>
+      </div>
 
       <section aria-labelledby="hoy-titulo" className="flex flex-col gap-3">
         <h2 id="hoy-titulo" className="text-xl font-semibold">

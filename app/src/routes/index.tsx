@@ -19,6 +19,9 @@ import { DayPage } from '../features/meals/DayPage'
 import { EntryDetailPage } from '../features/meals/EntryDetailPage'
 import { MealsRedirect } from '../features/meals/MealsRedirect'
 import { ProfilePage } from '../features/profile/ProfilePage'
+import { RoutineDetailPage } from '../features/training/RoutineDetailPage'
+import { RoutineFormPage } from '../features/training/RoutineFormPage'
+import { RoutinesPage } from '../features/training/RoutinesPage'
 import { SessionPage } from '../features/training/SessionPage'
 import { TrainingHomePage } from '../features/training/TrainingHomePage'
 import { AppLayout } from './AppLayout'
@@ -61,6 +64,10 @@ export const routes: RouteObject[] = [
           { path: '/ejercicios/:id/editar', element: <ExerciseEditPage /> },
           { path: '/entrenamiento', element: <TrainingHomePage /> },
           { path: '/entrenamiento/sesion/:id', element: <SessionPage /> },
+          { path: '/entrenamiento/rutinas', element: <RoutinesPage /> },
+          { path: '/entrenamiento/rutinas/nueva', element: <RoutineFormPage /> },
+          { path: '/entrenamiento/rutinas/:id', element: <RoutineDetailPage /> },
+          { path: '/entrenamiento/rutinas/:id/editar', element: <RoutineFormPage /> },
           { path: '/fuentes', element: <SourcesPage /> },
         ],
       },

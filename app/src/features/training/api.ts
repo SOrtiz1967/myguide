@@ -3,7 +3,7 @@ import { isNetworkError } from '../../lib/errors'
 import { WriteError } from '../../lib/mutation'
 import { supabase } from '../../lib/supabase'
 import type { MeasurementType } from '../exercises/exerciseLists'
-import type { SessionPayload } from './schema'
+import type { RoutinePayload, SessionPayload } from './schema'
 import type { SessionStatus } from './trainingText'
 
 // Acceso a datos de rutinas y sesiones (spec 006). Las escrituras pasan por funciones del servidor
@@ -292,4 +292,62 @@ export async function deleteSession(id: string): Promise<void> {
   const { data, error } = await supabase.from('workout_sessions').delete().eq('id', id).select('id')
   if (error) throw translateError(error)
   if (!data || data.length === 0) throw new WriteError(false, es.training.errors.notFound)
+}
+
+// --- Rutinas -----------------------------------------------------------------------------------------------------------
+
+const ROUTINE_COLUMNS =
+  'id, name, created_at, updated_at, routine_exercises(*, exercise:exercises(id, name, measurement_type))'
+
+function sortRoutine(routine: Routine): Routine {
+  return {
+    ...routine,
+    routine_exercises: [...routine.routine_exercises].sort((a, b) => a.position - b.position),
+  }
+}
+
+/** Crea una rutina, de forma atómica e idempotente por `requestId`. Devuelve su identificador. */
+export function createRoutine(payload: RoutinePayload, requestId: string): Promise<string> {
+  return callRpc<string>('create_routine', { routine: payload, request_id: requestId })
+}
+
+/** Reemplaza el nombre y los ejercicios de una rutina propia. No toca ninguna sesión. */
+export function updateRoutine(id: string, payload: RoutinePayload): Promise<string> {
+  return callRpc<string>('update_routine', { id, routine: payload })
+}
+
+/** Crea una copia independiente de una rutina propia. */
+export function duplicateRoutine(id: string, requestId: string): Promise<string> {
+  return callRpc<string>('duplicate_routine', { id, request_id: requestId })
+}
+
+/** Elimina una rutina propia; las sesiones creadas con ella conservan su plan (borrado directo por RLS). */
+export async function deleteRoutine(id: string): Promise<void> {
+  if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+    throw new WriteError(true, es.errors.offline)
+  }
+  const { data, error } = await supabase.from('routines').delete().eq('id', id).select('id')
+  if (error) throw translateError(error)
+  if (!data || data.length === 0) throw new WriteError(false, es.training.errors.notFound)
+}
+
+/** Las rutinas de la cuenta, por nombre, con sus ejercicios y el ejercicio vigente de cada ítem. */
+export async function fetchRoutines(): Promise<Routine[]> {
+  const { data, error } = await supabase.from('routines').select(ROUTINE_COLUMNS).order('name')
+  if (error) throw error
+  return ((data ?? []) as unknown as Routine[]).map(sortRoutine)
+}
+
+/** Una rutina, o `null` si no existe o es ajena. */
+export async function fetchRoutine(id: string): Promise<Routine | null> {
+  const { data, error } = await supabase
+    .from('routines')
+    .select(ROUTINE_COLUMNS)
+    .eq('id', id)
+    .maybeSingle()
+  if (error) {
+    if (error.code === INVALID_TEXT_REPRESENTATION) return null
+    throw error
+  }
+  return data ? sortRoutine(data as unknown as Routine) : null
 }

@@ -86,6 +86,40 @@ export function summarizeSet(type: MeasurementType, set: SetValues): string {
     .join(' · ')
 }
 
+/** 62.5 → '62,5': como lo escribiría la persona. */
+export const numberInput = (value: number | null | undefined): string =>
+  value === null || value === undefined ? '' : String(value).replace('.', ',')
+
+/** 90 → '1:30'; 3930 → '1:05:30' (los formatos que acepta `parseDuration`). */
+export function durationInput(totalSeconds: number | null | undefined): string {
+  if (totalSeconds === null || totalSeconds === undefined) return ''
+  const hours = Math.floor(totalSeconds / 3600)
+  const minutes = Math.floor((totalSeconds % 3600) / 60)
+  const seconds = totalSeconds % 60
+  return hours > 0 ? `${hours}:${pad(minutes)}:${pad(seconds)}` : `${minutes}:${pad(seconds)}`
+}
+
+export interface TargetValues {
+  target_reps: number | null
+  target_weight_kg: number | null
+  target_duration_s: number | null
+  target_distance_km: number | null
+}
+
+/** Los objetivos presentes de un tipo de medición, con su unidad: '8 repeticiones · 60 kg' (vacío si no hay). */
+export function formatTargets(type: MeasurementType, targets: TargetValues): string {
+  const values: Record<SetField, number | null> = {
+    reps: targets.target_reps,
+    weight_kg: targets.target_weight_kg,
+    duration_s: targets.target_duration_s,
+    distance_km: targets.target_distance_km,
+  }
+  return setFields(type)
+    .filter((field) => values[field] !== null)
+    .map((field) => formatValue(field, values[field]))
+    .join(' · ')
+}
+
 export function setsCountLabel(count: number): string {
   if (count <= 0) return t.noSets
   return count === 1 ? '1 serie' : `${count} series`
