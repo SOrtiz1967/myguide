@@ -63,10 +63,10 @@
 - **Errores**: los de `start_session` y `not_found` (rutina ajena o inexistente).
 - **Requisitos**: FR-007, FR-015, FR-037.
 
-### `start_planned_session(id uuid, client_timezone text) → jsonb`
+### `start_planned_session(id uuid, session_date date, request_id uuid, client_timezone text) → jsonb`
 
-- **Efecto**: pasa una sesión `planned` de fecha de hoy o anterior a `in_progress`, conservando su fecha y su plan, y fija `started_at`. Si la sesión ya está `in_progress` devuelve su estado actual sin cambiar nada (idempotente).
-- **Errores**: `session_in_progress` (otra distinta ya está abierta), `invalid_date` (la fecha es futura: primero hay que reprogramarla), `invalid_transition` (cancelada o realizada), `not_found`.
+- **Efecto**: pasa una sesión `planned` de fecha de hoy o anterior a `in_progress`, conservando su plan, y fija `started_at`. `session_date` es el día en que se hizo: nulo significa hoy; no puede ser futuro. Si difiere de la fecha planificada, la sesión pasa a ese día, se agrega una fila a `session_date_changes`, sube `rescheduled_count` y queda el recorrido de fechas (no se pierde la fecha original). Si la sesión ya está `in_progress` devuelve su estado actual sin cambiar nada (idempotente), y el movimiento se repite de forma idempotente por `request_id`.
+- **Errores**: `session_in_progress` (otra distinta ya está abierta), `invalid_date` (la fecha planificada o la elegida es futura: primero hay que reprogramar), `invalid_transition` (cancelada o realizada), `not_found`, `request_required`.
 - **Requisitos**: FR-009, FR-026.
 
 ### `save_session(id uuid, payload jsonb, expected_revision integer, finish boolean) → jsonb`
@@ -98,7 +98,7 @@
   - El orden de `exercises` y de `sets` es el orden en la sesión.
   - Un ejercicio cuyo `id` ya existe en la sesión **conserva su instantánea**; uno nuevo toma nombre y tipo de medición del ejercicio vigente **visible** (`exercise_not_found` si no lo es). Una fila que no está en el payload se elimina.
   - Una serie sin ningún valor se descarta; las series deben llevar solo los valores del tipo de medición del ejercicio.
-- **Errores**: `stale_revision`, `invalid_transition`, `too_many_exercises` (más de 30), `too_many_sets` (más de 20), `invalid_set` (valor fuera de rango o que no corresponde al tipo), `invalid_effort`, `invalid_plan_item`, `note_too_long`, `exercise_not_found`, `not_found`.
+- **Errores**: `stale_revision`, `invalid_transition`, `duplicate_id` (el `id` de un ejercicio ya existe en otra sesión o cuenta: se rechaza sin revelar nada), `too_many_exercises` (más de 30), `too_many_sets` (más de 20), `invalid_set` (valor fuera de rango o que no corresponde al tipo), `invalid_effort`, `invalid_plan_item`, `note_too_long`, `exercise_not_found`, `not_found`.
 - **Requisitos**: FR-012, FR-013, FR-014, FR-018, FR-019, FR-028 a FR-035, FR-038, FR-045 a FR-047.
 
 ### Borrado
@@ -109,7 +109,7 @@
 
 | Qué | Cómo | Notas |
 |---|---|---|
-| Rutinas de la cuenta | `select` sobre `routines` con `routine_exercises` embebidos | Ordenadas por nombre |
+| Rutinas de la cuenta | `select` sobre `routines` con `routine_exercises` embebidos y, por cada ítem, el ejercicio vigente (`exercise:exercises(id, name, measurement_type)`, que queda nulo si ya no existe o no es visible) | Ordenadas por nombre. El nombre actual se muestra si existe (FR-004) y la diferencia de tipo de medición con la instantánea dispara el aviso de revisar objetivos |
 | Calendario de un mes | `select` sobre `workout_sessions` por rango de `session_date` (`id, session_date, status, modified, rescheduled_count, corrected_at, routine_name, has_plan`) | Sin series: liviano |
 | Sesiones de un día | `select` sobre `workout_sessions` por `session_date`, con sus ítems | Orden estable por `started_at`/`created_at` |
 | Una sesión | `select` con `session_plan_items`, `session_exercises`, `session_sets` y `session_date_changes` embebidos | Los ítems y las series ordenados por `position` |

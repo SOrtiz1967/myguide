@@ -60,7 +60,7 @@ npm run check:secrets --prefix app
 | 31 | Reprogramar una sesión planificada (dos veces) | 4 | Siempre la misma sesión, «Reprogramada» y su recorrido de fechas |
 | 32 | Mover una sesión realizada o en curso; mover a una fecha pasada | 4 | No se permite |
 | 33 | Cancelar y volver a planificar | 4 | «Cancelada» con el plan conservado; se puede volver a planificar |
-| 34 | Una planificada que pasó sin hacerse | 4 | «Sin registrar» y las opciones registrar, reprogramar o cancelar |
+| 34 | Una planificada que pasó sin hacerse | 4 | «Sin registrar» y las opciones registrar, reprogramar o cancelar; al registrar se pregunta qué día la hizo (por omisión hoy) y queda ese día con su recorrido |
 | 35 | Doble clic o reintento al planificar, mover o cancelar | 4 | Sin duplicados ni doble aplicación |
 | 36 | Calendario del mes y un día con dos sesiones | 4 | Estados y marcas por día; detalle de ambas en orden |
 | 37 | Historia de un ejercicio con tres sesiones | 5 | De la más reciente a la más antigua, con series y esfuerzo |
@@ -74,7 +74,7 @@ npm run check:secrets --prefix app
 | 45 | Guardar la misma sesión desde dos pestañas | 1 | La segunda recibe «cambió en otro dispositivo» y elige qué conservar |
 | 46 | La cuenta B y la petición anónima | todas | No ven ni cambian rutinas ni sesiones de A |
 | 47 | Teléfono y escritorio, teclado y lector de pantalla; revisión de textos | todas | Sin desplazamiento horizontal; axe sin problemas graves; sin rachas ni culpa |
-| 48 | Un mes con 200 sesiones y un ejercicio con 500 | 4 y 5 | Calendario en menos de 2 s; primera tanda de la historia en menos de 1 s |
+| 48 | Un mes con 200 sesiones y un ejercicio con 500; uso normal | 1, 4 y 5 | Calendario en menos de 2 s; primera tanda de la historia en menos de 1 s; desde una rutina, la primera serie en menos de 30 s y una sesión de 3 ejercicios con 3 series en menos de 4 min |
 
 ## Criterio de terminado
 

@@ -68,7 +68,7 @@ Esta spec no tiene fuentes externas ni licencias que investigar (a diferencia de
 **Decisión**: una sesión pertenece a un día calendario (`session_date`, tipo `date`). El «hoy» lo calcula el servidor con la zona del perfil (`private.effective_timezone`), como en las specs 003 y 004; el reloj del dispositivo no decide. Reglas:
 - Se puede **registrar** (iniciar) una sesión en una fecha de hoy o pasada.
 - Se puede **planificar** o **reprogramar** a una fecha de hoy o futura; nunca a una pasada.
-- Una sesión planificada se puede iniciar si su fecha es de hoy o anterior (la vencida «Sin registrar»); conserva su fecha.
+- Una sesión planificada se puede iniciar si su fecha es de hoy o anterior (la vencida «Sin registrar»). Al registrarla, la persona elige el día en que la hizo (por omisión hoy; nunca futuro): la fecha de lo realizado es siempre cuando ocurrió, y si cambia queda anotado en el recorrido de fechas. La prohibición de mover a una fecha pasada vale solo para reprogramar una planificada.
 - Una sesión realizada o en curso no cambia de fecha jamás.
 - Una sesión que cruza la medianoche conserva el día en que empezó (la fecha se fija al iniciar).
 

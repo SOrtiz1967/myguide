@@ -79,7 +79,7 @@ El máximo de 30 ejercicios por rutina lo impone `create_routine`/`update_routin
 |---|---|---|---|
 | (nada) | `planned` | `plan_session` | fecha de hoy o futura |
 | (nada) | `in_progress` | `start_session`, `start_session_from_routine` | fecha de hoy o pasada; sin otra sesión en curso |
-| `planned` | `in_progress` | `start_planned_session` | fecha de hoy o anterior; sin otra en curso |
+| `planned` | `in_progress` | `start_planned_session` | fecha de hoy o anterior; sin otra en curso; puede pasar al día en que se hizo (hoy o pasado), con su fila en `session_date_changes` |
 | `planned` | `planned` | `reschedule_session`, `set_session_routine` | nueva fecha de hoy o futura |
 | `planned` | `cancelled` | `cancel_session` | |
 | `cancelled` | `planned` | `reschedule_session` | nueva fecha de hoy o futura (volver a planificar) |
@@ -163,7 +163,7 @@ Las series se reemplazan enteras en cada guardado, por eso su `id` no es estable
 | `client_request_id` | uuid | único por `(user_id, client_request_id)`: reintentar un movimiento devuelve el mismo |
 | `created_at` | timestamptz | |
 
-Nunca se actualiza ni se borra una fila (salvo la cascada de la sesión o de la cuenta). El recorrido de fechas de una sesión es `original_date` más los `to_date` en orden de `created_at`.
+Nunca se actualiza ni se borra una fila (salvo la cascada de la sesión o de la cuenta). Se agrega una fila al reprogramar y también cuando una sesión planificada vencida se registra en otro día. El recorrido de fechas de una sesión es `original_date` más los `to_date` en orden de `created_at`.
 
 ## Seguridad (RLS)
 

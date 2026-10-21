@@ -106,9 +106,10 @@ La persona ve un calendario con sus sesiones y, para cada día, elige qué entre
 8. **Given** una sesión ya realizada, **When** intenta moverla de fecha, **Then** no se permite: la fecha de lo que ya ocurrió no cambia.
 9. **Given** una sesión planificada, **When** la cancela, **Then** queda como "Cancelada" en su día, con su plan conservado, sin avisos de culpa; puede volver a planificarla para la misma u otra fecha.
 10. **Given** una sesión planificada cuya fecha ya pasó sin que la hiciera, **When** mira el calendario, **Then** la ve señalada con un texto neutral ("Sin registrar") y con las opciones de registrarla, reprogramarla o cancelarla; nunca como un fallo.
-11. **Given** una sesión planificada, **When** llega el día y la inicia, **Then** pasa a "En curso" y luego a "Realizada" sin duplicarse.
-12. **Given** un doble clic al mover, planificar o cancelar, o un reintento de red, **When** se envía, **Then** no se duplica ninguna sesión ni se aplican dos veces los cambios.
-13. **Given** un día con más de una sesión, **When** lo abre, **Then** ve todas las sesiones de ese día en orden y puede abrir cada una.
+11. **Given** esa sesión "Sin registrar", **When** elige registrarla, **Then** se le pregunta qué día la hizo (por omisión, hoy; puede elegir otro día pasado), y la sesión queda en ese día, con su recorrido de fechas.
+12. **Given** una sesión planificada, **When** llega el día y la inicia, **Then** pasa a "En curso" y luego a "Realizada" sin duplicarse.
+13. **Given** un doble clic al mover, planificar o cancelar, o un reintento de red, **When** se envía, **Then** no se duplica ninguna sesión ni se aplican dos veces los cambios.
+14. **Given** un día con más de una sesión, **When** lo abre, **Then** ve todas las sesiones de ese día en orden y puede abrir cada una.
 
 ---
 
@@ -209,7 +210,7 @@ La persona corrige un dato de una sesión ya realizada (una repetición mal anot
 - **FR-023**: La persona MUST poder mover una sesión planificada a otra fecha de hoy o futura; la sesión MUST seguir siendo la misma (sin duplicarse), quedar marcada como "reprogramada" y conservar el recorrido de sus fechas.
 - **FR-024**: Una sesión realizada o en curso MUST NOT poder moverse de fecha; mover sesiones MUST NOT cambiar las fechas ni los ejercicios de sesiones ya realizadas.
 - **FR-025**: La persona MUST poder cancelar una sesión planificada, que conserva su plan y puede volver a planificarse; cancelar MUST NOT borrar datos.
-- **FR-026**: Una sesión planificada cuya fecha pasó sin realizarse MUST mostrarse con un texto neutral ("Sin registrar") y ofrecer registrarla, reprogramarla o cancelarla.
+- **FR-026**: Una sesión planificada cuya fecha pasó sin realizarse MUST mostrarse con un texto neutral ("Sin registrar") y ofrecer registrarla, reprogramarla o cancelarla. Al registrarla, la persona MUST elegir el día en que la hizo (hoy o un día pasado, por omisión hoy), de modo que la fecha de lo realizado sea siempre el día en que ocurrió; si difiere de la planificada, el cambio queda en el recorrido de fechas de la sesión. La prohibición de mover a una fecha pasada (FR-023) rige solo para reprogramar.
 - **FR-027**: Las rutinas MUST funcionar como un catálogo de entrenamientos de la persona y MUST NOT asignarse a días de la semana ni repetirse automáticamente: cada sesión se planifica en una fecha concreta, y para cada día la persona elige qué rutina toca o ninguna.
 - **FR-027a**: La persona MUST poder, desde un día del calendario o desde "Hoy", elegir una rutina de su catálogo con un solo gesto para planificar ese día o, si el día es hoy, empezar a entrenar de inmediato; MUST poder cambiar o quitar la rutina de un día mientras la sesión sea solo planificada.
 

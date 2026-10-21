@@ -28,7 +28,7 @@ Una ruta con una fecha inválida, o con un identificador ajeno o inexistente, mu
 - **Cuadrícula del mes**: 7 columnas (lunes a domingo), un enlace por día con nombre accesible completo («jueves 22 de octubre: 1 sesión realizada, 1 planificada»). Cada día muestra el estado de sus sesiones con **texto o forma además del color**. Botones «Mes anterior», «Mes siguiente» y «Hoy».
 - **Estados**: cargando; mes sin sesiones (invitación neutral a planificar o registrar una); error con «Reintentar»; sin conexión (aviso, sin datos desactualizados presentados como actuales).
 - **«Hoy»**: si no hay sesión de hoy, un selector de rutina del catálogo con «Empezar» y la opción «Sesión vacía». Con una sesión en curso, un acceso destacado a «Continuar la sesión».
-- Una sesión planificada con fecha pasada se rotula **«Sin registrar»** (texto neutral) con las acciones «Registrar», «Reprogramar» y «Cancelar».
+- Una sesión planificada con fecha pasada se rotula **«Sin registrar»** (texto neutral) con las acciones «Registrar», «Reprogramar» y «Cancelar». «Registrar» pregunta «¿Qué día la hiciste?» (por omisión hoy; hoy o un día pasado) antes de empezar.
 
 ### Día
 

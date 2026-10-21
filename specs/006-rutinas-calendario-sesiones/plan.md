@@ -37,7 +37,7 @@ Enfoque técnico (detalle y alternativas en [research.md](research.md)): las mis
 | Principio | Evaluación | Estado |
 |---|---|---|
 | **I. Privacidad y seguridad** | Rutinas y sesiones son privadas con RLS y pruebas de aislamiento entre cuentas (incluida la petición anónima); las altas y los cambios pasan solo por funciones que verifican la sesión y toman el dueño de `auth.uid()`; el cliente no escribe en las tablas; los registros técnicos no contienen contenido de entrenamientos; todo se elimina con la cuenta (`on delete cascade`). Sin fotos y sin IA. | ✅ Cumple |
-| **II. Integridad e idempotencia** | Núcleo de la spec. Planificación y ejecución en tablas separadas; reprogramar no toca lo realizado ni lo reescribe (solo se mueven sesiones planificadas, y queda el recorrido de fechas); instantánea inmutable del nombre y del tipo de medición en plan, rutina y sesión; el ejercicio se referencia por su `id` estable con `on delete set null` (no hay `cascade` hacia `exercises`); todas las creaciones y movimientos son idempotentes por `request_id` y el guardado de contenido por reemplazo completo con revisión (nunca pisa en silencio lo que guardó otro dispositivo); fechas en la zona del perfil resueltas en el servidor. | ✅ Cumple |
+| **II. Integridad e idempotencia** | Núcleo de la spec. Planificación y ejecución en tablas separadas; reprogramar no toca lo realizado ni lo reescribe (solo se mueven sesiones planificadas, y queda el recorrido de fechas); instantánea inmutable del nombre y del tipo de medición en plan, rutina y sesión; el ejercicio se referencia por su `id` estable con `on delete set null` (no hay `cascade` hacia `exercises`); todas las creaciones y movimientos son idempotentes por `request_id` y el guardado de contenido por reemplazo completo con revisión (nunca pisa en silencio lo que guardó otro dispositivo); fechas en la zona del perfil resueltas en el servidor. El Principio II pide poder imputar un registro al día que se está cerrando: para sesiones no se usa la regla del «día que cierra» de las comidas porque la persona elige libremente cualquier día pasado («ayer» incluido), con una sola fecha por sesión y sin ambigüedad; la intención del principio se cumple (`research.md`, Decisión 6). | ✅ Cumple |
 | **III. Estimaciones nutricionales transparentes** | No hay estimaciones de nutrición ni de gasto. Los datos de entrenamiento son siempre manuales. | ✅ No aplica |
 | **IV. Información de salud responsable** | Sin recomendaciones ni metas automáticas; sin rachas, culpa ni valoración del rendimiento; lo no hecho se dice «No realizado» o «Sin registrar»; nada sugiere entrenar con dolor o lesión. Una prueba recorre todos los textos buscando términos prohibidos. | ✅ Cumple |
 | **V. Seguimiento consistente** | Registra ejercicios, series, repeticiones, cargas, esfuerzo percibido, sustituciones y notas; distingue rutina planificada, sesión realizada, modificada, reprogramada y cancelada; el calendario mueve entrenamientos sin perder el historial ni duplicar; una sesión distinta de la planificada no pierde la rutina original; los datos faltantes se muestran como faltantes. Los gráficos con contexto, unidades y comparación de períodos quedan en la spec 012. | ✅ Cumple |
@@ -77,6 +77,7 @@ app/src/features/training/
 ├── schema.ts                 # Zod: rutina, serie por tipo de medición, payload de sesión (mismas reglas que la base)
 ├── trainingText.ts           # puras: estados y marcas, unidades, formato de series, diferencias plan/realizado
 ├── calendar.ts               # puras: cuadrícula del mes, nombres accesibles, rangos de fechas
+├── limits.ts                 # límites compartidos (80, 30, 20, 999, 999,9, 86.400, 1.000, 500, esfuerzo 1 a 10)
 ├── useRoutines.ts · useRoutine.ts
 ├── useCalendarMonth.ts · useSessionsOfDay.ts · useSession.ts
 ├── sessionEditorState.ts     # puras: reductor del editor (agregar, quitar, reordenar, validar, diferencias con el plan)
@@ -92,6 +93,7 @@ app/src/features/training/
 ├── ReschedulePanel.tsx · RoutinePicker.tsx
 └── ExerciseHistoryPage.tsx   # ruta /ejercicios/:id/historia
 app/src/features/exercises/ExerciseDetailPage.tsx   # enlace «Ver historia»
+app/src/features/exercises/ExerciseSearchPanel.tsx   # parte reutilizable de la búsqueda (extraída de ExerciseSearchPage)
 app/src/components/AppShell.tsx                      # enlace «Entrenamiento»
 app/src/copy/es.ts                                   # clave `training`
 app/src/routes/index.tsx                             # rutas /entrenamiento y /ejercicios/:id/historia
