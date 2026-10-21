@@ -19,6 +19,8 @@ import { DayPage } from '../features/meals/DayPage'
 import { EntryDetailPage } from '../features/meals/EntryDetailPage'
 import { MealsRedirect } from '../features/meals/MealsRedirect'
 import { ProfilePage } from '../features/profile/ProfilePage'
+import { SessionPage } from '../features/training/SessionPage'
+import { TrainingHomePage } from '../features/training/TrainingHomePage'
 import { AppLayout } from './AppLayout'
 import { HomePage } from './HomePage'
 import { OfflinePage } from './OfflinePage'
@@ -57,6 +59,8 @@ export const routes: RouteObject[] = [
           { path: '/ejercicios/nuevo', element: <ExerciseCreatePage /> },
           { path: '/ejercicios/:id', element: <ExerciseDetailPage /> },
           { path: '/ejercicios/:id/editar', element: <ExerciseEditPage /> },
+          { path: '/entrenamiento', element: <TrainingHomePage /> },
+          { path: '/entrenamiento/sesion/:id', element: <SessionPage /> },
           { path: '/fuentes', element: <SourcesPage /> },
         ],
       },

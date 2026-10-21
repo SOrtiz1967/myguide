@@ -1,5 +1,9 @@
 import { es } from '../../copy/es'
+import { isNetworkError } from '../../lib/errors'
+import { WriteError } from '../../lib/mutation'
+import { supabase } from '../../lib/supabase'
 import type { MeasurementType } from '../exercises/exerciseLists'
+import type { SessionPayload } from './schema'
 import type { SessionStatus } from './trainingText'
 
 // Acceso a datos de rutinas y sesiones (spec 006). Las escrituras pasan por funciones del servidor
@@ -140,4 +144,152 @@ export function trainingErrorMessage(error: unknown): string | null {
     return table[match[2]!] ?? e.saveFailed
   }
   return null
+}
+
+// --- Errores con significado propio --------------------------------------------------------------------------------
+
+/** Otro dispositivo guardó la sesión antes (`stale_revision`): hay que elegir qué versión conservar. */
+export class StaleRevisionError extends Error {
+  constructor() {
+    super('stale_revision')
+    this.name = 'StaleRevisionError'
+  }
+}
+
+/** Ya hay una sesión en curso; lleva su identificador para ofrecer continuarla (FR-009). */
+export class SessionInProgressError extends Error {
+  readonly sessionId: string | null
+  constructor(sessionId: string | null) {
+    super(es.training.errors.sessionInProgress)
+    this.name = 'SessionInProgressError'
+    this.sessionId = sessionId
+  }
+}
+
+/**
+ * Llama a una función del servidor. Sin conexión no lo intenta; un fallo se convierte en un error con un mensaje
+ * seguro (`WriteError`), salvo los dos que tienen significado propio. Nunca se muestra el texto crudo del servidor.
+ */
+async function callRpc<T>(name: string, args: Record<string, unknown>): Promise<T> {
+  if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+    throw new WriteError(true, es.errors.offline)
+  }
+  let result
+  try {
+    result = await supabase.rpc(name, args)
+  } catch (error) {
+    throw translateError(error)
+  }
+  if (result.error) throw translateError(result.error)
+  return result.data as T
+}
+
+function translateError(error: unknown): Error {
+  if (isNetworkError(error)) return new WriteError(true, es.errors.offline)
+  const message = (error as { message?: unknown } | null)?.message
+  if (typeof message === 'string' && message.startsWith('stale_revision'))
+    return new StaleRevisionError()
+  const open = openSessionIdFromError(error)
+  if (open || (typeof message === 'string' && message.startsWith('session_in_progress'))) {
+    return new SessionInProgressError(open)
+  }
+  return new WriteError(false, trainingErrorMessage(error) ?? es.errors.generic)
+}
+
+// --- Sesiones ----------------------------------------------------------------------------------------------------------
+
+export interface StartResult {
+  id: string
+  session_date: string
+  status: SessionStatus
+  revision: number
+}
+
+export interface SaveResult {
+  revision: number
+  status: SessionStatus
+  modified: boolean
+  corrected_at: string | null
+  finished_at: string | null
+}
+
+const SUMMARY_COLUMNS =
+  'id, session_date, original_date, status, routine_name, has_plan, modified, rescheduled_count, corrected_at'
+
+const SESSION_COLUMNS = `${SUMMARY_COLUMNS}, routine_id, note, started_at, finished_at, revision,
+  session_plan_items(*), session_exercises(*, session_sets(*)), session_date_changes(*)`
+
+// Un id con formato inválido (22P02) se comporta como una sesión inexistente.
+const INVALID_TEXT_REPRESENTATION = '22P02'
+
+/** Inicia una sesión vacía en curso (hoy, o una fecha pasada). Idempotente por `requestId`. */
+export function startWorkout(sessionDate: string | null, requestId: string): Promise<StartResult> {
+  return callRpc<StartResult>('start_workout', {
+    session_date: sessionDate,
+    request_id: requestId,
+    client_timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+  })
+}
+
+/** Guarda el contenido de la sesión (reemplazo completo con revisión). Puede lanzar `StaleRevisionError`. */
+export function saveWorkout(
+  sessionId: string,
+  payload: SessionPayload,
+  expectedRevision: number,
+  finish: boolean,
+): Promise<SaveResult> {
+  return callRpc<SaveResult>('save_workout', {
+    id: sessionId,
+    payload,
+    expected_revision: expectedRevision,
+    finish,
+  })
+}
+
+/** La sesión con su plan, sus ejercicios, sus series y su recorrido de fechas; `null` si no existe o es ajena. */
+export async function fetchSession(id: string): Promise<WorkoutSession | null> {
+  const { data, error } = await supabase
+    .from('workout_sessions')
+    .select(SESSION_COLUMNS)
+    .eq('id', id)
+    .maybeSingle()
+  if (error) {
+    if (error.code === INVALID_TEXT_REPRESENTATION) return null
+    throw error
+  }
+  return (data as unknown as WorkoutSession | null) ?? null
+}
+
+/** La sesión en curso de la cuenta, si la hay. */
+export async function fetchInProgressSession(): Promise<SessionSummary | null> {
+  const { data, error } = await supabase
+    .from('workout_sessions')
+    .select(SUMMARY_COLUMNS)
+    .eq('status', 'in_progress')
+    .maybeSingle()
+  if (error) throw error
+  return (data as unknown as SessionSummary | null) ?? null
+}
+
+/** Las últimas sesiones realizadas, de la más reciente a la más antigua. */
+export async function fetchRecentSessions(limit = 10): Promise<SessionSummary[]> {
+  const { data, error } = await supabase
+    .from('workout_sessions')
+    .select(SUMMARY_COLUMNS)
+    .eq('status', 'completed')
+    .order('session_date', { ascending: false })
+    .order('created_at', { ascending: false })
+    .limit(limit)
+  if (error) throw error
+  return (data ?? []) as unknown as SessionSummary[]
+}
+
+/** Elimina una sesión propia con todo lo suyo (borrado directo por RLS). */
+export async function deleteSession(id: string): Promise<void> {
+  if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+    throw new WriteError(true, es.errors.offline)
+  }
+  const { data, error } = await supabase.from('workout_sessions').delete().eq('id', id).select('id')
+  if (error) throw translateError(error)
+  if (!data || data.length === 0) throw new WriteError(false, es.training.errors.notFound)
 }
