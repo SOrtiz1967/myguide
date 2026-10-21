@@ -5,7 +5,7 @@
 -- usuario) no tienen `user_id`, pero deben tener RLS, una única política `select` y ningún permiso
 -- de escritura para anon ni authenticated. Agregar una tabla a esta lista requiere justificarlo.
 begin;
-select plan(7);
+select plan(8);
 
 create temp table reference_tables (name text primary key) on commit drop;
 insert into reference_tables (name) values ('food_sources'), ('exercise_sources');
@@ -92,6 +92,21 @@ select is(
   ),
   0::bigint,
   'rendimiento: ninguna política de public llama a is_session_fresh() fuera de un (select ...)'
+);
+
+-- Spec 006 (T005): una tabla con RLS y sin ninguna política queda inaccesible (denegado por defecto) y suele ser un
+-- olvido. Toda tabla de public debe tener al menos una política.
+select is(
+  (
+    select count(*)
+    from pg_tables t
+    where t.schemaname = 'public'
+      and not exists (
+        select 1 from pg_policies p where p.schemaname = 'public' and p.tablename = t.tablename
+      )
+  ),
+  0::bigint,
+  'toda tabla de public tiene al menos una política'
 );
 
 select * from finish();

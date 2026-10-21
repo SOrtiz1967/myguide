@@ -339,4 +339,140 @@ begin
 end;
 $$;
 
+-- Ayudantes de la spec 006 (rutinas, calendario y sesiones de entrenamiento). Escriben directamente en las
+-- tablas, sin pasar por las funciones del cliente, y respetan las restricciones de data-model.md.
+
+-- Crea una rutina con los ejercicios indicados (en ese orden), tomando la instantánea de cada uno.
+create or replace function tests.create_routine(
+  p_user_id uuid,
+  p_name text,
+  p_exercise_ids uuid[],
+  p_sets integer default 3
+) returns uuid
+language plpgsql
+as $$
+declare
+  v_id uuid := gen_random_uuid();
+begin
+  insert into public.routines (id, user_id, name) values (v_id, p_user_id, p_name);
+  insert into public.routine_exercises (routine_id, user_id, position, exercise_id, exercise_name, measurement_type, sets)
+  select v_id, p_user_id, t.position, e.id, e.name, e.measurement_type, p_sets
+  from unnest(p_exercise_ids) with ordinality as t(exercise_id, position)
+  join public.exercises e on e.id = t.exercise_id;
+  return v_id;
+end;
+$$;
+
+-- Crea una sesión en el estado indicado. Con p_with_plan y una rutina, copia sus ítems como plan.
+create or replace function tests.create_session(
+  p_user_id uuid,
+  p_date date,
+  p_status text default 'planned',
+  p_routine_id uuid default null,
+  p_with_plan boolean default false
+) returns uuid
+language plpgsql
+as $$
+declare
+  v_id uuid := gen_random_uuid();
+  v_routine_name text;
+begin
+  if p_with_plan and p_routine_id is null then
+    raise exception 'tests.create_session: p_with_plan necesita una rutina';
+  end if;
+  select r.name into v_routine_name from public.routines r where r.id = p_routine_id;
+
+  insert into public.workout_sessions (
+    id, user_id, session_date, original_date, status, routine_id, routine_name, has_plan, started_at, finished_at
+  )
+  values (
+    v_id, p_user_id, p_date, p_date, p_status, p_routine_id, v_routine_name, p_with_plan,
+    case when p_status in ('in_progress', 'completed') then now() - interval '1 hour' end,
+    case when p_status = 'completed' then now() end
+  );
+
+  if p_with_plan then
+    insert into public.session_plan_items (
+      session_id, user_id, position, exercise_id, exercise_name, measurement_type, sets,
+      target_reps, target_weight_kg, target_duration_s, target_distance_km
+    )
+    select v_id, p_user_id, re.position, re.exercise_id, re.exercise_name, re.measurement_type, re.sets,
+           re.target_reps, re.target_weight_kg, re.target_duration_s, re.target_distance_km
+    from public.routine_exercises re
+    where re.routine_id = p_routine_id;
+  end if;
+  return v_id;
+end;
+$$;
+
+-- Agrega un ítem al plan de una sesión (sin rutina), con la instantánea del ejercicio. Devuelve su id.
+create or replace function tests.add_plan_item(
+  p_session_id uuid,
+  p_exercise_id uuid,
+  p_sets integer default 3
+) returns uuid
+language plpgsql
+as $$
+declare
+  v_id uuid := gen_random_uuid();
+begin
+  insert into public.session_plan_items (id, session_id, user_id, position, exercise_id, exercise_name, measurement_type, sets)
+  select v_id, s.id, s.user_id,
+         coalesce((select max(position) from public.session_plan_items where session_id = s.id), 0) + 1,
+         e.id, e.name, e.measurement_type, p_sets
+  from public.workout_sessions s, public.exercises e
+  where s.id = p_session_id and e.id = p_exercise_id;
+  update public.workout_sessions set has_plan = true where id = p_session_id;
+  return v_id;
+end;
+$$;
+
+-- Agrega un ejercicio realizado a una sesión, con la instantánea del ejercicio. Devuelve su id.
+create or replace function tests.add_session_exercise(
+  p_session_id uuid,
+  p_exercise_id uuid,
+  p_plan_item_id uuid default null,
+  p_is_substitute boolean default false,
+  p_effort smallint default null
+) returns uuid
+language plpgsql
+as $$
+declare
+  v_id uuid := gen_random_uuid();
+begin
+  insert into public.session_exercises (
+    id, session_id, user_id, position, exercise_id, exercise_name, measurement_type, plan_item_id, is_substitute, effort
+  )
+  select v_id, s.id, s.user_id,
+         coalesce((select max(position) from public.session_exercises where session_id = s.id), 0) + 1,
+         e.id, e.name, e.measurement_type, p_plan_item_id, p_is_substitute, p_effort
+  from public.workout_sessions s, public.exercises e
+  where s.id = p_session_id and e.id = p_exercise_id;
+  return v_id;
+end;
+$$;
+
+-- Agrega una serie a un ejercicio realizado. Devuelve su id.
+create or replace function tests.add_session_set(
+  p_session_exercise_id uuid,
+  p_reps integer default null,
+  p_weight_kg numeric default null,
+  p_duration_s integer default null,
+  p_distance_km numeric default null
+) returns uuid
+language plpgsql
+as $$
+declare
+  v_id uuid := gen_random_uuid();
+begin
+  insert into public.session_sets (id, session_exercise_id, session_id, user_id, position, reps, weight_kg, duration_s, distance_km)
+  select v_id, x.id, x.session_id, x.user_id,
+         coalesce((select max(position) from public.session_sets where session_exercise_id = x.id), 0) + 1,
+         p_reps, p_weight_kg, p_duration_s, p_distance_km
+  from public.session_exercises x
+  where x.id = p_session_exercise_id;
+  return v_id;
+end;
+$$;
+
 grant execute on all functions in schema tests to anon, authenticated;
