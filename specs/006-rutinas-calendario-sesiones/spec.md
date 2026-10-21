@@ -8,6 +8,14 @@
 
 **Input**: User description: "Rutinas, calendario y sesiones de entrenamiento de MyGuide (spec 006 del roadmap, Principios II, V y VI). La persona puede armar rutinas (planes de entrenamiento reutilizables) con ejercicios del catálogo de la spec 005, indicando para cada ejercicio cuántas series quiere hacer y, de forma opcional, repeticiones, carga o tiempo objetivo según el tipo de medición del ejercicio. Puede planificar sesiones en un calendario (una sesión planificada en una fecha, a partir de una rutina o vacía), y realizarlas: registrar por cada ejercicio sus series con repeticiones y carga, repeticiones sin carga, tiempo, o distancia y tiempo según el tipo de medición, un esfuerzo percibido opcional y notas opcionales. Una sesión puede estar planificada, en curso, realizada, modificada, reprogramada o cancelada; se puede registrar una sesión que no estaba planificada, sustituir un ejercicio por otro durante la sesión, y mover una sesión a otra fecha sin duplicarla ni perder su historial. Lo planificado y lo realmente hecho se muestran por separado y nunca se mezclan ni se completan con supuestos; los datos que faltan se muestran como faltantes. Cada sesión guarda una copia propia (snapshot) del nombre y del tipo de medición de cada ejercicio, de modo que editar o eliminar un ejercicio propio, o una nueva importación del catálogo, nunca cambia sesiones ya realizadas. Editar o eliminar una rutina nunca cambia las sesiones ya creadas a partir de ella. Una sesión en curso conserva su borrador localmente, con avisos claros de lo que no llegó al servidor, guardados idempotentes y sin dobles registros. Ver la historia de un ejercicio (las últimas veces que se hizo, con sus series), sin recomendaciones automáticas. Lenguaje neutral y sin coerción: sin rachas, sin culpa por sesiones saltadas o canceladas, sin juicios sobre el rendimiento. Privacidad: rutinas y sesiones son privadas de cada cuenta. Estados de carga, vacío y error, formularios con borrador local, accesible y responsive, todo en español, sin funcionamiento sin conexión. Fuera de alcance: cálculo de gasto calórico (007/008), sueño, pasos y actividad (007), recomendaciones automáticas, estimación con IA, compartir o importar rutinas, y gráficos de progreso (a decidir en las aclaraciones si entra algo mínimo)."
 
+## Clarifications
+
+### Session 2026-10-21
+
+- Q: ¿El esfuerzo percibido se registra por sesión, por serie o ambos? → A: Por cada ejercicio de la sesión, con un solo valor que vale para todas sus series; no se registra por sesión completa ni por serie.
+- Q: ¿Se puede planificar una sesión que se repite (por ejemplo, todos los lunes)? → A: No. Las rutinas no se asignan a días de la semana ni se repiten solas: funcionan como un catálogo de entrenamientos de la persona, y cada día ella elige cuál toca (o ninguno), con total flexibilidad.
+- Q: ¿Entra algún gráfico de progreso mínimo en esta spec? → A: No. Esta spec solo muestra la lista de las últimas veces que se hizo un ejercicio; los gráficos de progreso quedan para una spec propia, ya redactada (`specs/012-graficos-progreso-entrenamiento`) y pendiente de desarrollo.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Registrar una sesión de entrenamiento (Priority: P1)
@@ -27,14 +35,15 @@ La persona entrena y quiere anotar lo que hizo: abre una sesión (hoy, o una fec
 5. **Given** una sesión con varios ejercicios, **When** la termina, **Then** queda como "Realizada" en su día, con los ejercicios, las series y las unidades que anotó.
 6. **Given** que quiere registrar un entrenamiento de ayer o de otro día pasado, **When** elige esa fecha, **Then** la sesión queda en esa fecha como realizada.
 7. **Given** una serie anotada por error, **When** la elimina o la corrige antes de terminar, **Then** el cambio se refleja sin dejar series duplicadas ni huecos.
-8. **Given** un ejercicio ya agregado a la sesión, **When** quiere ver cómo le fue la última vez, **Then** lo ve en un paso, sin salir de la sesión (ver historia, historia de usuario 5).
-9. **Given** que ya tiene una sesión en curso, **When** intenta iniciar otra, **Then** se le ofrece continuar la que tiene abierta en lugar de crear una segunda sin querer.
+8. **Given** un ejercicio con sus series anotadas, **When** quiere indicar qué tan exigente le resultó, **Then** puede elegir un esfuerzo percibido de 1 a 10 para ese ejercicio en su totalidad (no por serie); es opcional y, si no lo elige, se muestra como "sin dato".
+9. **Given** un ejercicio ya agregado a la sesión, **When** quiere ver cómo le fue la última vez, **Then** lo ve en un paso, sin salir de la sesión (ver historia, historia de usuario 5).
+10. **Given** que ya tiene una sesión en curso, **When** intenta iniciar otra, **Then** se le ofrece continuar la que tiene abierta en lugar de crear una segunda sin querer.
 
 ---
 
 ### User Story 2 - Armar y mantener mis rutinas (Priority: P1)
 
-La persona arma una rutina —un plan reutilizable con nombre— eligiendo ejercicios del catálogo (o propios), en el orden que quiere, e indicando para cada uno cuántas series quiere hacer y, de forma opcional, un objetivo de repeticiones, de peso o de tiempo según el tipo de medición. Puede editarla, duplicarla y eliminarla.
+La persona arma una rutina —un plan reutilizable con nombre— eligiendo ejercicios del catálogo (o propios), en el orden que quiere, e indicando para cada uno cuántas series quiere hacer y, de forma opcional, un objetivo de repeticiones, de peso o de tiempo según el tipo de medición. Puede editarla, duplicarla y eliminarla. Sus rutinas forman un catálogo de entrenamientos propio: no se asignan a días de la semana, y cada día la persona elige cuál toca.
 
 **Why this priority**: Es lo que permite entrenar y planificar sin armar todo desde cero cada vez, y es la base de la comparación entre lo planificado y lo realizado.
 
@@ -79,7 +88,7 @@ La persona inicia una sesión a partir de una rutina. La sesión nace con el pla
 
 ### User Story 4 - Planificar en el calendario, reprogramar y cancelar (Priority: P2)
 
-La persona ve un calendario con sus sesiones, planifica una sesión en una fecha (desde una rutina o vacía), la mueve a otro día si cambian sus planes y la cancela si no la va a hacer. Moverla no la duplica ni pierde su historia, y nunca toca lo que ya hizo.
+La persona ve un calendario con sus sesiones y, para cada día, elige qué entrenamiento toca: una de sus rutinas o ninguna. No hay un horario fijo ni repeticiones automáticas, así que cada semana puede ser distinta. Si cambian sus planes, mueve la sesión a otro día; si no la va a hacer, la cancela. Moverla no la duplica ni pierde su historia, y nunca toca lo que ya hizo.
 
 **Why this priority**: Es lo que pide el Principio V para el calendario. Es valioso, pero la persona ya puede entrenar y registrar sin planificar por adelantado.
 
@@ -87,16 +96,19 @@ La persona ve un calendario con sus sesiones, planifica una sesión en una fecha
 
 **Acceptance Scenarios**:
 
-1. **Given** el calendario, **When** elige un día y planifica una sesión desde una rutina o vacía, **Then** queda como "Planificada" en ese día con el plan de la rutina en ese momento.
-2. **Given** un mes con sesiones, **When** lo abre, **Then** ve qué días tienen sesiones y su estado (planificada, realizada, cancelada), y al elegir un día ve el detalle de sus sesiones.
-3. **Given** una sesión planificada, **When** la mueve a otra fecha, **Then** sigue siendo la misma sesión (no se crea otra), queda marcada como "Reprogramada" y muestra la fecha en la que estaba antes.
-4. **Given** una sesión reprogramada varias veces, **When** la abre, **Then** ve su recorrido de fechas, de la original a la actual.
-5. **Given** una sesión ya realizada, **When** intenta moverla de fecha, **Then** no se permite: la fecha de lo que ya ocurrió no cambia.
-6. **Given** una sesión planificada, **When** la cancela, **Then** queda como "Cancelada" en su día, con su plan conservado, sin avisos de culpa; puede volver a planificarla para la misma u otra fecha.
-7. **Given** una sesión planificada cuya fecha ya pasó sin que la hiciera, **When** mira el calendario, **Then** la ve señalada con un texto neutral ("Sin registrar") y con las opciones de registrarla, reprogramarla o cancelarla; nunca como un fallo.
-8. **Given** una sesión planificada, **When** llega el día y la inicia, **Then** pasa a "En curso" y luego a "Realizada" sin duplicarse.
-9. **Given** un doble clic al mover, planificar o cancelar, o un reintento de red, **When** se envía, **Then** no se duplica ninguna sesión ni se aplican dos veces los cambios.
-10. **Given** un día con más de una sesión, **When** lo abre, **Then** ve todas las sesiones de ese día en orden y puede abrir cada una.
+1. **Given** el calendario, **When** elige un día y marca qué entrenamiento toca (una rutina de su catálogo, o una sesión vacía), **Then** queda como "Planificada" en ese día con el plan de la rutina en ese momento.
+2. **Given** que planificó un día con una rutina, **When** más tarde cambia de idea, **Then** puede reemplazar la rutina de ese día por otra, o quitarla, mientras la sesión sea solo planificada y sin tocar nada de otros días.
+3. **Given** que nunca planificó nada, **When** abre "Hoy", **Then** puede elegir una rutina de su catálogo y empezar a entrenar de inmediato, sin planificar antes.
+4. **Given** el catálogo de rutinas, **When** planifica la misma rutina en varios días, **Then** cada día es una sesión independiente; la app no repite ni propone fechas por su cuenta.
+5. **Given** un mes con sesiones, **When** lo abre, **Then** ve qué días tienen sesiones y su estado (planificada, realizada, cancelada), y al elegir un día ve el detalle de sus sesiones.
+6. **Given** una sesión planificada, **When** la mueve a otra fecha, **Then** sigue siendo la misma sesión (no se crea otra), queda marcada como "Reprogramada" y muestra la fecha en la que estaba antes.
+7. **Given** una sesión reprogramada varias veces, **When** la abre, **Then** ve su recorrido de fechas, de la original a la actual.
+8. **Given** una sesión ya realizada, **When** intenta moverla de fecha, **Then** no se permite: la fecha de lo que ya ocurrió no cambia.
+9. **Given** una sesión planificada, **When** la cancela, **Then** queda como "Cancelada" en su día, con su plan conservado, sin avisos de culpa; puede volver a planificarla para la misma u otra fecha.
+10. **Given** una sesión planificada cuya fecha ya pasó sin que la hiciera, **When** mira el calendario, **Then** la ve señalada con un texto neutral ("Sin registrar") y con las opciones de registrarla, reprogramarla o cancelarla; nunca como un fallo.
+11. **Given** una sesión planificada, **When** llega el día y la inicia, **Then** pasa a "En curso" y luego a "Realizada" sin duplicarse.
+12. **Given** un doble clic al mover, planificar o cancelar, o un reintento de red, **When** se envía, **Then** no se duplica ninguna sesión ni se aplican dos veces los cambios.
+13. **Given** un día con más de una sesión, **When** lo abre, **Then** ve todas las sesiones de ese día en orden y puede abrir cada una.
 
 ---
 
@@ -179,7 +191,7 @@ La persona corrige un dato de una sesión ya realizada (una repetición mal anot
 - **FR-011**: La persona MUST poder registrar más de una sesión en el mismo día.
 - **FR-012**: La persona MUST poder terminar una sesión, que pasa a "realizada" con lo que anotó, y MUST poder terminarla aunque haya ejercicios planificados sin hacer.
 - **FR-013**: Una sesión en curso o realizada MUST permitir una nota general opcional de hasta 1.000 caracteres.
-- **FR-014**: [NEEDS CLARIFICATION: ¿El esfuerzo percibido opcional se registra por sesión completa, por cada serie, o ambos?]
+- **FR-014**: Para cada ejercicio de una sesión, la persona MUST poder indicar un esfuerzo percibido opcional, de 1 a 10, que vale para todas las series de ese ejercicio en conjunto. El esfuerzo percibido MUST NOT registrarse por sesión completa ni por serie, y un ejercicio sin esfuerzo indicado MUST mostrarlo como "sin dato".
 
 **Planificación y realización por separado**
 
@@ -198,7 +210,8 @@ La persona corrige un dato de una sesión ya realizada (una repetición mal anot
 - **FR-024**: Una sesión realizada o en curso MUST NOT poder moverse de fecha; mover sesiones MUST NOT cambiar las fechas ni los ejercicios de sesiones ya realizadas.
 - **FR-025**: La persona MUST poder cancelar una sesión planificada, que conserva su plan y puede volver a planificarse; cancelar MUST NOT borrar datos.
 - **FR-026**: Una sesión planificada cuya fecha pasó sin realizarse MUST mostrarse con un texto neutral ("Sin registrar") y ofrecer registrarla, reprogramarla o cancelarla.
-- **FR-027**: [NEEDS CLARIFICATION: ¿Se puede planificar una sesión que se repite (por ejemplo, todos los lunes), o cada sesión se planifica en una fecha concreta?]
+- **FR-027**: Las rutinas MUST funcionar como un catálogo de entrenamientos de la persona y MUST NOT asignarse a días de la semana ni repetirse automáticamente: cada sesión se planifica en una fecha concreta, y para cada día la persona elige qué rutina toca o ninguna.
+- **FR-027a**: La persona MUST poder, desde un día del calendario o desde "Hoy", elegir una rutina de su catálogo con un solo gesto para planificar ese día o, si el día es hoy, empezar a entrenar de inmediato; MUST poder cambiar o quitar la rutina de un día mientras la sesión sea solo planificada.
 
 **Registro de series**
 
@@ -221,10 +234,10 @@ La persona corrige un dato de una sesión ya realizada (una repetición mal anot
 
 **Historia de un ejercicio**
 
-- **FR-041**: La persona MUST poder ver, para un ejercicio, sus últimas sesiones donde lo registró (fecha y series con unidades), de la más reciente a la más antigua, por tandas, con el nombre que el ejercicio tenía en cada sesión.
+- **FR-041**: La persona MUST poder ver, para un ejercicio, sus últimas sesiones donde lo registró (fecha, series con unidades y esfuerzo percibido si lo indicó), de la más reciente a la más antigua, por tandas, con el nombre que el ejercicio tenía en cada sesión.
 - **FR-042**: Dentro de una sesión en curso, la persona MUST poder ver la última vez que hizo un ejercicio sin salir de la sesión.
 - **FR-043**: La historia MUST mostrar solo datos registrados: MUST NOT incluir recomendaciones, metas, comparaciones valorativas ni mensajes sobre rendimiento.
-- **FR-044**: [NEEDS CLARIFICATION: ¿Entra en esta spec algún gráfico de progreso mínimo (por ejemplo, la evolución de la carga de un ejercicio), o quedan los gráficos para una spec posterior?]
+- **FR-044**: Esta spec MUST NOT incluir gráficos de progreso: la historia de un ejercicio es una lista de las últimas veces, con sus series, su esfuerzo percibido y sus fechas. Los gráficos quedan para una spec propia (`012-graficos-progreso-entrenamiento`).
 
 **Borradores, idempotencia y errores**
 
@@ -244,11 +257,11 @@ La persona corrige un dato de una sesión ya realizada (una repetición mal anot
 
 ### Key Entities *(include if feature involves data)*
 
-- **Rutina**: plan reutilizable de la persona. Atributos: nombre y lista ordenada de ejercicios de la rutina. Es privada de una cuenta.
+- **Rutina**: plan reutilizable de la persona; el conjunto de sus rutinas es su catálogo de entrenamientos, sin días asignados. Atributos: nombre y lista ordenada de ejercicios de la rutina. Es privada de una cuenta.
 - **Ejercicio de la rutina**: un ejercicio dentro de una rutina. Atributos: identificador estable del ejercicio, nombre y tipo de medición con que se agregó, posición, cantidad de series y objetivos opcionales según el tipo de medición.
-- **Sesión**: una ocasión de entrenamiento de un día. Atributos: fecha (día en la zona horaria de la persona), estado (planificada, en curso, realizada, cancelada), marcas (reprogramada, modificada, corregida), recorrido de fechas si se reprogramó, rutina de origen si la hay (solo como referencia, sin dependencia), nota general y esfuerzo percibido (según la aclaración). Es privada de una cuenta.
+- **Sesión**: una ocasión de entrenamiento de un día. Atributos: fecha (día en la zona horaria de la persona), estado (planificada, en curso, realizada, cancelada), marcas (reprogramada, modificada, corregida), recorrido de fechas si se reprogramó, rutina de origen si la hay (solo como referencia, sin dependencia), y una nota general opcional. Es privada de una cuenta.
 - **Plan de la sesión**: lo que se pensaba hacer, copiado al crear la sesión desde una rutina: ejercicios, series y objetivos. Es inmutable respecto de la rutina de origen.
-- **Ejercicio de la sesión**: un ejercicio dentro de una sesión. Atributos: identificador estable del ejercicio, copia del nombre y del tipo de medición, si formaba parte del plan, si sustituye a otro ejercicio planificado, si quedó sin hacer, nota opcional y sus series realizadas.
+- **Ejercicio de la sesión**: un ejercicio dentro de una sesión. Atributos: identificador estable del ejercicio, copia del nombre y del tipo de medición, si formaba parte del plan, si sustituye a otro ejercicio planificado, si quedó sin hacer, esfuerzo percibido opcional de 1 a 10 (para todas sus series en conjunto), nota opcional y sus series realizadas.
 - **Serie**: una serie realizada de un ejercicio de la sesión. Atributos: posición y los valores que correspondan al tipo de medición (repeticiones, peso en kg, duración, distancia en km), cada uno opcional y mostrado como "sin dato" si falta.
 - **Tipo de medición**: el de la spec 005 (repeticiones con peso, repeticiones sin peso, tiempo, distancia y tiempo); define qué valores admite un objetivo y una serie.
 - **Historia de un ejercicio**: vista derivada de las sesiones donde se registró un ejercicio; no guarda datos propios.
@@ -285,4 +298,5 @@ La persona corrige un dato de una sesión ya realizada (una repetición mal anot
 - La historia de un ejercicio agrupa por el identificador del ejercicio: una copia propia de un ejercicio del catálogo es otro ejercicio y tiene su propia historia.
 - Sin conexión no se puede planificar, guardar ni consultar (spec 001, Principio VI); los borradores se conservan localmente.
 - Los límites numéricos (30 ejercicios por rutina o sesión, 20 series por ejercicio, notas de 1.000 y 500 caracteres) son razonables para uso personal y pueden ajustarse en el plan sin cambiar el comportamiento descrito.
-- El esfuerzo percibido es un dato opcional elegido por la persona, sin juicios sobre el resultado; su forma exacta se define en las aclaraciones.
+- El esfuerzo percibido es un dato opcional elegido por la persona, de 1 a 10, uno por ejercicio de la sesión, sin juicios sobre el resultado; la escala se presenta con etiquetas neutrales (por ejemplo, 1 = muy suave y 10 = el máximo esfuerzo) y no se usa para recomendar nada.
+- Los gráficos de progreso no forman parte de esta spec: están redactados aparte en la spec 012, pendiente de desarrollo, y se apoyarán en los datos que esta spec registra.

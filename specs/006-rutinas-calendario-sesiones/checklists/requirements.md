@@ -13,7 +13,7 @@
 
 ## Requirement Completeness
 
-- [ ] No [NEEDS CLARIFICATION] markers remain
+- [x] No [NEEDS CLARIFICATION] markers remain
 - [x] Requirements are testable and unambiguous
 - [x] Success criteria are measurable
 - [x] Success criteria are technology-agnostic (no implementation details)
@@ -31,8 +31,5 @@
 
 ## Notes
 
-- Quedan 3 marcadores [NEEDS CLARIFICATION] a resolver con el autor antes de `/speckit-clarify` o `/speckit-plan`:
-  1. FR-014: esfuerzo percibido (por sesión, por serie o ambos).
-  2. FR-027: sesiones que se repiten (por ejemplo, todos los lunes).
-  3. FR-044: si entra algún gráfico de progreso mínimo.
+- Las 3 aclaraciones se resolvieron el 2026-10-21 (ver `## Clarifications` en la spec): esfuerzo percibido por ejercicio (todas sus series en conjunto), rutinas como catálogo sin días asignados ni repetición, y gráficos en una spec aparte (012).
 - Las demás decisiones se tomaron con valores por defecto documentados en Assumptions (una sola sesión en curso por persona, solo se reprograman sesiones planificadas, "modificada" y "reprogramada" como marcas, límites numéricos).
