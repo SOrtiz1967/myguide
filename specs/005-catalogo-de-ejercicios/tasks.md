@@ -194,7 +194,7 @@ description: "Lista de tareas de la spec 005: catálogo de ejercicios"
 
 - [X] T049 [P] [US3] Prueba pgTAP en `supabase/tests/copy_exercise.test.sql` (FR-026, SC-008): copia un ejercicio del catálogo con los mismos datos y textos `original`, sin nombre original ni fuente, con `based_on_exercise_id`; copia uno propio; idempotente por `request_id`; dos `request_id` distintos crean dos copias independientes; un ejercicio ajeno o inexistente → `not_found`; el original no cambia; una nueva importación no toca la copia; eliminar el original deja `based_on_exercise_id` nulo y la copia intacta
 - [X] T050 [P] [US3] Pruebas de componente en `app/tests/component/ExerciseCopy.test.tsx` (escenarios 23 y 24): «Crear mi versión» en un ejercicio del catálogo y «Crear una copia» en uno propio llevan a la edición de la copia; la copia dice «basado en [original]»; doble clic crea una sola; fallo de red avisa; copiar dos veces crea dos
-- [ ] T051 [US3] Prueba e2e en `app/tests/e2e/exercises-copy.spec.ts` (escenarios 23 y 24): copiar, editar nombre y descripción, el original intacto y visto igual por otra cuenta, ambos diferenciados en la búsqueda, dos copias independientes
+- [X] T051 [US3] Prueba e2e en `app/tests/e2e/exercises-copy.spec.ts` (escenarios 23 y 24): copiar, editar nombre y descripción, el original intacto y visto igual por otra cuenta, ambos diferenciados en la búsqueda, dos copias independientes
 
 ### Implementation for User Story 3
 
@@ -213,14 +213,14 @@ description: "Lista de tareas de la spec 005: catálogo de ejercicios"
 
 ### Tests for User Story 4 ⚠️
 
-- [ ] T054 [P] [US4] Prueba pgTAP en `supabase/tests/update_delete_exercise.test.sql` (FR-027, FR-028, FR-030): `update_exercise` actualiza un ejercicio propio (todos los campos, incluido el tipo de medición) con las mismas validaciones que al crear; sobre uno del catálogo o ajeno → `not_found` y no cambia ninguna fila; no cambia `origin`, dueño ni procedencia; borrar lo propio funciona, borrar el catálogo o lo ajeno no afecta ninguna fila; eliminar un ejercicio con copias deja las copias intactas
-- [ ] T055 [P] [US4] Pruebas de componente en `app/tests/component/ExerciseEdit.test.tsx` (escenarios 25 y 26): edición de un ejercicio propio con los datos cargados y las mismas validaciones; guardar actualiza el detalle; eliminar con `ConfirmDialog` (foco inicial en «Cancelar», Escape cancela, el foco vuelve al disparador), desaparece de las búsquedas; el catálogo no ofrece «Editar» ni «Eliminar»; fallo de red: aviso y borrador conservado
-- [ ] T056 [US4] Prueba e2e en `app/tests/e2e/exercises-edit.spec.ts` (escenarios 25 y 26) y `app/tests/e2e/exercises-readonly.spec.ts`: editar y eliminar por la interfaz; con una sesión válida, `insert`, `update` y `delete` sobre el catálogo por la API real son rechazados y los ejercicios de otra cuenta no se pueden modificar
+- [X] T054 [P] [US4] Prueba pgTAP en `supabase/tests/update_delete_exercise.test.sql` (FR-027, FR-028, FR-030): `update_exercise` actualiza un ejercicio propio (todos los campos, incluido el tipo de medición) con las mismas validaciones que al crear; sobre uno del catálogo o ajeno → `not_found` y no cambia ninguna fila; no cambia `origin`, dueño ni procedencia; borrar lo propio funciona, borrar el catálogo o lo ajeno no afecta ninguna fila; eliminar un ejercicio con copias deja las copias intactas
+- [X] T055 [P] [US4] Pruebas de componente en `app/tests/component/ExerciseEdit.test.tsx` (escenarios 25 y 26): edición de un ejercicio propio con los datos cargados y las mismas validaciones; guardar actualiza el detalle; eliminar con `ConfirmDialog` (foco inicial en «Cancelar», Escape cancela, el foco vuelve al disparador), desaparece de las búsquedas; el catálogo no ofrece «Editar» ni «Eliminar»; fallo de red: aviso y borrador conservado
+- [X] T056 [US4] Prueba e2e en `app/tests/e2e/exercises-edit.spec.ts` (escenarios 25 y 26) y `app/tests/e2e/exercises-readonly.spec.ts`: editar y eliminar por la interfaz; con una sesión válida, `insert`, `update` y `delete` sobre el catálogo por la API real son rechazados y los ejercicios de otra cuenta no se pueden modificar
 
 ### Implementation for User Story 4
 
-- [ ] T057 [US4] Migración `supabase/migrations/20261021000800_update_exercise.sql`: `public.update_exercise(id, exercise jsonb)` `security definer`. Hace pasar T054
-- [ ] T058 [US4] `updateExercise` y `deleteExercise` en `api.ts`, `ExerciseEditPage.tsx` (reutiliza `ExerciseForm`), la ruta `/ejercicios/:id/editar` y la acción «Eliminar» con confirmación en el detalle. Hace pasar T055; los e2e de T056 quedan en verde
+- [X] T057 [US4] Migración `supabase/migrations/20261021000800_update_exercise.sql`: `public.update_exercise(id, exercise jsonb)` `security definer`. Hace pasar T054
+- [X] T058 [US4] `updateExercise` y `deleteExercise` en `api.ts`, `ExerciseEditPage.tsx` (reutiliza `ExerciseForm`), la ruta `/ejercicios/:id/editar` y la acción «Eliminar» con confirmación en el detalle. Hace pasar T055; los e2e de T056 quedan en verde
 
 **Checkpoint**: escenarios 25 y 26.
 

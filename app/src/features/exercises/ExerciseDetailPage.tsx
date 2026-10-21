@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState, type ReactNode } from 'react'
 import { Link, useLocation, useNavigate, useParams } from 'react-router'
+import { ConfirmDialog } from '../../components/ConfirmDialog'
 import { EmptyState } from '../../components/EmptyState'
 import { ErrorState } from '../../components/ErrorState'
 import { LoadingState } from '../../components/LoadingState'
@@ -9,7 +10,7 @@ import { es } from '../../copy/es'
 import { formatDate } from '../../lib/format'
 import { newRequestId } from '../../lib/ids'
 import { saveRemotely, WriteError } from '../../lib/mutation'
-import { copyExercise, exerciseErrorMessage, type Exercise } from './api'
+import { copyExercise, deleteExercise, exerciseErrorMessage, type Exercise } from './api'
 import {
   alsoKnownAs,
   descriptionView,
@@ -121,9 +122,39 @@ function useCopyAction(exercise: Exercise) {
   return { copy: () => mutation.mutate(), pending: mutation.isPending, error }
 }
 
+/** Elimina el ejercicio propio (FR-027) y vuelve a la búsqueda. El diálogo sigue abierto si falla. */
+function useDeleteAction(exercise: Exercise) {
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
+  const [open, setOpen] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const mutation = useMutation({
+    mutationFn: () => saveRemotely(() => deleteExercise(exercise.id), exerciseErrorMessage),
+    onMutate: () => setError(null),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['exercises'] })
+      void navigate('/ejercicios', { state: { deleted: true } })
+    },
+    onError: (e) => setError(e instanceof WriteError ? e.message : t.form.deleteFailed),
+  })
+  return {
+    open,
+    show: () => {
+      setError(null)
+      setOpen(true)
+    },
+    hide: () => setOpen(false),
+    confirm: () => mutation.mutate(),
+    pending: mutation.isPending,
+    error,
+  }
+}
+
 /** Las acciones según el origen: del catálogo solo se puede crear una versión propia (FR-028). */
 function Actions({ exercise }: { exercise: Exercise }) {
   const copy = useCopyAction(exercise)
+  const remove = useDeleteAction(exercise)
   return (
     <div className="flex flex-col gap-3">
       <div className="flex flex-wrap gap-3">
@@ -144,13 +175,25 @@ function Actions({ exercise }: { exercise: Exercise }) {
             >
               {t.actions.copy}
             </button>
-            <button type="button" className="btn-secondary">
+            <button type="button" className="btn-secondary" onClick={remove.show}>
               {t.actions.delete}
             </button>
           </>
         )}
       </div>
       {copy.error ? <ErrorState message={copy.error} /> : null}
+      {remove.open ? (
+        <ConfirmDialog
+          title={t.form.deleteTitle}
+          description={t.form.deleteBody}
+          confirmLabel={t.actions.confirmDelete}
+          cancelLabel={t.actions.cancel}
+          onConfirm={remove.confirm}
+          onCancel={remove.hide}
+          busy={remove.pending}
+          error={remove.error}
+        />
+      ) : null}
     </div>
   )
 }

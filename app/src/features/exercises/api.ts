@@ -186,3 +186,20 @@ export async function copyExercise(id: string, requestId: string): Promise<strin
   if (error) throw error
   return data as string
 }
+
+/** Edita un ejercicio propio (incluidas las copias). Un ejercicio del catálogo o ajeno devuelve `not_found`. */
+export async function updateExercise(id: string, payload: ExercisePayload): Promise<string> {
+  const { data, error } = await supabase.rpc('update_exercise', { id, exercise: payload })
+  if (error) throw error
+  return data as string
+}
+
+/**
+ * Elimina un ejercicio propio. Las copias que se basaban en él no cambian. RLS hace que uno del catálogo
+ * o de otra cuenta no afecte ninguna fila.
+ */
+export async function deleteExercise(id: string): Promise<void> {
+  const { data, error } = await supabase.from('exercises').delete().eq('id', id).select('id')
+  if (error) throw error
+  if (!data || data.length === 0) throw new Error('not_found')
+}

@@ -122,3 +122,24 @@ export const exerciseDraftSchema = z.object({
   description: z.string(),
   aliases: z.string(),
 })
+
+/** Los valores del formulario para editar un ejercicio ya guardado. */
+export function exerciseToFormValues(exercise: {
+  name: string
+  measurement_type: string
+  primary_muscles: string[]
+  secondary_muscles: string[]
+  equipment: string | null
+  description: string | null
+  aliases: string[]
+}): ExerciseFormInput {
+  return {
+    name: exercise.name,
+    measurement_type: exercise.measurement_type,
+    primary_muscles: exercise.primary_muscles,
+    secondary_muscles: exercise.secondary_muscles,
+    equipment: exercise.equipment ?? '',
+    description: exercise.description ?? '',
+    aliases: exercise.aliases.join('\n'),
+  }
+}
