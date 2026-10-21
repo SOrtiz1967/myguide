@@ -192,14 +192,14 @@ description: "Lista de tareas de la spec 005: catálogo de ejercicios"
 
 ### Tests for User Story 3 ⚠️
 
-- [ ] T049 [P] [US3] Prueba pgTAP en `supabase/tests/copy_exercise.test.sql` (FR-026, SC-008): copia un ejercicio del catálogo con los mismos datos y textos `original`, sin nombre original ni fuente, con `based_on_exercise_id`; copia uno propio; idempotente por `request_id`; dos `request_id` distintos crean dos copias independientes; un ejercicio ajeno o inexistente → `not_found`; el original no cambia; una nueva importación no toca la copia; eliminar el original deja `based_on_exercise_id` nulo y la copia intacta
-- [ ] T050 [P] [US3] Pruebas de componente en `app/tests/component/ExerciseCopy.test.tsx` (escenarios 23 y 24): «Crear mi versión» en un ejercicio del catálogo y «Crear una copia» en uno propio llevan a la edición de la copia; la copia dice «basado en [original]»; doble clic crea una sola; fallo de red avisa; copiar dos veces crea dos
+- [X] T049 [P] [US3] Prueba pgTAP en `supabase/tests/copy_exercise.test.sql` (FR-026, SC-008): copia un ejercicio del catálogo con los mismos datos y textos `original`, sin nombre original ni fuente, con `based_on_exercise_id`; copia uno propio; idempotente por `request_id`; dos `request_id` distintos crean dos copias independientes; un ejercicio ajeno o inexistente → `not_found`; el original no cambia; una nueva importación no toca la copia; eliminar el original deja `based_on_exercise_id` nulo y la copia intacta
+- [X] T050 [P] [US3] Pruebas de componente en `app/tests/component/ExerciseCopy.test.tsx` (escenarios 23 y 24): «Crear mi versión» en un ejercicio del catálogo y «Crear una copia» en uno propio llevan a la edición de la copia; la copia dice «basado en [original]»; doble clic crea una sola; fallo de red avisa; copiar dos veces crea dos
 - [ ] T051 [US3] Prueba e2e en `app/tests/e2e/exercises-copy.spec.ts` (escenarios 23 y 24): copiar, editar nombre y descripción, el original intacto y visto igual por otra cuenta, ambos diferenciados en la búsqueda, dos copias independientes
 
 ### Implementation for User Story 3
 
-- [ ] T052 [US3] Migración `supabase/migrations/20261021000700_copy_exercise.sql`: `public.copy_exercise(id, request_id)` `security definer`, idempotente. Hace pasar T049
-- [ ] T053 [US3] `copyExercise` en `api.ts` y las acciones de copia en `ExerciseDetailPage.tsx`. Hace pasar T050; el e2e de T051 queda en verde
+- [X] T052 [US3] Migración `supabase/migrations/20261021000700_copy_exercise.sql`: `public.copy_exercise(id, request_id)` `security definer`, idempotente. Hace pasar T049
+- [X] T053 [US3] `copyExercise` en `api.ts` y las acciones de copia en `ExerciseDetailPage.tsx`. Hace pasar T050; el e2e de T051 queda en verde
 
 **Checkpoint**: escenarios 23 y 24.
 

@@ -1,12 +1,15 @@
-import type { ReactNode } from 'react'
-import { Link, useLocation, useParams } from 'react-router'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useState, type ReactNode } from 'react'
+import { Link, useLocation, useNavigate, useParams } from 'react-router'
 import { EmptyState } from '../../components/EmptyState'
 import { ErrorState } from '../../components/ErrorState'
 import { LoadingState } from '../../components/LoadingState'
 import { SuccessMessage } from '../../components/SuccessMessage'
 import { es } from '../../copy/es'
 import { formatDate } from '../../lib/format'
-import type { Exercise } from './api'
+import { newRequestId } from '../../lib/ids'
+import { saveRemotely, WriteError } from '../../lib/mutation'
+import { copyExercise, exerciseErrorMessage, type Exercise } from './api'
 import {
   alsoKnownAs,
   descriptionView,
@@ -98,27 +101,56 @@ function Provenance({ exercise }: { exercise: Exercise }) {
   )
 }
 
+/** Crea la copia propia (idempotente: un reintento reutiliza el mismo identificador) y lleva a editarla. */
+function useCopyAction(exercise: Exercise) {
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
+  const [requestId] = useState(newRequestId)
+  const [error, setError] = useState<string | null>(null)
+
+  const mutation = useMutation({
+    mutationFn: () =>
+      saveRemotely(() => copyExercise(exercise.id, requestId), exerciseErrorMessage),
+    onMutate: () => setError(null),
+    onSuccess: (copyId) => {
+      void queryClient.invalidateQueries({ queryKey: ['exercises'] })
+      void navigate(`/ejercicios/${copyId}/editar`, { state: { copied: true } })
+    },
+    onError: (e) => setError(e instanceof WriteError ? e.message : es.errors.generic),
+  })
+  return { copy: () => mutation.mutate(), pending: mutation.isPending, error }
+}
+
 /** Las acciones según el origen: del catálogo solo se puede crear una versión propia (FR-028). */
 function Actions({ exercise }: { exercise: Exercise }) {
+  const copy = useCopyAction(exercise)
   return (
-    <div className="flex flex-wrap gap-3">
-      {exercise.origin === 'imported' ? (
-        <button type="button" className="btn-primary">
-          {t.actions.createMine}
-        </button>
-      ) : (
-        <>
-          <Link to={`/ejercicios/${exercise.id}/editar`} className="btn-primary">
-            {t.actions.edit}
-          </Link>
-          <button type="button" className="btn-secondary">
-            {t.actions.copy}
+    <div className="flex flex-col gap-3">
+      <div className="flex flex-wrap gap-3">
+        {exercise.origin === 'imported' ? (
+          <button type="button" className="btn-primary" disabled={copy.pending} onClick={copy.copy}>
+            {t.actions.createMine}
           </button>
-          <button type="button" className="btn-secondary">
-            {t.actions.delete}
-          </button>
-        </>
-      )}
+        ) : (
+          <>
+            <Link to={`/ejercicios/${exercise.id}/editar`} className="btn-primary">
+              {t.actions.edit}
+            </Link>
+            <button
+              type="button"
+              className="btn-secondary"
+              disabled={copy.pending}
+              onClick={copy.copy}
+            >
+              {t.actions.copy}
+            </button>
+            <button type="button" className="btn-secondary">
+              {t.actions.delete}
+            </button>
+          </>
+        )}
+      </div>
+      {copy.error ? <ErrorState message={copy.error} /> : null}
     </div>
   )
 }

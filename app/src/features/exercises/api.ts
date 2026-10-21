@@ -179,3 +179,10 @@ export async function createExercise(payload: ExercisePayload, requestId: string
   if (error) throw error
   return data as string
 }
+
+/** Crea una copia propia y editable de un ejercicio visible (catálogo o propio), idempotente por `requestId`. */
+export async function copyExercise(id: string, requestId: string): Promise<string> {
+  const { data, error } = await supabase.rpc('copy_exercise', { id, request_id: requestId })
+  if (error) throw error
+  return data as string
+}
