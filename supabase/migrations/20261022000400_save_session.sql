@@ -1,7 +1,7 @@
 -- T025 (spec 006, FR-010, FR-012 a FR-014, FR-028 a FR-035, FR-038, FR-045, FR-047): guardar el contenido de una
 -- sesión de forma atómica e idempotente.
 --
--- `save_session` REEMPLAZA los ejercicios y las series de la sesión por los del payload (research.md, Decisión 4):
+-- `save_workout` REEMPLAZA los ejercicios y las series de la sesión por los del payload (research.md, Decisión 4):
 -- repetir el envío deja el mismo resultado. La revisión (`revision`) detecta que otro dispositivo guardó antes sin
 -- pisarlo en silencio; y un hash del contenido permite reconocer el reintento de un guardado cuya respuesta se perdió
 -- (se vuelve a enviar con la revisión anterior y el mismo contenido) y devolver el estado actual sin error.
@@ -97,7 +97,7 @@ $$;
 revoke all on function private.clean_session_set(jsonb, text) from public, anon, authenticated;
 
 -- Devuelve { revision, status, modified, corrected_at, finished_at }.
-create function public.save_session(id uuid, payload jsonb, expected_revision integer, finish boolean default false)
+create function public.save_workout(id uuid, payload jsonb, expected_revision integer, finish boolean default false)
 returns jsonb
 language plpgsql
 security definer
@@ -141,7 +141,7 @@ begin
     raise exception 'invalid_session:invalid_payload:payload' using errcode = '22023';
   end if;
 
-  select * into v_s from public.workout_sessions s where s.id = save_session.id and s.user_id = v_user for update;
+  select * into v_s from public.workout_sessions s where s.id = save_workout.id and s.user_id = v_user for update;
   if not found then
     raise exception 'not_found: la sesion no existe' using errcode = 'P0002';
   end if;
@@ -321,5 +321,5 @@ begin
 end
 $$;
 
-revoke all on function public.save_session(uuid, jsonb, integer, boolean) from public, anon;
-grant execute on function public.save_session(uuid, jsonb, integer, boolean) to authenticated;
+revoke all on function public.save_workout(uuid, jsonb, integer, boolean) from public, anon;
+grant execute on function public.save_workout(uuid, jsonb, integer, boolean) to authenticated;

@@ -27,49 +27,49 @@
 
 ## Sesiones: ciclo de vida
 
-### `plan_session(session_date date, routine_id uuid, request_id uuid, client_timezone text) → uuid`
+### `plan_workout(session_date date, routine_id uuid, request_id uuid, client_timezone text) → uuid`
 
 - **Efecto**: crea una sesión `planned` en `session_date` (hoy o futura, con el «hoy» del servidor y la zona del perfil). Con `routine_id` copia su contenido a `session_plan_items` refrescando nombre y tipo de medición desde el ejercicio vigente (si el ejercicio ya no existe usa la instantánea de la rutina; si hay objetivos incompatibles con el tipo vigente, no se copian y el ítem queda con `targets_dropped`). Sin `routine_id` crea una sesión sin plan. Idempotente por `request_id`.
 - **Errores**: `invalid_date` (anterior a hoy), `not_found` (rutina ajena o inexistente), `request_required`.
 - **Requisitos**: FR-015, FR-017, FR-022, FR-027, FR-027a, FR-037.
 
-### `set_session_routine(id uuid, routine_id uuid) → uuid`
+### `set_workout_routine(id uuid, routine_id uuid) → uuid`
 
 - **Efecto**: en una sesión `planned`, reemplaza el plan por el de otra rutina; con `routine_id` nulo quita el plan (la sesión queda sin planificación). No toca otros días.
 - **Errores**: `invalid_transition` si la sesión no está `planned`, `not_found`.
 - **Requisitos**: FR-027a.
 
-### `reschedule_session(id uuid, new_date date, request_id uuid, client_timezone text) → jsonb`
+### `reschedule_workout(id uuid, new_date date, request_id uuid, client_timezone text) → jsonb`
 
 - **Efecto**: mueve una sesión `planned` (o vuelve a planificar una `cancelled`, que pasa a `planned`) a `new_date` de hoy o futura. Es la misma sesión: no se crea otra. Agrega una fila a `session_date_changes`, suma uno a `rescheduled_count` y devuelve `{ id, session_date, status, rescheduled_count }`. Mover a la misma fecha en la que ya está no cambia nada. Idempotente por `request_id`: repetirlo devuelve el movimiento ya hecho.
 - **Errores**: `invalid_date` (anterior a hoy), `invalid_transition` (`in_progress` o `completed`: la fecha de lo que ya ocurrió no cambia, FR-024), `not_found`.
 - **Requisitos**: FR-023, FR-024, FR-025, FR-047.
 
-### `cancel_session(id uuid) → jsonb`
+### `cancel_workout(id uuid) → jsonb`
 
 - **Efecto**: pasa una sesión `planned` a `cancelled`, conservando su plan. Si ya está cancelada no cambia nada. No borra datos.
 - **Errores**: `invalid_transition` (`in_progress` o `completed`), `not_found`.
 - **Requisitos**: FR-025.
 
-### `start_session(session_date date, request_id uuid, client_timezone text) → jsonb`
+### `start_workout(session_date date, request_id uuid, client_timezone text) → jsonb`
 
 - **Efecto**: crea una sesión **vacía** `in_progress` en `session_date` (por omisión hoy; no puede ser futura) y fija `started_at`. Devuelve `{ id, session_date, status, revision }`. Idempotente por `request_id`.
 - **Errores**: `session_in_progress` (ya hay otra abierta; el mensaje lleva su identificador para ofrecer continuarla, FR-009), `invalid_date` (futura), `request_required`.
 - **Requisitos**: FR-007, FR-009, FR-010, FR-011.
 
-### `start_session_from_routine(routine_id uuid, session_date date, request_id uuid, client_timezone text) → jsonb`
+### `start_workout_from_routine(routine_id uuid, session_date date, request_id uuid, client_timezone text) → jsonb`
 
-- **Efecto**: igual que `start_session`, pero la sesión nace con el plan de la rutina (copia de sus ítems con las instantáneas refrescadas, como en `plan_session`). Idempotente por `request_id`.
-- **Errores**: los de `start_session` y `not_found` (rutina ajena o inexistente).
+- **Efecto**: igual que `start_workout`, pero la sesión nace con el plan de la rutina (copia de sus ítems con las instantáneas refrescadas, como en `plan_workout`). Idempotente por `request_id`.
+- **Errores**: los de `start_workout` y `not_found` (rutina ajena o inexistente).
 - **Requisitos**: FR-007, FR-015, FR-037.
 
-### `start_planned_session(id uuid, session_date date, request_id uuid, client_timezone text) → jsonb`
+### `start_planned_workout(id uuid, session_date date, request_id uuid, client_timezone text) → jsonb`
 
 - **Efecto**: pasa una sesión `planned` de fecha de hoy o anterior a `in_progress`, conservando su plan, y fija `started_at`. `session_date` es el día en que se hizo: nulo significa hoy; no puede ser futuro. Si difiere de la fecha planificada, la sesión pasa a ese día, se agrega una fila a `session_date_changes`, sube `rescheduled_count` y queda el recorrido de fechas (no se pierde la fecha original). Si la sesión ya está `in_progress` devuelve su estado actual sin cambiar nada (idempotente), y el movimiento se repite de forma idempotente por `request_id`.
 - **Errores**: `session_in_progress` (otra distinta ya está abierta), `invalid_date` (la fecha planificada o la elegida es futura: primero hay que reprogramar), `invalid_transition` (cancelada o realizada), `not_found`, `request_required`.
 - **Requisitos**: FR-009, FR-026.
 
-### `save_session(id uuid, payload jsonb, expected_revision integer, finish boolean) → jsonb`
+### `save_workout(id uuid, payload jsonb, expected_revision integer, finish boolean) → jsonb`
 
 - **Efecto**: reemplaza **de forma atómica** la nota, los ejercicios realizados y sus series por los del `payload`.
   - Sesión `in_progress`: guarda el avance; con `finish = true` además pasa a `completed`, fija `finished_at` y calcula `modified`.
@@ -136,5 +136,5 @@ Sin sesión vigente nada es visible. Un ejercicio, rutina o sesión ajena se com
 
 - **Instantánea**: el nombre y el tipo de medición de un ejercicio de plan, de rutina o de sesión no cambian después de insertarse; solo `exercise_id` puede pasar a nulo (cuando se elimina el ejercicio).
 - **Separación**: nada de `session_plan_items` se modifica al guardar lo realizado, ni al revés.
-- **Atomicidad**: `save_session` y las funciones de rutina no dejan datos a medias ante un error.
+- **Atomicidad**: `save_workout` y las funciones de rutina no dejan datos a medias ante un error.
 - **Sin contenido en registros**: ningún mensaje de error, registro ni excepción incluye nombres, notas ni valores de la persona.

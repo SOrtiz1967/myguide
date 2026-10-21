@@ -77,14 +77,14 @@ El máximo de 30 ejercicios por rutina lo impone `create_routine`/`update_routin
 
 | Desde | Hacia | Quién | Condición |
 |---|---|---|---|
-| (nada) | `planned` | `plan_session` | fecha de hoy o futura |
-| (nada) | `in_progress` | `start_session`, `start_session_from_routine` | fecha de hoy o pasada; sin otra sesión en curso |
-| `planned` | `in_progress` | `start_planned_session` | fecha de hoy o anterior; sin otra en curso; puede pasar al día en que se hizo (hoy o pasado), con su fila en `session_date_changes` |
-| `planned` | `planned` | `reschedule_session`, `set_session_routine` | nueva fecha de hoy o futura |
-| `planned` | `cancelled` | `cancel_session` | |
-| `cancelled` | `planned` | `reschedule_session` | nueva fecha de hoy o futura (volver a planificar) |
-| `in_progress` | `completed` | `save_session` con `finish` | |
-| `completed` | `completed` | `save_session` (corrección) | marca `corrected_at` |
+| (nada) | `planned` | `plan_workout` | fecha de hoy o futura |
+| (nada) | `in_progress` | `start_workout`, `start_workout_from_routine` | fecha de hoy o pasada; sin otra sesión en curso |
+| `planned` | `in_progress` | `start_planned_workout` | fecha de hoy o anterior; sin otra en curso; puede pasar al día en que se hizo (hoy o pasado), con su fila en `session_date_changes` |
+| `planned` | `planned` | `reschedule_workout`, `set_workout_routine` | nueva fecha de hoy o futura |
+| `planned` | `cancelled` | `cancel_workout` | |
+| `cancelled` | `planned` | `reschedule_workout` | nueva fecha de hoy o futura (volver a planificar) |
+| `in_progress` | `completed` | `save_workout` con `finish` | |
+| `completed` | `completed` | `save_workout` (corrección) | marca `corrected_at` |
 | cualquiera | (eliminada) | borrado directo (RLS) | con confirmación en la interfaz |
 
 Cualquier otra transición responde `invalid_transition`. Una sesión `in_progress` o `completed` **nunca** cambia de fecha (FR-024).
@@ -116,7 +116,7 @@ El plan de una sesión: copia de los ítems de la rutina al crear la sesión. **
 | `target_reps`, `target_weight_kg`, `target_duration_s`, `target_distance_km` | | las mismas reglas y la misma restricción por tipo que en `routine_exercises` |
 | `targets_dropped` | boolean | verdadero si la rutina traía objetivos incompatibles con el tipo vigente y no se copiaron |
 
-**Disparador de inmutabilidad**: ninguna columna cambia después de insertar, salvo `exercise_id` que solo puede pasar a nulo. El plan solo se reemplaza entero (borrar e insertar) desde `set_session_routine`, y solo mientras la sesión está `planned`.
+**Disparador de inmutabilidad**: ninguna columna cambia después de insertar, salvo `exercise_id` que solo puede pasar a nulo. El plan solo se reemplaza entero (borrar e insertar) desde `set_workout_routine`, y solo mientras la sesión está `planned`.
 
 ## `public.session_exercises` (lo realizado)
 
@@ -193,9 +193,9 @@ Todas con `search_path` vacío y sin permiso para el cliente.
 | FR-007 a FR-013 (sesiones y estados) | `workout_sessions`, índice de sesión en curso, transiciones |
 | FR-014 (esfuerzo) | `session_exercises.effort` |
 | FR-015 a FR-020 (plan frente a realizado) | `session_plan_items` separada de `session_exercises`; `modified`; `is_substitute` |
-| FR-021 a FR-027a (calendario) | `session_date`, `session_date_changes`, `rescheduled_count`, `plan_session`, `reschedule_session`, `cancel_session`, `set_session_routine` |
+| FR-021 a FR-027a (calendario) | `session_date`, `session_date_changes`, `rescheduled_count`, `plan_workout`, `reschedule_workout`, `cancel_workout`, `set_workout_routine` |
 | FR-028 a FR-033 (series) | `session_sets` y sus restricciones |
 | FR-034 a FR-040 (integridad) | instantáneas inmutables, `set null`, `corrected_at`, borrado |
 | FR-041 a FR-044 (historia) | `exercise_history`; sin gráficos |
-| FR-045 a FR-049 (borrador, idempotencia) | `revision`, `client_request_id`, `save_session` |
+| FR-045 a FR-049 (borrador, idempotencia) | `revision`, `client_request_id`, `save_workout` |
 | FR-050 a FR-054 (privacidad) | RLS, cascada de cuenta |

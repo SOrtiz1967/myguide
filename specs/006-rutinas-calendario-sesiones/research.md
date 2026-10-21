@@ -41,7 +41,7 @@ Esta spec no tiene fuentes externas ni licencias que investigar (a diferencia de
 
 ## Decisión 4: todas las escrituras pasan por funciones; guardar la sesión es «reemplazar todo» con revisión
 
-**Decisión**: el cliente no inserta ni actualiza tablas; llama a funciones `security definer` (con `search_path` vacío, `auth.uid()` y sesión vigente verificados), como en la spec 005. Las funciones de ciclo de vida son pequeñas (planificar, reprogramar, cancelar, iniciar). Guardar el contenido de una sesión es **una sola función** `save_session(id, payload, expected_revision, finish)` que reemplaza los ejercicios y las series de la sesión por los del payload, de forma atómica. La sesión tiene una columna `revision` que sube con cada guardado; si `expected_revision` no coincide, la función rechaza con `stale_revision`.
+**Decisión**: el cliente no inserta ni actualiza tablas; llama a funciones `security definer` (con `search_path` vacío, `auth.uid()` y sesión vigente verificados), como en la spec 005. Las funciones de ciclo de vida son pequeñas (planificar, reprogramar, cancelar, iniciar). Guardar el contenido de una sesión es **una sola función** `save_workout(id, payload, expected_revision, finish)` que reemplaza los ejercicios y las series de la sesión por los del payload, de forma atómica. La sesión tiene una columna `revision` que sube con cada guardado; si `expected_revision` no coincide, la función rechaza con `stale_revision`.
 
 **Por qué**:
 - El estado de una sesión en curso vive en el formulario (borrador local), así que «enviar el estado completo» es lo natural y es **idempotente por construcción**: repetir el envío deja el mismo resultado (FR-047).

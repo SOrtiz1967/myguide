@@ -63,7 +63,7 @@ specs/006-rutinas-calendario-sesiones/
 ├── data-model.md
 ├── quickstart.md
 ├── contracts/
-│   ├── database-api.md      # funciones, payload de save_session, lectura y errores
+│   ├── database-api.md      # funciones, payload de save_workout, lectura y errores
 │   └── ui-routes.md         # rutas, pantallas, estados y accesibilidad
 ├── checklists/requirements.md
 └── tasks.md                 # Fase 2 (/speckit-tasks)
@@ -113,7 +113,7 @@ Documentacion/                # roadmap y README de supabase
 |---|---|---|
 | Siete tablas nuevas, con plan y realizado separados | El Principio II exige que planificación y ejecución sean conceptos separados; la separación en tablas lo garantiza por construcción | Una tabla con columnas «planificado» y «realizado» mezcla los conceptos y confunde «sin dato» con «no planificado» |
 | Instantánea del ejercicio repetida en tres tablas (rutina, plan, realizado) | Cada una es un registro con su propio momento; el pasado no puede depender del ejercicio vivo | Leer el ejercicio vivo reescribiría el historial al editarlo (prohibido por el Principio II) |
-| `save_session` como reemplazo completo con revisión, en lugar de operaciones granulares | Es idempotente por construcción, atómico y no necesita cola de operaciones (sincronización diferida, no permitida) | Operaciones granulares multiplican las llamadas y dejan estados parciales ante un corte |
+| `save_workout` como reemplazo completo con revisión, en lugar de operaciones granulares | Es idempotente por construcción, atómico y no necesita cola de operaciones (sincronización diferida, no permitida) | Operaciones granulares multiplican las llamadas y dejan estados parciales ante un corte |
 | Calendario propio en lugar de una biblioteca | Accesibilidad y cero dependencias nuevas | Las bibliotecas pesan cientos de KB y traen su propio manejo de fechas y de foco |
 | Autoguardado al servidor además del borrador local | La sesión «En curso» debe existir en el servidor para verse en el calendario y no depender de un solo dispositivo | Guardar solo al terminar pierde la sesión ante la pérdida del dispositivo |
 

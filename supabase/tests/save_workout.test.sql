@@ -18,7 +18,7 @@ select tests.create_exercise(:'uid_b', 'Ejercicio de B e2e', 'reps_weight') as b
 select tests.create_catalog_exercise('free-exercise-db', 'SV-1', 'Remo del catálogo e2e', 'reps_weight') as cat \gset
 
 -- La sesión en curso de A.
-select (private.start_session_at(:'uid_a', null, '10000000-0000-0000-0000-000000000001', now(), 'UTC')) ->> 'id' as sess \gset
+select (private.start_workout_at(:'uid_a', null, '10000000-0000-0000-0000-000000000001', now(), 'UTC')) ->> 'id' as sess \gset
 
 -- Variables para usar dentro de $$...$$ (psql no las interpola ahí) -----------------------------------------------------------
 create temp table vars (k text primary key, v text);
@@ -41,9 +41,9 @@ create function pg_temp.rev(p_key text default 'sess') returns integer language 
   select revision from public.workout_sessions where id = pg_temp.v(p_key) $$;
 -- Guarda con la revisión actual (o la que se indique).
 create function pg_temp.save(p text, p_finish boolean default false, p_key text default 'sess') returns jsonb language plpgsql as $$
-begin return public.save_session(pg_temp.v(p_key), pg_temp.fill(p)::jsonb, pg_temp.rev(p_key), p_finish); end $$;
+begin return public.save_workout(pg_temp.v(p_key), pg_temp.fill(p)::jsonb, pg_temp.rev(p_key), p_finish); end $$;
 create function pg_temp.save_rev(p text, p_rev integer, p_finish boolean default false) returns jsonb language plpgsql as $$
-begin return public.save_session(pg_temp.v('sess'), pg_temp.fill(p)::jsonb, p_rev, p_finish); end $$;
+begin return public.save_workout(pg_temp.v('sess'), pg_temp.fill(p)::jsonb, p_rev, p_finish); end $$;
 
 select tests.authenticate_as(:'uid_a');
 
@@ -129,20 +129,20 @@ select lives_ok($j$ select pg_temp.save('{"exercises": [{"id": "{ex1}", "exercis
 select throws_ilike(format($$ select pg_temp.save(%L) $$, '{"note": "' || repeat('a', 1001) || '", "exercises": []}'), '%invalid_session:note_too_long%', 'FR-013: nota de sesión de 1.001 caracteres');
 select throws_ilike(format($$ select pg_temp.save(%L) $$, '{"exercises": [{"id": "{ex1}", "exercise_id": "{rw}", "note": "' || repeat('a', 501) || '", "sets": []}]}'), '%invalid_session:note_too_long%', 'FR-032: nota de ejercicio de 501 caracteres');
 select throws_ilike(
-  $j$ select public.save_session(pg_temp.v('sess'),
+  $j$ select public.save_workout(pg_temp.v('sess'),
         jsonb_build_object('exercises', (select jsonb_agg(jsonb_build_object('id', gen_random_uuid(), 'exercise_id', pg_temp.v('rw'), 'sets', '[]'::jsonb)) from generate_series(1, 31))),
         pg_temp.rev(), false) $j$,
   '%invalid_session:too_many_exercises%', 'FR-033: más de 30 ejercicios'
 );
 select throws_ilike(
-  $j$ select public.save_session(pg_temp.v('sess'),
+  $j$ select public.save_workout(pg_temp.v('sess'),
         jsonb_build_object('exercises', jsonb_build_array(jsonb_build_object('id', pg_temp.v('ex1'), 'exercise_id', pg_temp.v('rw'),
           'sets', (select jsonb_agg(jsonb_build_object('reps', 5)) from generate_series(1, 21))))),
         pg_temp.rev(), false) $j$,
   '%invalid_session:too_many_sets%', 'FR-028: más de 20 series'
 );
 select lives_ok(
-  $j$ select public.save_session(pg_temp.v('sess'),
+  $j$ select public.save_workout(pg_temp.v('sess'),
         jsonb_build_object('exercises', (select jsonb_agg(jsonb_build_object('id', gen_random_uuid(), 'exercise_id', pg_temp.v('rw'),
           'sets', (select jsonb_agg(jsonb_build_object('reps', 5)) from generate_series(1, 20)))) from generate_series(1, 30))),
         pg_temp.rev(), false) $j$,
@@ -229,10 +229,10 @@ select throws_ilike(
 );
 
 -- cargas mal formadas y sesiones ajenas -----------------------------------------------------------------------------------------------------
-select throws_ilike($j$ select public.save_session(pg_temp.v('sess'), '[]'::jsonb, pg_temp.rev(), false) $j$, '%invalid_session:invalid_payload%', 'un payload que no es un objeto se rechaza');
-select throws_ilike($j$ select public.save_session(pg_temp.v('sess'), '{"exercises": 5}'::jsonb, pg_temp.rev(), false) $j$, '%invalid_session:invalid_payload%', 'ejercicios que no son una lista se rechazan');
-select throws_ilike($j$ select public.save_session(pg_temp.v('other_b'), '{}'::jsonb, 1, false) $j$, '%not_found%', 'una sesión ajena se comporta como inexistente');
-select throws_ilike($j$ select public.save_session(gen_random_uuid(), '{}'::jsonb, 1, false) $j$, '%not_found%', 'una sesión inexistente → not_found');
+select throws_ilike($j$ select public.save_workout(pg_temp.v('sess'), '[]'::jsonb, pg_temp.rev(), false) $j$, '%invalid_session:invalid_payload%', 'un payload que no es un objeto se rechaza');
+select throws_ilike($j$ select public.save_workout(pg_temp.v('sess'), '{"exercises": 5}'::jsonb, pg_temp.rev(), false) $j$, '%invalid_session:invalid_payload%', 'ejercicios que no son una lista se rechazan');
+select throws_ilike($j$ select public.save_workout(pg_temp.v('other_b'), '{}'::jsonb, 1, false) $j$, '%not_found%', 'una sesión ajena se comporta como inexistente');
+select throws_ilike($j$ select public.save_workout(gen_random_uuid(), '{}'::jsonb, 1, false) $j$, '%not_found%', 'una sesión inexistente → not_found');
 
 -- terminar y corregir ---------------------------------------------------------------------------------------------------------------------------
 select pg_temp.rev() as rev_finish \gset
@@ -268,8 +268,8 @@ select tests.create_session(:'uid_a', date '2026-12-01', 'planned') as planned_s
 select tests.create_session(:'uid_a', date '2026-12-02', 'cancelled') as cancelled_s \gset
 insert into vars values ('planned_s', :'planned_s'), ('cancelled_s', :'cancelled_s');
 select tests.authenticate_as(:'uid_a');
-select throws_ilike($j$ select public.save_session(pg_temp.v('planned_s'), '{}'::jsonb, 1, false) $j$, '%invalid_transition%', 'una sesión planificada no se guarda sin iniciarla');
-select throws_ilike($j$ select public.save_session(pg_temp.v('cancelled_s'), '{}'::jsonb, 1, false) $j$, '%invalid_transition%', 'una sesión cancelada tampoco');
+select throws_ilike($j$ select public.save_workout(pg_temp.v('planned_s'), '{}'::jsonb, 1, false) $j$, '%invalid_transition%', 'una sesión planificada no se guarda sin iniciarla');
+select throws_ilike($j$ select public.save_workout(pg_temp.v('cancelled_s'), '{}'::jsonb, 1, false) $j$, '%invalid_transition%', 'una sesión cancelada tampoco');
 
 reset role;
 select tests.create_routine(:'uid_a', 'Rutina e2e', array[:'rw'::uuid, :'bw'::uuid]) as r \gset
@@ -306,11 +306,11 @@ select is(
 
 -- una sesión que cruza la medianoche conserva el día en que empezó (FR-010) ----------------------------------------------------------------
 reset role;
-select (private.start_session_at(:'uid_b', null, '20000000-0000-0000-0000-000000000001', timestamptz '2026-10-22 02:30:00+00', 'America/Argentina/Buenos_Aires')) ->> 'id' as b_sess \gset
+select (private.start_workout_at(:'uid_b', null, '20000000-0000-0000-0000-000000000001', timestamptz '2026-10-22 02:30:00+00', 'America/Argentina/Buenos_Aires')) ->> 'id' as b_sess \gset
 insert into vars values ('b_sess', :'b_sess');
 select tests.authenticate_as(:'uid_b');
 select is(
-  (public.save_session(pg_temp.v('b_sess'), '{"exercises": []}'::jsonb, 1, true)) ->> 'status', 'completed',
+  (public.save_workout(pg_temp.v('b_sess'), '{"exercises": []}'::jsonb, 1, true)) ->> 'status', 'completed',
   'B termina su sesión, iniciada antes de la medianoche, mucho después'
 );
 select is(
@@ -322,11 +322,11 @@ select tests.clear_authentication();
 -- sesión vencida, sin sesión y permisos -------------------------------------------------------------------------------------------------------
 update public.profiles set last_active_at = now() - interval '31 days' where user_id = :'uid_a';
 select tests.authenticate_as(:'uid_a');
-select throws_ilike($j$ select public.save_session(pg_temp.v('sess'), '{}'::jsonb, 1, false) $j$, '%session_expired%', 'con la sesión vencida no se guarda');
+select throws_ilike($j$ select public.save_workout(pg_temp.v('sess'), '{}'::jsonb, 1, false) $j$, '%session_expired%', 'con la sesión vencida no se guarda');
 select tests.clear_authentication();
-select throws_ilike($j$ select public.save_session(pg_temp.v('sess'), '{}'::jsonb, 1, false) $j$, '%session_expired%', 'sin sesión no se guarda');
-select ok(not has_function_privilege('anon', 'public.save_session(uuid, jsonb, integer, boolean)', 'execute'), 'anon no puede ejecutarla');
-select ok(has_function_privilege('authenticated', 'public.save_session(uuid, jsonb, integer, boolean)', 'execute'), 'authenticated sí');
+select throws_ilike($j$ select public.save_workout(pg_temp.v('sess'), '{}'::jsonb, 1, false) $j$, '%session_expired%', 'sin sesión no se guarda');
+select ok(not has_function_privilege('anon', 'public.save_workout(uuid, jsonb, integer, boolean)', 'execute'), 'anon no puede ejecutarla');
+select ok(has_function_privilege('authenticated', 'public.save_workout(uuid, jsonb, integer, boolean)', 'execute'), 'authenticated sí');
 
 select * from finish();
 rollback;

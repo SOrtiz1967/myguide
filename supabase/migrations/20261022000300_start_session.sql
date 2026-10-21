@@ -1,7 +1,7 @@
 -- T024 (spec 006, FR-007, FR-009 a FR-011, FR-047): iniciar una sesión vacía.
 --
 -- El «hoy» lo calcula el servidor con la zona del perfil, no el reloj del dispositivo. La lógica vive en
--- `private.start_session_at`, con la hora y la zona como parámetros, para poder probarla con una hora simulada
+-- `private.start_workout_at`, con la hora y la zona como parámetros, para poder probarla con una hora simulada
 -- (el mismo patrón que `set_energy_goal_at` de la spec 004). Una sola sesión en curso por persona: lo garantiza un
 -- índice único parcial, y aquí se responde con el id de la abierta para que la interfaz ofrezca continuarla.
 
@@ -19,7 +19,7 @@ as $$
   )
 $$;
 
-create function private.start_session_at(
+create function private.start_workout_at(
   p_user uuid,
   p_date date,
   p_request uuid,
@@ -80,10 +80,10 @@ end
 $$;
 
 revoke all on function private.session_brief(public.workout_sessions) from public, anon, authenticated;
-revoke all on function private.start_session_at(uuid, date, uuid, timestamptz, text) from public, anon, authenticated;
+revoke all on function private.start_workout_at(uuid, date, uuid, timestamptz, text) from public, anon, authenticated;
 
 -- Devuelve { id, session_date, status, revision }. `session_date` nulo es hoy; no puede ser futura.
-create function public.start_session(session_date date default null, request_id uuid default null, client_timezone text default null)
+create function public.start_workout(session_date date default null, request_id uuid default null, client_timezone text default null)
 returns jsonb
 language plpgsql
 security definer
@@ -95,11 +95,11 @@ begin
   if v_user is null or not private.is_session_fresh() then
     raise exception 'session_expired: la sesion vencio' using errcode = '42501';
   end if;
-  return private.start_session_at(
+  return private.start_workout_at(
     v_user, session_date, request_id, now(), private.effective_timezone(v_user, client_timezone)
   );
 end
 $$;
 
-revoke all on function public.start_session(date, uuid, text) from public, anon;
-grant execute on function public.start_session(date, uuid, text) to authenticated;
+revoke all on function public.start_workout(date, uuid, text) from public, anon;
+grant execute on function public.start_workout(date, uuid, text) to authenticated;
