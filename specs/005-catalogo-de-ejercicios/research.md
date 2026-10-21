@@ -173,3 +173,30 @@ Migraciones aplicadas con `supabase db reset --local`, luego `import:ejercicios-
 **Hallazgo: tope de músculos secundarios.** La primera carga omitió 7 ejercicios con `invalid_muscle`: la restricción `exercises_secondary_muscles_check` permitía 8 y la fuente trae hasta 10. En lugar de recortar datos de la fuente, se subió el tope a **10** en la base, la función `create_exercise`, el esquema del cliente, `exercise-lists.ts`, las pruebas y los documentos. Los músculos principales siguen en 5 como máximo.
 
 Nota: en la base de desarrollo algunos nombres se repiten entre fuentes porque la muestra de desarrollo convive con las fuentes reales; no ocurre en producción, donde la muestra no se carga.
+
+### Mediciones (T065, 2026-10-21)
+
+Equipo de desarrollo, base local con el catálogo real cargado (928 ejercicios importados: 876 de free-exercise-db, 21 de `myguide-base` y la muestra de desarrollo), compilación de producción en el puerto 4173, emulación de Pixel 7.
+
+| Criterio | Medido | Tope | Resultado |
+|---|---|---|---|
+| SC-001: de abrir la búsqueda al detalle de «sentadilla con barra» | 1,4 s | 15 s | cumple |
+| SC-003: ejercicio propio completo (nombre, tipo, músculo principal y secundario, equipamiento; 6 interacciones) | 0,9 s automatizado | 60 s | cumple |
+| SC-002, por la API real: 90 consultas (texto, filtros y ambos) | p95 33 ms, máximo 77 ms | 1 s | cumple |
+| SC-002, por la interfaz: 6 búsquedas, desde escribir hasta el primer resultado | p95 410 ms | 1 s | cumple |
+| SC-012: encontrar por nombre original en inglés (40 al azar) | 40 de 40 | 100 % | cumple |
+| SC-012: encontrar por un sinónimo (40 al azar) | 40 de 40 | 100 % | cumple |
+| SC-012: filtros por 18 músculos y 12 equipamientos, todas las páginas | 0 diferencias contra la tabla | 100 % | cumple |
+
+El tiempo de SC-003 es de un guion automatizado y por eso solo acota por debajo lo que tarda una persona; lo que pesa es el número de interacciones (6), sin pasos opcionales.
+
+**Tiempo de `search_exercises` según el tamaño del catálogo** (script `mediciones/bench_search.sql`, ejecutado como cuenta autenticada, o sea con RLS real; 130 consultas por tamaño, 5 repeticiones cada una tras una pasada de calentamiento; ejercicios sintéticos con nombres, alias, músculos, equipamiento y descripción; todo se deshace al terminar):
+
+| Filas | Tabla + índices | Con texto (p50 / p95 / máx) | Con filtros | Con ambos | Todas (p95) |
+|---|---|---|---|---|---|
+| 2.030 | 5,5 MB | 7,4 / 12,0 / 14,6 ms | p95 7,4 ms | p95 8,3 ms | 11,7 ms |
+| 20.030 | 32 MB | 43,3 / 58,9 / 76,5 ms | p95 29,2 ms | p95 36,3 ms | 56,0 ms |
+
+Con 20.000 filas, diez veces el catálogo previsto, el percentil 95 sigue en 56 ms: no hace falta ajustar el índice ni el disparador. La medición de la función no incluye la red ni PostgREST; la de la API real de arriba sí.
+
+**Hallazgos de accesibilidad y diseño de esta etapa** (T062 y T063): el grupo del tipo de medición usaba `aria-required` sobre un `fieldset`, que axe rechaza; ahora es un `radiogroup`. En teléfono (375 px) el detalle se desbordaba 132 px con palabras muy largas en los otros nombres y en los pasos; ahora rompen renglón.
