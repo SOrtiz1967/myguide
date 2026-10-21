@@ -376,6 +376,85 @@ export const es = {
       error: 'No pudimos cargar las fuentes de ejercicios.',
     },
   },
+  // Spec 006 (rutinas, calendario y sesiones de entrenamiento). Lenguaje neutral (Principio IV, FR-051): sin
+  // rachas, sin culpa y sin valorar el rendimiento; lo que no se hizo se dice «No realizado» o «Sin registrar».
+  training: {
+    navLink: 'Entrenamiento',
+    title: 'Entrenamiento',
+    noData: 'sin dato',
+    noSets: 'Sin series',
+    noPlan: 'Sin planificación',
+    overdue: 'Sin registrar',
+    status: {
+      planned: 'Planificada',
+      in_progress: 'En curso',
+      completed: 'Realizada',
+      cancelled: 'Cancelada',
+    },
+    marks: { rescheduled: 'Reprogramada', modified: 'Modificada', corrected: 'Corregida' },
+    // Nombre de cada valor de una serie, para decir cuál falta («peso: sin dato»).
+    fieldMissing: {
+      reps: 'repeticiones',
+      weight_kg: 'peso',
+      duration_s: 'tiempo',
+      distance_km: 'distancia',
+    },
+    // Etiquetas de los campos de una serie, con su unidad visible (FR-029).
+    fields: {
+      reps: 'Repeticiones',
+      weight_kg: 'Peso (kg)',
+      duration_s: 'Tiempo (mm:ss)',
+      distance_km: 'Distancia (km)',
+    },
+    plan: { notDone: 'No realizado' },
+    validation: {
+      number: 'Escribe un número.',
+      reps: 'Las repeticiones van de 1 a 999, sin decimales.',
+      weight: 'El peso va de 0 a 999,9 kg.',
+      duration: 'El tiempo va de 0:01 a 24:00:00. Escríbelo como mm:ss, por ejemplo 1:30.',
+      distance: 'La distancia es mayor que 0 y llega hasta 999,9 km.',
+    },
+    effort: {
+      label: 'Esfuerzo percibido',
+      hint: 'De 1 (muy suave) a 10 (el máximo esfuerzo), para todas las series de este ejercicio.',
+      none: 'Sin indicar',
+      value: (effort: number) => `${effort} de 10`,
+    },
+    saveIndicator: {
+      saved: 'Guardado',
+      saving: 'Guardando…',
+      unsaved: 'Sin guardar en el servidor',
+      offline: 'Sin guardar en el servidor: no hay conexión',
+      failed: 'Sin guardar en el servidor: no pudimos guardar',
+    },
+    errors: {
+      sessionInProgress: 'Ya tienes una sesión en curso. Continúala antes de empezar otra.',
+      staleRevision: 'Esta sesión cambió en otro dispositivo.',
+      invalidTransition: 'Esta acción no está disponible en el estado actual de la sesión.',
+      invalidDate: 'Esa fecha no es válida para esta acción.',
+      notFound: 'No encontramos este entrenamiento',
+      saveFailed: 'No pudimos guardar. Lo que escribiste se conserva en este dispositivo.',
+      routine: {
+        name_required: 'Escribe un nombre para la rutina.',
+        name_too_long: 'El nombre puede tener hasta 80 caracteres.',
+        exercises_required: 'Agrega al menos un ejercicio.',
+        too_many_exercises: 'Puedes agregar hasta 30 ejercicios.',
+        exercise_not_found: 'Uno de los ejercicios ya no está disponible. Reemplázalo o quítalo.',
+        invalid_sets: 'Las series van de 1 a 20.',
+        invalid_target: 'Un objetivo no es válido para el tipo de ejercicio.',
+      } as Record<string, string>,
+      session: {
+        too_many_exercises: 'Puedes anotar hasta 30 ejercicios por sesión.',
+        too_many_sets: 'Puedes anotar hasta 20 series por ejercicio.',
+        invalid_set: 'Revisa los valores de las series.',
+        invalid_effort: 'El esfuerzo va de 1 a 10.',
+        note_too_long: 'La nota es demasiado larga.',
+        exercise_not_found: 'Uno de los ejercicios ya no está disponible.',
+        invalid_plan_item: 'Ese ejercicio no corresponde al plan de esta sesión.',
+        duplicate_id: 'No pudimos guardar el ejercicio. Vuelve a intentarlo.',
+      } as Record<string, string>,
+    },
+  },
   // Spec 003 (registro de comidas). Sin juicios sobre lo comido (Principio IV).
   meals: {
     navLink: 'Comidas',
