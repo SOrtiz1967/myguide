@@ -266,8 +266,8 @@ description: "Lista de tareas de la spec 005: catálogo de ejercicios"
   - `Documentacion/roadmap-specs.md`: spec 005 y qué queda para la 006;
   - `Documentacion/fuentes-datos.md`: revisar que la sección de ejercicios coincide con lo cargado;
   - `contracts/import-pipeline.md`: dejar anotado el ajuste de la copia fijada en el repositorio.
-- [ ] T068 Ejecutar los 32 escenarios del `quickstart.md` y registrar el resultado en `specs/005-catalogo-de-ejercicios/verification.md`
-- [ ] T069 Ejecutar `format:check`, `lint`, `typecheck`, `test`, `e2e` (por partes), `test:db`, `test:functions`, `test:import`, `test:config` y `check:secrets`; todo en verde antes de dar la spec por terminada
+- [X] T068 Ejecutar los 32 escenarios del `quickstart.md` y registrar el resultado en `specs/005-catalogo-de-ejercicios/verification.md`
+- [X] T069 Ejecutar `format:check`, `lint`, `typecheck`, `test`, `e2e` (por partes), `test:db`, `test:functions`, `test:import`, `test:config` y `check:secrets`; todo en verde antes de dar la spec por terminada
 
 ---
 
