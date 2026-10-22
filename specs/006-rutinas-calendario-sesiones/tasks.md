@@ -232,13 +232,13 @@ description: "Lista de tareas de la spec 006: rutinas, calendario y sesiones de 
 
 ### Tests for User Story 6 ⚠️
 
-- [ ] T069 [P] [US6] Prueba pgTAP en `supabase/tests/session_correct_delete.test.sql` (FR-035, FR-038, FR-039): corregir una sesión realizada fija `corrected_at`, recalcula `modified`, sube la revisión y conserva `exercise_name` y `measurement_type` aunque el ejercicio se haya renombrado, cambiado de tipo o eliminado; agregar, quitar y reordenar series en una corrección; `stale_revision` también en correcciones; eliminar una sesión (propia) borra sus hijos y la quita de la historia; las rutinas, el catálogo y otras sesiones no cambian (SC-004); ajena → no afecta ninguna fila
-- [ ] T070 [P] [US6] Pruebas de componente en `app/tests/component/SessionCorrection.test.tsx` (escenarios 40 y 41; deben fallar): «Corregir» vuelve al editor con el mismo guardado y muestra «Corregida» con la fecha; el nombre y el tipo de medición no se pueden editar; «Eliminar» con `ConfirmDialog` (foco inicial en «Cancelar», Escape cancela, el foco vuelve) y aviso claro si falla
-- [ ] T071 [US6] Prueba e2e en `app/tests/e2e/training-correct.spec.ts` (escenarios 40 a 42): corregir una serie y una nota, ver «Corregida», eliminar una sesión y verla desaparecer del calendario y de la historia; **editar y eliminar un ejercicio propio, y repetir la importación del catálogo, no cambia ninguna sesión ya creada** (escenario 42)
+- [X] T069 [P] [US6] Prueba pgTAP en `supabase/tests/session_correct_delete.test.sql` (FR-035, FR-038, FR-039): corregir una sesión realizada fija `corrected_at`, recalcula `modified`, sube la revisión y conserva `exercise_name` y `measurement_type` aunque el ejercicio se haya renombrado, cambiado de tipo o eliminado; agregar, quitar y reordenar series en una corrección; `stale_revision` también en correcciones; eliminar una sesión (propia) borra sus hijos y la quita de la historia; las rutinas, el catálogo y otras sesiones no cambian (SC-004); ajena → no afecta ninguna fila
+- [X] T070 [P] [US6] Pruebas de componente en `app/tests/component/SessionCorrection.test.tsx` (escenarios 40 y 41; deben fallar): «Corregir» vuelve al editor con el mismo guardado y muestra «Corregida» con la fecha; el nombre y el tipo de medición no se pueden editar; «Eliminar» con `ConfirmDialog` (foco inicial en «Cancelar», Escape cancela, el foco vuelve) y aviso claro si falla
+- [X] T071 [US6] Prueba e2e en `app/tests/e2e/training-correct.spec.ts` (escenarios 40 a 42): corregir una serie y una nota, ver «Corregida», eliminar una sesión y verla desaparecer del calendario y de la historia; **editar y eliminar un ejercicio propio, y repetir la importación del catálogo, no cambia ninguna sesión ya creada** (escenario 42)
 
 ### Implementation for User Story 6
 
-- [ ] T072 [US6] En `SessionPage.tsx` (vista realizada): «Corregir» (reabre el editor), «Corregida el …», «Eliminar» con confirmación y navegación posterior; textos de error. Hace pasar T070; el e2e de T071 queda en verde (la base ya lo soporta desde US1 y T069 lo fija)
+- [X] T072 [US6] En `SessionPage.tsx` (vista realizada): «Corregir» (reabre el editor), «Corregida el …», «Eliminar» con confirmación y navegación posterior; textos de error. Hace pasar T070; el e2e de T071 queda en verde (la base ya lo soporta desde US1 y T069 lo fija)
 
 **Checkpoint**: todas las historias funcionan. Escenarios 40 a 42.
 

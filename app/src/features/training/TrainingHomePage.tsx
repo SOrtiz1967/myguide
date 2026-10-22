@@ -1,9 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useRef, useState } from 'react'
-import { Link, useNavigate } from 'react-router'
+import { Link, useLocation, useNavigate } from 'react-router'
 import { EmptyState } from '../../components/EmptyState'
 import { ErrorState } from '../../components/ErrorState'
 import { LoadingState } from '../../components/LoadingState'
+import { SuccessMessage } from '../../components/SuccessMessage'
 import { es } from '../../copy/es'
 import { formatDate } from '../../lib/format'
 import { newRequestId } from '../../lib/ids'
@@ -86,6 +87,7 @@ function SessionRow({ session }: { session: SessionSummary }) {
 /** Inicio de entrenamiento: «Hoy», continuar una sesión abierta, registrar otra fecha y las últimas sesiones. */
 export function TrainingHomePage() {
   const navigate = useNavigate()
+  const deleted = (useLocation().state as { deleted?: boolean } | null)?.deleted
   const queryClient = useQueryClient()
   const open = useQuery({ queryKey: ['training', 'open'], queryFn: fetchInProgressSession })
   const recent = useQuery({
@@ -134,6 +136,7 @@ export function TrainingHomePage() {
 
   return (
     <div className="flex flex-col gap-6">
+      {deleted ? <SuccessMessage>{t.session.deleted}</SuccessMessage> : null}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-semibold tracking-tight">{t.title}</h1>
         <Link to="/entrenamiento/rutinas" className="btn-secondary">

@@ -493,6 +493,18 @@ export const es = {
         `${name}: ${sets === 1 ? '1 serie' : `${sets} series`}`,
       finishing: 'Guardando la sesión…',
       done: 'Sesión guardada',
+      correct: 'Corregir',
+      correctedOn: (date: string) => `Corregida el ${date}`,
+      correcting: 'Estás corrigiendo esta sesión. Los cambios se guardan en el servidor.',
+      finishCorrection: 'Listo, volver a la sesión',
+      delete: 'Eliminar la sesión',
+      confirmDeleteTitle: '¿Eliminar esta sesión?',
+      confirmDeleteBody:
+        'Se elimina la sesión con todo lo que registraste. Tus rutinas y tus ejercicios no cambian.',
+      confirmDelete: 'Sí, eliminar',
+      cancelDelete: 'Cancelar',
+      deleteFailed: 'No pudimos eliminar la sesión. Sigue como estaba.',
+      deleted: 'Sesión eliminada',
     },
     editor: {
       finish: 'Terminar sesión',

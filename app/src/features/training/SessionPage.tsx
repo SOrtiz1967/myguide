@@ -21,7 +21,14 @@ const t = es.training
 const e = t.editor
 
 /** El editor de una sesión en curso, con su borrador local y su autoguardado. */
-function SessionEditorView({ session }: { session: WorkoutSession }) {
+function SessionEditorView({
+  session,
+  onDone,
+}: {
+  session: WorkoutSession
+  /** Se llama al terminar una corrección, para volver a la vista de la sesión. */
+  onDone?: () => void
+}) {
   const { session: auth } = useAuth()
   const queryClient = useQueryClient()
   // Qué se está eligiendo: un ejercicio nuevo o el sustituto de un ítem del plan.
@@ -53,8 +60,9 @@ function SessionEditorView({ session }: { session: WorkoutSession }) {
     setFinishError(false)
     const outcome = await editor.finish()
     if (outcome.kind === 'ok') {
-      setFinished(true)
       await queryClient.invalidateQueries({ queryKey: ['training'] })
+      if (onDone) onDone()
+      else setFinished(true)
     } else if (outcome.kind === 'error') {
       setFinishError(true)
     }
@@ -70,6 +78,7 @@ function SessionEditorView({ session }: { session: WorkoutSession }) {
         </Link>
       </div>
       <SessionHeader session={session} />
+      {onDone ? <p className="text-muted">{t.session.correcting}</p> : null}
 
       {editor.restored ? (
         <div
@@ -120,6 +129,7 @@ function SessionEditorView({ session }: { session: WorkoutSession }) {
         indicator={editor.indicator}
         onAddExercise={() => setPicking({ item: null })}
         onFinish={() => void finish()}
+        finishLabel={onDone ? t.session.finishCorrection : undefined}
         onRetry={() => void editor.retry()}
         header={
           <PlanSection
@@ -167,6 +177,7 @@ function SessionEditorView({ session }: { session: WorkoutSession }) {
 export function SessionPage() {
   const { id = '' } = useParams()
   const { data: session, isPending, isError, refetch } = useSession(id)
+  const [correcting, setCorrecting] = useState(false)
 
   if (isPending) return <LoadingState />
   if (isError) {
@@ -191,5 +202,19 @@ export function SessionPage() {
   }
   if (session.status === 'in_progress')
     return <SessionEditorView key={session.id} session={session} />
-  return <SessionSummaryView session={session} />
+  if (session.status === 'completed' && correcting) {
+    return (
+      <SessionEditorView
+        key={`${session.id}-correct`}
+        session={session}
+        onDone={() => setCorrecting(false)}
+      />
+    )
+  }
+  return (
+    <SessionSummaryView
+      session={session}
+      onCorrect={session.status === 'completed' ? () => setCorrecting(true) : undefined}
+    />
+  )
 }

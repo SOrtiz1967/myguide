@@ -5,6 +5,7 @@ import { measurementLabel } from '../exercises/exerciseLists'
 import type { WorkoutSession } from './api'
 import { sessionStateLabel } from './calendar'
 import { todayLocal } from './dates'
+import { DeleteSession } from './DeleteSession'
 import { PlannedActions } from './PlannedActions'
 import { Differences, PlanList } from './PlanVsDone'
 import { draftFromSession } from './sessionEditorState'
@@ -74,7 +75,14 @@ export function DoneList({ session }: { session: WorkoutSession }) {
 }
 
 /** Vista de una sesión que no se está editando (realizada, planificada o cancelada). */
-export function SessionSummaryView({ session }: { session: WorkoutSession }) {
+export function SessionSummaryView({
+  session,
+  onCorrect,
+}: {
+  session: WorkoutSession
+  /** Reabre el editor para corregir una sesión realizada. */
+  onCorrect?: () => void
+}) {
   const plan = [...session.session_plan_items].sort((a, b) => a.position - b.position)
   const draft = draftFromSession(session)
   return (
@@ -86,11 +94,34 @@ export function SessionSummaryView({ session }: { session: WorkoutSession }) {
       </div>
       <SessionHeader session={session} />
 
+      {session.corrected_at ? (
+        <p className="text-sm text-muted">
+          {s.correctedOn(
+            formatDate(new Intl.DateTimeFormat('en-CA').format(new Date(session.corrected_at))),
+          )}
+        </p>
+      ) : null}
+      {session.status === 'completed' ? (
+        <div className="flex flex-wrap gap-3">
+          {onCorrect ? (
+            <button type="button" className="btn-primary" onClick={onCorrect}>
+              {s.correct}
+            </button>
+          ) : null}
+          <DeleteSession sessionId={session.id} />
+        </div>
+      ) : null}
+
       {session.status === 'cancelled' ? (
         <p className="text-muted">{t.planning.cancelledNote}</p>
       ) : null}
       {session.status === 'planned' || session.status === 'cancelled' ? (
-        <PlannedActions session={session} withRoutineChange />
+        <div className="flex flex-col gap-3">
+          <PlannedActions session={session} withRoutineChange />
+          <div>
+            <DeleteSession sessionId={session.id} />
+          </div>
+        </div>
       ) : null}
 
       {plan.length > 0 ? (
