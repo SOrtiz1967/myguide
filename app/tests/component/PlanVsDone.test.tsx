@@ -1,4 +1,5 @@
 // T044 (spec 006, escenarios 18 a 26; FR-015 a FR-020): el plan y lo realizado, en bloques separados.
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useMemo, useReducer, type ReactNode } from 'react'
@@ -236,9 +237,11 @@ describe('una sesión terminada (escenarios 22 a 26)', () => {
 
   const view = (s: WorkoutSession) =>
     render(
-      <MemoryRouter>
-        <SessionSummaryView session={s} />
-      </MemoryRouter>,
+      <QueryClientProvider client={new QueryClient()}>
+        <MemoryRouter>
+          <SessionSummaryView session={s} />
+        </MemoryRouter>
+      </QueryClientProvider>,
     )
 
   it('igual al plan, con otros valores: «Realizada» sin la marca «Modificada»', () => {
