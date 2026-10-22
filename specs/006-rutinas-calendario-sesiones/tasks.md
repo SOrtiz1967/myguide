@@ -250,7 +250,7 @@ description: "Lista de tareas de la spec 006: rutinas, calendario y sesiones de 
 - [X] T074 [P] Responsive en `app/tests/e2e/responsive-training.spec.ts` (escenario 47, FR-052, SC-012): teléfono (375 px) y escritorio sin desplazamiento horizontal, áreas táctiles de 44 px o más (incluidas las filas de series y los días del calendario), nombres de ejercicio y notas largos, 30 ejercicios con 20 series cada uno sin romper el diseño
 - [X] T075 [P] Aislamiento por la API real en `app/tests/e2e/training-isolation.spec.ts` (escenario 46, SC-008): con sesiones reales, la cuenta A no lee, inserta, modifica ni borra rutinas ni sesiones de B (tablas y funciones), no puede iniciar ni guardar la sesión de B, y una petición anónima no accede a nada
 - [X] T076 Medición (SC-001 y SC-010; escenario 48), sobre la compilación de producción (puerto 4173), registrada en `research.md`: **SC-001**: desde «Hoy», empezar con una rutina y anotar la primera serie en menos de 30 s, y registrar una sesión de 3 ejercicios con 3 series en menos de 4 minutos (guion automatizado, con el número de interacciones); **SC-010**: con datos sintéticos de **200 sesiones en un mes** y **500 sesiones de un ejercicio**, tiempo del calendario del mes, de la primera tanda de `exercise_history` y de guardar una sesión de 30 ejercicios con 20 series; si no llega a los topes (2 s, 1 s), ajustar índices o la consulta. El script de datos sintéticos queda en `specs/006-rutinas-calendario-sesiones/mediciones/`
-- [ ] T077 Revisión de seguridad dirigida, registrada en `verification.md` (FR-050, FR-053, FR-054):
+- [X] T077 Revisión de seguridad dirigida, registrada en `verification.md` (FR-050, FR-053, FR-054):
   - el cliente no inserta ni actualiza ninguna tabla de entrenamiento directamente;
   - las funciones no aceptan rutinas, sesiones ni ejercicios ajenos;
   - las instantáneas son inmutables y no hay `cascade` hacia `exercises`;
@@ -260,12 +260,12 @@ description: "Lista de tareas de la spec 006: rutinas, calendario y sesiones de 
   - `check:secrets`.
 
   Corregir los hallazgos con TDD.
-- [ ] T078 [P] Documentación:
+- [X] T078 [P] Documentación:
   - `supabase/README.md`: tablas, funciones, estados y transiciones, regla de «modificada», revisión y autoguardado;
   - `README.md`: estado;
   - `Documentacion/roadmap-specs.md`: spec 006 implementada y qué queda para la 012;
   - `specs/012-graficos-progreso-entrenamiento/spec.md`: revisar que sus supuestos coinciden con lo implementado.
-- [ ] T079 Ejecutar los 48 escenarios del `quickstart.md` y registrar el resultado en `specs/006-rutinas-calendario-sesiones/verification.md`
+- [X] T079 Ejecutar los 48 escenarios del `quickstart.md` y registrar el resultado en `specs/006-rutinas-calendario-sesiones/verification.md`
 - [ ] T080 Ejecutar `format:check`, `lint`, `typecheck`, `test`, `e2e` (por partes; revisar antes la memoria libre, Docker y las funciones servidas), `test:db`, `test:functions`, `test:import`, `test:config` y `check:secrets`; todo en verde antes de dar la spec por terminada
 
 ---
