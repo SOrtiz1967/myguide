@@ -3,9 +3,12 @@ import { es } from '../../copy/es'
 import { formatDate } from '../../lib/format'
 import { measurementLabel } from '../exercises/exerciseLists'
 import type { WorkoutSession } from './api'
+import { sessionStateLabel } from './calendar'
+import { todayLocal } from './dates'
+import { PlannedActions } from './PlannedActions'
 import { Differences, PlanList } from './PlanVsDone'
 import { draftFromSession } from './sessionEditorState'
-import { effortLabel, markLabels, setsCountLabel, statusLabel, summarizeSet } from './trainingText'
+import { effortLabel, markLabels, setsCountLabel, summarizeSet } from './trainingText'
 
 const t = es.training
 const s = t.session
@@ -18,7 +21,9 @@ export function SessionHeader({ session }: { session: WorkoutSession }) {
       <h1 className="break-words text-2xl font-semibold tracking-tight">
         {s.title(formatDate(session.session_date))}
       </h1>
-      <p className="text-muted">{[statusLabel(session.status), ...marks].join(' · ')}</p>
+      <p className="text-muted">
+        {[sessionStateLabel(session, todayLocal()), ...marks].join(' · ')}
+      </p>
       {session.routine_name ? (
         <p className="text-muted">{t.plan.fromRoutine(session.routine_name)}</p>
       ) : null}
@@ -81,6 +86,13 @@ export function SessionSummaryView({ session }: { session: WorkoutSession }) {
       </div>
       <SessionHeader session={session} />
 
+      {session.status === 'cancelled' ? (
+        <p className="text-muted">{t.planning.cancelledNote}</p>
+      ) : null}
+      {session.status === 'planned' || session.status === 'cancelled' ? (
+        <PlannedActions session={session} withRoutineChange />
+      ) : null}
+
       {plan.length > 0 ? (
         <section aria-labelledby="plan-titulo" className="flex flex-col gap-2">
           <h2 id="plan-titulo" className="text-xl font-semibold">
@@ -102,6 +114,23 @@ export function SessionSummaryView({ session }: { session: WorkoutSession }) {
       ) : null}
 
       {session.status === 'completed' ? <Differences plan={plan} draft={draft} /> : null}
+
+      {session.session_date_changes.length > 0 ? (
+        <section aria-labelledby="recorrido-titulo" className="flex flex-col gap-2">
+          <h2 id="recorrido-titulo" className="text-xl font-semibold">
+            {t.planning.path}
+          </h2>
+          <ol className="ml-5 list-decimal">
+            {[...session.session_date_changes]
+              .sort((a, b) => a.created_at.localeCompare(b.created_at))
+              .map((change) => (
+                <li key={change.id}>
+                  {t.planning.pathStep(formatDate(change.from_date), formatDate(change.to_date))}
+                </li>
+              ))}
+          </ol>
+        </section>
+      ) : null}
 
       {session.note ? (
         <section aria-labelledby="nota-titulo" className="flex flex-col gap-1">

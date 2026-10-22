@@ -365,3 +365,93 @@ export async function fetchRoutine(id: string): Promise<Routine | null> {
   }
   return data ? sortRoutine(data as unknown as Routine) : null
 }
+
+// --- Planificación y calendario ----------------------------------------------------------------------------------------
+
+export interface MoveResult {
+  id: string
+  session_date: string
+  status: SessionStatus
+  rescheduled_count: number
+}
+
+const timezone = () => Intl.DateTimeFormat().resolvedOptions().timeZone
+
+/** Planifica una sesión para hoy o un día futuro, con una rutina o vacía. Idempotente por `requestId`. */
+export function planWorkout(
+  sessionDate: string,
+  routineId: string | null,
+  requestId: string,
+): Promise<string> {
+  return callRpc<string>('plan_workout', {
+    session_date: sessionDate,
+    routine_id: routineId,
+    request_id: requestId,
+    client_timezone: timezone(),
+  })
+}
+
+/** Cambia la rutina de una sesión planificada, o quita el plan con `null`. */
+export function setWorkoutRoutine(id: string, routineId: string | null): Promise<string> {
+  return callRpc<string>('set_workout_routine', { id, routine_id: routineId })
+}
+
+/** Mueve una sesión planificada (o vuelve a planificar una cancelada) a hoy o un día futuro. */
+export function rescheduleWorkout(
+  id: string,
+  newDate: string,
+  requestId: string,
+): Promise<MoveResult> {
+  return callRpc<MoveResult>('reschedule_workout', {
+    id,
+    new_date: newDate,
+    request_id: requestId,
+    client_timezone: timezone(),
+  })
+}
+
+export function cancelWorkout(id: string): Promise<MoveResult> {
+  return callRpc<MoveResult>('cancel_workout', { id })
+}
+
+/** Empieza una sesión planificada; `sessionDate` es el día en que se hizo (nulo: hoy). */
+export function startPlannedWorkout(
+  id: string,
+  sessionDate: string | null,
+  requestId: string,
+): Promise<StartResult> {
+  return callRpc<StartResult>('start_planned_workout', {
+    id,
+    session_date: sessionDate,
+    request_id: requestId,
+    client_timezone: timezone(),
+  })
+}
+
+/** Las sesiones entre dos fechas (ambas incluidas), en un orden estable. */
+export async function fetchSessionsBetween(from: string, to: string): Promise<SessionSummary[]> {
+  const { data, error } = await supabase
+    .from('workout_sessions')
+    .select(SUMMARY_COLUMNS)
+    .gte('session_date', from)
+    .lte('session_date', to)
+    .order('session_date', { ascending: true })
+    .order('created_at', { ascending: true })
+  if (error) throw error
+  return (data ?? []) as unknown as SessionSummary[]
+}
+
+export const fetchSessionsOfDay = (day: string) => fetchSessionsBetween(day, day)
+
+/** Las planificadas de hoy o de días anteriores («sin registrar»), de la más antigua a la más reciente. */
+export async function fetchDueSessions(today: string): Promise<SessionSummary[]> {
+  const { data, error } = await supabase
+    .from('workout_sessions')
+    .select(SUMMARY_COLUMNS)
+    .eq('status', 'planned')
+    .lte('session_date', today)
+    .order('session_date', { ascending: true })
+    .order('created_at', { ascending: true })
+  if (error) throw error
+  return (data ?? []) as unknown as SessionSummary[]
+}

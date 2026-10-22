@@ -22,6 +22,7 @@ import { ProfilePage } from '../features/profile/ProfilePage'
 import { RoutineDetailPage } from '../features/training/RoutineDetailPage'
 import { RoutineFormPage } from '../features/training/RoutineFormPage'
 import { RoutinesPage } from '../features/training/RoutinesPage'
+import { TrainingDayPage } from '../features/training/DayPage'
 import { SessionPage } from '../features/training/SessionPage'
 import { TrainingHomePage } from '../features/training/TrainingHomePage'
 import { AppLayout } from './AppLayout'
@@ -63,6 +64,7 @@ export const routes: RouteObject[] = [
           { path: '/ejercicios/:id', element: <ExerciseDetailPage /> },
           { path: '/ejercicios/:id/editar', element: <ExerciseEditPage /> },
           { path: '/entrenamiento', element: <TrainingHomePage /> },
+          { path: '/entrenamiento/dia/:fecha', element: <TrainingDayPage /> },
           { path: '/entrenamiento/sesion/:id', element: <SessionPage /> },
           { path: '/entrenamiento/rutinas', element: <RoutinesPage /> },
           { path: '/entrenamiento/rutinas/nueva', element: <RoutineFormPage /> },
