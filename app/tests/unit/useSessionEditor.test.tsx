@@ -39,7 +39,7 @@ function setup(options: Partial<Parameters<typeof useSessionEditor>[0]> = {}) {
       loadServer,
       debounceMs: 1000,
       ...options,
-      save,
+      save: save as unknown as Parameters<typeof useSessionEditor>[0]['save'],
     }),
   )
   return { ...hook, save, loadServer }
@@ -162,7 +162,7 @@ describe('autoguardado (FR-046)', () => {
 
   it('una sola solicitud en vuelo: un cambio mientras guarda se envía después, con la revisión nueva', async () => {
     const resolvers: Array<(r: SaveResult) => void> = []
-    const save = vi.fn(() => new Promise<SaveResult>((r) => resolvers.push(r)))
+    const save = vi.fn((..._args: unknown[]) => new Promise<SaveResult>((r) => resolvers.push(r)))
     const hook = setup({ save })
     addPress(hook)
     await act(() => vi.advanceTimersByTimeAsync(1000))
@@ -174,7 +174,9 @@ describe('autoguardado (FR-046)', () => {
     await act(() => vi.advanceTimersByTimeAsync(1000))
     expect(save).toHaveBeenCalledTimes(2)
     expect(save.mock.calls[1]![1]).toBe(2)
-    expect(save.mock.calls[1]![0].exercises[0].sets).toEqual([{ reps: 9 }])
+    expect(
+      (save.mock.calls[1]![0] as { exercises: Array<{ sets: unknown }> }).exercises[0]!.sets,
+    ).toEqual([{ reps: 9 }])
   })
 
   it('sin conexión no llama al servidor y lo dice', async () => {

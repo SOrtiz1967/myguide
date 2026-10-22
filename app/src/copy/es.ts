@@ -702,7 +702,7 @@ export const es = {
         exercise_not_found: 'Uno de los ejercicios ya no está disponible. Reemplázalo o quítalo.',
         invalid_sets: 'Las series van de 1 a 20.',
         invalid_target: 'Un objetivo no es válido para el tipo de ejercicio.',
-      } as Record<string, string>,
+      },
       session: {
         too_many_exercises: 'Puedes anotar hasta 30 ejercicios por sesión.',
         too_many_sets: 'Puedes anotar hasta 20 series por ejercicio.',
@@ -712,7 +712,7 @@ export const es = {
         exercise_not_found: 'Uno de los ejercicios ya no está disponible.',
         invalid_plan_item: 'Ese ejercicio no corresponde al plan de esta sesión.',
         duplicate_id: 'No pudimos guardar el ejercicio. Vuelve a intentarlo.',
-      } as Record<string, string>,
+      },
     },
   },
   // Spec 003 (registro de comidas). Sin juicios sobre lo comido (Principio IV).

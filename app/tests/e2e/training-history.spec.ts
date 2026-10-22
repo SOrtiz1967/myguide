@@ -112,7 +112,7 @@ test('escenario 39: renombrar o eliminar el ejercicio no cambia lo registrado', 
   dbQuery(`update public.exercises set name = 'Press renombrado e2e' where id = '${exerciseId}'`)
   await page.goto(`/ejercicios/${exerciseId}/historia`)
   await expect(page.getByText(/ · Press e2e$/).first()).toBeVisible()
-  await expect(page.getByText(/Press renombrado e2e/, { selector: 'p.break-words' })).toBeVisible()
+  await expect(page.locator('p.break-words', { hasText: /Press renombrado e2e/ })).toBeVisible()
 
   dbQuery(`delete from public.exercises where id = '${exerciseId}'`)
   await page.goto(`/entrenamiento/sesion/${sessions[0]}`)

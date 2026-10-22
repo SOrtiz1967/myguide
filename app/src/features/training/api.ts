@@ -141,7 +141,7 @@ export function trainingErrorMessage(error: unknown): string | null {
   if (message.startsWith('not_found')) return e.notFound
   const match = /^invalid_(routine|session):([a-z_]+):/.exec(message)
   if (match) {
-    const table = match[1] === 'routine' ? e.routine : e.session
+    const table: Record<string, string | undefined> = match[1] === 'routine' ? e.routine : e.session
     return table[match[2]!] ?? e.saveFailed
   }
   return null

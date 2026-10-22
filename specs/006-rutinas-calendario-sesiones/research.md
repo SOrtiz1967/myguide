@@ -161,3 +161,17 @@ La interfaz acepta coma decimal; la base reimpone todo (si el cliente falla, la 
 ## Resultados de prototipos
 
 *(Se completa durante la implementación.)*
+
+## Mediciones (T076, escenario 48)
+
+Medidas con `app/tests/e2e/training-measure.spec.ts` sobre la compilación de producción (`npm run build`, servida en el puerto 4173) contra la base local, el 2026-10-21. Los datos sintéticos salen de `mediciones/sinteticos.sql`. Los tiempos del guion automatizado son un piso: no incluyen el tiempo humano de escribir, solo cuentan las interacciones.
+
+| Criterio | Qué se mide | Resultado | Tope |
+|---|---|---|---|
+| SC-001 | Desde «Hoy», empezar con una rutina y anotar la primera serie | 571 ms, 3 interacciones (empezar, «Hacer este ejercicio», escribir las repeticiones) | 30 s |
+| SC-001 | Sesión de 3 ejercicios con 3 series cada uno (agregar ejercicio, escribir repeticiones y peso, terminar) | 9 016 ms, 35 interacciones | 4 min |
+| SC-010 | Calendario del mes con 200 sesiones (700 sesiones en total) | 562 ms | 2 s |
+| SC-010 | Primera tanda de la historia de un ejercicio con 700 sesiones (500 pedidas) | 552 ms en la interfaz, 59 ms por la API | 1 s |
+| SC-010 | Guardar una sesión de 30 ejercicios con 20 series (600 series) | 249 ms | sin tope propio |
+
+Con 35 interacciones, una persona llega a los 4 minutos solo si tarda más de 6 segundos por interacción; el guion no necesitó ajustar índices ni consultas.
