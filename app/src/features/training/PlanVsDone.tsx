@@ -155,7 +155,7 @@ export function Differences({ plan, draft }: { plan: PlanItem[]; draft: SessionD
       </h2>
       <ul className="ml-5 list-disc">
         {differences.map((difference, index) => (
-          <li key={index}>
+          <li key={index} className="break-words">
             {difference.kind === 'not_done'
               ? p.diff.not_done(difference.name)
               : difference.kind === 'substituted'

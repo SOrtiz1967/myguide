@@ -10,7 +10,7 @@ const h = es.training.history
 export function HistoryEntryView({ entry }: { entry: HistoryEntry }) {
   return (
     <div className="flex flex-col gap-2">
-      <p className="font-medium">
+      <p className="break-words font-medium">
         {formatDate(entry.session_date)} · {entry.exercise_name}
       </p>
       <p className="text-sm text-muted">{setsCountLabel(entry.sets.length)}</p>

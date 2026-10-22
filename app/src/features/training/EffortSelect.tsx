@@ -26,7 +26,7 @@ export function EffortSelect({ exerciseName, value, onChange, error }: EffortSel
   const errorId = `${id}-error`
   return (
     <div className="flex flex-col gap-1">
-      <label htmlFor={id} className="font-medium">
+      <label htmlFor={id} className="break-words font-medium">
         {t.editor.effortOfExercise(exerciseName)}
       </label>
       <select

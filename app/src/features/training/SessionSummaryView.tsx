@@ -26,7 +26,7 @@ export function SessionHeader({ session }: { session: WorkoutSession }) {
         {[sessionStateLabel(session, todayLocal()), ...marks].join(' · ')}
       </p>
       {session.routine_name ? (
-        <p className="text-muted">{t.plan.fromRoutine(session.routine_name)}</p>
+        <p className="break-words text-muted">{t.plan.fromRoutine(session.routine_name)}</p>
       ) : null}
       {session.has_plan && session.routine_id === null ? (
         <p className="text-sm text-muted">{t.plan.routineGone}</p>
