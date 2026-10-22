@@ -57,7 +57,7 @@ Basado en la Constitution v1.2.1. Este documento solo define el corte y el conte
 - Mover sesiones sin perder historial ni duplicar; snapshots de ejercicios.
 - Persistencia de borrador de una sesión activa.
 - Principios: II, V, VI.
-- **Estado (2026-10-21): especificada y aclarada** (`specs/006-rutinas-calendario-sesiones/spec.md`), todavía sin plan. Decisiones del autor: las rutinas son un catálogo de entrenamientos sin días asignados ni repetición automática (cada día se elige cuál toca), el esfuerzo percibido es uno por ejercicio de la sesión (para todas sus series en conjunto) y los gráficos quedan fuera (spec 012).
+- **Estado (2026-10-21): implementada y verificada** (`specs/006-rutinas-calendario-sesiones/`, ver su `verification.md`). Decisiones del autor: las rutinas son un catálogo de entrenamientos sin días asignados ni repetición automática (cada día se elige cuál toca), el esfuerzo percibido es uno por ejercicio de la sesión (para todas sus series en conjunto) y los gráficos quedan fuera. Deja lista la lectura `exercise_history` y las copias de nombre y tipo de medición que usará la spec 012 (gráficos de progreso de entrenamiento).
 
 ### 007 — Sueño, pasos y actividad
 - Registro manual con fuente y fecha.

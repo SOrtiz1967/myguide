@@ -312,3 +312,47 @@ Una vez `reviewed`, una recarga posterior **nunca** lo reemplaza por una traducc
 ### Pruebas
 
 `tests/exercises_schema`, `exercises_rls`, `exercise_sources_seed`, `search_exercises`, `create_exercise`, `copy_exercise`, `update_delete_exercise` e `import_exercises` (pgTAP, `*.test.sql`) cubren las restricciones, el aislamiento entre cuentas, el catálogo de solo lectura, la búsqueda, la idempotencia y la carga. La normalización, las reglas de medición, las traducciones y la carga se prueban con `npm run test:import` (Deno). Las mediciones de rendimiento (20.000 filas) están en [`research.md`](../specs/005-catalogo-de-ejercicios/research.md), con su script en `specs/005-catalogo-de-ejercicios/mediciones/`.
+
+## Rutinas, calendario y sesiones de entrenamiento (spec 006)
+
+Todo es privado de cada cuenta. Ninguna tabla admite `insert` ni `update` desde el cliente; solo `select` de lo propio y `delete` de lo propio en `routines` y `workout_sessions` (los hijos se borran en cascada). Las escrituras pasan por funciones `security definer` que verifican `auth.uid()` y la sesión vigente.
+
+### Tablas
+
+| Tabla | Qué guarda |
+|---|---|
+| `routines`, `routine_exercises` | El catálogo de rutinas de la persona (sin días asignados). Cada ítem guarda una copia del nombre y del tipo de medición del ejercicio, sus series y objetivos opcionales. |
+| `workout_sessions` | Una sesión: fecha, fecha original, estado, rutina de origen y su nombre, nota, marcas, revisión y solicitud de creación. |
+| `session_plan_items` | El plan de la sesión (lo que se pensaba hacer): copia de los ítems de la rutina al crearla. Nunca se mezcla con lo realizado. |
+| `session_exercises`, `session_sets` | Lo realizado: ejercicios (con su copia del nombre y del tipo de medición, esfuerzo percibido y nota) y sus series. |
+| `session_date_changes` | El recorrido de fechas de una sesión que se reprogramó. |
+
+`exercise_id` es una clave foránea `on delete set null` en las tres tablas que lo guardan: eliminar un ejercicio propio nunca borra ni cambia lo registrado. Los disparadores impiden cambiar las copias de nombre y tipo, el plan, el dueño y la fecha original.
+
+### Estados y transiciones
+
+`planned` → `in_progress` → `completed`, y `planned` ↔ `cancelled`. Una sesión `planned` se puede mover de fecha (misma fila, `rescheduled_count` + 1 y una fila en `session_date_changes`), cambiar de rutina o cancelar; una `cancelled` se vuelve a planificar. La fecha de una sesión `in_progress` o `completed` no cambia. Solo hay una sesión `in_progress` por cuenta (índice único parcial). Una planificada con fecha pasada se muestra como «Sin registrar»; es un estado de presentación, no del dato.
+
+### Marcas
+
+- **Reprogramada**: `rescheduled_count > 0`.
+- **Modificada** (`private.compute_session_modified`, la fija siempre el servidor al terminar o corregir): la sesión tuvo plan y algún ítem del plan no tiene un ejercicio realizado propio con al menos una serie, hay un ejercicio realizado con series que no está en el plan, o un ejercicio propio de un ítem tiene una cantidad de series distinta de la planificada. Las diferencias de repeticiones, peso, tiempo o distancia **no** cuentan.
+- **Corregida**: `corrected_at`, al guardar una sesión ya realizada.
+
+### Funciones
+
+Rutinas: `create_routine`, `update_routine`, `duplicate_routine` (idempotentes por `request_id` al crear). Sesiones: `start_workout`, `start_workout_from_routine`, `plan_workout`, `set_workout_routine`, `reschedule_workout`, `cancel_workout`, `start_planned_workout`, `save_workout` y la lectura `exercise_history`. Se llaman `*_workout` porque `start_session()` ya existe desde la spec 001. El contrato completo está en `specs/006-rutinas-calendario-sesiones/contracts/database-api.md`.
+
+Errores: `invalid_routine:<motivo>:<campo>`, `invalid_session:<motivo>:<campo>`, `session_in_progress:<id>`, `stale_revision`, `invalid_transition`, `invalid_date`, `not_found` y `session_expired`. Ninguno incluye contenido de la persona.
+
+### Revisión y autoguardado
+
+`save_workout` reemplaza de forma atómica el contenido de la sesión (nota, ejercicios y series) y exige `expected_revision`: si otro dispositivo guardó antes responde `stale_revision` y no cambia nada. Repetir el mismo contenido no cambia la revisión. El cliente guarda un borrador local (`draft:v1:<cuenta>:workout-<sesión>`) en cada cambio y autoguarda en el servidor con un retraso corto; cerrar sesión borra los borradores.
+
+### Tiempo simulado
+
+El «hoy» lo calcula el servidor con la zona del perfil. Cada operación con fecha tiene una versión `private.*_at(…, p_now, p_zone)` para probar con una hora simulada.
+
+### Pruebas
+
+`training_schema`, `training_rls`, `start_workout`, `save_workout`, `routine_functions`, `session_from_routine`, `session_modified`, `session_planning`, `exercise_history` y `session_correct_delete` (`npx supabase test db`).
