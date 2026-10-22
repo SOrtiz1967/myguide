@@ -109,6 +109,7 @@ export interface HistoryEntry {
   session_id: string
   session_date: string
   exercise_name: string
+  measurement_type: MeasurementType
   effort: number | null
   note: string | null
   sets: Array<{ reps?: number; weight_kg?: number; duration_s?: number; distance_km?: number }>
@@ -454,4 +455,31 @@ export async function fetchDueSessions(today: string): Promise<SessionSummary[]>
     .order('created_at', { ascending: true })
   if (error) throw error
   return (data ?? []) as unknown as SessionSummary[]
+}
+
+// --- Historia de un ejercicio -------------------------------------------------------------------------------------------
+
+export const HISTORY_PAGE_SIZE = 10
+
+export interface HistoryPage {
+  entries: HistoryEntry[]
+  total: number
+}
+
+/** Las últimas veces que se hizo un ejercicio (sesiones realizadas), de la más reciente a la más antigua. */
+export async function fetchExerciseHistory(
+  exerciseId: string,
+  excludeSessionId: string | null,
+  pageSize: number,
+  pageOffset: number,
+): Promise<HistoryPage> {
+  const { data, error } = await supabase.rpc('exercise_history', {
+    exercise_id: exerciseId,
+    exclude_session_id: excludeSessionId,
+    page_size: pageSize,
+    page_offset: pageOffset,
+  })
+  if (error) throw error
+  const entries = (data ?? []) as unknown as HistoryEntry[]
+  return { entries, total: entries[0]?.total_estimate ?? 0 }
 }

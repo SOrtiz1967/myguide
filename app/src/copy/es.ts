@@ -595,6 +595,20 @@ export const es = {
       // Forma que acompaña al color para cada estado (el nombre accesible ya lo dice con palabras).
       symbol: { completed: '●', in_progress: '▶', planned: '○', unrecorded: '◌', cancelled: '✕' },
     },
+    history: {
+      title: 'Historia del ejercicio',
+      view: 'Ver historia',
+      lastTime: 'La última vez',
+      hideLastTime: 'Ocultar la última vez',
+      empty: 'Todavía no lo registraste',
+      emptyBody: 'Cuando lo hagas en una sesión, vas a verlo acá.',
+      loadMore: 'Ver más',
+      loadError: 'No pudimos cargar la historia.',
+      openSession: 'Ver la sesión',
+      back: 'Volver al ejercicio',
+      lastTimeOn: (date: string) => `La última vez fue el ${date}`,
+      sessionOf: (date: string) => `Sesión del ${date}`,
+    },
     planning: {
       dayTitle: (date: string) => `Entrenamientos del ${date}`,
       dayBack: 'Volver a Entrenamiento',

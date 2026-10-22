@@ -10,6 +10,7 @@ import { useAuth } from '../auth/useAuth'
 import { fetchSession, saveWorkout, type PlanItem, type WorkoutSession } from './api'
 import { ExercisePickerPanel } from './ExercisePickerPanel'
 import { PlanSection, PlanTag } from './PlanVsDone'
+import { LastTime } from './LastTime'
 import { SessionEditor } from './SessionEditor'
 import { draftFromSession } from './sessionEditorState'
 import { SessionHeader, SessionSummaryView } from './SessionSummaryView'
@@ -128,9 +129,15 @@ function SessionEditorView({ session }: { session: WorkoutSession }) {
             onSubstitute={(item) => setPicking({ item })}
           />
         }
-        renderExtra={(exerciseId) => (
-          <PlanTag plan={plan} draft={editor.draft} exerciseId={exerciseId} />
-        )}
+        renderExtra={(exerciseId) => {
+          const catalogId = editor.draft.exercises.find((x) => x.id === exerciseId)?.exercise_id
+          return (
+            <>
+              <PlanTag plan={plan} draft={editor.draft} exerciseId={exerciseId} />
+              {catalogId ? <LastTime exerciseId={catalogId} sessionId={session.id} /> : null}
+            </>
+          )
+        }}
       />
 
       {picking ? (

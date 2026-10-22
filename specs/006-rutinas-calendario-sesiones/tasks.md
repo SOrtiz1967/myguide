@@ -209,16 +209,16 @@ description: "Lista de tareas de la spec 006: rutinas, calendario y sesiones de 
 
 ### Tests for User Story 5 ⚠️
 
-- [ ] T062 [P] [US5] Prueba pgTAP en `supabase/tests/exercise_history.test.sql` (FR-041 a FR-043, SC-009): solo sesiones `completed`, de la más reciente a la más antigua con desempate estable; muestra el nombre guardado en cada sesión (renombrar el ejercicio después no lo cambia); trae las series ordenadas con sus valores y el esfuerzo; `exclude_session_id` omite la sesión actual; paginado con tope de 50; ejercicio sin historia → cero filas; una copia propia es otro ejercicio; un ejercicio eliminado deja sus sesiones visibles en el calendario; aislamiento entre cuentas; sesión vencida y `anon`
-- [ ] T063 [P] [US5] Pruebas de componente en `app/tests/component/ExerciseHistoryPage.test.tsx` (escenarios 37 y 39; deben fallar): lista por tandas («Ver más») con fecha, nombre guardado, series con unidades y esfuerzo o «sin dato», enlace a la sesión, estado vacío «Todavía no lo registraste», sin recomendaciones ni valoraciones, estados de carga y error
-- [ ] T064 [P] [US5] Pruebas de componente en `app/tests/component/LastTime.test.tsx` (escenario 38; deben fallar): dentro de una sesión en curso, «La última vez» abre en un paso la sesión anterior más reciente del ejercicio sin salir, y un ejercicio sin historia lo dice sin inventar datos
-- [ ] T065 [US5] Prueba e2e en `app/tests/e2e/training-history.spec.ts` (escenarios 37 a 39): tres sesiones, historia ordenada, «La última vez» dentro de una sesión, historia vacía, ejercicio renombrado y ejercicio eliminado
+- [X] T062 [P] [US5] Prueba pgTAP en `supabase/tests/exercise_history.test.sql` (FR-041 a FR-043, SC-009): solo sesiones `completed`, de la más reciente a la más antigua con desempate estable; muestra el nombre guardado en cada sesión (renombrar el ejercicio después no lo cambia); trae las series ordenadas con sus valores y el esfuerzo; `exclude_session_id` omite la sesión actual; paginado con tope de 50; ejercicio sin historia → cero filas; una copia propia es otro ejercicio; un ejercicio eliminado deja sus sesiones visibles en el calendario; aislamiento entre cuentas; sesión vencida y `anon`
+- [X] T063 [P] [US5] Pruebas de componente en `app/tests/component/ExerciseHistoryPage.test.tsx` (escenarios 37 y 39; deben fallar): lista por tandas («Ver más») con fecha, nombre guardado, series con unidades y esfuerzo o «sin dato», enlace a la sesión, estado vacío «Todavía no lo registraste», sin recomendaciones ni valoraciones, estados de carga y error
+- [X] T064 [P] [US5] Pruebas de componente en `app/tests/component/LastTime.test.tsx` (escenario 38; deben fallar): dentro de una sesión en curso, «La última vez» abre en un paso la sesión anterior más reciente del ejercicio sin salir, y un ejercicio sin historia lo dice sin inventar datos
+- [X] T065 [US5] Prueba e2e en `app/tests/e2e/training-history.spec.ts` (escenarios 37 a 39): tres sesiones, historia ordenada, «La última vez» dentro de una sesión, historia vacía, ejercicio renombrado y ejercicio eliminado
 
 ### Implementation for User Story 5
 
-- [ ] T066 [US5] Migración `supabase/migrations/20261022000800_exercise_history.sql`: `public.exercise_history` (`security invoker`) según `contracts/database-api.md`. Hace pasar T062
-- [ ] T067 [US5] `api.ts` y `useExerciseHistory.ts` (`fetchExerciseHistory`, tandas)
-- [ ] T068 [US5] `ExerciseHistoryPage.tsx`, la ruta `/ejercicios/:id/historia`, el enlace «Ver historia» en `app/src/features/exercises/ExerciseDetailPage.tsx` (ajustar sus pruebas de la spec 005), «La última vez» y «Ver historia» en `SessionExerciseCard`, y los textos; sin gráficos ni comparaciones (FR-044). Hace pasar T063 y T064; el e2e de T065 queda en verde
+- [X] T066 [US5] Migración `supabase/migrations/20261022000800_exercise_history.sql`: `public.exercise_history` (`security invoker`) según `contracts/database-api.md`. Hace pasar T062
+- [X] T067 [US5] `api.ts` y `useExerciseHistory.ts` (`fetchExerciseHistory`, tandas)
+- [X] T068 [US5] `ExerciseHistoryPage.tsx`, la ruta `/ejercicios/:id/historia`, el enlace «Ver historia» en `app/src/features/exercises/ExerciseDetailPage.tsx` (ajustar sus pruebas de la spec 005), «La última vez» y «Ver historia» en `SessionExerciseCard`, y los textos; sin gráficos ni comparaciones (FR-044). Hace pasar T063 y T064; el e2e de T065 queda en verde
 
 **Checkpoint**: la historia de un ejercicio funciona. Escenarios 37 a 39.
 

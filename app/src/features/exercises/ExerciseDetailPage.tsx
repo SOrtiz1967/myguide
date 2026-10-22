@@ -180,6 +180,9 @@ function Actions({ exercise }: { exercise: Exercise }) {
             </button>
           </>
         )}
+        <Link to={`/ejercicios/${exercise.id}/historia`} className="btn-secondary">
+          {es.training.history.view}
+        </Link>
       </div>
       {copy.error ? <ErrorState message={copy.error} /> : null}
       {remove.open ? (

@@ -117,7 +117,7 @@
 
 ### `exercise_history(exercise_id uuid, exclude_session_id uuid, page_size integer, page_offset integer) → table`
 
-- **Seguridad**: `security invoker` (RLS filtra: solo lo propio, con sesión vigente).
+- **Seguridad**: `security definer` con `search_path` vacío; verifica la sesión vigente y filtra por la cuenta autenticada de forma explícita.
 - **Devuelve**, por cada sesión **realizada** donde se registró el ejercicio, de la más reciente a la más antigua (`session_date desc`, desempate estable): `session_id`, `session_date`, `exercise_name` (el guardado en esa sesión), `effort`, `note` y `sets` (arreglo ordenado de `{ reps, weight_kg, duration_s, distance_km }`), más `total_estimate`.
 - **Parámetros**: `page_size` con tope de 50 (por omisión 10); `exclude_session_id` para «la última vez» dentro de una sesión en curso.
 - **Errores**: `session_expired`. Un ejercicio sin historia devuelve cero filas.
