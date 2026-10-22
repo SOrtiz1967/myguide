@@ -11,8 +11,10 @@ import { newRequestId } from '../../lib/ids'
 import { WriteError } from '../../lib/mutation'
 import { measurementLabel } from '../exercises/exerciseLists'
 import { deleteRoutine, duplicateRoutine, type Routine, type RoutineExercise } from './api'
+import { StartError } from './RoutinePicker'
 import { formatTargets } from './trainingText'
 import { useRoutine } from './useRoutines'
+import { useStartFromRoutine } from './useStartFromRoutine'
 
 const r = es.training.routines
 
@@ -87,6 +89,7 @@ function useDelete(routine: Routine) {
 function RoutineView({ routine }: { routine: Routine }) {
   const state = useLocation().state as { saved?: boolean; duplicated?: boolean } | null
   const duplicate = useDuplicate(routine)
+  const startFrom = useStartFromRoutine()
   const remove = useDelete(routine)
   return (
     <div className="flex flex-col gap-5">
@@ -103,7 +106,15 @@ function RoutineView({ routine }: { routine: Routine }) {
       </header>
 
       <div className="flex flex-wrap gap-3">
-        <Link to={`/entrenamiento/rutinas/${routine.id}/editar`} className="btn-primary">
+        <button
+          type="button"
+          className="btn-primary"
+          disabled={startFrom.pending}
+          onClick={() => startFrom.start(routine.id)}
+        >
+          {r.startWithThis}
+        </button>
+        <Link to={`/entrenamiento/rutinas/${routine.id}/editar`} className="btn-secondary">
           {r.edit}
         </Link>
         <button
@@ -119,6 +130,7 @@ function RoutineView({ routine }: { routine: Routine }) {
         </button>
       </div>
       {duplicate.error ? <ErrorState message={duplicate.error} /> : null}
+      <StartError error={startFrom.error} />
 
       <section aria-labelledby="ejercicios-rutina" className="flex flex-col gap-3">
         <h2 id="ejercicios-rutina" className="text-xl font-semibold">

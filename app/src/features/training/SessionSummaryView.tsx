@@ -3,6 +3,8 @@ import { es } from '../../copy/es'
 import { formatDate } from '../../lib/format'
 import { measurementLabel } from '../exercises/exerciseLists'
 import type { WorkoutSession } from './api'
+import { Differences, PlanList } from './PlanVsDone'
+import { draftFromSession } from './sessionEditorState'
 import { effortLabel, markLabels, setsCountLabel, statusLabel, summarizeSet } from './trainingText'
 
 const t = es.training
@@ -17,7 +19,12 @@ export function SessionHeader({ session }: { session: WorkoutSession }) {
         {s.title(formatDate(session.session_date))}
       </h1>
       <p className="text-muted">{[statusLabel(session.status), ...marks].join(' · ')}</p>
-      {session.routine_name ? <p className="text-muted">{session.routine_name}</p> : null}
+      {session.routine_name ? (
+        <p className="text-muted">{t.plan.fromRoutine(session.routine_name)}</p>
+      ) : null}
+      {session.has_plan && session.routine_id === null ? (
+        <p className="text-sm text-muted">{t.plan.routineGone}</p>
+      ) : null}
     </header>
   )
 }
@@ -64,6 +71,7 @@ export function DoneList({ session }: { session: WorkoutSession }) {
 /** Vista de una sesión que no se está editando (realizada, planificada o cancelada). */
 export function SessionSummaryView({ session }: { session: WorkoutSession }) {
   const plan = [...session.session_plan_items].sort((a, b) => a.position - b.position)
+  const draft = draftFromSession(session)
   return (
     <div className="flex flex-col gap-6">
       <div>
@@ -78,15 +86,11 @@ export function SessionSummaryView({ session }: { session: WorkoutSession }) {
           <h2 id="plan-titulo" className="text-xl font-semibold">
             {s.planTitle}
           </h2>
-          <ul className="ml-5 list-disc">
-            {plan.map((item) => (
-              <li key={item.id}>{s.planItem(item.exercise_name, item.sets)}</li>
-            ))}
-          </ul>
+          <PlanList plan={plan} draft={draft} finished={session.status === 'completed'} />
         </section>
-      ) : session.status === 'planned' || session.status === 'cancelled' ? (
+      ) : (
         <p className="text-muted">{t.noPlan}</p>
-      ) : null}
+      )}
 
       {session.status === 'completed' ? (
         <section aria-labelledby="realizado-titulo" className="flex flex-col gap-3">
@@ -96,6 +100,8 @@ export function SessionSummaryView({ session }: { session: WorkoutSession }) {
           <DoneList session={session} />
         </section>
       ) : null}
+
+      {session.status === 'completed' ? <Differences plan={plan} draft={draft} /> : null}
 
       {session.note ? (
         <section aria-labelledby="nota-titulo" className="flex flex-col gap-1">

@@ -16,6 +16,7 @@ import {
   type SessionSummary,
 } from './api'
 import { todayLocal } from './dates'
+import { RoutinePicker } from './RoutinePicker'
 import { markLabels, statusLabel } from './trainingText'
 
 const t = es.training
@@ -122,6 +123,7 @@ export function TrainingHomePage() {
             </div>
           </div>
         ) : null}
+        {open.isSuccess && !openSession ? <RoutinePicker /> : null}
         {open.isSuccess && !openSession ? (
           <div>
             <button

@@ -7,8 +7,9 @@ import { LoadingState } from '../../components/LoadingState'
 import { es } from '../../copy/es'
 import { newRequestId } from '../../lib/ids'
 import { useAuth } from '../auth/useAuth'
-import { fetchSession, saveWorkout, type WorkoutSession } from './api'
+import { fetchSession, saveWorkout, type PlanItem, type WorkoutSession } from './api'
 import { ExercisePickerPanel } from './ExercisePickerPanel'
+import { PlanSection, PlanTag } from './PlanVsDone'
 import { SessionEditor } from './SessionEditor'
 import { draftFromSession } from './sessionEditorState'
 import { SessionHeader, SessionSummaryView } from './SessionSummaryView'
@@ -22,7 +23,9 @@ const e = t.editor
 function SessionEditorView({ session }: { session: WorkoutSession }) {
   const { session: auth } = useAuth()
   const queryClient = useQueryClient()
-  const [picking, setPicking] = useState(false)
+  // Qué se está eligiendo: un ejercicio nuevo o el sustituto de un ítem del plan.
+  const [picking, setPicking] = useState<{ item: PlanItem | null } | null>(null)
+  const plan = [...session.session_plan_items].sort((a, b) => a.position - b.position)
   const [finished, setFinished] = useState(false)
   const [finishError, setFinishError] = useState(false)
 
@@ -114,14 +117,25 @@ function SessionEditorView({ session }: { session: WorkoutSession }) {
         dispatch={editor.dispatch}
         errors={editor.built.ok ? null : editor.built.errors}
         indicator={editor.indicator}
-        onAddExercise={() => setPicking(true)}
+        onAddExercise={() => setPicking({ item: null })}
         onFinish={() => void finish()}
         onRetry={() => void editor.retry()}
+        header={
+          <PlanSection
+            plan={plan}
+            draft={editor.draft}
+            dispatch={editor.dispatch}
+            onSubstitute={(item) => setPicking({ item })}
+          />
+        }
+        renderExtra={(exerciseId) => (
+          <PlanTag plan={plan} draft={editor.draft} exerciseId={exerciseId} />
+        )}
       />
 
       {picking ? (
         <ExercisePickerPanel
-          onClose={() => setPicking(false)}
+          onClose={() => setPicking(null)}
           onPick={(exercise) => {
             editor.dispatch({
               type: 'addExercise',
@@ -130,9 +144,11 @@ function SessionEditorView({ session }: { session: WorkoutSession }) {
                 exercise_id: exercise.id,
                 exercise_name: exercise.name,
                 measurement_type: exercise.measurement_type,
+                plan_item_id: picking.item?.id ?? null,
+                is_substitute: picking.item !== null,
               },
             })
-            setPicking(false)
+            setPicking(null)
           }}
         />
       ) : null}

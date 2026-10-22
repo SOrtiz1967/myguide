@@ -231,6 +231,20 @@ export function startWorkout(sessionDate: string | null, requestId: string): Pro
   })
 }
 
+/** Inicia una sesión en curso con el plan de una rutina. Idempotente por `requestId`. */
+export function startWorkoutFromRoutine(
+  routineId: string,
+  sessionDate: string | null,
+  requestId: string,
+): Promise<StartResult> {
+  return callRpc<StartResult>('start_workout_from_routine', {
+    routine_id: routineId,
+    session_date: sessionDate,
+    request_id: requestId,
+    client_timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+  })
+}
+
 /** Guarda el contenido de la sesión (reemplazo completo con revisión). Puede lanzar `StaleRevisionError`. */
 export function saveWorkout(
   sessionId: string,

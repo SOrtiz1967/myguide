@@ -19,6 +19,7 @@ vi.mock('../../src/features/training/api', async (importOriginal) => ({
   ...(await importOriginal<typeof import('../../src/features/training/api')>()),
   fetchInProgressSession: vi.fn(),
   fetchRecentSessions: vi.fn(),
+  fetchRoutines: vi.fn().mockResolvedValue([]),
   startWorkout: vi.fn(),
 }))
 
