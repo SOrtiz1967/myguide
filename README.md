@@ -14,7 +14,10 @@ Desarrollada con **Spec-Driven Development** (Spec Kit). Los principios del proy
 | 004 Objetivo calórico y resumen diario | Implementada y verificada. Sin pasos de despliegue propios (una tabla y una función de base de datos). Ver [`verification.md`](specs/004-objetivo-calorico-resumen/verification.md)         |
 | 005 Catálogo de ejercicios | Implementada y verificada; pendiente la carga en producción y la revisión de licencias del autor (los pasos de free-exercise-db). Ver [`verification.md`](specs/005-catalogo-de-ejercicios/verification.md) |
 | 006 Rutinas, calendario y sesiones | Implementada y verificada. Sin pasos de despliegue propios (migraciones de base de datos). Ver [`verification.md`](specs/006-rutinas-calendario-sesiones/verification.md) |
-| 007 a 012 | Pendientes (la 012, de gráficos de entrenamiento, está redactada) |
+| 007 Sueño, pasos y actividad | Implementada y verificada (registro manual). Sin pasos de despliegue propios. Ver [`verification.md`](specs/007-sueno-pasos-actividad/verification.md) |
+| 008 Peso y medidas | Implementada y verificada en su versión mínima (sin fotos de progreso). Sin pasos de despliegue propios. Ver [`verification.md`](specs/008-peso-y-medidas/verification.md) |
+| 013 Inicio «Hoy» | Implementada y verificada. Solo frontend. Ver [`verification.md`](specs/013-inicio-hoy/verification.md) |
+| 009 a 012 | Pendientes (la 012, de gráficos de entrenamiento, está redactada) |
 
 ## Stack
 

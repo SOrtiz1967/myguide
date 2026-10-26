@@ -64,12 +64,14 @@ Basado en la Constitution v1.2.1. Este documento solo define el corte y el conte
 - Datos faltantes mostrados como faltantes; sin sumar fuentes distintas.
 - Decisión pendiente #5: viabilidad de integraciones en una PWA (el registro manual es la base).
 - Principios: V.
+- **Estado (2026-10-26): implementada y verificada** (`specs/007-sueno-pasos-actividad/`), solo registro manual con fuente; las integraciones con dispositivos quedan fuera.
 
 ### 008 — Peso, medidas y fotos de progreso
 - Mediciones con unidad y fecha.
 - Subida de fotos: eliminación de EXIF, compresión, almacenamiento privado y cifrado en reposo.
 - Comparación visual por fecha, sin IA.
 - Principios: I, V, VI.
+- **Estado (2026-10-26): versión mínima implementada** (`specs/008-peso-y-medidas/`): peso y medidas con historial, sin fotos de progreso. Las fotos, su procesamiento y la comparación visual quedan pendientes.
 
 ## Ola 3: inteligencia y cierre
 
@@ -101,6 +103,12 @@ Basado en la Constitution v1.2.1. Este documento solo define el corte y el conte
 - Depende de la 006. Comparte lenguaje visual con los gráficos de la 010, pero esta spec solo trata de entrenamiento.
 - Principios: II, IV, V, VI.
 - **Estado (2026-10-21): especificada (`specs/012-graficos-progreso-entrenamiento/spec.md`) y dejada para después**, sin rama ni plan.
+
+### 013 — Inicio «Hoy»
+- Pantalla de inicio con las calorías del día frente al objetivo, el entrenamiento de hoy, cuatro accesos rápidos y lo último registrado (comida, sesión, peso y sueño).
+- No estaba en el roadmap original: se agregó el 2026-10-26 para poder usar la aplicación a diario.
+- Principios: IV, V, VI.
+- **Estado (2026-10-26): implementada y verificada** (`specs/013-inicio-hoy/`).
 
 ## Notas de la spec 001 (cerrada el 2026-10-17)
 
