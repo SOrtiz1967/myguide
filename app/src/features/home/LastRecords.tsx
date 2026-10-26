@@ -5,7 +5,8 @@ import { es } from '../../copy/es'
 import { formatDate } from '../../lib/format'
 import { markLabels } from '../training/trainingText'
 import { HomeSection } from './HomeSection'
-import { useLastMealEntry, useLastSession } from './useLastMealEntry'
+import { formatMeasure } from '../measures/measures'
+import { useLastMealEntry, useLastSession, useLastWeight } from './useLastMealEntry'
 
 const l = es.home.last
 
@@ -43,6 +44,21 @@ function SessionRow() {
   )
 }
 
+function WeightRow() {
+  const { data, isPending, isError, refetch } = useLastWeight()
+  if (isPending) return <LoadingState />
+  if (isError) return <ErrorState message={es.home.loadError} onRetry={() => void refetch()} />
+  if (!data) return <p className="text-muted">{l.noWeight}</p>
+  return (
+    <Link to="/medidas" className="flex min-h-11 flex-col gap-0.5 underline">
+      <span className="font-medium">{l.weight}</span>
+      <span className="text-sm text-muted">
+        {formatMeasure('weight', data.value)} · {formatDate(data.measured_on)}
+      </span>
+    </Link>
+  )
+}
+
 /** Lo último que se registró: el ítem de comida más reciente y la última sesión realizada, con su fecha. */
 export function LastRecords() {
   return (
@@ -53,6 +69,9 @@ export function LastRecords() {
         </li>
         <li>
           <SessionRow />
+        </li>
+        <li>
+          <WeightRow />
         </li>
       </ul>
     </HomeSection>
