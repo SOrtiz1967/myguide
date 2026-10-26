@@ -83,6 +83,39 @@ export const es = {
   },
   home: {
     title: 'Inicio',
+    offline: 'Sin conexión: no podemos mostrar tu día actualizado.',
+    loadError: 'No pudimos cargar este bloque.',
+    calories: {
+      title: 'Comidas de hoy',
+      dayTitle: (date: string) => `Comidas del ${date}`,
+      empty: 'Todavía no registraste comidas hoy.',
+      emptyDay: (date: string) => `Todavía no registraste comidas el ${date}.`,
+      register: 'Agregar una comida a este día',
+      openDay: 'Ver el día completo',
+    },
+    training: {
+      title: 'Entrenamiento de hoy',
+      continueTitle: 'Tienes una sesión en curso',
+      empty: 'Hoy no tienes sesiones planificadas.',
+    },
+    quick: {
+      title: 'Accesos rápidos',
+      meal: 'Registrar una comida',
+      train: 'Empezar a entrenar',
+      calendar: 'Ver el calendario',
+      profile: 'Mi perfil',
+    },
+    last: {
+      title: 'Lo último que registraste',
+      meal: 'Última comida',
+      session: 'Última sesión',
+      noMeal: 'Todavía no registraste comidas.',
+      noSession: 'Todavía no registraste sesiones de entrenamiento.',
+      mealLine: (food: string, meal: string, date: string) => `${food} · ${meal} · ${date}`,
+      sessionLine: (date: string, routine: string | null) =>
+        routine ? `${date} · ${routine}` : date,
+      open: 'Abrir',
+    },
   },
   profile: {
     title: 'Perfil',

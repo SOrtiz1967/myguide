@@ -4,11 +4,17 @@ import { es } from '../copy/es'
 import { VerifyEmailBanner } from '../features/auth/VerifyEmailBanner'
 import { isProfileComplete } from '../features/profile/profileValues'
 import { useProfile } from '../features/profile/useProfile'
+import { CaloriesBlock } from '../features/home/CaloriesBlock'
+import { LastRecords } from '../features/home/LastRecords'
+import { QuickLinks } from '../features/home/QuickLinks'
+import { TrainingBlock } from '../features/home/TrainingBlock'
+import { useOnline } from '../lib/useOnline'
 
 export function HomePage() {
   const state = (useLocation().state ?? {}) as { verificationEmailSent?: boolean }
   const navigate = useNavigate()
   const { data: profile } = useProfile()
+  const online = useOnline()
 
   return (
     <div className="flex flex-col gap-4">
@@ -27,6 +33,18 @@ export function HomePage() {
           onAction={() => void navigate('/perfil')}
         />
       ) : null}
+      {online ? (
+        <>
+          <CaloriesBlock />
+          <TrainingBlock />
+        </>
+      ) : (
+        <p role="alert" className="rounded-md border border-danger/40 bg-danger/10 p-3">
+          {es.home.offline}
+        </p>
+      )}
+      <QuickLinks />
+      {online ? <LastRecords /> : null}
     </div>
   )
 }

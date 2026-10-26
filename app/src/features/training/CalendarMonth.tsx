@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Link } from 'react-router'
+import { useEffect, useRef, useState } from 'react'
+import { Link, useLocation } from 'react-router'
 import { ErrorState } from '../../components/ErrorState'
 import { LoadingState } from '../../components/LoadingState'
 import { es } from '../../copy/es'
@@ -33,12 +33,23 @@ export function CalendarMonth() {
   const today = todayLocal()
   const online = useOnline()
   const [month, setMonth] = useState<MonthRef>(() => monthOf(today))
+  const section = useRef<HTMLElement>(null)
+  const { hash } = useLocation()
+  // Un enlace desde el inicio («Ver el calendario») llega directo al calendario.
+  useEffect(() => {
+    if (hash === '#calendario') section.current?.scrollIntoView?.()
+  }, [hash])
   const { data, isPending, isError, refetch } = useMonthSessions(month)
   const byDay = groupByDay(data ?? [])
   const hasSessions = (data ?? []).some((s) => sameMonth(monthOf(s.session_date), month))
 
   return (
-    <section aria-labelledby="calendario-titulo" className="flex flex-col gap-3">
+    <section
+      id="calendario"
+      ref={section}
+      aria-labelledby="calendario-titulo"
+      className="flex flex-col gap-3"
+    >
       <h2 id="calendario-titulo" className="text-xl font-semibold">
         {c.title}
       </h2>

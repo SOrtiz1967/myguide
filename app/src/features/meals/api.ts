@@ -119,6 +119,18 @@ export async function fetchDayEntries(date: string): Promise<MealEntry[]> {
   return (data ?? []) as unknown as MealEntry[]
 }
 
+/** El último ítem registrado de la cuenta: el del día más reciente y, dentro de ese día, el cargado más tarde. */
+export async function fetchLastEntry(): Promise<MealEntry | null> {
+  const { data, error } = await supabase
+    .from('meal_entries')
+    .select(ENTRY_COLUMNS)
+    .order('log_date', { ascending: false })
+    .order('created_at', { ascending: false })
+    .limit(1)
+  if (error) throw error
+  return ((data ?? [])[0] as unknown as MealEntry | undefined) ?? null
+}
+
 export async function fetchRecents(): Promise<RecentItem[]> {
   const { data, error } = await supabase.rpc('recent_meal_items', { max_items: 20 })
   if (error) throw error
