@@ -34,6 +34,9 @@ export function AppShell({ children }: { children: ReactNode }) {
               <Link to="/entrenamiento" className="inline-flex min-h-11 items-center underline">
                 {es.training.navLink}
               </Link>
+              <Link to="/actividad" className="inline-flex min-h-11 items-center underline">
+                {es.activity.navLink}
+              </Link>
               <Link to="/medidas" className="inline-flex min-h-11 items-center underline">
                 {es.measures.navLink}
               </Link>

@@ -5,8 +5,9 @@ import { es } from '../../copy/es'
 import { formatDate } from '../../lib/format'
 import { markLabels } from '../training/trainingText'
 import { HomeSection } from './HomeSection'
+import { formatActivity } from '../activity/activity'
 import { formatMeasure } from '../measures/measures'
-import { useLastMealEntry, useLastSession, useLastWeight } from './useLastMealEntry'
+import { useLastMealEntry, useLastSession, useLastSleep, useLastWeight } from './useLastMealEntry'
 
 const l = es.home.last
 
@@ -59,6 +60,21 @@ function WeightRow() {
   )
 }
 
+function SleepRow() {
+  const { data, isPending, isError, refetch } = useLastSleep()
+  if (isPending) return <LoadingState />
+  if (isError) return <ErrorState message={es.home.loadError} onRetry={() => void refetch()} />
+  if (!data) return <p className="text-muted">{l.noSleep}</p>
+  return (
+    <Link to="/actividad" className="flex min-h-11 flex-col gap-0.5 underline">
+      <span className="font-medium">{l.sleep}</span>
+      <span className="text-sm text-muted">
+        {formatActivity('sleep', data.value)} · {formatDate(data.activity_date)}
+      </span>
+    </Link>
+  )
+}
+
 /** Lo último que se registró: el ítem de comida más reciente y la última sesión realizada, con su fecha. */
 export function LastRecords() {
   return (
@@ -72,6 +88,9 @@ export function LastRecords() {
         </li>
         <li>
           <WeightRow />
+        </li>
+        <li>
+          <SleepRow />
         </li>
       </ul>
     </HomeSection>

@@ -10,6 +10,7 @@ import { ExerciseDetailPage } from '../features/exercises/ExerciseDetailPage'
 import { ExerciseSearchPage } from '../features/exercises/ExerciseSearchPage'
 import { ExerciseHistoryPage } from '../features/training/ExerciseHistoryPage'
 import { MeasuresPage } from '../features/measures/MeasuresPage'
+import { ActivityPage } from '../features/activity/ActivityPage'
 import { FoodCreatePage } from '../features/foods/FoodCreatePage'
 import { FoodDetailPage } from '../features/foods/FoodDetailPage'
 import { FoodEditPage } from '../features/foods/FoodEditPage'
@@ -67,6 +68,7 @@ export const routes: RouteObject[] = [
           { path: '/ejercicios/:id/editar', element: <ExerciseEditPage /> },
           { path: '/ejercicios/:id/historia', element: <ExerciseHistoryPage /> },
           { path: '/medidas', element: <MeasuresPage /> },
+          { path: '/actividad', element: <ActivityPage /> },
           { path: '/entrenamiento', element: <TrainingHomePage /> },
           { path: '/entrenamiento/dia/:fecha', element: <TrainingDayPage /> },
           { path: '/entrenamiento/sesion/:id', element: <SessionPage /> },

@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { fetchLastEntry } from '../meals/api'
+import { fetchLastSleep } from '../activity/api'
 import { fetchLastWeight } from '../measures/api'
 import { fetchRecentSessions } from '../training/api'
 
@@ -19,4 +20,9 @@ export function useLastSession() {
 /** El último peso registrado. */
 export function useLastWeight() {
   return useQuery({ queryKey: ['measures', 'last-weight'], queryFn: fetchLastWeight })
+}
+
+/** El último sueño registrado. */
+export function useLastSleep() {
+  return useQuery({ queryKey: ['activity', 'last-sleep'], queryFn: fetchLastSleep })
 }
