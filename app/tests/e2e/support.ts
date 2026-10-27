@@ -84,12 +84,27 @@ export function sessionCount(email: string): number {
   )
 }
 
-export async function register(page: Page, email: string, password = PASSWORD): Promise<void> {
+/** Crea la cuenta y espera el recorrido del primer ingreso (spec 014). */
+export async function registerRaw(page: Page, email: string, password = PASSWORD): Promise<void> {
   await page.goto('/registro')
   await page.getByLabel(es.auth.labels.email).fill(email)
   await page.getByLabel(es.auth.labels.password).fill(password)
   await page.getByLabel(es.auth.labels.privacyAccept).check()
   await page.getByRole('button', { name: es.auth.actions.register }).click()
+  await expect(page.getByRole('heading', { level: 1, name: es.onboarding.title })).toBeVisible()
+}
+
+/**
+ * Crea la cuenta y deja el recorrido del primer ingreso como completado, sin cargar datos: así las
+ * demás pruebas siguen viendo un perfil vacío y llegan al inicio. El disparador de validación se
+ * omite solo en esta sentencia de prueba.
+ */
+export async function register(page: Page, email: string, password = PASSWORD): Promise<void> {
+  await registerRaw(page, email, password)
+  dbQuery(
+    `set session_replication_role = replica; update public.profiles set onboarding_completed_at = now() where user_id = (select id from auth.users where email = '${email}')`,
+  )
+  await page.goto('/')
   await expect(page.getByRole('heading', { level: 1, name: es.home.title })).toBeVisible()
 }
 

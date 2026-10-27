@@ -70,7 +70,7 @@ test('escenario 16 (FR-007): un doble clic en "Crear cuenta" resulta en una sola
   await page.getByLabel(es.auth.labels.password).fill(PASSWORD)
   await page.getByLabel(es.auth.labels.privacyAccept).check()
   await page.getByRole('button', { name: es.auth.actions.register }).dblclick()
-  await expect(page.getByRole('heading', { level: 1, name: es.home.title })).toBeVisible()
+  await expect(page.getByRole('heading', { level: 1, name: es.onboarding.title })).toBeVisible()
 
   await waitForMail(email, /confirma tu correo/i)
   const confirmations = (await messagesFor(email)).filter((m) =>

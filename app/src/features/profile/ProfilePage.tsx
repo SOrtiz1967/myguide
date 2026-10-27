@@ -6,6 +6,7 @@ import { es } from '../../copy/es'
 import { discardDraft } from '../../lib/drafts'
 import { detectDeviceTimezone, isValidTimezone } from '../../lib/timezone'
 import { ChangePasswordForm } from '../auth/ChangePasswordForm'
+import { GoalProfileForm } from './GoalProfileForm'
 import { ProfileForm } from './ProfileForm'
 import { toProfileUpdate } from './profileValues'
 import { ProfileSummary } from './ProfileSummary'
@@ -52,6 +53,8 @@ export function ProfilePage() {
         onConfirmed={() => setConfirmed(true)}
       />
       {confirmed ? <SuccessMessage>{es.profile.saved}</SuccessMessage> : null}
+
+      <GoalProfileForm profile={profile} />
 
       <section aria-labelledby="cambiar-contrasena" className="flex flex-col gap-4">
         <h2 id="cambiar-contrasena" className="text-lg font-semibold">

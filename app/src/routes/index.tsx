@@ -10,6 +10,8 @@ import { ExerciseDetailPage } from '../features/exercises/ExerciseDetailPage'
 import { ExerciseSearchPage } from '../features/exercises/ExerciseSearchPage'
 import { ExerciseHistoryPage } from '../features/training/ExerciseHistoryPage'
 import { MeasuresPage } from '../features/measures/MeasuresPage'
+import { OnboardingPage } from '../features/onboarding/OnboardingPage'
+import { PlanPage } from '../features/plan/PlanPage'
 import { ActivityPage } from '../features/activity/ActivityPage'
 import { FoodCreatePage } from '../features/foods/FoodCreatePage'
 import { FoodDetailPage } from '../features/foods/FoodDetailPage'
@@ -32,6 +34,7 @@ import { AppLayout } from './AppLayout'
 import { HomePage } from './HomePage'
 import { OfflinePage } from './OfflinePage'
 import { RequireAuth } from './RequireAuth'
+import { RequireOnboarding } from './RequireOnboarding'
 
 /**
  * Tabla de rutas de contracts/ui-routes.md. Las rutas privadas pasan por RequireAuth (FR-012);
@@ -51,32 +54,39 @@ export const routes: RouteObject[] = [
       {
         element: <RequireAuth />,
         children: [
-          { path: '/', element: <HomePage /> },
-          { path: '/perfil', element: <ProfilePage /> },
-          { path: '/comidas', element: <MealsRedirect /> },
-          { path: '/comidas/:fecha', element: <DayPage /> },
-          { path: '/comidas/:fecha/agregar', element: <AddEntryPage /> },
-          { path: '/comidas/item/:id', element: <EntryDetailPage /> },
-          { path: '/objetivo', element: <GoalPage /> },
-          { path: '/alimentos', element: <FoodSearchPage /> },
-          { path: '/alimentos/nuevo', element: <FoodCreatePage /> },
-          { path: '/alimentos/:id', element: <FoodDetailPage /> },
-          { path: '/alimentos/:id/editar', element: <FoodEditPage /> },
-          { path: '/ejercicios', element: <ExerciseSearchPage /> },
-          { path: '/ejercicios/nuevo', element: <ExerciseCreatePage /> },
-          { path: '/ejercicios/:id', element: <ExerciseDetailPage /> },
-          { path: '/ejercicios/:id/editar', element: <ExerciseEditPage /> },
-          { path: '/ejercicios/:id/historia', element: <ExerciseHistoryPage /> },
-          { path: '/medidas', element: <MeasuresPage /> },
-          { path: '/actividad', element: <ActivityPage /> },
-          { path: '/entrenamiento', element: <TrainingHomePage /> },
-          { path: '/entrenamiento/dia/:fecha', element: <TrainingDayPage /> },
-          { path: '/entrenamiento/sesion/:id', element: <SessionPage /> },
-          { path: '/entrenamiento/rutinas', element: <RoutinesPage /> },
-          { path: '/entrenamiento/rutinas/nueva', element: <RoutineFormPage /> },
-          { path: '/entrenamiento/rutinas/:id', element: <RoutineDetailPage /> },
-          { path: '/entrenamiento/rutinas/:id/editar', element: <RoutineFormPage /> },
-          { path: '/fuentes', element: <SourcesPage /> },
+          { path: '/bienvenida', element: <OnboardingPage /> },
+          {
+            element: <RequireOnboarding />,
+            children: [
+              { path: '/plan', element: <PlanPage /> },
+              { path: '/', element: <HomePage /> },
+              { path: '/perfil', element: <ProfilePage /> },
+              { path: '/comidas', element: <MealsRedirect /> },
+              { path: '/comidas/:fecha', element: <DayPage /> },
+              { path: '/comidas/:fecha/agregar', element: <AddEntryPage /> },
+              { path: '/comidas/item/:id', element: <EntryDetailPage /> },
+              { path: '/objetivo', element: <GoalPage /> },
+              { path: '/alimentos', element: <FoodSearchPage /> },
+              { path: '/alimentos/nuevo', element: <FoodCreatePage /> },
+              { path: '/alimentos/:id', element: <FoodDetailPage /> },
+              { path: '/alimentos/:id/editar', element: <FoodEditPage /> },
+              { path: '/ejercicios', element: <ExerciseSearchPage /> },
+              { path: '/ejercicios/nuevo', element: <ExerciseCreatePage /> },
+              { path: '/ejercicios/:id', element: <ExerciseDetailPage /> },
+              { path: '/ejercicios/:id/editar', element: <ExerciseEditPage /> },
+              { path: '/ejercicios/:id/historia', element: <ExerciseHistoryPage /> },
+              { path: '/medidas', element: <MeasuresPage /> },
+              { path: '/actividad', element: <ActivityPage /> },
+              { path: '/entrenamiento', element: <TrainingHomePage /> },
+              { path: '/entrenamiento/dia/:fecha', element: <TrainingDayPage /> },
+              { path: '/entrenamiento/sesion/:id', element: <SessionPage /> },
+              { path: '/entrenamiento/rutinas', element: <RoutinesPage /> },
+              { path: '/entrenamiento/rutinas/nueva', element: <RoutineFormPage /> },
+              { path: '/entrenamiento/rutinas/:id', element: <RoutineDetailPage /> },
+              { path: '/entrenamiento/rutinas/:id/editar', element: <RoutineFormPage /> },
+              { path: '/fuentes', element: <SourcesPage /> },
+            ],
+          },
         ],
       },
     ],

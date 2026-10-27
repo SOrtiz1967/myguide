@@ -81,6 +81,167 @@ export const es = {
     haveAccount: '¿Ya tienes cuenta?',
     forgotPassword: '¿Olvidaste tu contraseña?',
   },
+  onboarding: {
+    title: 'Bienvenida a MyGuide',
+    intro:
+      'Con unos pocos datos calculamos una estimación de tus calorías diarias. Puedes cambiarlos cuando quieras desde tu perfil.',
+    stepOf: (step: number, total: number) => `Paso ${step} de ${total}`,
+    steps: ['Sobre ti', 'Tu actividad', 'Tu objetivo', 'Tu plan'],
+    about: {
+      why: 'Estos datos se usan solo para calcular tu estimación.',
+      sex: 'Sexo',
+      sexHint: 'Se usa en la fórmula de cálculo (Mifflin-St Jeor).',
+      sexOptions: { female: 'Mujer', male: 'Hombre' },
+      birthDate: 'Fecha de nacimiento',
+      birthDateHint: 'Se usa para calcular tu edad. La estimación es solo para personas adultas.',
+      height: 'Altura (cm)',
+      heightHint: 'Ejemplo: 175 o 171,5.',
+      weight: 'Peso actual (kg)',
+      weightHint: 'Quedará como tu primer registro en Medidas. Ejemplo: 75,5.',
+    },
+    activity: {
+      why: 'Sirve para estimar cuánta energía gastas en un día.',
+      job: 'Tu día a día',
+      jobHint: 'Sin contar tus entrenamientos.',
+      jobOptions: {
+        sedentary: 'Sentado la mayor parte del día',
+        mixed: 'Mixto: algo de pie y caminando',
+        on_feet: 'De pie o en movimiento casi todo el día',
+      },
+      days: 'Días de entrenamiento por semana',
+      daysHint: 'Si ya registraste sesiones, usamos tu promedio real.',
+      daysOption: (count: number) => (count === 1 ? '1 día' : `${count} días`),
+      experience: 'Experiencia entrenando',
+      experienceOptions: {
+        beginner: 'Principiante (menos de 1 año)',
+        intermediate: 'Intermedia (de 1 a 3 años)',
+        advanced: 'Avanzada (más de 3 años)',
+      },
+      choose: 'Elige una opción',
+    },
+    goal: {
+      why: 'Define cómo ajustamos tus calorías respecto de tu mantenimiento. Puedes cambiarlo después.',
+      legend: 'Tu objetivo',
+      options: {
+        muscle_gain: {
+          label: 'Ganar músculo',
+          description:
+            'Un pequeño excedente de energía sobre tu mantenimiento, junto con entrenamiento de fuerza.',
+        },
+        fat_loss: {
+          label: 'Perder grasa',
+          description:
+            'Un déficit moderado respecto de tu mantenimiento, sin llegar a valores extremos.',
+        },
+        recomposition: {
+          label: 'Recomposición corporal',
+          description:
+            'Calorías cercanas al mantenimiento, con entrenamiento de fuerza y proteína suficiente.',
+        },
+      },
+    },
+    plan: {
+      later: 'Guardar sin objetivo calórico',
+      laterHint: 'Podrás calcularlo cuando quieras desde Objetivo.',
+    },
+    nav: { back: 'Atrás', next: 'Siguiente' },
+    saving: 'Guardando…',
+    notSaved: 'No se guardó nada todavía.',
+    draftRestored: 'Recuperamos lo que estabas escribiendo.',
+    draftDiscard: 'Descartar borrador',
+    loading: 'Cargando tus datos…',
+    loadError: 'No pudimos cargar tus datos.',
+    errors: {
+      sex: 'Elige una opción.',
+      birthDate: 'Escribe una fecha de nacimiento válida.',
+      underage:
+        'La estimación calórica de MyGuide es solo para personas adultas (18 años o más). No se guardó ningún dato.',
+      height: 'Escribe una altura entre 50 y 250 cm, con a lo sumo un decimal.',
+      job: 'Elige una opción.',
+      days: 'Elige un número entre 0 y 7.',
+      experience: 'Elige una opción.',
+      goal: 'Elige un objetivo.',
+      incomplete: 'Faltan datos para completar el recorrido.',
+    } as Record<string, string>,
+  },
+  plan: {
+    navLink: 'Calcular mi objetivo',
+    title: 'Tu objetivo calórico',
+    pageIntro:
+      'Recalcula tu estimación con tus datos actuales: perfil, último peso y entrenos registrados. Nada cambia hasta que lo confirmes.',
+    loading: 'Calculando…',
+    loadError: 'No pudimos cargar tus datos para el cálculo.',
+    missingTitle: 'Faltan datos para calcular',
+    missingIntro:
+      'Completa estos datos y vuelve. No mostramos un valor si no tenemos con qué calcularlo.',
+    missing: {
+      birthDate: 'Fecha de nacimiento',
+      sex: 'Sexo',
+      height: 'Altura',
+      weight: 'Peso actual (regístralo en Medidas)',
+      job: 'Tu día a día',
+      trainingDays: 'Días de entrenamiento por semana',
+      experience: 'Experiencia entrenando',
+      goal: 'Objetivo',
+    } as Record<string, string>,
+    goToProfile: 'Completar en el perfil',
+    goToMeasures: 'Registrar mi peso',
+    maintenanceLabel: 'Calorías de mantenimiento',
+    targetLabel: 'Objetivo diario propuesto',
+    kcal: (value: number) => `${value.toLocaleString('es-ES', { useGrouping: 'always' })} kcal`,
+    range: (low: number, high: number) =>
+      `Rango orientativo: ${low.toLocaleString('es-ES', { useGrouping: 'always' })} a ${high.toLocaleString('es-ES', { useGrouping: 'always' })} kcal`,
+    adjustment: {
+      muscle_gain: (pct: number) => `Incluye un excedente de ${pct} % sobre tu mantenimiento.`,
+      fat_loss: (pct: number) =>
+        `Incluye un déficit de ${Math.abs(pct)} % respecto de tu mantenimiento.`,
+      recomposition: 'Es igual a tu mantenimiento.',
+      same: 'Es igual a tu mantenimiento.',
+    },
+    protein: (min: number, max: number) => `Proteína sugerida: ${min} a ${max} g al día.`,
+    accuracy:
+      'Es una estimación aproximada: puede variar entre personas y con el tiempo. Revísala con tus registros; no se ajusta sola.',
+    basis: {
+      logged: (sessions: string) =>
+        `Entrenamientos: ${sessions} por semana, según tus entrenos registrados.`,
+      declared: (sessions: string) =>
+        `Entrenamientos: ${sessions} por semana, según los días que indicaste.`,
+    },
+    notes: {
+      floor:
+        'Para cuidar tu energía no proponemos menos de este valor. Si quieres un déficit mayor, conviene hablarlo con un profesional de la salud.',
+      lowBmi:
+        'Con tu peso y altura no proponemos un déficit: te mostramos tu mantenimiento. Si tienes dudas, conviene consultarlo con un profesional de la salud.',
+      older:
+        'A partir de los 65 años la fórmula es menos precisa. Tómala como una referencia y consúltala con un profesional.',
+      cap: 'El excedente tiene un tope de 500 kcal.',
+    },
+    method: {
+      summary: 'Cómo se calcula',
+      intro: 'Método: fórmula de Mifflin-St Jeor más el gasto de tus entrenamientos.',
+      rmr: (value: number) => `Reposo (Mifflin-St Jeor): ${value} kcal`,
+      base: (factor: string, value: number) =>
+        `Actividad diaria (reposo × ${factor}): ${value} kcal`,
+      training: (value: number) =>
+        `Entrenamientos, en promedio por día: ${value} kcal (aproximado)`,
+      maintenance: (value: number) => `Mantenimiento (suma, redondeada): ${value} kcal`,
+      inputs: (age: number, height: string, weight: string) =>
+        `Datos usados: ${age} años, ${height} cm, ${weight} kg.`,
+      trainingAssumption:
+        'Cada sesión se estima en 1 hora con una intensidad media (MET 4,5); el gasto real puede diferir.',
+    },
+    actions: {
+      use: 'Usar este objetivo',
+      other: 'Elegir otro valor',
+      otherLabel: 'Tu objetivo en kcal',
+      otherHint: 'Entre 1.000 y 6.000 kcal. Es una referencia que eliges tú.',
+      useOther: 'Usar este valor',
+      cancelOther: 'Cancelar',
+      saving: 'Guardando…',
+      saved: 'Objetivo guardado',
+      notSaved: 'No se guardó.',
+    },
+  },
   activity: {
     navLink: 'Sueño y actividad',
     title: 'Sueño, pasos y actividad',
@@ -312,6 +473,14 @@ export const es = {
       birthDate: 'La fecha de nacimiento no es válida.',
       timezone: 'Elige una zona horaria válida.',
       sex: 'Elige una de las opciones.',
+    },
+    goalForm: {
+      title: 'Objetivo y actividad',
+      hint: 'Cambiar esto no modifica tu objetivo calórico. Puedes recalcularlo y confirmarlo cuando quieras.',
+      save: 'Guardar objetivo y actividad',
+      saved: 'Objetivo y actividad guardados',
+      incomplete: 'Elige una opción en cada campo.',
+      recalculate: 'Recalcular mi objetivo calórico',
     },
     emptyTitle: 'Todavía no completaste tu perfil',
     emptyBody:
