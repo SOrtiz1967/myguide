@@ -35,7 +35,7 @@ export function EffortSelect({ exerciseName, value, onChange, error }: EffortSel
         onChange={(event) => onChange(event.target.value)}
         aria-invalid={error ? true : undefined}
         aria-describedby={`${hintId}${error ? ` ${errorId}` : ''}`}
-        className="min-h-11 rounded-md border border-line bg-surface px-3 py-2"
+        className="min-h-11 control px-3 py-2"
       >
         <option value="">{t.effort.none}</option>
         {levels.map((level) => (

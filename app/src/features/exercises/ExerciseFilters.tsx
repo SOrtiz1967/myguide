@@ -10,7 +10,7 @@ import {
   type Muscle,
 } from './exerciseLists'
 
-const selectClass = 'min-h-11 rounded-md border border-line bg-surface px-3 py-2'
+const selectClass = 'min-h-11 control px-3 py-2'
 
 interface ExerciseFiltersProps {
   muscle: Muscle | null
@@ -84,7 +84,7 @@ export function ExerciseFilters({
                 type="button"
                 aria-label={t.remove(filter.label)}
                 onClick={filter.remove}
-                className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line bg-surface px-3"
+                className="inline-flex min-h-11 items-center gap-2 rounded-full bg-surface-2 px-3"
               >
                 <span>{filter.label}</span>
                 <span aria-hidden="true">×</span>

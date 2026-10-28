@@ -48,7 +48,7 @@ export function QuantityPicker({ food, value, onChange, error }: QuantityPickerP
           onChange={(event) =>
             onChange({ portion: event.target.value, amount: event.target.value ? '1' : '100' })
           }
-          className="min-h-11 rounded-md border border-line bg-surface px-3 py-2"
+          className="min-h-11 control px-3 py-2"
         >
           <option value="">
             {liquid ? es.meals.quantity.milliliters : es.meals.quantity.grams}
@@ -85,7 +85,7 @@ export function QuantityPicker({ food, value, onChange, error }: QuantityPickerP
           <caption className="pb-2 text-left font-medium">{es.meals.quantity.preview}</caption>
           <tbody>
             {NUTRIENTS.map((nutrient) => (
-              <tr key={nutrient.key} className="border-t border-line">
+              <tr key={nutrient.key} className="border-t border-line/25">
                 <th
                   scope="row"
                   className={`py-1.5 pr-3 font-normal ${nutrient.indent ? 'pl-5 text-muted' : ''}`}

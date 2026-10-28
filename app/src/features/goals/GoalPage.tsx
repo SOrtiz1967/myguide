@@ -45,10 +45,10 @@ export function GoalPage() {
 
   return (
     <div className="flex max-w-xl flex-col gap-6">
-      <h1 className="text-2xl font-semibold tracking-tight">{es.goal.page.title}</h1>
+      <h1 className="text-2xl font-extrabold tracking-tight">{es.goal.page.title}</h1>
       <p className="text-muted">{es.goal.page.explanation}</p>
 
-      <p className="rounded-lg border border-line bg-surface p-4 font-medium">
+      <p className="card-inset p-4 font-medium">
         {current
           ? es.goal.page.current(current.kcal, formatDayMonth(current.since))
           : es.goal.page.none}
@@ -106,12 +106,9 @@ function GoalForm({ backTo }: { backTo: string }) {
   })
 
   return (
-    <form onSubmit={submit} noValidate className="flex flex-col gap-4">
+    <form onSubmit={submit} noValidate className="card flex flex-col gap-4">
       {draft.restored ? (
-        <div
-          role="status"
-          className="flex flex-col gap-2 rounded-md border border-line bg-surface p-3"
-        >
+        <div role="status" className="flex flex-col gap-2 card-inset p-3">
           <p>{es.goal.page.draftRestored}</p>
           <div>
             <button

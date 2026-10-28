@@ -32,7 +32,7 @@ export function LastTime({ exerciseId, sessionId }: { exerciseId: string; sessio
         </Link>
       </div>
       {open ? (
-        <div role="region" aria-label={h.lastTime} className="rounded-md border border-line p-3">
+        <div role="region" aria-label={h.lastTime} className="card-inset p-3">
           {last.isPending ? <LoadingState /> : null}
           {last.isError ? (
             <ErrorState message={h.loadError} onRetry={() => void last.refetch()} />

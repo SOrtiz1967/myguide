@@ -20,7 +20,7 @@ export function CheckboxField({ label, error, id, ref, ...rest }: CheckboxFieldP
           type="checkbox"
           aria-invalid={error ? true : undefined}
           aria-describedby={errorId}
-          className="mt-1 size-5"
+          className="mt-1 size-5 accent-accent"
           {...rest}
         />
         <label htmlFor={inputId}>{label}</label>

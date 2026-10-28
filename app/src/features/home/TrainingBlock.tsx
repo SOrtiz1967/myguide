@@ -49,13 +49,13 @@ export function TrainingBlock() {
   const due = useDueSessions(todayLocal())
 
   return (
-    <HomeSection title={es.home.training.title}>
+    <HomeSection tone="training" className="lg:col-span-2" title={es.home.training.title}>
       {open.isPending ? <LoadingState /> : null}
       {open.isError ? (
         <ErrorState message={es.home.loadError} onRetry={() => void open.refetch()} />
       ) : null}
       {open.data ? (
-        <div className="flex flex-col gap-3 rounded-lg border border-line bg-surface p-4">
+        <div className="card-inset flex flex-col gap-3">
           <p className="font-medium">{es.home.training.continueTitle}</p>
           <p className="text-sm text-muted">{formatDate(open.data.session_date)}</p>
           <div>

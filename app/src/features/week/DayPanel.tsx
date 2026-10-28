@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router'
 import { ErrorState } from '../../components/ErrorState'
 import { LoadingState } from '../../components/LoadingState'
+import { HomeSection } from '../home/HomeSection'
 import { es } from '../../copy/es'
 import { CaloriesBlock } from '../home/CaloriesBlock'
 import { TrainingBlock } from '../home/TrainingBlock'
@@ -23,16 +24,15 @@ function WeightRow({ date, isToday }: { date: string; isToday: boolean }) {
   const value = weight.data?.at(-1)
 
   return (
-    <section aria-labelledby={`peso-${date}`} className="flex flex-col gap-1">
-      <h3 id={`peso-${date}`} className="text-lg font-semibold">
-        {p.weightTitle}
-      </h3>
+    <HomeSection tone="body" title={p.weightTitle}>
       {weight.isPending ? <LoadingState /> : null}
       {weight.isError ? (
         <ErrorState message={es.home.loadError} onRetry={() => void weight.refetch()} />
       ) : null}
       {weight.isSuccess && value ? (
-        <p className="text-xl font-semibold tabular-nums">{formatMeasure('weight', value.value)}</p>
+        <p className="text-3xl font-extrabold tabular-nums">
+          {formatMeasure('weight', value.value)}
+        </p>
       ) : null}
       {weight.isSuccess && !value ? <p className="text-muted">{p.noWeight}</p> : null}
       {weight.isSuccess && !value && isToday && profile?.weight_reminder ? (
@@ -43,17 +43,14 @@ function WeightRow({ date, isToday }: { date: string; isToday: boolean }) {
           </Link>
         </p>
       ) : null}
-    </section>
+    </HomeSection>
   )
 }
 
 function DaySessions({ date }: { date: string }) {
   const sessions = useDaySessions(date)
   return (
-    <section aria-labelledby={`entreno-${date}`} className="flex flex-col gap-2">
-      <h3 id={`entreno-${date}`} className="text-lg font-semibold">
-        {p.trainingTitle}
-      </h3>
+    <HomeSection tone="training" className="lg:col-span-2" title={p.trainingTitle}>
       {sessions.isPending ? <LoadingState /> : null}
       {sessions.isError ? (
         <ErrorState message={es.home.loadError} onRetry={() => void sessions.refetch()} />
@@ -75,7 +72,7 @@ function DaySessions({ date }: { date: string }) {
           ))}
         </ul>
       ) : null}
-    </section>
+    </HomeSection>
   )
 }
 
@@ -86,45 +83,40 @@ function DaySessions({ date }: { date: string }) {
 export function DayPanel({ date, today }: { date: string; today: string }) {
   const isToday = date === today
   return (
-    <aside
-      aria-labelledby="panel-dia-titulo"
-      className="flex flex-col gap-5 rounded-lg border border-line bg-surface p-4"
-    >
+    <section aria-labelledby="panel-dia-titulo" className="flex flex-col gap-4">
       <header>
-        <p className={`text-sm ${isToday ? 'text-accent' : 'text-warn'}`}>
+        <p className={`text-sm font-semibold ${isToday ? 'text-accent-soft' : 'text-warn'}`}>
           {isToday ? p.today : p.notToday}
         </p>
-        <h2 id="panel-dia-titulo" className="text-xl font-semibold">
+        <h2 id="panel-dia-titulo" className="text-2xl font-extrabold tracking-tight">
           {formatDay(date)}
         </h2>
       </header>
 
-      <CaloriesBlock date={date} />
-      <WeightRow date={date} isToday={isToday} />
-      {isToday ? <TrainingBlock /> : <DaySessions date={date} />}
-
-      <section aria-labelledby={`acciones-${date}`} className="flex flex-col gap-2">
-        <h3 id={`acciones-${date}`} className="text-lg font-semibold">
-          {p.actionsTitle}
-        </h3>
-        <ul className="grid grid-cols-1 gap-2">
-          <li>
-            <Link to="/medidas" className="btn-secondary w-full">
-              {p.addWeight}
-            </Link>
-          </li>
-          <li>
-            <Link to={`/entrenamiento/dia/${date}`} className="btn-secondary w-full">
-              {p.addWorkout}
-            </Link>
-          </li>
-          <li>
-            <Link to="/actividad" className="btn-secondary w-full">
-              {p.addSleep}
-            </Link>
-          </li>
-        </ul>
-      </section>
-    </aside>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <CaloriesBlock date={date} />
+        {isToday ? <TrainingBlock /> : <DaySessions date={date} />}
+        <WeightRow date={date} isToday={isToday} />
+        <HomeSection title={p.actionsTitle} className="md:col-span-2 lg:col-span-3">
+          <ul className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+            <li>
+              <Link to="/medidas" className="btn-secondary w-full">
+                {p.addWeight}
+              </Link>
+            </li>
+            <li>
+              <Link to={`/entrenamiento/dia/${date}`} className="btn-secondary w-full">
+                {p.addWorkout}
+              </Link>
+            </li>
+            <li>
+              <Link to="/actividad" className="btn-secondary w-full">
+                {p.addSleep}
+              </Link>
+            </li>
+          </ul>
+        </HomeSection>
+      </div>
+    </section>
   )
 }

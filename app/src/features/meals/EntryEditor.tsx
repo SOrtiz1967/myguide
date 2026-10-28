@@ -185,13 +185,10 @@ function EditorForm({
         void submit()
       }}
     >
-      <h2 className="text-lg font-semibold">{es.meals.entry.editTitle}</h2>
+      <h2 className="text-base font-bold">{es.meals.entry.editTitle}</h2>
 
       {restored ? (
-        <div
-          role="status"
-          className="flex flex-col gap-2 rounded-md border border-line bg-surface p-3"
-        >
+        <div role="status" className="flex flex-col gap-2 card-inset p-3">
           <p>{es.meals.entry.draftRestored}</p>
           <div>
             <button
@@ -224,7 +221,7 @@ function EditorForm({
           id="editar-comida"
           value={form.meal}
           onChange={(event) => setForm({ ...form, meal: event.target.value })}
-          className="min-h-11 rounded-md border border-line bg-surface px-3 py-2"
+          className="min-h-11 control px-3 py-2"
         >
           {MEALS.map((option: Meal) => (
             <option key={option} value={option}>
@@ -246,7 +243,7 @@ function EditorForm({
           max={addDays(today, 7)}
           aria-invalid={dateError ? true : undefined}
           onChange={(event) => setForm({ ...form, log_date: event.target.value })}
-          className="min-h-11 rounded-md border border-line bg-surface px-3 py-2"
+          className="min-h-11 control px-3 py-2"
         />
         {dateError ? <p className="text-sm text-danger">{dateError}</p> : null}
       </div>

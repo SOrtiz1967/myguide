@@ -84,9 +84,9 @@ export function ConfirmDialog({
         aria-labelledby={titleId}
         aria-describedby={descriptionId}
         onKeyDown={onKeyDown}
-        className="flex w-full max-w-md flex-col gap-4 rounded-lg border border-line bg-surface p-5 text-ink"
+        className="flex w-full max-w-md flex-col gap-4 rounded-xl bg-surface-2 p-5 text-ink"
       >
-        <h2 id={titleId} className="text-lg font-semibold">
+        <h2 id={titleId} className="text-base font-bold">
           {title}
         </h2>
         <p id={descriptionId} className="text-muted">

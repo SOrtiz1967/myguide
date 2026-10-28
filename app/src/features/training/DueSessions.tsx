@@ -16,15 +16,12 @@ export function DueSessions() {
   if (!due.data || due.data.length === 0) return null
   return (
     <section aria-labelledby="pendientes-titulo" className="flex flex-col gap-3">
-      <h3 id="pendientes-titulo" className="text-lg font-semibold">
+      <h3 id="pendientes-titulo" className="text-base font-bold">
         {h.dueTitle}
       </h3>
       <ul className="flex flex-col gap-3">
         {due.data.map((session) => (
-          <li
-            key={session.id}
-            className="flex flex-col gap-3 rounded-lg border border-line bg-surface p-4"
-          >
+          <li key={session.id} className="card-inset flex flex-col gap-3">
             <Link
               to={`/entrenamiento/sesion/${session.id}`}
               className="flex min-h-11 flex-col gap-0.5 underline"

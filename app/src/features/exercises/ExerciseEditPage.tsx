@@ -64,7 +64,7 @@ export function ExerciseEditPage() {
   return (
     <div className="flex max-w-2xl flex-col gap-4">
       <div>{back}</div>
-      <h1 className="text-2xl font-semibold tracking-tight">{t.form.editTitle}</h1>
+      <h1 className="text-2xl font-extrabold tracking-tight">{t.form.editTitle}</h1>
       {copied ? <SuccessMessage>{t.form.copyCreated}</SuccessMessage> : null}
       <ExerciseForm
         userId={session?.user.id ?? ''}

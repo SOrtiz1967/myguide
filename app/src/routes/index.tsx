@@ -31,6 +31,7 @@ import { TrainingDayPage } from '../features/training/DayPage'
 import { SessionPage } from '../features/training/SessionPage'
 import { TrainingHomePage } from '../features/training/TrainingHomePage'
 import { AppLayout } from './AppLayout'
+import { DesignSystemPage } from './DesignSystemPage'
 import { HomePage } from './HomePage'
 import { OfflinePage } from './OfflinePage'
 import { RequireAuth } from './RequireAuth'
@@ -85,6 +86,7 @@ export const routes: RouteObject[] = [
               { path: '/entrenamiento/rutinas/:id', element: <RoutineDetailPage /> },
               { path: '/entrenamiento/rutinas/:id/editar', element: <RoutineFormPage /> },
               { path: '/fuentes', element: <SourcesPage /> },
+              { path: '/sistema', element: <DesignSystemPage /> },
             ],
           },
         ],

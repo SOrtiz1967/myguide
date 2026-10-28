@@ -24,7 +24,7 @@ export function ExerciseHistoryPage() {
         </Link>
       </div>
       <header className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold tracking-tight">{h.title}</h1>
+        <h1 className="text-2xl font-extrabold tracking-tight">{h.title}</h1>
         {exercise.data ? <p className="break-words text-muted">{exercise.data.name}</p> : null}
       </header>
 
@@ -38,10 +38,7 @@ export function ExerciseHistoryPage() {
       {entries.length > 0 ? (
         <ul className="flex flex-col gap-3">
           {entries.map((entry) => (
-            <li
-              key={`${entry.session_id}-${entry.exercise_name}`}
-              className="rounded-lg border border-line bg-surface p-4"
-            >
+            <li key={`${entry.session_id}-${entry.exercise_name}`} className="card-inset p-4">
               <HistoryEntryView entry={entry} />
             </li>
           ))}

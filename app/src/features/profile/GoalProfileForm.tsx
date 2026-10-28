@@ -55,8 +55,8 @@ export function GoalProfileForm({ profile }: { profile: Profile }) {
   }
 
   return (
-    <form onSubmit={(event) => void submit(event)} noValidate className="flex flex-col gap-4">
-      <h2 className="text-lg font-semibold">{t.title}</h2>
+    <form onSubmit={(event) => void submit(event)} noValidate className="card flex flex-col gap-4">
+      <h2 className="text-base font-bold">{t.title}</h2>
       <p className="text-sm text-muted">{t.hint}</p>
 
       <ChoiceGroup
@@ -95,7 +95,7 @@ export function GoalProfileForm({ profile }: { profile: Profile }) {
         </label>
         <select
           id="perfil-dias"
-          className="min-h-11 rounded-md border border-line bg-surface px-3 py-2"
+          className="min-h-11 control px-3 py-2"
           value={days}
           onChange={(event) => setDays(event.target.value)}
         >

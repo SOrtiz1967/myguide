@@ -97,7 +97,7 @@ export function SaveAsFoodPanel({ entry, onClose, onSaved }: SaveAsFoodPanelProp
 
   if (savedId) {
     return (
-      <div className="flex flex-col gap-3 rounded-md border border-line bg-surface p-4">
+      <div className="flex flex-col gap-3 card-inset p-4">
         <SuccessMessage>{es.meals.saveAsFood.saved}</SuccessMessage>
         <div className="flex flex-wrap gap-3">
           <Link to={`/alimentos/${savedId}`} className="btn-secondary">
@@ -114,13 +114,13 @@ export function SaveAsFoodPanel({ entry, onClose, onSaved }: SaveAsFoodPanelProp
   return (
     <form
       noValidate
-      className="flex flex-col gap-4 rounded-md border border-line bg-surface p-4"
+      className="flex flex-col gap-4 card-inset p-4"
       onSubmit={(event) => {
         event.preventDefault()
         void submit()
       }}
     >
-      <h3 className="text-lg font-semibold">{es.meals.saveAsFood.title}</h3>
+      <h3 className="text-base font-bold">{es.meals.saveAsFood.title}</h3>
       <p className="text-muted">{es.meals.saveAsFood.intro}</p>
 
       <fieldset className="flex flex-col gap-1">
@@ -160,7 +160,7 @@ export function SaveAsFoodPanel({ entry, onClose, onSaved }: SaveAsFoodPanelProp
           <caption className="pb-2 text-left font-medium">{basisLabel(basis)}</caption>
           <tbody>
             {NUTRIENTS.map((nutrient) => (
-              <tr key={nutrient.key} className="border-t border-line">
+              <tr key={nutrient.key} className="border-t border-line/25">
                 <th
                   scope="row"
                   className={`py-1.5 pr-3 font-normal ${nutrient.indent ? 'pl-5 text-muted' : ''}`}

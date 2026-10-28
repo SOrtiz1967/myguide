@@ -7,7 +7,7 @@ export function RegisterPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-semibold tracking-tight">{es.auth.titles.register}</h1>
+      <h1 className="text-2xl font-extrabold tracking-tight">{es.auth.titles.register}</h1>
       <RegisterForm
         onRegistered={({ verificationEmailSent }) =>
           navigate('/', { replace: true, state: { verificationEmailSent } })

@@ -60,7 +60,7 @@ export function FoodEditPage() {
   return (
     <div className="flex flex-col gap-4">
       <div>{back}</div>
-      <h1 className="text-2xl font-semibold tracking-tight">{es.foods.form.editTitle}</h1>
+      <h1 className="text-2xl font-extrabold tracking-tight">{es.foods.form.editTitle}</h1>
       {copied ? <SuccessMessage>{es.foods.form.copyCreated}</SuccessMessage> : null}
       <FoodForm
         userId={session?.user.id ?? ''}

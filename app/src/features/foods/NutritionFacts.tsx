@@ -19,7 +19,7 @@ type Values = Pick<
 export function NutritionFacts({ food }: { food: Values }) {
   return (
     <section aria-labelledby="valores-titulo">
-      <h2 id="valores-titulo" className="text-lg font-semibold">
+      <h2 id="valores-titulo" className="text-base font-bold">
         {es.foods.nutrition.title}
       </h2>
       <table className="mt-2 w-full border-collapse text-left">
@@ -34,7 +34,7 @@ export function NutritionFacts({ food }: { food: Values }) {
           {NUTRIENTS.map((nutrient) => {
             const value = food[nutrient.key]
             return (
-              <tr key={nutrient.key} className="border-t border-line">
+              <tr key={nutrient.key} className="border-t border-line/25">
                 <th
                   scope="row"
                   className={`py-2 pr-3 font-normal ${nutrient.indent ? 'pl-5 text-muted' : 'font-medium'}`}

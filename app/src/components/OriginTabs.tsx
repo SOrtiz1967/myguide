@@ -39,11 +39,7 @@ export function OriginTabs({
   }
 
   return (
-    <div
-      role="tablist"
-      aria-label={ariaLabel}
-      className="flex gap-1 overflow-x-auto border-b border-line"
-    >
+    <div role="tablist" aria-label={ariaLabel} className="flex gap-2 overflow-x-auto py-1">
       {TABS.map((tab, index) => {
         const selected = tab.scope === value
         return (
@@ -60,9 +56,7 @@ export function OriginTabs({
             tabIndex={selected ? 0 : -1}
             onClick={() => onChange(tab.scope)}
             onKeyDown={(event) => onKeyDown(event, index)}
-            className={`min-h-11 whitespace-nowrap border-b-2 px-4 py-2 font-medium ${
-              selected ? 'border-accent text-ink' : 'border-transparent text-muted'
-            }`}
+            className="chip whitespace-nowrap"
           >
             {tab.label}
           </button>

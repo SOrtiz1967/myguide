@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import { EmptyState } from '../components/EmptyState'
+import { PageHeader } from '../components/PageHeader'
 import { es } from '../copy/es'
 import { VerifyEmailBanner } from '../features/auth/VerifyEmailBanner'
 import { LastRecords } from '../features/home/LastRecords'
@@ -32,9 +33,9 @@ export function HomePage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-2xl font-semibold tracking-tight">{es.home.title}</h1>
+      <PageHeader title={es.home.title} />
       {state.verificationEmailSent === false ? (
-        <p role="alert" className="rounded-md border border-danger/40 bg-danger/10 px-4 py-3">
+        <p role="alert" className="notice-error px-4 py-3">
           {es.auth.verifyEmailNotSent}
         </p>
       ) : null}
@@ -49,28 +50,22 @@ export function HomePage() {
       ) : null}
 
       {online ? (
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
-          <div className="lg:col-start-1 lg:row-start-1">
-            <WeekStrip
-              anchor={shownAnchor}
-              today={today}
-              selected={day}
-              onSelect={setSelected}
-              onAnchorChange={(next) => {
-                setAnchor(next)
-                setSelected(next)
-              }}
-            />
-          </div>
-          <div className="lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-start">
-            <DayPanel date={day} today={today} />
-          </div>
-          <div className="lg:col-start-1 lg:row-start-2">
-            <LastRecords />
-          </div>
+        <div className="flex flex-col gap-4">
+          <WeekStrip
+            anchor={shownAnchor}
+            today={today}
+            selected={day}
+            onSelect={setSelected}
+            onAnchorChange={(next) => {
+              setAnchor(next)
+              setSelected(next)
+            }}
+          />
+          <DayPanel date={day} today={today} />
+          <LastRecords />
         </div>
       ) : (
-        <p role="alert" className="rounded-md border border-danger/40 bg-danger/10 p-3">
+        <p role="alert" className="notice-error p-3">
           {es.home.offline}
         </p>
       )}

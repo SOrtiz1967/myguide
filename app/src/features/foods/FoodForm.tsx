@@ -107,12 +107,9 @@ export function FoodForm({
   })
 
   return (
-    <form onSubmit={submit} noValidate className="flex flex-col gap-5">
+    <form onSubmit={submit} noValidate className="card flex flex-col gap-5">
       {draft.restored ? (
-        <div
-          role="status"
-          className="flex flex-col gap-2 rounded-md border border-line bg-surface p-3"
-        >
+        <div role="status" className="flex flex-col gap-2 card-inset p-3">
           <p>{es.foods.form.draftRestored}</p>
           <div>
             <button
@@ -176,24 +173,21 @@ export function FoodForm({
         </div>
 
         {!coherence.coherent && coherence.expected !== null ? (
-          <p role="status" className="rounded-md border border-line bg-surface px-4 py-3">
+          <p role="status" className="card-inset px-4 py-3">
             {es.foods.form.coherenceNotice(Math.round(coherence.expected))}
           </p>
         ) : null}
       </fieldset>
 
       <section className="flex flex-col gap-3" aria-labelledby="form-porciones">
-        <h2 id="form-porciones" className="text-lg font-semibold">
+        <h2 id="form-porciones" className="text-base font-bold">
           {es.foods.portions.title}
         </h2>
         {errors.portions?.message ? (
           <p className="text-sm text-danger">{errors.portions.message}</p>
         ) : null}
         {portions.fields.map((field, index) => (
-          <fieldset
-            key={field.id}
-            className="flex flex-col gap-3 rounded-md border border-line p-3"
-          >
+          <fieldset key={field.id} className="flex flex-col gap-3 card-inset p-3">
             <legend className="px-1 text-sm text-muted">
               {es.foods.form.portionLegend(index + 1)}
             </legend>

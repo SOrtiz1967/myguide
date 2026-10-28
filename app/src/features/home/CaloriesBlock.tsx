@@ -23,7 +23,11 @@ export function CaloriesBlock({ date: forced }: { date?: string } = {}) {
   const { query, entries } = useDay(date)
 
   return (
-    <HomeSection title={date === today ? c.title : c.dayTitle(formatDate(date))}>
+    <HomeSection
+      tone="calorie"
+      className="lg:col-span-2"
+      title={date === today ? c.title : c.dayTitle(formatDate(date))}
+    >
       {(status.isPending && forced === undefined) || query.isPending ? <LoadingState /> : null}
       {query.isError ? (
         <ErrorState message={es.home.loadError} onRetry={() => void query.refetch()} />

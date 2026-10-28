@@ -27,14 +27,14 @@ export function ClosingDayNotice({ status }: { status: DayStatus }) {
   return (
     <section
       aria-label={es.meals.day.closing(formatDay(status.proposed_date))}
-      className="flex flex-col gap-2 rounded-lg border border-line bg-surface p-4"
+      className="flex flex-col gap-2 card p-4"
     >
-      <h2 className="text-lg font-semibold">
+      <h2 className="text-base font-bold">
         {es.meals.day.closing(formatDay(status.proposed_date))}
       </h2>
       <p className="text-muted">{es.meals.day.closingHint}</p>
       {error ? (
-        <p role="alert" className="rounded-md border border-danger/40 bg-danger/10 px-4 py-3">
+        <p role="alert" className="notice-error px-4 py-3">
           {error}
         </p>
       ) : null}

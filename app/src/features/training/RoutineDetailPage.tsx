@@ -24,12 +24,9 @@ function ItemCard({ item }: { item: RoutineExercise }) {
   const typeChanged = current !== null && current.measurement_type !== item.measurement_type
   const targets = formatTargets(item.measurement_type, item)
   return (
-    <article
-      aria-label={name}
-      className="flex flex-col gap-2 rounded-lg border border-line bg-surface p-4"
-    >
+    <article aria-label={name} className="flex flex-col gap-2 card p-4">
       <div className="min-w-0">
-        <h3 className="break-words text-lg font-semibold">{name}</h3>
+        <h3 className="break-words text-base font-bold">{name}</h3>
         <p className="text-sm text-muted">
           {measurementLabel(current?.measurement_type ?? item.measurement_type)}
         </p>
@@ -101,7 +98,7 @@ function RoutineView({ routine }: { routine: Routine }) {
       {state?.saved ? <SuccessMessage>{r.saved}</SuccessMessage> : null}
       {state?.duplicated ? <SuccessMessage>{r.duplicated}</SuccessMessage> : null}
       <header className="flex flex-col gap-1">
-        <h1 className="break-words text-2xl font-semibold tracking-tight">{routine.name}</h1>
+        <h1 className="break-words text-2xl font-extrabold tracking-tight">{routine.name}</h1>
         <p className="text-muted">{r.exerciseCount(routine.routine_exercises.length)}</p>
       </header>
 
@@ -132,8 +129,8 @@ function RoutineView({ routine }: { routine: Routine }) {
       {duplicate.error ? <ErrorState message={duplicate.error} /> : null}
       <StartError error={startFrom.error} />
 
-      <section aria-labelledby="ejercicios-rutina" className="flex flex-col gap-3">
-        <h2 id="ejercicios-rutina" className="text-xl font-semibold">
+      <section aria-labelledby="ejercicios-rutina" className="card flex flex-col gap-3">
+        <h2 id="ejercicios-rutina" className="text-lg font-extrabold">
           {r.exercisesTitle}
         </h2>
         {routine.routine_exercises.map((item) => (

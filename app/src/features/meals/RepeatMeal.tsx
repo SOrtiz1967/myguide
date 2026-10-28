@@ -94,7 +94,7 @@ function RepeatPanel({ date, meal, onClose }: RepeatMealProps & { onClose: () =>
   return (
     <form
       noValidate
-      className="flex flex-col gap-3 rounded-md border border-line p-3"
+      className="flex flex-col gap-3 card-inset p-3"
       onSubmit={(event) => {
         event.preventDefault()
         next()
@@ -114,7 +114,7 @@ function RepeatPanel({ date, meal, onClose }: RepeatMealProps & { onClose: () =>
           max={addDays(today, 7)}
           aria-invalid={dateError ? true : undefined}
           onChange={(event) => setToDate(event.target.value)}
-          className="min-h-11 rounded-md border border-line bg-surface px-3 py-2"
+          className="min-h-11 control px-3 py-2"
         />
         {dateError ? <p className="text-sm text-danger">{dateError}</p> : null}
       </div>
@@ -129,7 +129,7 @@ function RepeatPanel({ date, meal, onClose }: RepeatMealProps & { onClose: () =>
           onChange={(event) => {
             if (isMeal(event.target.value)) setToMeal(event.target.value)
           }}
-          className="min-h-11 rounded-md border border-line bg-surface px-3 py-2"
+          className="min-h-11 control px-3 py-2"
         >
           {MEALS.map((option) => (
             <option key={option} value={option}>

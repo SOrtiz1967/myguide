@@ -15,8 +15,8 @@ export function Field({ label, error, hint, id, ref, className, ...rest }: Field
   const errorId = error ? `${inputId}-error` : undefined
 
   return (
-    <div className="flex flex-col gap-1">
-      <label htmlFor={inputId} className="font-medium">
+    <div className="flex flex-col gap-1.5">
+      <label htmlFor={inputId} className="text-sm font-semibold text-muted">
         {label}
       </label>
       <input
@@ -24,7 +24,7 @@ export function Field({ label, error, hint, id, ref, className, ...rest }: Field
         ref={ref}
         aria-invalid={error ? true : undefined}
         aria-describedby={[hintId, errorId].filter(Boolean).join(' ') || undefined}
-        className={`min-h-11 rounded-md border border-line bg-surface px-3 py-2 ${className ?? ''}`}
+        className={`control ${className ?? ''}`}
         {...rest}
       />
       {hint ? (

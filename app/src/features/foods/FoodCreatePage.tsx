@@ -25,7 +25,7 @@ export function FoodCreatePage() {
           {es.foods.backToSearch}
         </Link>
       </div>
-      <h1 className="text-2xl font-semibold tracking-tight">{es.foods.form.createTitle}</h1>
+      <h1 className="text-2xl font-extrabold tracking-tight">{es.foods.form.createTitle}</h1>
       <FoodForm
         userId={session?.user.id ?? ''}
         formId="food-new"

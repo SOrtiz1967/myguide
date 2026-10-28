@@ -7,7 +7,7 @@ import type { Food } from './api'
 export function FoodProvenance({ food }: { food: Food }) {
   return (
     <section aria-labelledby="procedencia-titulo">
-      <h2 id="procedencia-titulo" className="text-lg font-semibold">
+      <h2 id="procedencia-titulo" className="text-base font-bold">
         {es.foods.provenance.title}
       </h2>
       {food.origin === 'imported' ? (

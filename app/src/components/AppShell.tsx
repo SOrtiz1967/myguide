@@ -8,7 +8,7 @@ import { OfflineNotice } from './OfflineNotice'
 interface NavItem {
   to: string
   label: string
-  icon?: NavIconName
+  icon: NavIconName
   active: (path: string, hash: string) => boolean
 }
 
@@ -34,36 +34,42 @@ const PRIMARY: NavItem[] = [
 
 /** El resto: en celular se abre con «Más». */
 const SECONDARY: NavItem[] = [
-  { to: '/medidas', label: es.measures.navLink, active: starts('/medidas') },
-  { to: '/alimentos', label: es.foods.navLink, active: starts('/alimentos') },
-  { to: '/ejercicios', label: es.exercises.navLink, active: starts('/ejercicios') },
-  { to: '/actividad', label: es.activity.navLink, active: starts('/actividad') },
+  { to: '/medidas', label: es.measures.navLink, icon: 'ruler', active: starts('/medidas') },
+  { to: '/alimentos', label: es.foods.navLink, icon: 'food', active: starts('/alimentos') },
+  { to: '/ejercicios', label: es.exercises.navLink, icon: 'bolt', active: starts('/ejercicios') },
+  { to: '/actividad', label: es.activity.navLink, icon: 'steps', active: starts('/actividad') },
   {
     to: '/objetivo',
     label: es.nav.goal,
+    icon: 'target',
     active: (path) => path.startsWith('/objetivo') || path.startsWith('/plan'),
   },
-  { to: '/perfil', label: es.nav.profile, active: starts('/perfil') },
+  { to: '/perfil', label: es.nav.profile, icon: 'user', active: starts('/perfil') },
 ]
 
-function Brand() {
+function Brand({ compact = false }: { compact?: boolean }) {
   return (
-    <Link to="/" className="inline-flex min-h-11 items-center gap-2 text-lg font-semibold">
+    <Link
+      to="/"
+      className={`inline-flex min-h-11 items-center gap-2 text-lg font-extrabold ${
+        compact ? 'lg:justify-center' : ''
+      }`}
+    >
       <span
         aria-hidden="true"
-        className="grid size-7 place-items-center rounded-md bg-accent text-sm font-bold text-accent-ink"
+        className="grid size-9 place-items-center rounded-md bg-accent text-base font-extrabold text-accent-ink"
       >
         M
       </span>
-      {es.appName}
+      <span className={compact ? 'lg:sr-only' : undefined}>{es.appName}</span>
     </Link>
   )
 }
 
 /**
- * Estructura común: enlace para saltar al contenido y un único landmark `main`. Con sesión: menú lateral en
- * escritorio y barra inferior con «Más» en celular (spec 016). La carcasa no hace consultas: también se muestra sin
- * proveedor de datos (por ejemplo, sin conexión).
+ * Estructura común: enlace para saltar al contenido y un único landmark `main`. Con sesión: columna de íconos
+ * con su nombre en escritorio y barra inferior flotante con «Más» en celular (spec 017, dirección C). La carcasa
+ * no hace consultas: también se muestra sin proveedor de datos (por ejemplo, sin conexión).
  */
 export function AppShell({ children }: { children: ReactNode }) {
   // El contexto es opcional aquí: la carcasa también se muestra sin proveedor (por ejemplo, sin conexión).
@@ -86,14 +92,14 @@ export function AppShell({ children }: { children: ReactNode }) {
         <Link
           to={item.to}
           aria-current={current ? 'page' : undefined}
-          className={`flex min-h-11 items-center gap-2 rounded-md px-2 py-1 text-sm ${
-            variant === 'bar'
-              ? 'max-lg:flex-col max-lg:justify-center max-lg:gap-0.5 max-lg:px-0.5 max-lg:text-[11px]'
-              : ''
-          } ${current ? 'bg-surface-2 font-semibold text-accent' : 'text-ink hover:bg-surface-2'}`}
+          className={`flex min-h-12 flex-col items-center justify-center gap-0.5 rounded-lg px-0.5 py-1.5 text-center text-[10px] leading-tight lg:px-1 lg:text-[11px] ${
+            current
+              ? 'bg-surface-2 font-bold text-ink'
+              : 'text-muted hover:bg-surface-2 hover:text-ink'
+          } ${variant === 'side' ? 'max-lg:flex-row max-lg:justify-start max-lg:gap-3 max-lg:px-3 max-lg:text-sm' : ''}`}
         >
-          {item.icon ? <NavIcon name={item.icon} /> : null}
-          <span className="truncate">{item.label}</span>
+          <NavIcon name={item.icon} />
+          <span className="max-w-full [overflow-wrap:anywhere]">{item.label}</span>
         </Link>
       </li>
     )
@@ -101,7 +107,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div
-      className={`min-h-dvh bg-bg text-ink ${withMenu ? 'lg:grid lg:grid-cols-[15rem_minmax(0,1fr)]' : ''}`}
+      className={`min-h-dvh bg-bg text-ink ${withMenu ? 'lg:grid lg:grid-cols-[6.75rem_minmax(0,1fr)]' : ''}`}
     >
       <a href="#contenido" className="skip-link">
         {es.common.skipToContent}
@@ -109,16 +115,16 @@ export function AppShell({ children }: { children: ReactNode }) {
       <aside
         className={
           withMenu
-            ? 'border-b border-line bg-surface lg:sticky lg:top-0 lg:flex lg:h-dvh lg:flex-col lg:overflow-y-auto lg:border-b-0 lg:border-r lg:p-4'
-            : 'border-b border-line bg-surface'
+            ? 'lg:sticky lg:top-0 lg:flex lg:h-dvh lg:flex-col lg:overflow-y-auto lg:px-2 lg:py-5'
+            : ''
         }
       >
         <div
-          className={`flex items-center justify-between gap-x-3 px-4 py-1 lg:px-0 ${
+          className={`flex items-center justify-between gap-x-3 px-4 py-2 lg:px-0 ${
             withMenu ? '' : 'mx-auto max-w-3xl'
           }`}
         >
-          <Brand />
+          <Brand compact={withMenu} />
           {signedIn && !withMenu ? (
             <button type="button" className="btn-secondary" onClick={() => void auth.signOut()}>
               {es.auth.actions.logout}
@@ -129,9 +135,9 @@ export function AppShell({ children }: { children: ReactNode }) {
         {withMenu ? (
           <nav
             aria-label={es.nav.label}
-            className="max-lg:fixed max-lg:inset-x-0 max-lg:bottom-0 max-lg:z-20 max-lg:border-t max-lg:border-line max-lg:bg-surface max-lg:pb-[env(safe-area-inset-bottom)] lg:mt-4 lg:flex lg:flex-1 lg:flex-col lg:gap-4"
+            className="max-lg:fixed max-lg:inset-x-3 max-lg:bottom-3 max-lg:z-20 max-lg:pb-[env(safe-area-inset-bottom)] lg:mt-3 lg:flex lg:flex-1 lg:flex-col lg:gap-3"
           >
-            <ul className="flex lg:flex-col lg:gap-1">
+            <ul className="flex gap-1 max-lg:rounded-full max-lg:bg-surface max-lg:p-1.5 max-lg:shadow-[0_8px_24px_rgb(0_0_0/0.5)] lg:flex-col">
               {PRIMARY.map((item) => link(item, 'bar'))}
               <li className="min-w-0 flex-1 lg:hidden">
                 <button
@@ -139,7 +145,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                   aria-expanded={moreOpen}
                   aria-controls="menu-mas"
                   onClick={() => setOpenAt(moreOpen ? null : here)}
-                  className="flex min-h-11 w-full flex-col items-center justify-center gap-0.5 rounded-md px-2 py-1 text-xs"
+                  className="flex min-h-12 w-full flex-col items-center justify-center gap-0.5 rounded-lg px-1 py-1.5 text-[11px] text-muted"
                 >
                   <NavIcon name="more" />
                   <span>{es.nav.more}</span>
@@ -148,20 +154,18 @@ export function AppShell({ children }: { children: ReactNode }) {
             </ul>
             <div
               id="menu-mas"
-              className={`flex-col gap-1 border-line max-lg:fixed max-lg:inset-x-0 max-lg:bottom-16 max-lg:max-h-[70dvh] max-lg:overflow-y-auto max-lg:border-t max-lg:bg-surface max-lg:p-3 lg:flex lg:border-t lg:pt-4 ${
+              className={`flex-col gap-2 max-lg:absolute max-lg:inset-x-0 max-lg:bottom-[4.75rem] max-lg:max-h-[65dvh] max-lg:overflow-y-auto max-lg:rounded-xl max-lg:bg-surface max-lg:p-3 max-lg:shadow-[0_8px_24px_rgb(0_0_0/0.5)] lg:flex lg:border-t lg:border-line/40 lg:pt-3 ${
                 moreOpen ? 'flex' : 'hidden'
               }`}
             >
               <ul className="flex flex-col gap-1">{SECONDARY.map((item) => link(item, 'side'))}</ul>
-              <div className="mt-2">
-                <button
-                  type="button"
-                  className="btn-secondary w-full"
-                  onClick={() => void auth.signOut()}
-                >
-                  {es.auth.actions.logout}
-                </button>
-              </div>
+              <button
+                type="button"
+                className="btn-quiet w-full text-sm lg:mt-2 lg:px-1"
+                onClick={() => void auth.signOut()}
+              >
+                {es.auth.actions.logout}
+              </button>
             </div>
           </nav>
         ) : null}
@@ -171,7 +175,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <OfflineNotice />
         <main
           id="contenido"
-          className={`mx-auto px-4 py-6 ${withMenu ? 'max-w-6xl pb-28 lg:pb-8' : 'max-w-3xl'}`}
+          className={`mx-auto px-4 py-6 ${withMenu ? 'max-w-6xl pb-28 lg:px-8 lg:pb-8' : 'max-w-3xl'}`}
         >
           {children}
         </main>

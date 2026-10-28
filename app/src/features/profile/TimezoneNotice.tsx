@@ -18,10 +18,7 @@ export function TimezoneNotice({
   onAccept,
 }: TimezoneNoticeProps) {
   return (
-    <section
-      aria-label={es.profile.timezoneNoticeTitle}
-      className="flex flex-col gap-3 rounded-lg border border-line bg-surface p-4"
-    >
+    <section aria-label={es.profile.timezoneNoticeTitle} className="flex flex-col gap-3 card p-4">
       <p>
         {es.profile.deviceTimezoneIs(deviceTimezone)}{' '}
         {savedTimezone ? es.profile.timezoneNoticeDifferent : es.profile.timezoneNoticeSame}

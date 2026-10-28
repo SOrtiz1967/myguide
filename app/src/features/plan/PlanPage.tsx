@@ -49,7 +49,7 @@ export function PlanPage() {
 
   return (
     <div className="flex max-w-xl flex-col gap-6">
-      <h1 className="text-2xl font-semibold tracking-tight">{p.title}</h1>
+      <h1 className="text-2xl font-extrabold tracking-tight">{p.title}</h1>
       <p className="text-muted">{p.pageIntro}</p>
 
       {result.ok ? (
@@ -60,8 +60,8 @@ export function PlanPage() {
           onUse={(kcal) => void use(kcal)}
         />
       ) : (
-        <section aria-labelledby="faltan-datos" className="flex flex-col gap-3">
-          <h2 id="faltan-datos" className="text-lg font-semibold">
+        <section aria-labelledby="faltan-datos" className="card flex flex-col gap-3">
+          <h2 id="faltan-datos" className="text-base font-bold">
             {p.missingTitle}
           </h2>
           <p>{p.missingIntro}</p>

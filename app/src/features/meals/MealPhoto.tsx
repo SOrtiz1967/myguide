@@ -137,7 +137,7 @@ export function MealPhoto({ date, meal, photo }: MealPhotoProps) {
   )
 
   return (
-    <div className="flex flex-col gap-3 border-t border-line pt-3">
+    <div className="flex flex-col gap-3 border-t border-line/25 pt-3">
       {photo ? (
         <figure className="flex flex-col gap-2">
           {url.isPending ? <p role="status">{es.meals.photo.loadingImage}</p> : null}
@@ -159,8 +159,8 @@ export function MealPhoto({ date, meal, photo }: MealPhotoProps) {
               onError={() => setImageFailed(true)}
               className={
                 expanded
-                  ? 'h-auto w-full rounded-md border border-line'
-                  : 'h-auto max-h-40 w-auto max-w-full rounded-md border border-line object-cover'
+                  ? 'h-auto w-full rounded-xl bg-surface'
+                  : 'h-auto max-h-40 w-auto max-w-full rounded-xl bg-surface object-cover'
               }
             />
           ) : null}
@@ -202,7 +202,7 @@ export function MealPhoto({ date, meal, photo }: MealPhotoProps) {
       ) : null}
       {!busy && notice ? <p role="status">{notice}</p> : null}
       {error ? (
-        <p role="alert" className="rounded-md border border-danger/40 bg-danger/10 px-4 py-3">
+        <p role="alert" className="notice-error px-4 py-3">
           {error}
         </p>
       ) : null}

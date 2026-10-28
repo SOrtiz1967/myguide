@@ -126,15 +126,12 @@ function Wizard({ profile }: { profile: Profile }) {
   return (
     <div className="flex max-w-xl flex-col gap-6">
       <div className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold tracking-tight">{o.title}</h1>
+        <h1 className="text-2xl font-extrabold tracking-tight">{o.title}</h1>
         <p className="text-muted">{o.intro}</p>
       </div>
 
       {draft.restored && step === 1 ? (
-        <div
-          role="status"
-          className="flex flex-col gap-2 rounded-md border border-line bg-surface p-3"
-        >
+        <div role="status" className="flex flex-col gap-2 card-inset p-3">
           <p>{o.draftRestored}</p>
           <div>
             <button
@@ -153,7 +150,7 @@ function Wizard({ profile }: { profile: Profile }) {
 
       <div>
         <p className="text-sm text-muted">{o.stepOf(step, TOTAL_STEPS)}</p>
-        <h2 ref={heading} tabIndex={-1} className="text-xl font-semibold outline-none">
+        <h2 ref={heading} tabIndex={-1} className="text-lg font-extrabold outline-none">
           {o.steps[step - 1]}
         </h2>
       </div>
@@ -277,7 +274,7 @@ function StepActivity({ values, errors, set }: StepProps) {
         </label>
         <select
           id="onb-dias"
-          className="min-h-11 rounded-md border border-line bg-surface px-3 py-2"
+          className="min-h-11 control px-3 py-2"
           value={values.trainingDays}
           aria-invalid={errors.trainingDays ? true : undefined}
           aria-describedby="onb-dias-hint"

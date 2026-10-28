@@ -37,10 +37,7 @@ function RoutineChangePanel({
     },
   )
   return (
-    <section
-      aria-label={p.changeRoutine}
-      className="flex flex-col gap-3 rounded-lg border border-line bg-surface p-4"
-    >
+    <section aria-label={p.changeRoutine} className="card-inset flex flex-col gap-3">
       <h3 className="font-medium">{p.changeRoutine}</h3>
       {isPending ? <LoadingState /> : null}
       {isError ? (

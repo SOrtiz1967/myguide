@@ -57,8 +57,8 @@ export function AddEntryPage() {
   if (!date) {
     return (
       <div className="flex flex-col gap-4">
-        <h1 className="text-2xl font-semibold tracking-tight">{es.meals.title}</h1>
-        <p role="alert" className="rounded-md border border-danger/40 bg-danger/10 px-4 py-3">
+        <h1 className="text-2xl font-extrabold tracking-tight">{es.meals.title}</h1>
+        <p role="alert" className="notice-error px-4 py-3">
           {es.meals.day.invalidDate}
         </p>
         <Link to="/comidas" className="inline-flex min-h-11 items-center underline">
@@ -147,7 +147,7 @@ function AddEntryForm({ date }: { date: string }) {
         </Link>
       </div>
       <header className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold tracking-tight">
+        <h1 className="text-2xl font-extrabold tracking-tight">
           {es.meals.add.title(mealLabel(meal))}
         </h1>
         <p className="text-muted">{es.meals.add.destination(formatDay(date))}</p>
@@ -184,10 +184,7 @@ function AddEntryForm({ date }: { date: string }) {
       </fieldset>
 
       {restored && selection ? (
-        <div
-          role="status"
-          className="flex flex-col gap-2 rounded-md border border-line bg-surface p-3"
-        >
+        <div role="status" className="flex flex-col gap-2 card-inset p-3">
           <p>{es.meals.add.draftRestored}</p>
           <div>
             <button type="button" className="btn-secondary" onClick={chooseOther}>

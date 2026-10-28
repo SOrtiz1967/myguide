@@ -14,7 +14,7 @@ export function ExerciseCreatePage() {
 
   return (
     <div className="flex max-w-2xl flex-col gap-4">
-      <h1 className="text-2xl font-semibold tracking-tight">{es.exercises.form.createTitle}</h1>
+      <h1 className="text-2xl font-extrabold tracking-tight">{es.exercises.form.createTitle}</h1>
       <ExerciseForm
         userId={session?.user.id ?? ''}
         draftId="exercise-new"

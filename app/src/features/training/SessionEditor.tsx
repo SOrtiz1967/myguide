@@ -64,8 +64,8 @@ export function SessionEditor({
 
       {header}
 
-      <section aria-labelledby="ejercicios-titulo" className="flex flex-col gap-4">
-        <h2 id="ejercicios-titulo" className="text-xl font-semibold">
+      <section aria-labelledby="ejercicios-titulo" className="card flex flex-col gap-4">
+        <h2 id="ejercicios-titulo" className="text-lg font-extrabold">
           {e.exercisesTitle}
         </h2>
         {draft.exercises.length === 0 ? <p className="text-muted">{e.noExercises}</p> : null}
@@ -101,7 +101,7 @@ export function SessionEditor({
           value={draft.note}
           aria-invalid={errors?.note ? true : undefined}
           onChange={(event) => dispatch({ type: 'setNote', value: event.target.value })}
-          className="rounded-md border border-line bg-surface px-3 py-2"
+          className="control px-3 py-2"
         />
         {errors?.note ? <p className="text-sm text-danger">{errors.note}</p> : null}
       </div>

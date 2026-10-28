@@ -117,10 +117,10 @@ export function ExercisePickerPanel({ onPick, onClose }: ExercisePickerPanelProp
         aria-modal="true"
         aria-labelledby={titleId}
         onKeyDown={onKeyDown}
-        className="flex max-h-[90dvh] w-full max-w-lg flex-col gap-4 overflow-y-auto rounded-lg border border-line bg-surface p-5 text-ink"
+        className="flex max-h-[90dvh] w-full max-w-lg flex-col gap-4 overflow-y-auto rounded-xl bg-surface p-5 text-ink"
       >
         <div className="flex items-start justify-between gap-3">
-          <h2 id={titleId} className="text-lg font-semibold">
+          <h2 id={titleId} className="text-base font-bold">
             {t.title}
           </h2>
           <button type="button" className="btn-secondary" onClick={onClose}>
@@ -139,7 +139,7 @@ export function ExercisePickerPanel({ onPick, onClose }: ExercisePickerPanelProp
             autoComplete="off"
             value={text}
             onChange={(event) => setText(event.target.value)}
-            className="min-h-11 rounded-md border border-line bg-surface px-3 py-2"
+            className="min-h-11 control px-3 py-2"
           />
         </div>
 
@@ -174,9 +174,9 @@ export function ExercisePickerPanel({ onPick, onClose }: ExercisePickerPanelProp
         ) : null}
 
         {items.length > 0 ? (
-          <ul className="rounded-lg border border-line px-3">
+          <ul className="rounded-xl bg-surface px-3">
             {items.map((exercise) => (
-              <li key={exercise.id} className="border-b border-line last:border-b-0">
+              <li key={exercise.id} className="border-b border-line/25 last:border-b-0">
                 <button
                   type="button"
                   onClick={() => onPick(exercise)}
@@ -184,7 +184,7 @@ export function ExercisePickerPanel({ onPick, onClose }: ExercisePickerPanelProp
                 >
                   <span className="flex items-start justify-between gap-3">
                     <span className="min-w-0 break-words font-medium">{exercise.name}</span>
-                    <span className="shrink-0 rounded-full border border-line px-2 text-sm text-muted">
+                    <span className="shrink-0 rounded-full bg-surface-2 px-2.5 text-sm text-muted">
                       {originBadge(exercise)}
                     </span>
                   </span>

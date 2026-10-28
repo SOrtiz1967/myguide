@@ -18,7 +18,7 @@ import { useFood } from './useFood'
 function Portions({ food }: { food: Food }) {
   return (
     <section aria-labelledby="porciones-titulo">
-      <h2 id="porciones-titulo" className="text-lg font-semibold">
+      <h2 id="porciones-titulo" className="text-base font-bold">
         {es.foods.portions.title}
       </h2>
       {food.portions.length === 0 ? (
@@ -167,7 +167,7 @@ export function FoodDetailPage() {
       <div>{back}</div>
       {state?.saved ? <SuccessMessage>{es.foods.form.saved}</SuccessMessage> : null}
       <header className="flex flex-col gap-1">
-        <h1 className="break-words text-2xl font-semibold tracking-tight">{food.name}</h1>
+        <h1 className="break-words text-2xl font-extrabold tracking-tight">{food.name}</h1>
         {food.brand ? <p className="text-muted">{food.brand}</p> : null}
         {food.name_status === 'machine_translated' ? (
           <p className="text-sm text-muted">{es.foods.nameStatus.machine_translated}</p>

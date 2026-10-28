@@ -70,10 +70,10 @@ function useDeleteEntry(entry: MealEntry) {
 function Values({ entry }: { entry: MealEntry }) {
   return (
     <table className="w-full border-collapse text-left">
-      <caption className="pb-2 text-left text-lg font-semibold">{es.meals.entry.values}</caption>
+      <caption className="pb-2 text-left text-base font-bold">{es.meals.entry.values}</caption>
       <tbody>
         {NUTRIENTS.map((nutrient) => (
-          <tr key={nutrient.key} className="border-t border-line">
+          <tr key={nutrient.key} className="border-t border-line/25">
             <th
               scope="row"
               className={`py-1.5 pr-3 font-normal ${nutrient.indent ? 'pl-5 text-muted' : 'font-medium'}`}
@@ -118,10 +118,10 @@ function Detail({ entry }: { entry: MealEntry }) {
       {saved ? <SuccessMessage>{es.meals.entry.saved}</SuccessMessage> : null}
 
       <header className="flex flex-col gap-1">
-        <h1 className="break-words text-2xl font-semibold tracking-tight">{entry.food_name}</h1>
+        <h1 className="break-words text-2xl font-extrabold tracking-tight">{entry.food_name}</h1>
         {entry.food_brand ? <p className="text-muted">{entry.food_brand}</p> : null}
         <p className="flex flex-wrap items-center gap-x-3 text-muted">
-          <span className="rounded-full border border-line px-2 text-sm">
+          <span className="rounded-full bg-surface-2 px-2.5 text-sm">
             {es.meals.origin[entry.origin]}
           </span>
           <span>

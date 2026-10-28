@@ -50,13 +50,13 @@ export function PlanProposal({ input, busy = false, error, onUse, skip }: PlanPr
   return (
     <div className="flex flex-col gap-4">
       <dl className="grid gap-3 sm:grid-cols-2">
-        <div className="rounded-lg border border-line bg-surface p-4">
+        <div className="card-inset p-4">
           <dt className="text-sm text-muted">{p.maintenanceLabel}</dt>
-          <dd className="text-xl font-semibold tabular-nums">{p.kcal(plan.maintenance)}</dd>
+          <dd className="text-lg font-extrabold tabular-nums">{p.kcal(plan.maintenance)}</dd>
         </div>
         <div className="rounded-lg border border-accent bg-surface p-4">
           <dt className="text-sm text-muted">{p.targetLabel}</dt>
-          <dd className="text-xl font-semibold tabular-nums">{p.kcal(plan.target)}</dd>
+          <dd className="text-lg font-extrabold tabular-nums">{p.kcal(plan.target)}</dd>
           <dd className="text-sm text-muted">{p.range(plan.low, plan.high)}</dd>
         </div>
       </dl>
@@ -64,13 +64,13 @@ export function PlanProposal({ input, busy = false, error, onUse, skip }: PlanPr
       <p>{adjustment}</p>
       <p>{p.protein(plan.proteinMinG, plan.proteinMaxG)}</p>
       {plan.notes.map((note) => (
-        <p key={note} role="note" className="rounded-md border border-line bg-surface p-3 text-sm">
+        <p key={note} role="note" className="card-inset p-3 text-sm">
           {p.notes[note]}
         </p>
       ))}
       <p className="text-sm text-muted">{p.accuracy}</p>
 
-      <details className="rounded-md border border-line bg-surface p-3">
+      <details className="card-inset p-3">
         <summary className="cursor-pointer font-medium">{p.method.summary}</summary>
         <div className="mt-3 flex flex-col gap-1 text-sm">
           <p>{p.method.intro}</p>

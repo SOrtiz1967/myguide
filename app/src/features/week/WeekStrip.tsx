@@ -48,10 +48,10 @@ export function WeekStrip({ anchor, today, selected, onSelect, onAnchorChange }:
   const isCurrentWeek = weekDays(today)[0] === days[0]
 
   return (
-    <section aria-labelledby="semana-titulo" className="flex flex-col gap-3">
+    <section aria-labelledby="semana-titulo" className="card flex flex-col gap-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
-          <h2 id="semana-titulo" className="text-xl font-semibold">
+          <h2 id="semana-titulo" className="text-base font-bold">
             {w.title}
           </h2>
           <p className="text-sm text-muted tabular-nums">
@@ -83,10 +83,7 @@ export function WeekStrip({ anchor, today, selected, onSelect, onAnchorChange }:
         </div>
       </div>
 
-      <ul
-        aria-label={w.daysLabel}
-        className="grid grid-cols-7 divide-x divide-line overflow-hidden rounded-lg border border-line bg-surface"
-      >
+      <ul aria-label={w.daysLabel} className="grid grid-cols-7 gap-1.5 sm:gap-2">
         {week.days.map((day) => {
           const text = dayText(day)
           const isToday = day.date === today
@@ -105,8 +102,8 @@ export function WeekStrip({ anchor, today, selected, onSelect, onAnchorChange }:
                 type="button"
                 aria-pressed={isSelected}
                 onClick={() => onSelect(day.date)}
-                className={`flex min-h-32 w-full flex-col items-center gap-1 px-0.5 py-2 ${
-                  isSelected ? 'bg-surface-2 shadow-[inset_0_-2px_0_var(--color-accent)]' : ''
+                className={`flex min-h-32 w-full flex-col items-center gap-1 rounded-lg px-0.5 py-2 ${
+                  isSelected ? 'bg-surface-2 ring-2 ring-accent' : 'bg-surface-3'
                 }`}
               >
                 <span aria-hidden="true" className="flex w-full flex-col items-center gap-1">
@@ -157,7 +154,7 @@ export function WeekStrip({ anchor, today, selected, onSelect, onAnchorChange }:
         <ErrorState message={w.loadErrorTraining} onRetry={() => void week.sessions.refetch()} />
       ) : null}
 
-      <details className="rounded-md border border-line bg-surface p-3 text-sm">
+      <details className="card-inset text-sm">
         <summary className="cursor-pointer font-medium">{w.legend.title}</summary>
         <div className="mt-2 flex flex-col gap-1 text-muted">
           <p>{w.legend.calories}</p>

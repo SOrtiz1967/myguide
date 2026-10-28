@@ -29,11 +29,8 @@ export function GoalSummary({ date, today, entries }: GoalSummaryProps) {
   const history = useGoalHistory()
 
   return (
-    <section
-      aria-labelledby={titleId}
-      className="flex flex-col gap-2 rounded-lg border border-line bg-surface p-4"
-    >
-      <h2 id={titleId} className="text-lg font-semibold">
+    <section aria-labelledby={titleId} className="card-inset flex flex-col gap-2">
+      <h2 id={titleId} className="text-base font-bold">
         {es.goal.cardTitle}
       </h2>
       {history.isPending ? (
@@ -97,14 +94,14 @@ function Body({ summary, date, today }: { summary: DaySummary; date: string; tod
     <>
       <p>{es.goal.goalLine(summary.goal)}</p>
       <p>{es.goal.registered(summary.registered, summary.lowerBound)}</p>
-      <p className="text-lg font-semibold">{statement}</p>
+      <p className="text-base font-bold">{statement}</p>
       <p className="text-muted">{es.goal.equation(summary)}</p>
       <p>{es.goal.percent(summary.percent)}</p>
       {/* La barra es decorativa: lo que importa está dicho en texto. Llega al tope sin cambiar de estilo. */}
-      <div aria-hidden="true" className="h-2 w-full overflow-hidden rounded-full bg-line">
+      <div aria-hidden="true" className="h-3 w-full overflow-hidden rounded-full bg-line/30">
         <div
           data-goal-bar
-          className="h-full rounded-full bg-accent"
+          className="h-full rounded-full bg-tone-calorie-bar"
           style={{ width: `${Math.min(summary.percent, 100)}%` }}
         />
       </div>

@@ -34,7 +34,7 @@ interface StartError {
 function SessionRow({ session }: { session: SessionSummary }) {
   const marks = markLabels(session)
   return (
-    <li className="border-b border-line last:border-b-0">
+    <li className="border-b border-line/25 last:border-b-0">
       <Link
         to={`/entrenamiento/sesion/${session.id}`}
         className="flex min-h-11 flex-col gap-0.5 px-1 py-3"
@@ -103,14 +103,14 @@ export function TrainingHomePage() {
     <div className="flex flex-col gap-6">
       {deleted ? <SuccessMessage>{t.session.deleted}</SuccessMessage> : null}
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-semibold tracking-tight">{t.title}</h1>
+        <h1 className="text-2xl font-extrabold tracking-tight">{t.title}</h1>
         <Link to="/entrenamiento/rutinas" className="btn-secondary">
           {t.routines.title}
         </Link>
       </div>
 
-      <section aria-labelledby="hoy-titulo" className="flex flex-col gap-3">
-        <h2 id="hoy-titulo" className="text-xl font-semibold">
+      <section aria-labelledby="hoy-titulo" className="card flex flex-col gap-3">
+        <h2 id="hoy-titulo" className="text-lg font-extrabold">
           {h.todayTitle}
         </h2>
         {open.isPending ? <LoadingState /> : null}
@@ -118,7 +118,7 @@ export function TrainingHomePage() {
           <ErrorState message={h.recentError} onRetry={() => void open.refetch()} />
         ) : null}
         {openSession ? (
-          <div className="flex flex-col gap-3 rounded-lg border border-line bg-surface p-4">
+          <div className="flex flex-col gap-3 card-inset p-4">
             <p className="font-medium">{h.inProgressTitle}</p>
             <p className="text-sm text-muted">{formatDate(openSession.session_date)}</p>
             <div>
@@ -157,8 +157,8 @@ export function TrainingHomePage() {
       </section>
 
       {open.isSuccess && !openSession ? (
-        <section aria-labelledby="otra-fecha-titulo" className="flex flex-col gap-3">
-          <h2 id="otra-fecha-titulo" className="text-xl font-semibold">
+        <section aria-labelledby="otra-fecha-titulo" className="card flex flex-col gap-3">
+          <h2 id="otra-fecha-titulo" className="text-lg font-extrabold">
             {h.otherDateTitle}
           </h2>
           <div className="flex flex-col gap-1">
@@ -173,7 +173,7 @@ export function TrainingHomePage() {
               aria-describedby="fecha-ayuda"
               aria-invalid={dateError ? true : undefined}
               onChange={(event) => setDate(event.target.value)}
-              className="min-h-11 max-w-xs rounded-md border border-line bg-surface px-3 py-2"
+              className="min-h-11 max-w-xs control px-3 py-2"
             />
             <p id="fecha-ayuda" className="text-sm text-muted">
               {h.otherDateHint}
@@ -195,8 +195,8 @@ export function TrainingHomePage() {
 
       <CalendarMonth />
 
-      <section aria-labelledby="recientes-titulo" className="flex flex-col gap-3">
-        <h2 id="recientes-titulo" className="text-xl font-semibold">
+      <section aria-labelledby="recientes-titulo" className="card flex flex-col gap-3">
+        <h2 id="recientes-titulo" className="text-lg font-extrabold">
           {h.recentTitle}
         </h2>
         {recent.isPending ? <LoadingState /> : null}
@@ -205,7 +205,7 @@ export function TrainingHomePage() {
         ) : null}
         {recent.isSuccess && recent.data.length === 0 ? <EmptyState title={h.recentEmpty} /> : null}
         {recent.isSuccess && recent.data.length > 0 ? (
-          <ul className="rounded-lg border border-line bg-surface px-3">
+          <ul className="rounded-xl bg-surface px-3">
             {recent.data.map((session) => (
               <SessionRow key={session.id} session={session} />
             ))}

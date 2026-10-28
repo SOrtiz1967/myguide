@@ -8,7 +8,7 @@ export function OfflinePage({
 }) {
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-2xl font-semibold tracking-tight">{es.offline.pageTitle}</h1>
+      <h1 className="text-2xl font-extrabold tracking-tight">{es.offline.pageTitle}</h1>
       <p>{es.offline.pageBody}</p>
       <div>
         <button type="button" className="btn-primary" onClick={onReload}>

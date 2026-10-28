@@ -20,7 +20,7 @@ export function OfflineNotice() {
   if (online) return null
 
   return (
-    <p role="alert" className="border-b border-danger/40 bg-danger/10 px-4 py-3 text-center">
+    <p role="alert" className="border-b border-danger/50 bg-danger/10 px-4 py-3 text-center">
       {es.offline.banner}
     </p>
   )

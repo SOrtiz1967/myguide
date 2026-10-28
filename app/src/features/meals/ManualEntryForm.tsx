@@ -123,10 +123,10 @@ export function ManualEntryForm({
   })
 
   return (
-    <form onSubmit={submit} noValidate className="flex flex-col gap-5">
+    <form onSubmit={submit} noValidate className="card flex flex-col gap-5">
       {title || onCancel ? (
         <div className="flex items-center justify-between gap-3">
-          {title ? <h2 className="text-xl font-semibold">{title}</h2> : <span />}
+          {title ? <h2 className="text-lg font-extrabold">{title}</h2> : <span />}
           {onCancel ? (
             <button type="button" className="btn-secondary" onClick={onCancel}>
               {es.meals.manual.back}
@@ -136,10 +136,7 @@ export function ManualEntryForm({
       ) : null}
 
       {draft.restored ? (
-        <div
-          role="status"
-          className="flex flex-col gap-2 rounded-md border border-line bg-surface p-3"
-        >
+        <div role="status" className="flex flex-col gap-2 card-inset p-3">
           <p>{es.meals.manual.draftRestored}</p>
           <div>
             <button
@@ -190,7 +187,7 @@ export function ManualEntryForm({
       </div>
 
       {!coherence.coherent && coherence.expected !== null ? (
-        <p role="status" className="rounded-md border border-line bg-surface px-4 py-3">
+        <p role="status" className="card-inset px-4 py-3">
           {es.foods.form.coherenceNotice(Math.round(coherence.expected))}
         </p>
       ) : null}

@@ -24,8 +24,8 @@ export function DayPage() {
   if (!date || !isDateInRange(date, today)) {
     return (
       <div className="flex flex-col gap-4">
-        <h1 className="text-2xl font-semibold tracking-tight">{es.meals.title}</h1>
-        <p role="alert" className="rounded-md border border-danger/40 bg-danger/10 px-4 py-3">
+        <h1 className="text-2xl font-extrabold tracking-tight">{es.meals.title}</h1>
+        <p role="alert" className="notice-error px-4 py-3">
           {es.meals.day.invalidDate}
         </p>
         <Link to="/comidas" className={linkClass}>
@@ -51,7 +51,7 @@ function Day({ date, today }: { date: string; today: string }) {
   return (
     <div className="flex flex-col gap-5">
       <header className="flex flex-col gap-3">
-        <h1 className="text-2xl font-semibold tracking-tight">
+        <h1 className="text-2xl font-extrabold tracking-tight">
           {formatDay(date)}
           {date === today ? ` · ${es.meals.day.today}` : ''}
         </h1>
@@ -88,7 +88,7 @@ function Day({ date, today }: { date: string; today: string }) {
                 const picked = parseDate(event.target.value)
                 if (picked) void navigate(`/comidas/${picked}`)
               }}
-              className="min-h-11 rounded-md border border-line bg-surface px-2"
+              className="min-h-11 control px-2"
             />
           </label>
         </nav>
@@ -109,16 +109,13 @@ function Day({ date, today }: { date: string; today: string }) {
         <>
           <GoalSummary date={date} today={today} entries={entries} />
           {entries.length === 0 ? (
-            <div className="rounded-lg border border-line bg-surface p-4">
+            <div className="card p-4">
               <p className="font-medium">{es.meals.day.empty}</p>
               <p className="text-muted">{es.meals.day.emptyHint}</p>
             </div>
           ) : (
-            <section
-              aria-label={es.meals.day.total}
-              className="flex flex-col gap-2 rounded-lg border border-line bg-surface p-4"
-            >
-              <h2 className="text-lg font-semibold">{es.meals.day.total}</h2>
+            <section aria-label={es.meals.day.total} className="flex flex-col gap-2 card p-4">
+              <h2 className="text-base font-bold">{es.meals.day.total}</h2>
               <TotalsList totals={dayTotal} />
             </section>
           )}

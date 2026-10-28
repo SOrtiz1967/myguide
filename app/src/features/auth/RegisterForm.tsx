@@ -48,12 +48,9 @@ export function RegisterForm({ onRegistered }: RegisterFormProps) {
   })
 
   return (
-    <form onSubmit={submit} noValidate className="flex flex-col gap-4">
-      <section
-        aria-labelledby="aviso-privacidad"
-        className="rounded-lg border border-line bg-surface p-4"
-      >
-        <h2 id="aviso-privacidad" className="text-lg font-semibold">
+    <form onSubmit={submit} noValidate className="card flex flex-col gap-4">
+      <section aria-labelledby="aviso-privacidad" className="card-inset p-4">
+        <h2 id="aviso-privacidad" className="text-base font-bold">
           {es.auth.titles.privacyNotice}
         </h2>
         <ul className="mt-2 list-disc space-y-1 pl-5 text-sm">

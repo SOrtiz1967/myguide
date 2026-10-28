@@ -13,11 +13,8 @@ export function ProfileSummary({ profile }: { profile: Profile }) {
   ]
 
   return (
-    <section
-      aria-label={es.profile.summaryTitle}
-      className="rounded-lg border border-line bg-surface p-4"
-    >
-      <h2 className="text-lg font-semibold">{es.profile.summaryTitle}</h2>
+    <section aria-label={es.profile.summaryTitle} className="card p-4">
+      <h2 className="text-base font-bold">{es.profile.summaryTitle}</h2>
       <dl className="mt-3 grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2">
         {rows.map(([label, value]) => (
           <div key={label}>

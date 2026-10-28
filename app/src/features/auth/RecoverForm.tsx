@@ -42,7 +42,7 @@ export function RecoverForm() {
   if (sent) return <SuccessMessage>{es.auth.recoverySent}</SuccessMessage>
 
   return (
-    <form onSubmit={submit} noValidate className="flex flex-col gap-4">
+    <form onSubmit={submit} noValidate className="card flex flex-col gap-4">
       <Field
         label={es.auth.labels.email}
         type="email"

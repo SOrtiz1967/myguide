@@ -163,12 +163,9 @@ export function ExerciseForm({
   const aliasesId = useId()
 
   return (
-    <form onSubmit={submit} noValidate className="flex flex-col gap-5">
+    <form onSubmit={submit} noValidate className="card flex flex-col gap-5">
       {draft.restored ? (
-        <div
-          role="status"
-          className="flex flex-col gap-2 rounded-md border border-line bg-surface p-3"
-        >
+        <div role="status" className="flex flex-col gap-2 card-inset p-3">
           <p>{f.draftRestored}</p>
           <div>
             <button
@@ -194,7 +191,7 @@ export function ExerciseForm({
           {...register('name')}
         />
         {duplicate ? (
-          <p role="status" className="rounded-md border border-line bg-surface px-3 py-2 text-sm">
+          <p role="status" className="control px-3 py-2 text-sm">
             {f.duplicateName}
           </p>
         ) : null}
@@ -203,10 +200,7 @@ export function ExerciseForm({
       <fieldset className="flex flex-col gap-2" role="radiogroup" aria-required="true">
         <legend className="font-medium">{f.measurementLegend}</legend>
         {MEASUREMENT_TYPES.map((type) => (
-          <label
-            key={type}
-            className="flex min-h-11 items-start gap-3 rounded-md border border-line bg-surface p-3"
-          >
+          <label key={type} className="flex min-h-11 items-start gap-3 control p-3">
             <input
               type="radio"
               value={type}
@@ -241,11 +235,7 @@ export function ExerciseForm({
         <label htmlFor="equipamiento" className="font-medium">
           {f.equipment}
         </label>
-        <select
-          id="equipamiento"
-          className="min-h-11 rounded-md border border-line bg-surface px-3 py-2"
-          {...register('equipment')}
-        >
+        <select id="equipamiento" className="min-h-11 control px-3 py-2" {...register('equipment')}>
           <option value="">{f.equipmentNone}</option>
           {EQUIPMENT.map((code) => (
             <option key={code} value={code}>
@@ -264,7 +254,7 @@ export function ExerciseForm({
           rows={5}
           aria-invalid={errors.description ? true : undefined}
           aria-describedby={`${descriptionId}-hint${errors.description ? ` ${descriptionId}-error` : ''}`}
-          className="rounded-md border border-line bg-surface px-3 py-2"
+          className="control px-3 py-2"
           {...register('description')}
         />
         <p id={`${descriptionId}-hint`} className="text-sm text-muted">
@@ -286,7 +276,7 @@ export function ExerciseForm({
           rows={2}
           aria-invalid={errors.aliases ? true : undefined}
           aria-describedby={`${aliasesId}-hint${errors.aliases ? ` ${aliasesId}-error` : ''}`}
-          className="rounded-md border border-line bg-surface px-3 py-2"
+          className="control px-3 py-2"
           {...register('aliases')}
         />
         <p id={`${aliasesId}-hint`} className="text-sm text-muted">

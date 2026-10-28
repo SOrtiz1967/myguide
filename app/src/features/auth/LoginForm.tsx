@@ -33,7 +33,7 @@ export function LoginForm({ onSignedIn }: { onSignedIn: () => void }) {
   })
 
   return (
-    <form onSubmit={submit} noValidate className="flex flex-col gap-4">
+    <form onSubmit={submit} noValidate className="card flex flex-col gap-4">
       <Field
         label={es.auth.labels.email}
         type="email"

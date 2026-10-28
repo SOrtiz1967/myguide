@@ -32,7 +32,7 @@ export function ProfilePage() {
 
   return (
     <div className="flex flex-col gap-8">
-      <h1 className="text-2xl font-semibold tracking-tight">{es.profile.title}</h1>
+      <h1 className="text-2xl font-extrabold tracking-tight">{es.profile.title}</h1>
 
       <ProfileSummary profile={profile} />
 
@@ -56,8 +56,8 @@ export function ProfilePage() {
 
       <GoalProfileForm profile={profile} />
 
-      <section aria-labelledby="cambiar-contrasena" className="flex flex-col gap-4">
-        <h2 id="cambiar-contrasena" className="text-lg font-semibold">
+      <section aria-labelledby="cambiar-contrasena" className="card flex flex-col gap-4">
+        <h2 id="cambiar-contrasena" className="text-base font-bold">
           {es.auth.actions.changePassword}
         </h2>
         <ChangePasswordForm />

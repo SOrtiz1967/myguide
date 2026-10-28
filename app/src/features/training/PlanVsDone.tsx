@@ -41,7 +41,7 @@ export function PlanList({ plan, draft, finished, renderActions }: PlanListProps
           <li
             key={item.id}
             aria-label={item.exercise_name}
-            className="flex flex-col gap-1 rounded-lg border border-line bg-surface p-4"
+            className="flex flex-col gap-1 card-inset p-4"
           >
             <span className="break-words font-semibold">{item.exercise_name}</span>
             <span className="text-sm">{es.training.routines.setsOf(item.sets)}</span>
@@ -80,8 +80,8 @@ export function PlanSection({
 }: PlanSectionProps) {
   if (plan.length === 0) return <p className="text-muted">{es.training.noPlan}</p>
   return (
-    <section aria-labelledby="plan-titulo-editor" className="flex flex-col gap-3">
-      <h2 id="plan-titulo-editor" className="text-xl font-semibold">
+    <section aria-labelledby="plan-titulo-editor" className="card flex flex-col gap-3">
+      <h2 id="plan-titulo-editor" className="text-lg font-extrabold">
         {p.title}
       </h2>
       <PlanList
@@ -141,7 +141,7 @@ export function PlanTag({
     : exercise.is_substitute
       ? p.tagInstead(planned.exercise_name)
       : p.tagPlan
-  return <p className="w-fit rounded-full border border-line px-2 text-sm text-muted">{text}</p>
+  return <p className="w-fit rounded-full bg-surface-2 px-2.5 text-sm text-muted">{text}</p>
 }
 
 /** En qué difiere lo realizado del plan, con palabras neutrales. No se muestra si no difiere. */
@@ -149,8 +149,8 @@ export function Differences({ plan, draft }: { plan: PlanItem[]; draft: SessionD
   const differences = sessionDifferences(plan, draft)
   if (differences.length === 0) return null
   return (
-    <section aria-labelledby="diferencias-titulo" className="flex flex-col gap-2">
-      <h2 id="diferencias-titulo" className="text-xl font-semibold">
+    <section aria-labelledby="diferencias-titulo" className="card flex flex-col gap-2">
+      <h2 id="diferencias-titulo" className="text-lg font-extrabold">
         {p.differencesTitle}
       </h2>
       <ul className="ml-5 list-disc">

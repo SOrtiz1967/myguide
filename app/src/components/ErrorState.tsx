@@ -7,7 +7,7 @@ interface ErrorStateProps {
 
 export function ErrorState({ message, onRetry }: ErrorStateProps) {
   return (
-    <div role="alert" className="rounded-md border border-danger/40 bg-danger/10 px-4 py-3">
+    <div role="alert" className="notice-error px-4 py-3">
       <p className="text-danger">{message}</p>
       {onRetry ? (
         <button type="button" onClick={onRetry} className="btn-secondary mt-3">

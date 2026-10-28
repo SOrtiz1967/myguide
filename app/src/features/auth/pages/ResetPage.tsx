@@ -7,7 +7,7 @@ export function ResetPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-semibold tracking-tight">{es.auth.titles.reset}</h1>
+      <h1 className="text-2xl font-extrabold tracking-tight">{es.auth.titles.reset}</h1>
       <ResetForm
         onDone={() => navigate('/ingresar', { replace: true, state: { notice: 'passwordReset' } })}
       />

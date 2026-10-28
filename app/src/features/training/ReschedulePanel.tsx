@@ -51,7 +51,7 @@ export function ReschedulePanel({
       noValidate
       onSubmit={submit}
       aria-label={replan ? p.replan : p.reschedule}
-      className="flex flex-col gap-3 rounded-lg border border-line bg-surface p-4"
+      className="flex flex-col gap-3 card-inset p-4"
     >
       <div className="flex flex-col gap-1">
         <label htmlFor={`fecha-mover-${session.id}`} className="font-medium">
@@ -65,7 +65,7 @@ export function ReschedulePanel({
           aria-describedby={`fecha-mover-ayuda-${session.id}`}
           aria-invalid={problem ? true : undefined}
           onChange={(event) => setDate(event.target.value)}
-          className="min-h-11 max-w-xs rounded-md border border-line bg-surface px-3 py-2"
+          className="min-h-11 max-w-xs control px-3 py-2"
         />
         <p id={`fecha-mover-ayuda-${session.id}`} className="text-sm text-muted">
           {p.newDateHint}
@@ -114,7 +114,7 @@ export function RegisterPanel({ session, onClose }: PanelProps) {
       noValidate
       onSubmit={submit}
       aria-label={p.whichDay}
-      className="flex flex-col gap-3 rounded-lg border border-line bg-surface p-4"
+      className="flex flex-col gap-3 card-inset p-4"
     >
       <div className="flex flex-col gap-1">
         <label htmlFor={`fecha-hizo-${session.id}`} className="font-medium">
@@ -128,7 +128,7 @@ export function RegisterPanel({ session, onClose }: PanelProps) {
           aria-describedby={`fecha-hizo-ayuda-${session.id}`}
           aria-invalid={problem ? true : undefined}
           onChange={(event) => setDate(event.target.value)}
-          className="min-h-11 max-w-xs rounded-md border border-line bg-surface px-3 py-2"
+          className="min-h-11 max-w-xs control px-3 py-2"
         />
         <p id={`fecha-hizo-ayuda-${session.id}`} className="text-sm text-muted">
           {p.whichDayHint}

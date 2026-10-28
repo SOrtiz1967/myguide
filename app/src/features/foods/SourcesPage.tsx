@@ -43,8 +43,8 @@ function SourceCard({
   count: string
 }) {
   return (
-    <article className="flex flex-col gap-2 rounded-lg border border-line bg-surface p-4">
-      <h3 className="text-lg font-semibold">{source.name}</h3>
+    <article className="flex flex-col gap-2 card p-4">
+      <h3 className="text-base font-bold">{source.name}</h3>
       <p>{source.attribution}</p>
       <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
         <dt className="text-muted">{es.foods.sources.license}</dt>
@@ -90,8 +90,8 @@ function SourceSection({
   children: ReactNode
 }) {
   return (
-    <section aria-labelledby={id} className="flex flex-col gap-4">
-      <h2 id={id} className="text-xl font-semibold">
+    <section aria-labelledby={id} className="card flex flex-col gap-4">
+      <h2 id={id} className="text-lg font-extrabold">
         {title}
       </h2>
       {isPending ? <LoadingState /> : null}
@@ -108,7 +108,7 @@ export function SourcesPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-semibold tracking-tight">{es.foods.sources.title}</h1>
+      <h1 className="text-2xl font-extrabold tracking-tight">{es.foods.sources.title}</h1>
       <p className="text-muted">{es.foods.sources.intro}</p>
 
       <SourceSection

@@ -81,10 +81,7 @@ function SessionEditorView({
       {onDone ? <p className="text-muted">{t.session.correcting}</p> : null}
 
       {editor.restored ? (
-        <div
-          role="note"
-          className="flex flex-col gap-2 rounded-md border border-line bg-surface p-3"
-        >
+        <div role="note" className="flex flex-col gap-2 card-inset p-3">
           <p>{e.restored}</p>
           <div>
             <button type="button" className="btn-secondary" onClick={editor.discardRestored}>
@@ -95,10 +92,7 @@ function SessionEditorView({
       ) : null}
 
       {editor.conflict ? (
-        <div
-          role="alert"
-          className="flex flex-col gap-3 rounded-md border border-danger/40 bg-danger/10 p-4"
-        >
+        <div role="alert" className="flex flex-col gap-3 notice-error p-4">
           <p className="font-medium">{e.conflictTitle}</p>
           <p>{e.conflictBody}</p>
           <div className="flex flex-wrap gap-3">

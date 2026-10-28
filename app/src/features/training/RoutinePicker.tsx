@@ -32,7 +32,7 @@ export function RoutinePicker() {
 
   return (
     <section aria-labelledby="empezar-rutina-titulo" className="flex flex-col gap-3">
-      <h3 id="empezar-rutina-titulo" className="text-lg font-semibold">
+      <h3 id="empezar-rutina-titulo" className="text-base font-bold">
         {h.startFromRoutine}
       </h3>
       {isPending ? <LoadingState /> : null}

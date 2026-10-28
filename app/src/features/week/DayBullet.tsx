@@ -31,7 +31,7 @@ export function DayBullet({
 
   return (
     <svg aria-hidden="true" width={WIDTH} height={HEIGHT} viewBox={`0 0 ${WIDTH} ${HEIGHT}`}>
-      <rect x="0" y="0" width={WIDTH} height={HEIGHT} rx="2" fill="var(--color-surface-2)" />
+      <rect x="0" y="0" width={WIDTH} height={HEIGHT} rx="2" fill="var(--color-surface)" />
       {scale ? (
         <>
           <rect

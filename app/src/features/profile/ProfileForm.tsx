@@ -76,14 +76,11 @@ export function ProfileForm({ profile, onConfirmed, onSubmitStart }: ProfileForm
   })
 
   return (
-    <form onSubmit={submit} noValidate className="flex flex-col gap-4">
-      <h2 className="text-lg font-semibold">{es.profile.formTitle}</h2>
+    <form onSubmit={submit} noValidate className="card flex flex-col gap-4">
+      <h2 className="text-base font-bold">{es.profile.formTitle}</h2>
 
       {draft.restored ? (
-        <div
-          role="status"
-          className="flex flex-col gap-2 rounded-md border border-line bg-surface p-3"
-        >
+        <div role="status" className="flex flex-col gap-2 card-inset p-3">
           <p>{es.profile.draftRestored}</p>
           <div>
             <button
@@ -114,7 +111,7 @@ export function ProfileForm({ profile, onConfirmed, onSubmitStart }: ProfileForm
         </label>
         <select
           id="perfil-sexo"
-          className="min-h-11 rounded-md border border-line bg-surface px-3 py-2"
+          className="min-h-11 control px-3 py-2"
           aria-invalid={errors.sex ? true : undefined}
           {...register('sex')}
         >
@@ -139,7 +136,7 @@ export function ProfileForm({ profile, onConfirmed, onSubmitStart }: ProfileForm
         </label>
         <select
           id="perfil-zona"
-          className="min-h-11 rounded-md border border-line bg-surface px-3 py-2"
+          className="min-h-11 control px-3 py-2"
           aria-invalid={errors.timezone ? true : undefined}
           {...register('timezone')}
         >

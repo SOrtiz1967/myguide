@@ -43,8 +43,8 @@ export function ChoiceGroup({
       {options.map((option) => (
         <label
           key={option.value}
-          className={`flex min-h-11 cursor-pointer items-start gap-3 rounded-md border px-3 py-2 ${
-            value === option.value ? 'border-accent bg-surface' : 'border-line bg-surface'
+          className={`flex min-h-11 cursor-pointer items-start gap-3 rounded-lg border-2 px-3 py-2 ${
+            value === option.value ? 'border-accent bg-surface-2' : 'border-transparent bg-surface'
           }`}
         >
           <input

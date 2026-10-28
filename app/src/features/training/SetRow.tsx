@@ -39,7 +39,7 @@ export function SetRow({
 }: SetRowProps) {
   const number = index + 1
   return (
-    <li className="flex flex-col gap-2 border-b border-line py-3 last:border-b-0">
+    <li className="flex flex-col gap-2 border-b border-line/25 py-3 last:border-b-0">
       <div className="flex items-center justify-between gap-2">
         <span className="font-medium">{e.setLabel(number)}</span>
         <span className="flex gap-1">
@@ -100,7 +100,7 @@ export function SetRow({
                       value: event.target.value,
                     })
                   }
-                  className="min-h-11 min-w-0 rounded-md border border-line bg-surface px-3 py-2"
+                  className="min-h-11 min-w-0 control px-3 py-2"
                 />
               </label>
               {error ? (

@@ -45,7 +45,7 @@ export function MeasuresPage() {
   return (
     <div className="flex max-w-xl flex-col gap-6">
       <div className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold tracking-tight">{m.title}</h1>
+        <h1 className="text-2xl font-extrabold tracking-tight">{m.title}</h1>
         <p className="text-muted">{m.intro}</p>
       </div>
       {message ? <SuccessMessage>{message}</SuccessMessage> : null}
@@ -82,8 +82,8 @@ function LatestCards({
 }) {
   const { data, isPending, isError, refetch } = useLatestMeasures()
   return (
-    <section aria-labelledby="ultimas-medidas" className="flex flex-col gap-3">
-      <h2 id="ultimas-medidas" className="text-xl font-semibold">
+    <section aria-labelledby="ultimas-medidas" className="card flex flex-col gap-3">
+      <h2 id="ultimas-medidas" className="text-lg font-extrabold">
         {m.latestTitle}
       </h2>
       {isPending ? <LoadingState /> : null}
@@ -98,10 +98,10 @@ function LatestCards({
                   type="button"
                   aria-pressed={selected === kind}
                   onClick={() => onSelect(kind)}
-                  className={`flex min-h-16 w-full flex-col items-start gap-0.5 rounded-lg border p-3 text-left ${
+                  className={`flex min-h-16 w-full flex-col items-start gap-0.5 rounded-xl border-2 p-3 text-left ${
                     selected === kind
-                      ? 'border-2 border-accent bg-surface'
-                      : 'border-line bg-surface'
+                      ? 'border-accent bg-surface-2'
+                      : 'border-transparent bg-surface'
                   }`}
                 >
                   <span className="font-medium">{kindLabel(kind)}</span>
@@ -202,15 +202,12 @@ function MeasureForm({ kind, editing, onKind, onDone, onCancel }: FormProps) {
       aria-labelledby="registrar-medida"
       className="flex flex-col gap-4"
     >
-      <h2 id="registrar-medida" className="text-xl font-semibold">
+      <h2 id="registrar-medida" className="text-lg font-extrabold">
         {editing ? m.form.editTitle : m.form.title}
       </h2>
 
       {restored ? (
-        <div
-          role="status"
-          className="flex flex-col gap-2 rounded-md border border-line bg-surface p-3"
-        >
+        <div role="status" className="flex flex-col gap-2 card-inset p-3">
           <p>{m.form.draftRestored}</p>
           <div>
             <button
@@ -238,7 +235,7 @@ function MeasureForm({ kind, editing, onKind, onDone, onCancel }: FormProps) {
           value={kind}
           disabled={editing !== null}
           onChange={(event) => onKind(event.target.value as MeasureKind)}
-          className="min-h-11 rounded-md border border-line bg-surface px-3 py-2"
+          className="min-h-11 control px-3 py-2"
         >
           {MEASURE_KINDS.map((k) => (
             <option key={k} value={k}>
@@ -327,8 +324,8 @@ function History({
   }
 
   return (
-    <section aria-labelledby="historial-medida" className="flex flex-col gap-3">
-      <h2 id="historial-medida" className="text-xl font-semibold">
+    <section aria-labelledby="historial-medida" className="card flex flex-col gap-3">
+      <h2 id="historial-medida" className="text-lg font-extrabold">
         {m.history.title(kindLabel(kind))}
       </h2>
       {history.isPending ? <LoadingState /> : null}
@@ -339,11 +336,11 @@ function History({
         <p className="text-muted">{m.history.empty}</p>
       ) : null}
       {rows.length > 0 ? (
-        <ul className="rounded-lg border border-line bg-surface px-3">
+        <ul className="rounded-xl bg-surface px-3">
           {rows.map((row) => (
             <li
               key={row.id}
-              className="flex flex-wrap items-center justify-between gap-2 border-b border-line py-3 last:border-b-0"
+              className="flex flex-wrap items-center justify-between gap-2 border-b border-line/25 py-3 last:border-b-0"
             >
               <div className="min-w-0">
                 <p className="font-medium">

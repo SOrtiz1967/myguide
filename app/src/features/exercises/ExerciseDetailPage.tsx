@@ -36,7 +36,7 @@ function Section({
 }) {
   return (
     <section aria-labelledby={id} className="flex flex-col gap-1">
-      <h2 id={id} className="text-lg font-semibold">
+      <h2 id={id} className="text-base font-bold">
         {title}
       </h2>
       {extra ? <p className="text-sm text-muted">{extra}</p> : null}
@@ -238,7 +238,7 @@ export function ExerciseDetailPage() {
       <div>{back}</div>
       {state?.saved ? <SuccessMessage>{t.form.saved}</SuccessMessage> : null}
       <header className="flex flex-col gap-1">
-        <h1 className="break-words text-2xl font-semibold tracking-tight">{exercise.name}</h1>
+        <h1 className="break-words text-2xl font-extrabold tracking-tight">{exercise.name}</h1>
         {nameLabel ? <p className="text-sm text-muted">{nameLabel}</p> : null}
       </header>
 

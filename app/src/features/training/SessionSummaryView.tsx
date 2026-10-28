@@ -19,7 +19,7 @@ export function SessionHeader({ session }: { session: WorkoutSession }) {
   const marks = markLabels(session)
   return (
     <header className="flex flex-col gap-1">
-      <h1 className="break-words text-2xl font-semibold tracking-tight">
+      <h1 className="break-words text-2xl font-extrabold tracking-tight">
         {s.title(formatDate(session.session_date))}
       </h1>
       <p className="text-muted">
@@ -44,12 +44,9 @@ export function DoneList({ session }: { session: WorkoutSession }) {
       {exercises.map((exercise) => {
         const sets = [...exercise.session_sets].sort((a, b) => a.position - b.position)
         return (
-          <li
-            key={exercise.id}
-            className="flex flex-col gap-2 rounded-lg border border-line bg-surface p-4"
-          >
+          <li key={exercise.id} className="flex flex-col gap-2 card-inset p-4">
             <div className="min-w-0">
-              <h3 className="break-words text-lg font-semibold">{exercise.exercise_name}</h3>
+              <h3 className="break-words text-base font-bold">{exercise.exercise_name}</h3>
               <p className="text-sm text-muted">
                 {measurementLabel(exercise.measurement_type)} · {setsCountLabel(sets.length)}
               </p>
@@ -125,8 +122,8 @@ export function SessionSummaryView({
       ) : null}
 
       {plan.length > 0 ? (
-        <section aria-labelledby="plan-titulo" className="flex flex-col gap-2">
-          <h2 id="plan-titulo" className="text-xl font-semibold">
+        <section aria-labelledby="plan-titulo" className="card flex flex-col gap-2">
+          <h2 id="plan-titulo" className="text-lg font-extrabold">
             {s.planTitle}
           </h2>
           <PlanList plan={plan} draft={draft} finished={session.status === 'completed'} />
@@ -136,8 +133,8 @@ export function SessionSummaryView({
       )}
 
       {session.status === 'completed' ? (
-        <section aria-labelledby="realizado-titulo" className="flex flex-col gap-3">
-          <h2 id="realizado-titulo" className="text-xl font-semibold">
+        <section aria-labelledby="realizado-titulo" className="card flex flex-col gap-3">
+          <h2 id="realizado-titulo" className="text-lg font-extrabold">
             {s.doneTitle}
           </h2>
           <DoneList session={session} />
@@ -147,8 +144,8 @@ export function SessionSummaryView({
       {session.status === 'completed' ? <Differences plan={plan} draft={draft} /> : null}
 
       {session.session_date_changes.length > 0 ? (
-        <section aria-labelledby="recorrido-titulo" className="flex flex-col gap-2">
-          <h2 id="recorrido-titulo" className="text-xl font-semibold">
+        <section aria-labelledby="recorrido-titulo" className="card flex flex-col gap-2">
+          <h2 id="recorrido-titulo" className="text-lg font-extrabold">
             {t.planning.path}
           </h2>
           <ol className="ml-5 list-decimal">
@@ -164,8 +161,8 @@ export function SessionSummaryView({
       ) : null}
 
       {session.note ? (
-        <section aria-labelledby="nota-titulo" className="flex flex-col gap-1">
-          <h2 id="nota-titulo" className="text-xl font-semibold">
+        <section aria-labelledby="nota-titulo" className="card flex flex-col gap-1">
+          <h2 id="nota-titulo" className="text-lg font-extrabold">
             {s.note}
           </h2>
           <p className="whitespace-pre-line break-words">{session.note}</p>

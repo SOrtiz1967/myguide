@@ -7,7 +7,7 @@
  */
 export function LowGoalNote() {
   return (
-    <p role="note" className="rounded-md border border-line bg-bg px-3 py-2 text-sm text-muted">
+    <p role="note" className="control text-sm text-muted">
       {es.goal.lowGoalNote}
     </p>
   )

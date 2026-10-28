@@ -31,13 +31,10 @@ export function SessionExerciseCard({
 }: SessionExerciseCardProps) {
   const { id, exercise_name: name } = exercise
   return (
-    <article
-      aria-label={name}
-      className="flex flex-col gap-4 rounded-lg border border-line bg-surface p-4"
-    >
+    <article aria-label={name} className="flex flex-col gap-4 card-inset p-4">
       <header className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <h3 className="break-words text-lg font-semibold">{name}</h3>
+          <h3 className="break-words text-base font-bold">{name}</h3>
           <p className="text-sm text-muted">{measurementLabel(exercise.measurement_type)}</p>
         </div>
         <span className="flex shrink-0 gap-1">
@@ -131,7 +128,7 @@ export function SessionExerciseCard({
           onChange={(event) =>
             dispatch({ type: 'setExerciseNote', exerciseId: id, value: event.target.value })
           }
-          className="rounded-md border border-line bg-surface px-3 py-2"
+          className="control px-3 py-2"
         />
         {errors?.note ? <p className="text-sm text-danger">{errors.note}</p> : null}
       </div>

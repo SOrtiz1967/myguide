@@ -106,7 +106,7 @@ export function SelectedFoodForm({
       }}
     >
       <div>
-        <h2 className="break-words text-xl font-semibold">{food.name}</h2>
+        <h2 className="break-words text-lg font-extrabold">{food.name}</h2>
         {food.brand ? <p className="text-muted">{food.brand}</p> : null}
       </div>
 

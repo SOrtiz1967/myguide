@@ -42,10 +42,7 @@ export function VerifyEmailBanner() {
   }
 
   return (
-    <section
-      aria-label="Confirmación del correo"
-      className="mb-4 flex flex-col gap-3 rounded-lg border border-line bg-surface p-4"
-    >
+    <section aria-label="Confirmación del correo" className="mb-4 flex flex-col gap-3 card p-4">
       <p>{es.auth.verifyBanner}</p>
       <div>
         <button type="button" className="btn-secondary" onClick={resend} disabled={busy}>

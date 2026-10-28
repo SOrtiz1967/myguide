@@ -50,7 +50,7 @@ export function CalendarMonth() {
       aria-labelledby="calendario-titulo"
       className="flex flex-col gap-3"
     >
-      <h2 id="calendario-titulo" className="text-xl font-semibold">
+      <h2 id="calendario-titulo" className="text-lg font-extrabold">
         {c.title}
       </h2>
       <div className="flex flex-wrap items-center justify-between gap-2">
@@ -77,7 +77,7 @@ export function CalendarMonth() {
       </div>
 
       {!online ? (
-        <p role="alert" className="rounded-md border border-danger/40 bg-danger/10 p-3">
+        <p role="alert" className="notice-error p-3">
           {c.offline}
         </p>
       ) : isPending ? (
@@ -102,8 +102,8 @@ export function CalendarMonth() {
                       to={`/entrenamiento/dia/${date}`}
                       aria-label={dayLabel(date, sessions, today)}
                       aria-current={date === today ? 'date' : undefined}
-                      className={`flex min-h-14 flex-col items-center gap-0.5 rounded-md border p-1 text-sm ${
-                        date === today ? 'border-accent border-2' : 'border-line'
+                      className={`flex min-h-14 flex-col items-center gap-0.5 rounded-lg border-2 p-1 text-sm ${
+                        date === today ? 'border-accent' : 'border-transparent'
                       } ${inMonth ? 'bg-surface' : 'bg-transparent text-muted'}`}
                     >
                       <span>{Number(date.slice(8))}</span>

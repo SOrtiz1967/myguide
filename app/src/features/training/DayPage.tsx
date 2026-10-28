@@ -22,7 +22,7 @@ const p = t.planning
 function DaySession({ session, today }: { session: SessionSummary; today: string }) {
   const marks = markLabels(session)
   return (
-    <li className="flex flex-col gap-3 rounded-lg border border-line bg-surface p-4">
+    <li className="flex flex-col gap-3 card-inset p-4">
       <Link
         to={`/entrenamiento/sesion/${session.id}`}
         className="flex min-h-11 flex-col gap-0.5 underline"
@@ -53,8 +53,8 @@ function PlanSection({ day }: { day: string }) {
     },
   )
   return (
-    <section aria-labelledby="planificar-titulo" className="flex flex-col gap-3">
-      <h2 id="planificar-titulo" className="text-xl font-semibold">
+    <section aria-labelledby="planificar-titulo" className="card flex flex-col gap-3">
+      <h2 id="planificar-titulo" className="text-lg font-extrabold">
         {p.planTitle}
       </h2>
       {planned ? <SuccessMessage>{p.planned}</SuccessMessage> : null}
@@ -112,8 +112,8 @@ function RegisterSection({ day }: { day: string }) {
     onSuccess: (result) => void navigate(`/entrenamiento/sesion/${result.id}`),
   })
   return (
-    <section aria-labelledby="registrar-titulo" className="flex flex-col gap-3">
-      <h2 id="registrar-titulo" className="text-xl font-semibold">
+    <section aria-labelledby="registrar-titulo" className="card flex flex-col gap-3">
+      <h2 id="registrar-titulo" className="text-lg font-extrabold">
         {p.registerTitle}
       </h2>
       <div>
@@ -156,10 +156,10 @@ export function TrainingDayPage() {
   return (
     <div className="flex flex-col gap-6">
       <div>{back}</div>
-      <h1 className="text-2xl font-semibold tracking-tight">{p.dayTitle(formatDate(day))}</h1>
+      <h1 className="text-2xl font-extrabold tracking-tight">{p.dayTitle(formatDate(day))}</h1>
 
-      <section aria-labelledby="sesiones-dia-titulo" className="flex flex-col gap-3">
-        <h2 id="sesiones-dia-titulo" className="text-xl font-semibold">
+      <section aria-labelledby="sesiones-dia-titulo" className="card flex flex-col gap-3">
+        <h2 id="sesiones-dia-titulo" className="text-lg font-extrabold">
           {p.sessionsTitle}
         </h2>
         {sessions.isPending ? <LoadingState /> : null}

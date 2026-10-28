@@ -35,7 +35,7 @@ function EntryRow({ entry, date }: { entry: MealEntry; date: string }) {
   const quantity = entryQuantityText(entry)
   const gone = entry.food_id === null && (entry.origin === 'catalog' || entry.origin === 'own')
   return (
-    <li className="border-b border-line last:border-b-0">
+    <li className="border-b border-line/25 last:border-b-0">
       <Link
         to={`/comidas/item/${entry.id}`}
         state={{ from: date }}
@@ -43,7 +43,7 @@ function EntryRow({ entry, date }: { entry: MealEntry; date: string }) {
       >
         <span className="flex items-start justify-between gap-3">
           <span className="block min-w-0 truncate font-medium">{entry.food_name}</span>
-          <span className="shrink-0 rounded-full border border-line px-2 text-sm text-muted">
+          <span className="shrink-0 rounded-full bg-surface-2 px-2.5 text-sm text-muted">
             {es.meals.origin[entry.origin]}
           </span>
         </span>
@@ -90,12 +90,9 @@ interface MealSectionProps {
 export function MealSection({ meal, date, entries, subtotal, extra }: MealSectionProps) {
   const name = mealLabel(meal)
   return (
-    <section
-      aria-labelledby={`comida-${meal}`}
-      className="flex flex-col gap-3 rounded-lg border border-line bg-surface p-4"
-    >
+    <section aria-labelledby={`comida-${meal}`} className="flex flex-col gap-3 card p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 id={`comida-${meal}`} className="text-lg font-semibold">
+        <h2 id={`comida-${meal}`} className="text-base font-bold">
           {name}
         </h2>
         <Link
@@ -119,7 +116,7 @@ export function MealSection({ meal, date, entries, subtotal, extra }: MealSectio
           <div
             role="group"
             aria-label={es.meals.day.subtotal}
-            className="border-t border-line pt-3"
+            className="border-t border-line/25 pt-3"
           >
             <TotalsList totals={subtotal} />
           </div>

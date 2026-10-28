@@ -21,7 +21,7 @@ export function RoutinesPage() {
         </Link>
       </div>
       <div className="flex items-center justify-between gap-3">
-        <h1 className="text-2xl font-semibold tracking-tight">{r.title}</h1>
+        <h1 className="text-2xl font-extrabold tracking-tight">{r.title}</h1>
         <Link to="/entrenamiento/rutinas/nueva" className="btn-primary">
           {r.newRoutine}
         </Link>
@@ -32,9 +32,9 @@ export function RoutinesPage() {
       {isError ? <ErrorState message={r.loadError} onRetry={() => void refetch()} /> : null}
       {data && data.length === 0 ? <EmptyState title={r.empty} description={r.emptyBody} /> : null}
       {data && data.length > 0 ? (
-        <ul className="rounded-lg border border-line bg-surface px-3">
+        <ul className="rounded-xl bg-surface px-3">
           {data.map((routine) => (
-            <li key={routine.id} className="border-b border-line last:border-b-0">
+            <li key={routine.id} className="border-b border-line/25 last:border-b-0">
               <Link
                 to={`/entrenamiento/rutinas/${routine.id}`}
                 className="flex min-h-11 flex-col gap-0.5 px-1 py-3"

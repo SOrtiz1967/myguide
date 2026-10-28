@@ -148,10 +148,7 @@ function RoutineForm({ initial, routineId }: { initial: RoutineFormInput; routin
       className="flex flex-col gap-5"
     >
       {draft.restored ? (
-        <div
-          role="status"
-          className="flex flex-col gap-2 rounded-md border border-line bg-surface p-3"
-        >
+        <div role="status" className="flex flex-col gap-2 card-inset p-3">
           <p>{r.draftRestored}</p>
           <div>
             <button
@@ -176,8 +173,8 @@ function RoutineForm({ initial, routineId }: { initial: RoutineFormInput; routin
         {...register('name')}
       />
 
-      <section aria-labelledby="ejercicios-rutina-form" className="flex flex-col gap-4">
-        <h2 id="ejercicios-rutina-form" className="text-xl font-semibold">
+      <section aria-labelledby="ejercicios-rutina-form" className="card flex flex-col gap-4">
+        <h2 id="ejercicios-rutina-form" className="text-lg font-extrabold">
           {r.exercisesTitle}
         </h2>
         <p className="text-sm text-muted">{r.targetsHint}</p>
@@ -192,11 +189,11 @@ function RoutineForm({ initial, routineId }: { initial: RoutineFormInput; routin
             <article
               key={field.id}
               aria-label={name}
-              className="flex flex-col gap-3 rounded-lg border border-line bg-surface p-4"
+              className="flex flex-col gap-3 card-inset p-4"
             >
               <header className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <h3 className="break-words text-lg font-semibold">{name}</h3>
+                  <h3 className="break-words text-base font-bold">{name}</h3>
                   <p className="text-sm text-muted">{measurementLabel(type)}</p>
                 </div>
                 <span className="flex shrink-0 gap-1">
@@ -314,7 +311,7 @@ export function RoutineFormPage() {
   if (!id) {
     return (
       <div className="flex max-w-2xl flex-col gap-4">
-        <h1 className="text-2xl font-semibold tracking-tight">{r.createTitle}</h1>
+        <h1 className="text-2xl font-extrabold tracking-tight">{r.createTitle}</h1>
         <RoutineForm key="new" initial={emptyForm} />
       </div>
     )
@@ -335,7 +332,7 @@ export function RoutineFormPage() {
   }
   return (
     <div className="flex max-w-2xl flex-col gap-4">
-      <h1 className="text-2xl font-semibold tracking-tight">{r.editTitle}</h1>
+      <h1 className="text-2xl font-extrabold tracking-tight">{r.editTitle}</h1>
       <RoutineForm key={id} initial={initial} routineId={id} />
     </div>
   )

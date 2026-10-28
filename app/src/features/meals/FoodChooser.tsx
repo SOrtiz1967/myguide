@@ -35,8 +35,8 @@ export function FoodChooser({ onPickRecent, onPickFood }: FoodChooserProps) {
 
   return (
     <div className="flex flex-col gap-6">
-      <section aria-labelledby="recientes-titulo" className="flex flex-col gap-2">
-        <h2 id="recientes-titulo" className="text-lg font-semibold">
+      <section aria-labelledby="recientes-titulo" className="card flex flex-col gap-2">
+        <h2 id="recientes-titulo" className="text-base font-bold">
           {es.meals.add.recents}
         </h2>
         {recents.isPending ? <LoadingState /> : null}
@@ -50,11 +50,11 @@ export function FoodChooser({ onPickRecent, onPickFood }: FoodChooserProps) {
           <p className="text-muted">{es.meals.add.recentsEmpty}</p>
         ) : null}
         {recents.data && recents.data.length > 0 ? (
-          <ul className="rounded-lg border border-line bg-surface px-3">
+          <ul className="rounded-xl bg-surface px-3">
             {recents.data.map((item) => (
               <li
                 key={`${item.food_id ?? 'manual'}:${item.food_name}`}
-                className="border-b border-line last:border-b-0"
+                className="border-b border-line/25 last:border-b-0"
               >
                 <button
                   type="button"
@@ -63,7 +63,7 @@ export function FoodChooser({ onPickRecent, onPickFood }: FoodChooserProps) {
                 >
                   <span className="flex w-full items-start justify-between gap-3">
                     <span className="block min-w-0 truncate font-medium">{item.food_name}</span>
-                    <span className="shrink-0 rounded-full border border-line px-2 text-sm text-muted">
+                    <span className="shrink-0 rounded-full bg-surface-2 px-2.5 text-sm text-muted">
                       {originLabel(item.origin)}
                     </span>
                   </span>
@@ -78,8 +78,8 @@ export function FoodChooser({ onPickRecent, onPickFood }: FoodChooserProps) {
         ) : null}
       </section>
 
-      <section aria-labelledby="buscar-titulo" className="flex flex-col gap-3">
-        <h2 id="buscar-titulo" className="text-lg font-semibold">
+      <section aria-labelledby="buscar-titulo" className="card flex flex-col gap-3">
+        <h2 id="buscar-titulo" className="text-base font-bold">
           {es.meals.add.search}
         </h2>
         <div className="flex flex-col gap-1">
@@ -89,7 +89,7 @@ export function FoodChooser({ onPickRecent, onPickFood }: FoodChooserProps) {
             autoComplete="off"
             value={search.text}
             onChange={(event) => search.setText(event.target.value)}
-            className="min-h-11 rounded-md border border-line bg-surface px-3 py-2"
+            className="min-h-11 control px-3 py-2"
           />
           <p className="text-sm text-muted">{es.meals.add.searchHint}</p>
         </div>
@@ -114,9 +114,9 @@ export function FoodChooser({ onPickRecent, onPickFood }: FoodChooserProps) {
         ) : null}
 
         {search.items.length > 0 ? (
-          <ul className="rounded-lg border border-line bg-surface px-3">
+          <ul className="rounded-xl bg-surface px-3">
             {search.items.map((food) => (
-              <li key={food.id} className="border-b border-line last:border-b-0">
+              <li key={food.id} className="border-b border-line/25 last:border-b-0">
                 <button
                   type="button"
                   onClick={() => onPickFood(food)}
@@ -124,7 +124,7 @@ export function FoodChooser({ onPickRecent, onPickFood }: FoodChooserProps) {
                 >
                   <span className="flex w-full items-start justify-between gap-3">
                     <span className="block min-w-0 truncate font-medium">{food.name}</span>
-                    <span className="shrink-0 rounded-full border border-line px-2 text-sm text-muted">
+                    <span className="shrink-0 rounded-full bg-surface-2 px-2.5 text-sm text-muted">
                       {originLabel(food.origin === 'imported' ? 'catalog' : 'own')}
                     </span>
                   </span>
