@@ -10,6 +10,7 @@ Cubre el despliegue de las specs 001 a 016. Las specs 004 a 008 y la 013 a 016 n
 | Cloudflare Pages | Frontend (PWA) | Free | 500 compilaciones al mes, 20 min por compilación; ancho de banda estático sin límite documentado. |
 | Brevo | Correo transaccional (SMTP) | Free | Alrededor de 300 correos por día (confirmar la cuota vigente). |
 | Cloudflare Turnstile | Captcha en registro y recuperación | Free | Sin costo. |
+| Google Gemini API | Estimación de comidas con IA (spec 009) | Free (con límites de uso) | Opcional: sin clave la IA queda desactivada y se carga a mano. Los límites del plan gratuito se confirman en el plan de la spec 009. |
 
 ## 1. Supabase (producción)
 
@@ -33,6 +34,13 @@ Cubre el despliegue de las specs 001 a 016. Las specs 004 a 008 y la 013 a 016 n
 
 6. Publicar las funciones: `npx supabase functions deploy`. Esto incluye `meal-photo` (spec 003), que **no** usa la verificación automática de JWT (`verify_jwt = false` en `config.toml`: verifica el token ella misma). Comprobar en el panel (Edge Functions → `meal-photo`) que *Verify JWT* quedó apagado; si no, el preflight de CORS del navegador falla.
 7. **Fotos de comidas (spec 003):** el bucket `meal-photos` lo crea la migración `20261019000900_meal_photos_storage.sql` al hacer `db push`. Comprobar en el panel (Storage) que existe, que es **privado** (sin «Public bucket»), de 3 MiB y que solo admite `image/jpeg`. No hay que crear políticas a mano. La función `meal-photo` usa la clave de servicio que Supabase le inyecta (`SUPABASE_SERVICE_ROLE_KEY`): no hay que cargarla como secreto ni ponerla en ningún archivo del repositorio. `ALLOWED_ORIGINS` (paso 5) debe incluir el dominio de producción, o la función responde `forbidden_origin`.
+
+## Clave de Gemini (spec 009)
+
+1. Crear la clave en <https://aistudio.google.com/apikey> (cuenta de Google).
+2. Local: pegarla en `GEMINI_API_KEY` de `supabase/.env.local` (no se sube a Git) y reiniciar `npx supabase functions serve --env-file supabase/.env.local`.
+3. Producción: ponerla en `GEMINI_API_KEY` de `supabase/.env` y ejecutar `npx supabase secrets set --env-file supabase/.env`.
+4. Nunca va en `app/`, en variables `VITE_*` ni en el chat. Las fotos de progreso no se envían a la IA.
 
 ## 2. Turnstile
 
