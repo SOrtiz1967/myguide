@@ -85,10 +85,13 @@ Basado en la Constitution v1.2.1. Este documento define el corte y el contenido 
 
 ### 009 — Estimación de comidas con IA
 
-- Adaptador de proveedor desacoplado, validación de esquema en ejecución.
-- Fallo del proveedor cae al registro manual; idempotencia y control de cuota.
-- Solo fotos y textos de comidas; nunca fotos de progreso.
-- **Caso agregado el 2026-10-28:** cuando la persona escribe a mano un alimento que no está en el catálogo, la IA propone sus calorías y macros a partir del nombre y la cantidad. Es una estimación: se muestra como tal, se distingue de un valor de etiqueta o confirmado por la persona, se corrige antes de guardar y, si la IA falla, se carga a mano (Principio III). Falta decidir si queda guardado como alimento propio «estimado por IA».
+- **Flujo principal (aclarado el 2026-10-28): cargar una comida escribiéndola y que la IA calcule las calorías.** La persona escribe en lenguaje natural lo que comió, por ejemplo «2 milanesas al horno con puré y una manzana». La IA separa el texto en ítems (alimento, cantidad) y propone para cada uno calorías y macronutrientes. Cada ítem aparece marcado como «estimado por IA, sin confirmar», con su valor editable; la persona corrige lo que no le cierre, quita o agrega ítems y recién al confirmar se guarda en la comida elegida (hoy, desayuno, almuerzo, etc.). Hasta confirmar no suma al total del día.
+- **Alimento escrito a mano que no está en el catálogo:** es el mismo caso en pequeño. Si la persona escribe solo el nombre y la cantidad, la IA propone las calorías y los macros, con la misma marca de estimación y la misma corrección antes de guardar. Falta decidir si queda guardado como alimento propio «estimado por IA».
+- **Siempre queda el camino manual:** si la IA falla, tarda, no está configurada (sin clave) o se agotó la cuota, la persona carga las calorías a mano como hoy (spec 003); el registro nunca depende de la IA (Principio III). Un ítem estimado y corregido por la persona pasa a «confirmado».
+- La IA corre en el servidor (Supabase Edge Function) con Gemini; la clave vive en `GEMINI_API_KEY` y nunca llega a la aplicación. Se envía solo el texto de la comida (y, más adelante, la foto de la comida); nunca fotos de progreso ni datos del cuerpo.
+- Adaptador de proveedor desacoplado, validación de esquema en ejecución de lo que devuelve la IA (valores fuera de rango o sin forma se descartan y se pasa al camino manual).
+- Idempotencia y control de cuota: reintentar no duplica comidas ni gasta consultas de más.
+- Entrada por foto de la comida: queda en esta spec como segunda vía, después del texto.
 - Decisiones pendientes #3 y #6.
 - Principios: I, II, III, VII, IX.
 
