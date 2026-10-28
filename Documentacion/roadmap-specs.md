@@ -130,23 +130,25 @@ Basado en la Constitution v1.2.1. Este documento define el corte y el contenido 
 
 Nacen de la primera prueba de uso del autor (2026-10-28). Las notas originales y la trazabilidad están en [`notas-de-prueba-2026-10-28.md`](notas-de-prueba-2026-10-28.md). Ninguna de estas specs está escrita todavía.
 
-**Orden propuesto:** 017 → 018 → 019 → 020 → 021 → 022 → 023, con las specs 009, 010 y 012 de la ola 3 intercaladas cuando el autor las priorice. La 017 va primero para que las pantallas siguientes nazcan con el criterio visual ya corregido; la 021 va después de la 019 y la 022 porque avisa sobre el peso, las fotos y los suplementos, y necesita que existan.
+**Orden propuesto:** 017 → 018 → 019 → 020 → 021 → 022 → 023 (la 024, notificaciones push, queda como feature futuro), con las specs 009, 010 y 012 de la ola 3 intercaladas cuando el autor las priorice. La 017 va primero para que las pantallas siguientes nazcan con el criterio visual ya corregido; la 021 va después de la 019 y la 022 porque avisa sobre el peso, las fotos y los suplementos, y necesita que existan.
 
-### 017 — Revisión de UX y pulido visual
+### 017 — Rediseño de la interfaz y de la experiencia de uso
 
-- Recorrido pantalla por pantalla con el autor para nombrar qué no cierra (navegación, jerarquía, cards, formularios, listas, estados vacíos).
-- Un conjunto único de componentes (card, lista, formulario, encabezado de pantalla, estado vacío) sobre los tokens actuales de negro y azul, y su aplicación a las pantallas existentes. El entrenamiento queda para la 018.
-- Sin funciones nuevas ni cambios de datos; si el recorrido descubre una función faltante, pasa a una spec propia.
+- **Alcance (aclarado el 2026-10-28):** el autor no está convencido del diseño en general y la mayoría de las pantallas no le gustan. No es un retoque de algunas cards: es un rediseño de toda la interfaz.
+- Arranca con exploración de dirección visual antes de tocar código: el autor ve alternativas concretas (maquetas) para la estructura de cada pantalla, la jerarquía, las cards y la navegación, y elige una. La paleta negro y azul, el nombre MyGuide y la estructura de tres zonas del inicio (spec 016) se pueden revisar si la exploración lo justifica.
+- Luego, un conjunto único de componentes (card, lista, formulario, encabezado de pantalla, estado vacío, gráfico) y su aplicación a todas las pantallas existentes. La pestaña Entrenamiento se rehace en la 018, con el mismo sistema.
+- Sin funciones nuevas ni cambios de datos; si la exploración descubre una función faltante, pasa a una spec propia.
+- Se hace con la skill de diseño de interfaces y con investigación de apps de referencia, igual que la spec 016. Se mantienen las verificaciones de accesibilidad, de 375 px y de lenguaje neutral (sin rojo y verde como juicio).
 - Principios: VI.
 - Origen: nota 2.
 
 ### 018 — Plan semanal de entrenamiento y pestaña Entrenamiento rehecha
 
 - **Plan semanal:** la persona arma una semana genérica asignando rutinas de su catálogo a los días de la semana («todos los lunes, pecho»). Se guarda y se repite cada semana hasta que lo cambie. Un día puede quedar sin rutina (descanso).
-- **Inicio:** el día muestra lo que toca según el plan. Con un toque se marca como completado, o se elige un entrenamiento distinto para ese día: una rutina ya cargada o una nueva. Cambiar un día puntual no modifica el plan.
+- **Inicio:** el día muestra lo que toca según el plan. Si ese día tiene una rutina asignada, hay un botón para marcarla como completada. Si no tiene ninguna, la opción es «Cargar entrenamiento», donde se elige una rutina ya cargada (queda registrada como hecha) o se arma una nueva. También se puede elegir un entrenamiento distinto del asignado. Cambiar un día puntual no modifica el plan.
 - **Pestaña Entrenamiento:** rehacer el frente completo (hoy desprolijo). Se conserva cómo se arma una rutina, que al autor le gusta.
 - **Relación con la spec 006:** revierte la decisión «rutinas sin días asignados». El plan es una entidad aparte; el catálogo de rutinas y las sesiones registradas no cambian. El estado de entrenamiento de la semana del inicio (spec 016) pasa a considerar el plan.
-- **Decisión de integridad (Principio II):** qué significa «marcar como completado» sin cargar series, y cómo se distingue de una sesión con detalle.
+- **Aclarado el 2026-10-28:** «marcar como completado» solo existe cuando el día tenía una rutina asignada; sin rutina asignada se carga el entrenamiento hecho. Queda por definir en la aclaración de la spec si la sesión marcada así copia las series planificadas de la rutina o queda sin series, y cómo se distingue de una sesión con detalle cargado (Principio II).
 - Depende de la 006 y la 016. Principios: II, V, VI.
 - Origen: nota 4.
 
@@ -170,13 +172,11 @@ Nacen de la primera prueba de uso del autor (2026-10-28). Las notas originales y
 
 ### 021 — Recordatorios y notificaciones configurables
 
-- Para el peso, las fotos de progreso y los suplementos: la persona elige cada cuánto toca cargarlo (cada día, cada tantos días, ciertos días de la semana) y cómo recibe el aviso.
+- Para el peso, las fotos de progreso y los suplementos: la persona elige cada cuánto toca cargarlo (cada día, cada tantos días, ciertos días de la semana). El aviso es una notificación dentro de la app.
+- **Decidido el 2026-10-28:** el autor prefiere notificaciones push del sistema pero las deja como feature futuro (spec 024). Esta spec entrega solo el aviso dentro de la app y deja la configuración preparada para que la push se agregue después sin rehacerla.
 - Reemplaza el recordatorio de peso de la spec 016 (casilla sin notificación) y absorbe `profiles.weight_reminder`.
 - Lenguaje neutral y sin culpa (Principio IV): el aviso se puede posponer o desactivar, y no se repite insistentemente.
-- **Decisión técnica documentada antes de implementar** (la Constitution exige justificar servicios externos nuevos y el hosting es gratuito):
-  - _Aviso dentro de la app:_ tarjeta en el inicio cuando toca. No necesita servicios externos ni permisos. No avisa con la app cerrada.
-  - _Notificación push del sistema (Web Push):_ avisa con la app cerrada. Necesita el service worker, claves VAPID, guardar la suscripción del dispositivo (dato personal, Principio I) y un programador de envíos; en el plan gratuito de Supabase se resuelve con `pg_cron` y una Edge Function, sin proveedor de pago. En iPhone solo funciona con la app instalada en la pantalla de inicio.
-  - Propuesta de partida: entregar el aviso dentro de la app primero y la notificación push como segundo paso, si el autor la quiere.
+- **Aviso dentro de la app:** tarjeta en el inicio cuando toca cargar algo. No necesita servicios externos ni permisos. No avisa con la app cerrada, y esa limitación es la razón del feature futuro 024.
 - Depende de la 019 y la 022. Principios: I, IV, VI, VII.
 - Origen: nota 3.
 
@@ -196,6 +196,14 @@ Nacen de la primera prueba de uso del autor (2026-10-28). Las notas originales y
 - Complementa la spec 009: el catálogo reduce los alimentos que hay que estimar con IA.
 - Principios: II, X.
 - Origen: nota 7.
+
+### 024 — Notificaciones push (feature futuro)
+
+- Avisos del sistema con la app cerrada para los recordatorios de la spec 021. Pedido por el autor el 2026-10-28 y **dejado para más adelante**: no entra en el orden propuesto.
+- Requiere una decisión técnica documentada antes de implementar (la Constitution exige justificar los servicios nuevos y el hosting es gratuito): service worker, claves VAPID, guardar la suscripción de cada dispositivo (dato personal, Principio I, con baja al cerrar sesión o eliminar la cuenta) y un programador de envíos. En el plan gratuito de Supabase se resolvería con `pg_cron` y una Edge Function, sin proveedor de pago.
+- En iPhone solo funciona con la app instalada en la pantalla de inicio (iOS 16.4 o posterior).
+- Depende de la 021. Principios: I, IV, VII.
+- Origen: nota 3.
 
 ## Notas de la spec 001 (cerrada el 2026-10-17)
 
