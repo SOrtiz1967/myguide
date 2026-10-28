@@ -108,6 +108,13 @@ export async function register(page: Page, email: string, password = PASSWORD): 
   await expect(page.getByRole('heading', { level: 1, name: es.home.title })).toBeVisible()
 }
 
+/** Cierra la sesión; en celular el botón está dentro del menú «Más». */
+export async function logout(page: Page): Promise<void> {
+  const more = page.getByRole('button', { name: es.nav.more })
+  if (await more.isVisible()) await more.click()
+  await page.getByRole('button', { name: es.auth.actions.logout }).click()
+}
+
 export async function login(page: Page, email: string, password = PASSWORD): Promise<void> {
   await page.goto('/ingresar')
   await page.getByLabel(es.auth.labels.email).fill(email)

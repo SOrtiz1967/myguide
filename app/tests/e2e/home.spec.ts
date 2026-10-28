@@ -40,22 +40,28 @@ test.beforeEach(async ({ page }) => {
   await stubTurnstile(page)
 })
 
-test('cuenta vacía: bloques vacíos, invitaciones y los cuatro accesos', async ({ page }) => {
+test('cuenta vacía: bloques vacíos, invitaciones, accesos del día y menú', async ({ page }) => {
   await register(page, uniqueEmail('hm'))
   await page.goto('/')
   await expect(page.getByText(h.calories.empty)).toBeVisible()
   await expect(page.getByText(h.training.empty)).toBeVisible()
   await expect(page.getByText(h.last.noMeal)).toBeVisible()
   await expect(page.getByText(h.last.noSession)).toBeVisible()
-  for (const name of [h.quick.meal, h.quick.train, h.quick.calendar, h.quick.profile]) {
+  await expect(page.getByRole('heading', { name: es.week.title })).toBeVisible()
+  for (const name of [
+    es.week.panel.addWeight,
+    es.week.panel.addWorkout,
+    es.week.panel.addSleep,
+    h.calories.register,
+  ]) {
     await expect(page.getByRole('link', { name })).toBeVisible()
   }
   await expectNoViolations(page, 'inicio vacío')
 
-  await page.getByRole('link', { name: h.quick.profile }).click()
+  await page.getByRole('link', { name: es.nav.profile }).click()
   await expect(page).toHaveURL(/\/perfil$/)
   await page.goto('/')
-  await page.getByRole('link', { name: h.quick.calendar }).click()
+  await page.getByRole('link', { name: es.nav.calendar }).click()
   await expect(page).toHaveURL(/\/entrenamiento#calendario$/)
   await expect(page.getByRole('heading', { name: es.training.calendar.title })).toBeVisible()
 })
@@ -104,7 +110,7 @@ test('con datos: calorías, entrenamiento y últimos registros; un bloque que fa
   await expect(
     page.getByRole('button', { name: es.training.planning.start, exact: true }),
   ).toBeVisible()
-  await expect(page.getByRole('link', { name: h.quick.profile })).toBeVisible()
+  await expect(page.getByRole('heading', { name: es.week.title })).toBeVisible()
 })
 
 for (const viewport of [

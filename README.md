@@ -17,6 +17,9 @@ Desarrollada con **Spec-Driven Development** (Spec Kit). Los principios del proy
 | 007 Sueño, pasos y actividad | Implementada y verificada (registro manual). Sin pasos de despliegue propios. Ver [`verification.md`](specs/007-sueno-pasos-actividad/verification.md) |
 | 008 Peso y medidas | Implementada y verificada en su versión mínima (sin fotos de progreso). Sin pasos de despliegue propios. Ver [`verification.md`](specs/008-peso-y-medidas/verification.md) |
 | 013 Inicio «Hoy» | Implementada y verificada. Solo frontend. Ver [`verification.md`](specs/013-inicio-hoy/verification.md) |
+| 014 Primer ingreso y objetivo físico | Implementada y verificada. Migración de perfil. Ver [`verification.md`](specs/014-onboarding-objetivo/verification.md) |
+| 015 Cálculo de calorías diarias | Implementada y verificada. Solo frontend. Ver [`verification.md`](specs/014-onboarding-objetivo/verification.md) |
+| 016 Rediseño con semana en el inicio | Implementada y verificada. Tema negro y azul, menú lateral y barra inferior, semana y panel del día. Migración del recordatorio de peso. Ver [`verification.md`](specs/016-rediseno-semana/verification.md) |
 | 009 a 012 | Pendientes (la 012, de gráficos de entrenamiento, está redactada) |
 
 ## Stack

@@ -64,6 +64,19 @@ export async function fetchLastWeight(): Promise<Measurement | null> {
   return data && data[0] ? toMeasurement(data[0]) : null
 }
 
+/** Los pesos registrados entre dos fechas (ambas incluidas), del más antiguo al más reciente. */
+export async function fetchWeightsBetween(from: string, to: string): Promise<Measurement[]> {
+  const { data, error } = await supabase
+    .from('body_measurements')
+    .select(COLUMNS)
+    .eq('kind', 'weight')
+    .gte('measured_on', from)
+    .lte('measured_on', to)
+    .order('measured_on', { ascending: true })
+  if (error) throw error
+  return (data ?? []).map(toMeasurement)
+}
+
 /** Una tanda del historial de una medida, del día más reciente al más antiguo. */
 export async function fetchHistory(
   kind: MeasureKind,

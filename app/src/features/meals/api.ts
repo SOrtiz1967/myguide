@@ -119,6 +119,25 @@ export async function fetchDayEntries(date: string): Promise<MealEntry[]> {
   return (data ?? []) as unknown as MealEntry[]
 }
 
+/** Lo mínimo de cada ítem para resumir varios días a la vez (la semana del inicio). */
+export interface WeekEntry {
+  log_date: string
+  energy_kcal: number | null
+  protein_g: number | null
+  status: EntryStatus
+}
+
+/** Los ítems de un rango de días (ambos incluidos), solo con lo necesario para los totales. */
+export async function fetchEntriesBetween(from: string, to: string): Promise<WeekEntry[]> {
+  const { data, error } = await supabase
+    .from('meal_entries')
+    .select('log_date, energy_kcal, protein_g, status')
+    .gte('log_date', from)
+    .lte('log_date', to)
+  if (error) throw error
+  return (data ?? []) as unknown as WeekEntry[]
+}
+
 /** El último ítem registrado de la cuenta: el del día más reciente y, dentro de ese día, el cargado más tarde. */
 export async function fetchLastEntry(): Promise<MealEntry | null> {
   const { data, error } = await supabase

@@ -1,40 +1,32 @@
 @import 'tailwindcss';
 
 /*
-  Sistema de diseño (T016). Mobile-first, sobrio: un solo acento, bordes finos, sin sombras
-  decorativas. Fuentes del sistema para que la carcasa de la PWA cargue sin red.
-  Alto contraste, foco visible y respeto de prefers-reduced-motion (FR-024).
+  Sistema de diseño (spec 016). Negro y azul, denso y de datos: bordes finos, sin sombras decorativas,
+  cifras tabulares. Un solo tema oscuro. El estado «por encima del rango» usa ocre (--color-warn) y nunca
+  rojo; los estados también se distinguen por forma, no solo por color. Alto contraste, foco visible y
+  respeto de prefers-reduced-motion.
 */
 @theme {
-  --color-bg: #f4f6f8;
-  --color-surface: #ffffff;
-  --color-ink: #14212b;
-  --color-muted: #4a5b68;
-  --color-line: #d5dde3;
-  --color-accent: #0b6e99;
-  --color-accent-ink: #ffffff;
-  --color-danger: #b3261e;
-  --color-success: #166534;
-  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-bg: #0f171d;
-    --color-surface: #16222b;
-    --color-ink: #e8eef2;
-    --color-muted: #a3b3bf;
-    --color-line: #2c3b47;
-    --color-accent: #5cb8e6;
-    --color-accent-ink: #06222f;
-    --color-danger: #ff8f86;
-    --color-success: #6fd69a;
-  }
+  --color-bg: #05070b;
+  --color-surface: #0d1219;
+  --color-surface-2: #141b25;
+  --color-ink: #e9eff7;
+  --color-muted: #9aa8b8;
+  --color-line: #3b4a5e;
+  --color-mark: #7a8da4;
+  --color-accent: #4da3ff;
+  --color-accent-ink: #04131f;
+  --color-warn: #f2a15f;
+  --color-danger: #ff8f86;
+  --color-success: #6fd69a;
+  --font-sans:
+    'Schibsted Grotesk Variable', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
+    Arial, sans-serif;
 }
 
 html {
   font-family: var(--font-sans);
-  color-scheme: light dark;
+  color-scheme: dark;
 }
 
 body {

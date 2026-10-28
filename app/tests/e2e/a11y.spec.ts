@@ -2,7 +2,7 @@
 import AxeBuilder from '@axe-core/playwright'
 import { expect, test, type Page } from '@playwright/test'
 import { es } from '../../src/copy/es'
-import { PASSWORD, register, resetRateLimits, stubTurnstile, uniqueEmail } from './support'
+import { logout, PASSWORD, register, resetRateLimits, stubTurnstile, uniqueEmail } from './support'
 
 test.beforeEach(async ({ page }) => {
   resetRateLimits()
@@ -51,7 +51,7 @@ test('teclado: el formulario de ingreso se recorre con Tab y se envía con Enter
 }) => {
   const email = uniqueEmail()
   await register(page, email)
-  await page.getByRole('button', { name: es.auth.actions.logout }).click()
+  await logout(page)
   await page.goto('/ingresar')
 
   // El primer Tab lleva al enlace para saltar al contenido.

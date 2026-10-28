@@ -76,8 +76,8 @@ function PlanSection({ day }: { day: string }) {
                   plan.run(routine.id)
                 }}
               >
-                <span className="break-words">{p.planWith(routine.name)}</span>
-                <span className="text-sm text-muted">
+                <span className="min-w-0 break-words">{p.planWith(routine.name)}</span>
+                <span className="shrink-0 text-sm text-muted">
                   {t.routines.exerciseCount(routine.routine_exercises.length)}
                 </span>
               </button>

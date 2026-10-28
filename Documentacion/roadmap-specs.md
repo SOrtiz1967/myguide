@@ -116,3 +116,7 @@ Basado en la Constitution v1.2.1. Este documento solo define el corte y el conte
 - **Registro abierto:** la spec 011 (privacidad y ciclo de vida de los datos) es **obligatoria antes de publicar**.
 - **Pendientes de la spec 001:** prueba de envío real de correo (T009), refuerzo opcional con Auth Hook (T031) y despliegue inicial (T077).
 - Verificación y revisión de seguridad: `specs/001-cuentas-perfil-pwa/verification.md`.
+
+### 014, 015 y 016 — Primer ingreso, cálculo calórico y rediseño con semana
+
+Implementadas y verificadas localmente. La 014 pide al entrar por primera vez sexo, nacimiento, altura, peso, actividad, días de entrenamiento, experiencia y objetivo (ganar músculo, perder grasa o recomposición) y no deja usar la app hasta completarlo. La 015 calcula el objetivo calórico con Mifflin-St Jeor más el gasto de los entrenos, con pisos y tope; se propone y la persona confirma (`/plan`). La 016 cambia el diseño a negro y azul con menú lateral (escritorio) y barra inferior (celular), y el inicio muestra la semana con el estado de cada día (rango de ±10 % del objetivo y entrenamiento) y el panel del día elegido, más el recordatorio de peso como preferencia. Pendiente: evolución del peso con promedio móvil (spec 017) y fotos de progreso (spec 008 completa). Los números del cálculo son convenciones; ver `research_notes/`.

@@ -6,13 +6,20 @@ import { MemoryRouter } from 'react-router'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { es } from '../../src/copy/es'
 import { fetchGoalHistory } from '../../src/features/goals/api'
-import { fetchDayEntries, fetchDayStatus, fetchLastEntry } from '../../src/features/meals/api'
+import {
+  fetchDayEntries,
+  fetchDayStatus,
+  fetchEntriesBetween,
+  fetchLastEntry,
+} from '../../src/features/meals/api'
+import { fetchWeightsBetween } from '../../src/features/measures/api'
 import { fetchProfile } from '../../src/features/profile/api'
 import {
   fetchDueSessions,
   fetchInProgressSession,
   fetchRecentSessions,
   fetchRoutines,
+  fetchSessionsBetween,
   type SessionSummary,
 } from '../../src/features/training/api'
 import { HomePage } from '../../src/routes/HomePage'
@@ -24,6 +31,11 @@ vi.mock('../../src/features/meals/api', async (importOriginal) => ({
   fetchDayEntries: vi.fn(),
   fetchDayStatus: vi.fn(),
   fetchLastEntry: vi.fn(),
+  fetchEntriesBetween: vi.fn(),
+}))
+vi.mock('../../src/features/measures/api', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('../../src/features/measures/api')>()),
+  fetchWeightsBetween: vi.fn(),
 }))
 vi.mock('../../src/features/training/api', async (importOriginal) => ({
   ...(await importOriginal<typeof import('../../src/features/training/api')>()),
@@ -31,6 +43,8 @@ vi.mock('../../src/features/training/api', async (importOriginal) => ({
   fetchDueSessions: vi.fn(),
   fetchRecentSessions: vi.fn(),
   fetchRoutines: vi.fn(),
+  fetchSessionsBetween: vi.fn(),
+  fetchSessionsOfDay: vi.fn(),
 }))
 
 const h = es.home
@@ -82,6 +96,7 @@ beforeEach(() => {
     timezone: 'America/Argentina/Buenos_Aires',
     unit_system: 'metric',
     onboarding_completed_at: '2026-10-20T00:00:00Z',
+    weight_reminder: false,
     goal_type: null,
     experience: null,
     job_activity: null,
@@ -101,6 +116,9 @@ beforeEach(() => {
   vi.mocked(fetchDueSessions).mockResolvedValue([])
   vi.mocked(fetchRecentSessions).mockResolvedValue([])
   vi.mocked(fetchRoutines).mockResolvedValue([])
+  vi.mocked(fetchEntriesBetween).mockResolvedValue([])
+  vi.mocked(fetchWeightsBetween).mockResolvedValue([])
+  vi.mocked(fetchSessionsBetween).mockResolvedValue([])
 })
 afterEach(() => vi.clearAllMocks())
 
@@ -149,7 +167,7 @@ describe('calorías de hoy', () => {
     )!
     expect(await within(block).findByText(h.loadError)).toBeInTheDocument()
     expect(await screen.findByRole('link', { name: es.training.home.continue })).toBeInTheDocument()
-    expect(screen.getByRole('region', { name: h.quick.title })).toBeInTheDocument()
+    expect(screen.getByRole('region', { name: es.week.title })).toBeInTheDocument()
 
     vi.mocked(fetchDayEntries).mockResolvedValue([entry()])
     await user.click(within(block).getByRole('button', { name: /Reintentar/ }))
@@ -201,21 +219,24 @@ describe('entrenamiento de hoy', () => {
 })
 
 describe('accesos rápidos y últimos registros', () => {
-  it('ofrece los cuatro accesos', async () => {
+  it('el panel del día ofrece registrar peso, entreno y sueño', async () => {
     renderHome()
-    expect(await screen.findByRole('link', { name: h.quick.meal })).toHaveAttribute(
+    expect(await screen.findByRole('link', { name: es.week.panel.addWeight })).toHaveAttribute(
+      'href',
+      '/medidas',
+    )
+    expect(screen.getByRole('link', { name: es.week.panel.addWorkout })).toHaveAttribute(
+      'href',
+      `/entrenamiento/dia/${today}`,
+    )
+    expect(screen.getByRole('link', { name: es.week.panel.addSleep })).toHaveAttribute(
+      'href',
+      '/actividad',
+    )
+    expect(await screen.findByRole('link', { name: h.calories.register })).toHaveAttribute(
       'href',
       `/comidas/${today}/agregar`,
     )
-    expect(screen.getByRole('link', { name: h.quick.train })).toHaveAttribute(
-      'href',
-      '/entrenamiento',
-    )
-    expect(screen.getByRole('link', { name: h.quick.calendar })).toHaveAttribute(
-      'href',
-      '/entrenamiento#calendario',
-    )
-    expect(screen.getByRole('link', { name: h.quick.profile })).toHaveAttribute('href', '/perfil')
   })
 
   it('muestra el último ítem y la última sesión con sus fechas y enlaces', async () => {
@@ -240,13 +261,14 @@ describe('accesos rápidos y últimos registros', () => {
 })
 
 describe('sin conexión', () => {
-  it('avisa y no presenta los bloques de datos; los accesos siguen', async () => {
+  it('avisa y no presenta la semana ni los bloques de datos', async () => {
     const online = vi.spyOn(window.navigator, 'onLine', 'get').mockReturnValue(false)
     renderHome()
     expect(await screen.findByText(h.offline)).toBeInTheDocument()
     expect(screen.queryByRole('region', { name: h.calories.title })).not.toBeInTheDocument()
-    expect(screen.getByRole('link', { name: h.quick.profile })).toBeInTheDocument()
+    expect(screen.queryByRole('region', { name: es.week.title })).not.toBeInTheDocument()
     expect(fetchDayEntries).not.toHaveBeenCalled()
+    expect(fetchEntriesBetween).not.toHaveBeenCalled()
     online.mockRestore()
   })
 })

@@ -81,6 +81,83 @@ export const es = {
     haveAccount: '¿Ya tienes cuenta?',
     forgotPassword: '¿Olvidaste tu contraseña?',
   },
+  week: {
+    title: 'Tu semana',
+    navLabel: 'Semana',
+    range: (from: string, to: string) => `${from} al ${to}`,
+    prev: 'Semana anterior',
+    next: 'Semana siguiente',
+    current: 'Volver a esta semana',
+    daysLabel: 'Días de la semana',
+    calorie: {
+      'no-goal': 'Sin objetivo',
+      future: 'Aún no llegó',
+      'no-record': 'Sin registro',
+      'in-progress': 'En curso',
+      below: 'Por debajo del rango',
+      'in-range': 'En rango',
+      above: 'Por encima del rango',
+    } as Record<string, string>,
+    calorieShort: {
+      'no-goal': 'Sin objetivo',
+      future: '',
+      'no-record': 'Sin registro',
+      'in-progress': 'En curso',
+      below: 'Por debajo',
+      'in-range': 'En rango',
+      above: 'Por encima',
+    } as Record<string, string>,
+    training: {
+      'in-progress': 'En curso',
+      done: 'Hecho',
+      planned: 'Planificado',
+      unlogged: 'Sin registrar',
+      cancelled: 'Cancelado',
+      none: 'Sin sesión',
+    } as Record<string, string>,
+    kcalOf: (registered: string, goal: string) => `${registered} de ${goal} kcal`,
+    kcalOnly: (registered: string) => `${registered} kcal`,
+    dayLabel: (day: string, calories: string, training: string) =>
+      `${day}. Calorías: ${calories}. Entrenamiento: ${training}.`,
+    today: 'hoy',
+    noKcal: 'sin datos',
+    legend: {
+      title: 'Cómo leer la semana',
+      calories:
+        'En rango: lo registrado está dentro de ±10 % del objetivo de ese día. Es una referencia orientativa, no una evaluación.',
+      noRecord: 'Sin registro significa que ese día no hay ítems; no es lo mismo que comer poco.',
+      single: 'Un solo día no dice nada firme: mira varios días juntos.',
+    },
+    loadError: 'No pudimos cargar tu semana.',
+    loadErrorCalories: 'No pudimos cargar las calorías de la semana.',
+    loadErrorTraining: 'No pudimos cargar el entrenamiento de la semana.',
+    panel: {
+      today: 'Hoy',
+      notToday: 'No es hoy',
+      weightTitle: 'Peso',
+      noWeight: 'Sin registro de peso este día.',
+      weightValue: (value: string) => `${value} kg`,
+      trainingTitle: 'Entrenamiento',
+      noTraining: 'Sin sesiones este día.',
+      sessionRow: (status: string, routine: string | null) =>
+        routine ? `${status} · ${routine}` : status,
+      actionsTitle: 'Registrar',
+      addMeal: 'Agregar comida',
+      addWeight: 'Registrar peso',
+      addWorkout: 'Registrar entreno',
+      addSleep: 'Registrar sueño o pasos',
+      reminder: 'Hoy todavía no registraste tu peso. Es opcional.',
+      reminderAction: 'Registrar peso',
+    },
+  },
+  nav: {
+    label: 'Menú principal',
+    home: 'Inicio',
+    calendar: 'Calendario',
+    more: 'Más',
+    goal: 'Objetivo calórico',
+    profile: 'Perfil',
+  },
   onboarding: {
     title: 'Bienvenida a MyGuide',
     intro:
@@ -481,6 +558,9 @@ export const es = {
       saved: 'Objetivo y actividad guardados',
       incomplete: 'Elige una opción en cada campo.',
       recalculate: 'Recalcular mi objetivo calórico',
+      weightReminder: 'Recordarme pesarme',
+      weightReminderHint:
+        'Si lo activas, el inicio te avisa de forma discreta cuando hoy no hay peso. Es opcional y sin notificaciones.',
     },
     emptyTitle: 'Todavía no completaste tu perfil',
     emptyBody:
@@ -1081,7 +1161,7 @@ export const es = {
   },
   // Spec 003 (registro de comidas). Sin juicios sobre lo comido (Principio IV).
   meals: {
-    navLink: 'Comidas',
+    navLink: 'Nutrición',
     title: 'Registro de comidas',
     names: {
       breakfast: 'Desayuno',

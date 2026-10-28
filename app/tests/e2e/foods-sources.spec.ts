@@ -32,7 +32,7 @@ test('desde la procedencia de un alimento se llega a las fuentes', async ({ page
   // El alimento de la muestra viene de una fuente del catálogo; basta con abrir uno cualquiera.
   await page.goto('/alimentos')
   await page.getByRole('searchbox', { name: es.foods.searchLabel }).fill('leche')
-  await page.getByRole('list').getByRole('link').first().click()
+  await page.getByRole('main').getByRole('list').getByRole('link').first().click()
   await page.getByRole('link', { name: es.foods.provenance.viewSources }).click()
   await expect(page).toHaveURL(/\/fuentes$/)
   await expect(page.getByRole('heading', { level: 1, name: es.foods.sources.title })).toBeVisible()

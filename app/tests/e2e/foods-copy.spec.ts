@@ -62,7 +62,7 @@ test('escenarios 16, 17 y 18: la copia es editable, el original no cambia y una 
 
   // en la búsqueda se distinguen el original y la copia
   await page.goto('/alimentos?q=original+copiable+e2e')
-  const list = page.getByRole('list')
+  const list = page.getByRole('main').getByRole('list')
   await expect(list.getByText(es.foods.originBadge.catalog)).toBeVisible()
   await expect(list.getByText(es.foods.originBadge.copy)).toBeVisible()
 
@@ -72,7 +72,7 @@ test('escenarios 16, 17 y 18: la copia es editable, el original no cambia y una 
   await stubTurnstile(otherPage)
   await register(otherPage, uniqueEmail('otra'))
   await otherPage.goto('/alimentos?q=original+copiable+e2e')
-  await expect(otherPage.getByRole('list').getByRole('link')).toHaveCount(1)
+  await expect(otherPage.getByRole('main').getByRole('list').getByRole('link')).toHaveCount(1)
   await otherPage.getByRole('link', { name: /Original copiable e2e/ }).click()
   await expect(energyRow(otherPage)).toContainText('120 kcal')
   await other.close()
@@ -82,6 +82,6 @@ test('escenarios 16, 17 y 18: la copia es editable, el original no cambia y una 
   await page.goto(`/alimentos/${originalId}`)
   await expect(energyRow(page)).toContainText('130 kcal')
   await page.goto('/alimentos?q=original+copiable+e2e')
-  await page.getByRole('list').getByText(es.foods.originBadge.copy).click()
+  await page.getByRole('main').getByRole('list').getByText(es.foods.originBadge.copy).click()
   await expect(energyRow(page)).toContainText('150 kcal')
 })

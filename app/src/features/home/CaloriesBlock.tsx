@@ -15,15 +15,16 @@ const c = es.home.calories
  * Las calorías del día vigente (regla del día de la spec 003). Las cifras salen de `GoalSummary`, la misma tarjeta de la
  * vista del día, así que no pueden diferir (spec 013, FR-001).
  */
-export function CaloriesBlock() {
+export function CaloriesBlock({ date: forced }: { date?: string } = {}) {
   const today = useToday()
   const status = useDayStatus()
-  const date = status.data?.proposed_date ?? today
+  // Con un día elegido (panel de la semana) manda ese día; si no, el que propone la regla del día.
+  const date = forced ?? status.data?.proposed_date ?? today
   const { query, entries } = useDay(date)
 
   return (
     <HomeSection title={date === today ? c.title : c.dayTitle(formatDate(date))}>
-      {status.isPending || query.isPending ? <LoadingState /> : null}
+      {(status.isPending && forced === undefined) || query.isPending ? <LoadingState /> : null}
       {query.isError ? (
         <ErrorState message={es.home.loadError} onRetry={() => void query.refetch()} />
       ) : null}

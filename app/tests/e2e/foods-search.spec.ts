@@ -50,7 +50,7 @@ test('escenarios 1 y 2: busca "leche" y encuentra lo mismo sin importar acentos 
 }) => {
   await page.getByRole('link', { name: es.foods.navLink }).click()
   await searchBox(page).fill('leche e2e')
-  const list = page.getByRole('list')
+  const list = page.getByRole('main').getByRole('list')
   await expect(list.getByRole('link', { name: /Leche entera e2e/ })).toBeVisible()
   await expect(list.getByRole('link', { name: /Dulce de leche e2e/ })).toBeVisible()
   await expect(list.getByText('61 kcal').first()).toBeVisible()
@@ -96,7 +96,7 @@ test('escenario 6: una búsqueda sin resultados ofrece crear lo buscado', async 
 test('escenario 7: "Ver más" agrega resultados sin perder los anteriores', async ({ page }) => {
   await page.goto('/alimentos')
   await searchBox(page).fill('galletita e2eg')
-  const list = page.getByRole('list')
+  const list = page.getByRole('main').getByRole('list')
   await expect(list.getByRole('link')).toHaveCount(20)
   await expect(page.getByText('25 resultados')).toBeVisible()
   await page.getByRole('button', { name: es.foods.loadMore }).click()

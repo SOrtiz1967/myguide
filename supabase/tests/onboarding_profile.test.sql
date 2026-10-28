@@ -1,6 +1,6 @@
 -- Spec 014: datos del primer ingreso — valores permitidos, exigencia de datos completos, mayoría de edad y aislamiento.
 begin;
-select plan(14);
+select plan(16);
 
 select tests.create_user('a@test.local') as uid_a \gset
 select tests.create_user('b@test.local') as uid_b \gset
@@ -55,6 +55,13 @@ select lives_ok(
 );
 select isnt(
   (select onboarding_completed_at from public.profiles), null, 'queda la marca de recorrido completado'
+);
+
+-- recordatorio de peso: apagado por defecto y editable
+select is((select weight_reminder from public.profiles), false, 'el recordatorio de peso empieza apagado');
+select lives_ok(
+  $$ update public.profiles set weight_reminder = true where user_id = auth.uid() $$,
+  'la cuenta puede encender el recordatorio de peso'
 );
 
 -- aislamiento: B no ve ni cambia el perfil de A

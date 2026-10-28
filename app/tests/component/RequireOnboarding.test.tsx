@@ -24,6 +24,7 @@ const profile = (completed: string | null): Profile => ({
   job_activity: null,
   training_days: null,
   onboarding_completed_at: completed,
+  weight_reminder: false,
   privacy_notice_version: '1',
   privacy_notice_accepted_at: '2026-10-20T00:00:00Z',
   email_verified_at: null,

@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router'
 import { ErrorState } from '../../components/ErrorState'
+import { CheckboxField } from '../../components/CheckboxField'
 import { SuccessMessage } from '../../components/SuccessMessage'
 import { es } from '../../copy/es'
 import { saveRemotely, WriteError } from '../../lib/mutation'
@@ -24,6 +25,7 @@ export function GoalProfileForm({ profile }: { profile: Profile }) {
   const [days, setDays] = useState(
     profile.training_days === null ? '' : String(profile.training_days),
   )
+  const [reminder, setReminder] = useState(profile.weight_reminder)
   const [error, setError] = useState<string | null>(null)
   const [saved, setSaved] = useState(false)
 
@@ -43,6 +45,7 @@ export function GoalProfileForm({ profile }: { profile: Profile }) {
           experience: experience as Experience,
           job_activity: job as JobActivity,
           training_days: Number(days),
+          weight_reminder: reminder,
         }),
       )
       setSaved(true)
@@ -103,6 +106,15 @@ export function GoalProfileForm({ profile }: { profile: Profile }) {
             </option>
           ))}
         </select>
+      </div>
+
+      <div className="flex flex-col gap-1">
+        <CheckboxField
+          label={t.weightReminder}
+          checked={reminder}
+          onChange={(event) => setReminder(event.target.checked)}
+        />
+        <p className="text-sm text-muted">{t.weightReminderHint}</p>
       </div>
 
       {error ? <ErrorState message={error} /> : null}

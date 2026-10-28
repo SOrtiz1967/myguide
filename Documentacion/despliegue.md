@@ -1,6 +1,6 @@
 # Guía de despliegue (gratuito)
 
-Cubre el despliegue de las specs 001 a 013. Las specs 004 a 008 y la 013 no agregan funciones ni secretos: solo migraciones de base de datos (se aplican con `db push`, paso 1.3) y frontend. Los límites de los planes gratuitos cambian: **confírmalos en las páginas oficiales** antes de depender de ellos (valores consultados el 2026-10-16 en fuentes públicas).
+Cubre el despliegue de las specs 001 a 016. Las specs 004 a 008 y la 013 a 016 no agregan funciones ni secretos: solo migraciones de base de datos (se aplican con `db push`, paso 1.3) y frontend. Los límites de los planes gratuitos cambian: **confírmalos en las páginas oficiales** antes de depender de ellos (valores consultados el 2026-10-16 en fuentes públicas).
 
 ## Servicios y límites
 

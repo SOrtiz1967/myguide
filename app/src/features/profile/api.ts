@@ -23,6 +23,7 @@ export interface Profile extends GoalProfile {
   privacy_notice_accepted_at: string
   email_verified_at: string | null
   onboarding_completed_at: string | null
+  weight_reminder: boolean
   last_active_at: string
   created_at: string
   updated_at: string
@@ -35,6 +36,7 @@ export interface ProfileUpdate extends Partial<GoalProfile> {
   height_cm: number | null
   timezone: string | null
   onboarding_completed_at?: string | null
+  weight_reminder?: boolean
 }
 
 /** Devuelve el perfil propio. RLS garantiza que solo existe el de la cuenta actual (FR-010). */
