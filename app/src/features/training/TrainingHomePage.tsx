@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useRef, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router'
 import { EmptyState } from '../../components/EmptyState'
+import { PageHeader } from '../../components/PageHeader'
 import { ErrorState } from '../../components/ErrorState'
 import { LoadingState } from '../../components/LoadingState'
 import { SuccessMessage } from '../../components/SuccessMessage'
@@ -16,10 +17,10 @@ import {
   startWorkout,
   type SessionSummary,
 } from './api'
+import { TrainingBlock } from '../home/TrainingBlock'
 import { CalendarMonth } from './CalendarMonth'
 import { todayLocal } from './dates'
-import { DueSessions } from './DueSessions'
-import { RoutinePicker } from './RoutinePicker'
+import { WeeklyPlanPanel } from './WeeklyPlanPanel'
 import { markLabels, statusLabel } from './trainingText'
 
 const t = es.training
@@ -61,7 +62,6 @@ export function TrainingHomePage() {
   })
 
   // Un identificador por intención: reintentar la misma no crea otra sesión (FR-047).
-  const [emptyRequestId] = useState(newRequestId)
   const dateRequest = useRef<{ date: string; id: string } | null>(null)
   const [date, setDate] = useState('')
   const [dateError, setDateError] = useState<string | null>(null)
@@ -83,11 +83,6 @@ export function TrainingHomePage() {
       ),
   })
 
-  function startEmpty() {
-    if (start.isPending) return
-    start.mutate({ sessionDate: null, requestId: emptyRequestId })
-  }
-
   function registerOtherDate() {
     if (start.isPending) return
     setDateError(null)
@@ -102,59 +97,19 @@ export function TrainingHomePage() {
   return (
     <div className="flex flex-col gap-6">
       {deleted ? <SuccessMessage>{t.session.deleted}</SuccessMessage> : null}
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-extrabold tracking-tight">{t.title}</h1>
-        <Link to="/entrenamiento/rutinas" className="btn-secondary">
-          {t.routines.title}
-        </Link>
-      </div>
+      <PageHeader
+        title={t.title}
+        action={
+          <Link to="/entrenamiento/rutinas" className="btn-secondary">
+            {t.routines.title}
+          </Link>
+        }
+      />
 
-      <section aria-labelledby="hoy-titulo" className="card flex flex-col gap-3">
-        <h2 id="hoy-titulo" className="text-lg font-extrabold">
-          {h.todayTitle}
-        </h2>
-        {open.isPending ? <LoadingState /> : null}
-        {open.isError ? (
-          <ErrorState message={h.recentError} onRetry={() => void open.refetch()} />
-        ) : null}
-        {openSession ? (
-          <div className="flex flex-col gap-3 card-inset p-4">
-            <p className="font-medium">{h.inProgressTitle}</p>
-            <p className="text-sm text-muted">{formatDate(openSession.session_date)}</p>
-            <div>
-              <Link to={`/entrenamiento/sesion/${openSession.id}`} className="btn-primary">
-                {h.continue}
-              </Link>
-            </div>
-          </div>
-        ) : null}
-        <DueSessions />
-        {open.isSuccess && !openSession ? <RoutinePicker /> : null}
-        {open.isSuccess && !openSession ? (
-          <div>
-            <button
-              type="button"
-              className="btn-primary"
-              disabled={start.isPending}
-              onClick={startEmpty}
-            >
-              {start.isPending ? h.starting : h.startEmpty}
-            </button>
-          </div>
-        ) : null}
-        {startError ? (
-          <div className="flex flex-col gap-3">
-            <ErrorState message={startError.message} />
-            {startError.openId ? (
-              <div>
-                <Link to={`/entrenamiento/sesion/${startError.openId}`} className="btn-secondary">
-                  {h.continue}
-                </Link>
-              </div>
-            ) : null}
-          </div>
-        ) : null}
-      </section>
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <TrainingBlock className="" />
+        <WeeklyPlanPanel />
+      </div>
 
       {open.isSuccess && !openSession ? (
         <section aria-labelledby="otra-fecha-titulo" className="card flex flex-col gap-3">
@@ -190,6 +145,18 @@ export function TrainingHomePage() {
               {h.register}
             </button>
           </div>
+          {startError ? (
+            <div className="flex flex-col gap-3">
+              <ErrorState message={startError.message} />
+              {startError.openId ? (
+                <div>
+                  <Link to={`/entrenamiento/sesion/${startError.openId}`} className="btn-secondary">
+                    {h.continue}
+                  </Link>
+                </div>
+              ) : null}
+            </div>
+          ) : null}
         </section>
       ) : null}
 

@@ -92,6 +92,8 @@ export interface SessionSummary {
   modified: boolean
   rescheduled_count: number
   corrected_at: string | null
+  /** Sesión realizada con el gesto «marcar como completado» y sin series todavía (spec 018). */
+  marked_complete?: boolean
 }
 
 export interface WorkoutSession extends SessionSummary {
@@ -139,9 +141,14 @@ export function trainingErrorMessage(error: unknown): string | null {
   if (message.startsWith('invalid_transition')) return e.invalidTransition
   if (message.startsWith('invalid_date')) return e.invalidDate
   if (message.startsWith('not_found')) return e.notFound
-  const match = /^invalid_(routine|session):([a-z_]+):/.exec(message)
+  const match = /^invalid_(routine|session|plan):([a-z_]+):/.exec(message)
   if (match) {
-    const table: Record<string, string | undefined> = match[1] === 'routine' ? e.routine : e.session
+    const tables: Record<string, Record<string, string | undefined>> = {
+      routine: e.routine,
+      session: e.session,
+      plan: e.plan,
+    }
+    const table = tables[match[1]!]!
     return table[match[2]!] ?? e.saveFailed
   }
   return null
@@ -215,7 +222,7 @@ export interface SaveResult {
 }
 
 const SUMMARY_COLUMNS =
-  'id, session_date, original_date, status, routine_name, has_plan, modified, rescheduled_count, corrected_at'
+  'id, session_date, original_date, status, routine_name, has_plan, modified, rescheduled_count, corrected_at, marked_complete'
 
 const SESSION_COLUMNS = `${SUMMARY_COLUMNS}, routine_id, note, started_at, finished_at, revision,
   session_plan_items(*), session_exercises(*, session_sets(*)), session_date_changes(*)`
@@ -482,4 +489,46 @@ export async function fetchExerciseHistory(
   if (error) throw error
   const entries = (data ?? []) as unknown as HistoryEntry[]
   return { entries, total: entries[0]?.total_estimate ?? 0 }
+}
+
+// --- Plan semanal (spec 018) --------------------------------------------------------------------------------------------
+
+export interface WeeklyPlanDay {
+  /** 1 = lunes … 7 = domingo. */
+  weekday: number
+  /** Nulo cuando la rutina asignada se eliminó: el día queda sin rutina y recuerda su último nombre. */
+  routine_id: string | null
+  routine_name: string
+}
+
+/** El plan semanal de la cuenta: a lo sumo una fila por día de la semana. */
+export async function fetchWeeklyPlan(): Promise<WeeklyPlanDay[]> {
+  const { data, error } = await supabase
+    .from('weekly_plan_days')
+    .select('weekday, routine_id, routine_name')
+    .order('weekday')
+  if (error) throw error
+  return (data ?? []) as WeeklyPlanDay[]
+}
+
+/** Asigna (o quita, con `null`) la rutina de un día de la semana. No toca ninguna sesión. */
+export function setWeeklyPlanDay(weekday: number, routineId: string | null): Promise<unknown> {
+  return callRpc('set_weekly_plan_day', { weekday, routine_id: routineId })
+}
+
+/**
+ * Marca como completado el entrenamiento de una rutina: crea una sesión realizada con el plan de la rutina y sin series
+ * realizadas. Idempotente por `requestId`. `sessionDate` nulo es hoy.
+ */
+export function markWorkoutDone(
+  routineId: string,
+  sessionDate: string | null,
+  requestId: string,
+): Promise<StartResult> {
+  return callRpc<StartResult>('mark_workout_done', {
+    routine_id: routineId,
+    session_date: sessionDate,
+    request_id: requestId,
+    client_timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+  })
 }

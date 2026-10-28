@@ -14,7 +14,10 @@ import { WeekStrip } from '../../src/features/week/WeekStrip'
 vi.mock('../../src/features/goals/api', () => ({ fetchGoalHistory: vi.fn() }))
 vi.mock('../../src/features/meals/api', () => ({ fetchEntriesBetween: vi.fn() }))
 vi.mock('../../src/features/measures/api', () => ({ fetchWeightsBetween: vi.fn() }))
-vi.mock('../../src/features/training/api', () => ({ fetchSessionsBetween: vi.fn() }))
+vi.mock('../../src/features/training/api', () => ({
+  fetchSessionsBetween: vi.fn(),
+  fetchWeeklyPlan: vi.fn().mockResolvedValue([]),
+}))
 
 const w = es.week
 const today = '2026-10-28' // miércoles

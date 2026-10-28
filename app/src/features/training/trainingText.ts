@@ -23,8 +23,10 @@ export function markLabels(session: {
   rescheduled_count: number
   modified: boolean
   corrected_at: string | null
+  marked_complete?: boolean
 }): string[] {
   const marks: string[] = []
+  if (session.marked_complete) marks.push(t.marks.markedComplete)
   if (session.rescheduled_count > 0) marks.push(t.marks.rescheduled)
   if (session.modified) marks.push(t.marks.modified)
   if (session.corrected_at) marks.push(t.marks.corrected)

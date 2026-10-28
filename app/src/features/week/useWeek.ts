@@ -4,7 +4,8 @@ import { summarizeDay } from '../goals/daySummary'
 import { useGoalHistory } from '../goals/useGoalHistory'
 import { fetchEntriesBetween, type WeekEntry } from '../meals/api'
 import { fetchWeightsBetween } from '../measures/api'
-import { fetchSessionsBetween, type SessionSummary } from '../training/api'
+import { fetchSessionsBetween, fetchWeeklyPlan, type SessionSummary } from '../training/api'
+import { isoWeekday, weeklyPlanQueryKey } from '../training/useWeeklyPlan'
 import {
   calorieState,
   trainingState,
@@ -38,6 +39,8 @@ export function useWeek(anchor: string, today: string) {
     queryKey: ['training', 'week', from, to],
     queryFn: () => fetchSessionsBetween(from, to),
   })
+  // El plan semanal no es imprescindible para la semana: si no llega, los días sin sesión quedan sin estado.
+  const plan = useQuery({ queryKey: weeklyPlanQueryKey, queryFn: fetchWeeklyPlan })
   const goals = useGoalHistory()
   const weights = useQuery({
     queryKey: ['measures', 'week', from, to],
@@ -58,7 +61,14 @@ export function useWeek(anchor: string, today: string) {
       calorie: caloriesReady
         ? calorieState({ date, today, goal, registered, entries: dayEntries.length })
         : null,
-      training: sessions.isSuccess ? trainingState(daySessions, date, today) : null,
+      training: sessions.isSuccess
+        ? trainingState(
+            daySessions,
+            date,
+            today,
+            (plan.data ?? []).some((d) => d.weekday === isoWeekday(date) && d.routine_id !== null),
+          )
+        : null,
       sessions: daySessions,
     }
   })

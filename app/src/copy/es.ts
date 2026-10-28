@@ -835,7 +835,12 @@ export const es = {
       completed: 'Realizada',
       cancelled: 'Cancelada',
     },
-    marks: { rescheduled: 'Reprogramada', modified: 'Modificada', corrected: 'Corregida' },
+    marks: {
+      markedComplete: 'Marcada como completada, sin detalle',
+      rescheduled: 'Reprogramada',
+      modified: 'Modificada',
+      corrected: 'Corregida',
+    },
     // Nombre de cada valor de una serie, para decir cuál falta («peso: sin dato»).
     fieldMissing: {
       reps: 'repeticiones',
@@ -989,6 +994,43 @@ export const es = {
       close: 'Cerrar',
       searchLabel: 'Buscar un ejercicio',
       createExercise: 'Crear un ejercicio',
+    },
+    // Spec 018: plan semanal y entrenamiento del día. Sin rachas ni juicios: un día sin rutina es solo un día sin rutina.
+    weeklyPlan: {
+      title: 'Plan semanal',
+      intro:
+        'Elige qué rutina te toca cada día de la semana. Se repite todas las semanas hasta que lo cambies.',
+      weekdays: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'],
+      none: 'Sin rutina',
+      saved: 'Plan guardado.',
+      saveFailed: 'No pudimos guardar el plan. No se cambió nada.',
+      loadError: 'No pudimos cargar tu plan.',
+      routinesError: 'No pudimos cargar tus rutinas.',
+      goneRoutine: (name: string) => `La rutina «${name}» ya no existe.`,
+      noRoutinesTitle: 'Todavía no tienes rutinas',
+      noRoutinesBody: 'Arma una rutina para poder asignarla a un día de la semana.',
+      createRoutine: 'Armar una rutina',
+    },
+    today: {
+      planned: (name: string) => `Hoy toca: ${name}`,
+      plannedDay: (name: string) => `Ese día tocaba: ${name}`,
+      exerciseCount: (count: number) => (count === 1 ? '1 ejercicio' : `${count} ejercicios`),
+      planOf: 'Según tu plan semanal',
+      markDone: 'Marcar como completado',
+      marking: 'Marcando…',
+      markFailed: 'No pudimos marcar el entrenamiento. No se registró nada.',
+      other: 'Hice otro entrenamiento',
+      load: 'Cargar entrenamiento',
+      loadTitle: 'Cargar entrenamiento',
+      loadHint: 'Elige una rutina que ya tengas, arma una nueva o carga un entrenamiento vacío.',
+      markRoutine: (name: string) => `Marcar ${name} como hecha`,
+      doneTitle: 'Entrenamiento registrado',
+      noPlanFuture: 'No hay una rutina asignada para ese día.',
+      planFuture: (name: string) => `Ese día toca: ${name}`,
+      cancel: 'Cerrar',
+      newRoutine: 'Armar una rutina nueva',
+      markedNote:
+        'Marcaste este entrenamiento como completado sin cargar series. Puedes corregir la sesión para agregar lo que hiciste.',
     },
     home: {
       todayTitle: 'Hoy',
@@ -1156,6 +1198,9 @@ export const es = {
         exercise_not_found: 'Uno de los ejercicios ya no está disponible.',
         invalid_plan_item: 'Ese ejercicio no corresponde al plan de esta sesión.',
         duplicate_id: 'No pudimos guardar el ejercicio. Vuelve a intentarlo.',
+      },
+      plan: {
+        weekday_invalid: 'Ese día de la semana no es válido.',
       },
     },
   },

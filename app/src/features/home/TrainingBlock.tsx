@@ -1,55 +1,34 @@
 import { useQuery } from '@tanstack/react-query'
-import { Link, useNavigate } from 'react-router'
+import { Link } from 'react-router'
 import { ErrorState } from '../../components/ErrorState'
 import { LoadingState } from '../../components/LoadingState'
 import { es } from '../../copy/es'
 import { formatDate } from '../../lib/format'
-import { fetchInProgressSession, startWorkout } from '../training/api'
+import { fetchInProgressSession } from '../training/api'
 import { todayLocal } from '../training/dates'
 import { DueSessions } from '../training/DueSessions'
-import { RoutinePicker, StartError } from '../training/RoutinePicker'
 import { useDueSessions } from '../training/useCalendar'
-import { useRequestIds, useTrainingAction } from '../training/useTrainingAction'
+import { useWeeklyPlan, planDayFor } from '../training/useWeeklyPlan'
+import { WorkoutDayActions } from '../training/WorkoutDayActions'
 import { HomeSection } from './HomeSection'
 
 const t = es.training
 const h = t.home
 
-/** Empezar una sesión vacía de hoy. */
-function StartEmpty() {
-  const navigate = useNavigate()
-  const requests = useRequestIds()
-  const start = useTrainingAction(() => startWorkout(null, requests.idFor('empty')), {
-    failure: h.startFailed,
-    onSuccess: (result) => void navigate(`/entrenamiento/sesion/${result.id}`),
-  })
-  return (
-    <div className="flex flex-col gap-3">
-      <div>
-        <button
-          type="button"
-          className="btn-secondary"
-          disabled={start.pending}
-          onClick={() => start.run(undefined)}
-        >
-          {start.pending ? h.starting : h.startEmpty}
-        </button>
-      </div>
-      <StartError error={start.error} />
-    </div>
-  )
-}
-
 /**
- * El entrenamiento de hoy (spec 006): la sesión en curso, las planificadas de hoy o sin registrar con sus acciones, o la
- * invitación a empezar con una rutina o una sesión vacía.
+ * El entrenamiento de hoy (specs 006 y 018): la sesión en curso, las planificadas de hoy o sin registrar con sus
+ * acciones, la rutina que toca según el plan semanal para marcarla como completada, o «Cargar entrenamiento».
  */
-export function TrainingBlock() {
+export function TrainingBlock({ className = 'lg:col-span-2' }: { className?: string } = {}) {
   const open = useQuery({ queryKey: ['training', 'open'], queryFn: fetchInProgressSession })
-  const due = useDueSessions(todayLocal())
+  const today = todayLocal()
+  const due = useDueSessions(today)
+  const plan = useWeeklyPlan()
+  const planned = planDayFor(plan.data, today)
+  const hasDue = due.isSuccess && due.data.length > 0
 
   return (
-    <HomeSection tone="training" className="lg:col-span-2" title={es.home.training.title}>
+    <HomeSection tone="training" className={className} title={es.home.training.title}>
       {open.isPending ? <LoadingState /> : null}
       {open.isError ? (
         <ErrorState message={es.home.loadError} onRetry={() => void open.refetch()} />
@@ -70,13 +49,17 @@ export function TrainingBlock() {
       ) : (
         <DueSessions />
       )}
-      {open.isSuccess && !open.data ? (
+      {open.isSuccess ? (
         <>
-          {due.isSuccess && due.data.length === 0 ? (
+          {due.isSuccess && !hasDue && !planned?.routine_id && !open.data ? (
             <p className="text-muted">{es.home.training.empty}</p>
           ) : null}
-          <RoutinePicker />
-          <StartEmpty />
+          <WorkoutDayActions
+            date={today}
+            today={today}
+            showCompleted
+            hasOpenSession={open.data !== null}
+          />
         </>
       ) : null}
     </HomeSection>

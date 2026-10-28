@@ -22,6 +22,8 @@ vi.mock('../../src/features/training/api', async (importOriginal) => ({
   fetchRoutines: vi.fn().mockResolvedValue([]),
   fetchSessionsBetween: vi.fn().mockResolvedValue([]),
   fetchDueSessions: vi.fn().mockResolvedValue([]),
+  fetchSessionsOfDay: vi.fn().mockResolvedValue([]),
+  fetchWeeklyPlan: vi.fn().mockResolvedValue([]),
   startWorkout: vi.fn(),
 }))
 

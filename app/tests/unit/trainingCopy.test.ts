@@ -71,6 +71,7 @@ describe('textos de entrenamiento (copy.training)', () => {
       cancelled: 'Cancelada',
     })
     expect(es.training.marks).toEqual({
+      markedComplete: 'Marcada como completada, sin detalle',
       rescheduled: 'Reprogramada',
       modified: 'Modificada',
       corrected: 'Corregida',

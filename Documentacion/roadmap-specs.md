@@ -151,7 +151,8 @@ Nacen de la primera prueba de uso del autor (2026-10-28). Las notas originales y
 - **Inicio:** el día muestra lo que toca según el plan. Si ese día tiene una rutina asignada, hay un botón para marcarla como completada. Si no tiene ninguna, la opción es «Cargar entrenamiento», donde se elige una rutina ya cargada (queda registrada como hecha) o se arma una nueva. También se puede elegir un entrenamiento distinto del asignado. Cambiar un día puntual no modifica el plan.
 - **Pestaña Entrenamiento:** rehacer el frente completo (hoy desprolijo). Se conserva cómo se arma una rutina, que al autor le gusta.
 - **Relación con la spec 006:** revierte la decisión «rutinas sin días asignados». El plan es una entidad aparte; el catálogo de rutinas y las sesiones registradas no cambian. El estado de entrenamiento de la semana del inicio (spec 016) pasa a considerar el plan.
-- **Aclarado el 2026-10-28:** «marcar como completado» solo existe cuando el día tenía una rutina asignada; sin rutina asignada se carga el entrenamiento hecho. Queda por definir en la aclaración de la spec si la sesión marcada así copia las series planificadas de la rutina o queda sin series, y cómo se distingue de una sesión con detalle cargado (Principio II).
+- **Aclarado el 2026-10-28:** «marcar como completado» solo existe cuando el día tenía una rutina asignada; sin rutina asignada se carga el entrenamiento hecho. Resuelto en la spec: la sesión marcada guarda el plan de la rutina como planificado, sin series realizadas, y se muestra como «Marcada como completada, sin detalle»; una rutina por día de la semana; sin descanso explícito; el plan no genera sesiones.
+- **Estado:** implementada el 2026-10-28 (base de datos, aplicación y pruebas); falta la corrida completa de Playwright.
 - Depende de la 006 y la 016. Principios: II, V, VI.
 - Origen: nota 4.
 

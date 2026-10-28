@@ -18,7 +18,7 @@ export interface StartErrorState {
  * Empezar una sesión con el plan de una rutina, con un solo gesto (FR-027a). Un identificador por rutina: reintentar
  * la misma no crea otra sesión (FR-047).
  */
-export function useStartFromRoutine() {
+export function useStartFromRoutine(sessionDate: string | null = null) {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const [requestIds] = useState(() => new Map<string, string>())
@@ -26,7 +26,7 @@ export function useStartFromRoutine() {
 
   const mutation = useMutation({
     mutationFn: ({ routineId, requestId }: { routineId: string; requestId: string }) =>
-      startWorkoutFromRoutine(routineId, null, requestId),
+      startWorkoutFromRoutine(routineId, sessionDate, requestId),
     onMutate: () => setError(null),
     onSuccess: (result) => {
       void queryClient.invalidateQueries({ queryKey: ['training'] })

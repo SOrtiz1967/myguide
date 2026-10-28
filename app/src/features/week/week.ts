@@ -61,11 +61,15 @@ export function trainingState(
   sessions: ReadonlyArray<{ status: SessionStatus }>,
   date: string,
   today: string,
+  /** El día tiene una rutina asignada en el plan semanal (spec 018). */
+  planned = false,
 ): TrainingState {
   if (sessions.some((s) => s.status === 'in_progress')) return 'in-progress'
   if (sessions.some((s) => s.status === 'completed')) return 'done'
   if (sessions.some((s) => s.status === 'planned')) return date >= today ? 'planned' : 'unlogged'
   if (sessions.some((s) => s.status === 'cancelled')) return 'cancelled'
+  // Sin sesión de ese día, el plan semanal dice qué tocaba: «Plan» hasta hoy, «Sin registro» después (spec 018).
+  if (planned) return date >= today ? 'planned' : 'unlogged'
   return 'none'
 }
 

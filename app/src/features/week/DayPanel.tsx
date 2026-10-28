@@ -12,6 +12,7 @@ import { formatMeasure } from '../measures/measures'
 import { useProfile } from '../profile/useProfile'
 import { useDaySessions } from '../training/useCalendar'
 import { statusLabel } from '../training/trainingText'
+import { WorkoutDayActions } from '../training/WorkoutDayActions'
 
 const p = es.week.panel
 
@@ -47,7 +48,7 @@ function WeightRow({ date, isToday }: { date: string; isToday: boolean }) {
   )
 }
 
-function DaySessions({ date }: { date: string }) {
+function DaySessions({ date, today }: { date: string; today: string }) {
   const sessions = useDaySessions(date)
   return (
     <HomeSection tone="training" className="lg:col-span-2" title={p.trainingTitle}>
@@ -72,6 +73,7 @@ function DaySessions({ date }: { date: string }) {
           ))}
         </ul>
       ) : null}
+      <WorkoutDayActions date={date} today={today} showCompleted={false} />
     </HomeSection>
   )
 }
@@ -95,7 +97,7 @@ export function DayPanel({ date, today }: { date: string; today: string }) {
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
         <CaloriesBlock date={date} />
-        {isToday ? <TrainingBlock /> : <DaySessions date={date} />}
+        {isToday ? <TrainingBlock /> : <DaySessions date={date} today={today} />}
         <WeightRow date={date} isToday={isToday} />
         <HomeSection title={p.actionsTitle} className="md:col-span-2 lg:col-span-3">
           <ul className="grid grid-cols-1 gap-2 sm:grid-cols-3">

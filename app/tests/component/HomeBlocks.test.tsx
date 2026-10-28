@@ -20,6 +20,8 @@ import {
   fetchRecentSessions,
   fetchRoutines,
   fetchSessionsBetween,
+  fetchSessionsOfDay,
+  fetchWeeklyPlan,
   type SessionSummary,
 } from '../../src/features/training/api'
 import { HomePage } from '../../src/routes/HomePage'
@@ -45,6 +47,7 @@ vi.mock('../../src/features/training/api', async (importOriginal) => ({
   fetchRoutines: vi.fn(),
   fetchSessionsBetween: vi.fn(),
   fetchSessionsOfDay: vi.fn(),
+  fetchWeeklyPlan: vi.fn(),
 }))
 
 const h = es.home
@@ -119,6 +122,8 @@ beforeEach(() => {
   vi.mocked(fetchEntriesBetween).mockResolvedValue([])
   vi.mocked(fetchWeightsBetween).mockResolvedValue([])
   vi.mocked(fetchSessionsBetween).mockResolvedValue([])
+  vi.mocked(fetchSessionsOfDay).mockResolvedValue([])
+  vi.mocked(fetchWeeklyPlan).mockResolvedValue([])
 })
 afterEach(() => vi.clearAllMocks())
 

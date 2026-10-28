@@ -126,13 +126,23 @@ export function SessionSummaryView({
           <h2 id="plan-titulo" className="text-lg font-extrabold">
             {s.planTitle}
           </h2>
-          <PlanList plan={plan} draft={draft} finished={session.status === 'completed'} />
+          <PlanList
+            plan={plan}
+            draft={draft}
+            finished={session.status === 'completed' && !session.marked_complete}
+          />
         </section>
       ) : (
         <p className="text-muted">{t.noPlan}</p>
       )}
 
-      {session.status === 'completed' ? (
+      {session.status === 'completed' && session.marked_complete ? (
+        <p role="note" className="card-inset text-sm">
+          {t.today.markedNote}
+        </p>
+      ) : null}
+
+      {session.status === 'completed' && !session.marked_complete ? (
         <section aria-labelledby="realizado-titulo" className="card flex flex-col gap-3">
           <h2 id="realizado-titulo" className="text-lg font-extrabold">
             {s.doneTitle}
@@ -141,7 +151,9 @@ export function SessionSummaryView({
         </section>
       ) : null}
 
-      {session.status === 'completed' ? <Differences plan={plan} draft={draft} /> : null}
+      {session.status === 'completed' && !session.marked_complete ? (
+        <Differences plan={plan} draft={draft} />
+      ) : null}
 
       {session.session_date_changes.length > 0 ? (
         <section aria-labelledby="recorrido-titulo" className="card flex flex-col gap-2">
