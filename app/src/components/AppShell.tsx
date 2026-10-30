@@ -35,6 +35,7 @@ const PRIMARY: NavItem[] = [
 /** El resto: en celular se abre con «Más». */
 const SECONDARY: NavItem[] = [
   { to: '/medidas', label: es.measures.navLink, icon: 'ruler', active: starts('/medidas') },
+  { to: '/fotos', label: es.progressPhotos.navLink, icon: 'camera', active: starts('/fotos') },
   { to: '/alimentos', label: es.foods.navLink, icon: 'food', active: starts('/alimentos') },
   { to: '/ejercicios', label: es.exercises.navLink, icon: 'bolt', active: starts('/ejercicios') },
   { to: '/actividad', label: es.activity.navLink, icon: 'steps', active: starts('/actividad') },

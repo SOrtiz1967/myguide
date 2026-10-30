@@ -4,13 +4,13 @@ Backend de MyGuide como código: migraciones, funciones de borde (Edge Functions
 
 ## Estructura
 
-| Carpeta | Contenido |
-|---|---|
-| `migrations/` | Esquema, RLS, funciones y disparadores. Una migración por cambio lógico, en orden cronológico. |
-| `functions/` | Edge Functions (Deno): `register`, `request-password-reset`, `send-verification`, `confirm-email`, `meal-photo` y utilidades en `_shared/`. Cada una separa la lógica probada (`handler.ts`) de su conexión real (`index.ts`). |
-| `tests/` | Pruebas pgTAP (`*.test.sql`) y la prueba de invariantes de configuración (`config.test.ts`). |
-| `seed.sql` | Ayudantes de prueba en el esquema `tests`. **Solo local**: no se aplica a producción. |
-| `config.toml` | Configuración de Auth y de las funciones. Las decisiones de seguridad están comentadas al final. |
+| Carpeta       | Contenido                                                                                                                                                                                                                                        |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `migrations/` | Esquema, RLS, funciones y disparadores. Una migración por cambio lógico, en orden cronológico.                                                                                                                                                   |
+| `functions/`  | Edge Functions (Deno): `register`, `request-password-reset`, `send-verification`, `confirm-email`, `meal-photo`, `progress-photo` y utilidades en `_shared/`. Cada una separa la lógica probada (`handler.ts`) de su conexión real (`index.ts`). |
+| `tests/`      | Pruebas pgTAP (`*.test.sql`) y la prueba de invariantes de configuración (`config.test.ts`).                                                                                                                                                     |
+| `seed.sql`    | Ayudantes de prueba en el esquema `tests`. **Solo local**: no se aplica a producción.                                                                                                                                                            |
+| `config.toml` | Configuración de Auth y de las funciones. Las decisiones de seguridad están comentadas al final.                                                                                                                                                 |
 
 ## Entorno local
 
@@ -27,20 +27,20 @@ El buzón de correo local (Mailpit) está en <http://127.0.0.1:54324>: ahí lleg
 
 Los secretos **nunca** van en `app/`, en variables `VITE_*` ni en el repositorio. Cada archivo está en `.gitignore`.
 
-| Archivo | Para qué | Se sube a Git |
-|---|---|---|
-| `supabase/.env.local` | Funciones en desarrollo: SMTP hacia el buzón local y la clave de **prueba** de Turnstile | No |
-| `supabase/.env` | Credenciales **reales** (Brevo y Turnstile). Copiar de `supabase/.env.example` | No |
-| `app/.env.local` | Solo variables públicas del frontend (`VITE_*`) | No |
+| Archivo               | Para qué                                                                                 | Se sube a Git |
+| --------------------- | ---------------------------------------------------------------------------------------- | ------------- |
+| `supabase/.env.local` | Funciones en desarrollo: SMTP hacia el buzón local y la clave de **prueba** de Turnstile | No            |
+| `supabase/.env`       | Credenciales **reales** (Brevo y Turnstile). Copiar de `supabase/.env.example`           | No            |
+| `app/.env.local`      | Solo variables públicas del frontend (`VITE_*`)                                          | No            |
 
-| Variable | Descripción | Dónde se obtiene |
-|---|---|---|
-| `SMTP_HOST`, `SMTP_PORT` | Servidor SMTP (`smtp-relay.brevo.com`, `587`) | Brevo → Settings → SMTP & API |
-| `SMTP_USER` | Login SMTP, con la forma `xxxx@smtp-brevo.com` (no es el correo de registro) | Brevo → Settings → SMTP & API → SMTP |
-| `SMTP_PASSWORD` | **Clave SMTP** (no la API key) | Brevo → "Generate SMTP key" |
-| `SMTP_FROM_EMAIL`, `SMTP_FROM_NAME` | Remitente verificado | Brevo → Settings → Senders, Domains, IPs |
-| `TURNSTILE_SECRET_KEY` | Clave secreta del widget | Cloudflare → Turnstile → widget → Settings |
-| `ALLOWED_ORIGINS`, `SITE_URL`, `FUNCTIONS_URL` | Origen del frontend y URL pública de las funciones | Según el entorno |
+| Variable                                       | Descripción                                                                  | Dónde se obtiene                           |
+| ---------------------------------------------- | ---------------------------------------------------------------------------- | ------------------------------------------ |
+| `SMTP_HOST`, `SMTP_PORT`                       | Servidor SMTP (`smtp-relay.brevo.com`, `587`)                                | Brevo → Settings → SMTP & API              |
+| `SMTP_USER`                                    | Login SMTP, con la forma `xxxx@smtp-brevo.com` (no es el correo de registro) | Brevo → Settings → SMTP & API → SMTP       |
+| `SMTP_PASSWORD`                                | **Clave SMTP** (no la API key)                                               | Brevo → "Generate SMTP key"                |
+| `SMTP_FROM_EMAIL`, `SMTP_FROM_NAME`            | Remitente verificado                                                         | Brevo → Settings → Senders, Domains, IPs   |
+| `TURNSTILE_SECRET_KEY`                         | Clave secreta del widget                                                     | Cloudflare → Turnstile → widget → Settings |
+| `ALLOWED_ORIGINS`, `SITE_URL`, `FUNCTIONS_URL` | Origen del frontend y URL pública de las funciones                           | Según el entorno                           |
 
 Para pruebas se usan las claves de prueba oficiales de Cloudflare: sitio `1x00000000000000000000AA`, secreto `1x0000000000000000000000000000000AA` (el captcha siempre aprueba).
 
@@ -72,7 +72,7 @@ Aplica a las specs 002 a 011. Detalle en [`data-model.md`](../specs/001-cuentas-
 - [ ] Ninguna política usa `using (true)` ni concede acceso a `anon`.
 - [ ] Restricciones de integridad en la base (`check`, `unique`, `not null`), no solo en el cliente.
 - [ ] Pruebas pgTAP de aislamiento: la cuenta B no lee, modifica ni borra filas de A; `anon` no accede; una sesión vencida no ve nada.
-- [ ] Si guarda historial, guarda también un *snapshot* de los valores relevantes (Principio II) y planificado/ejecutado son tablas distintas.
+- [ ] Si guarda historial, guarda también un _snapshot_ de los valores relevantes (Principio II) y planificado/ejecutado son tablas distintas.
 - [ ] Skill `database-design` aplicada a la revisión.
 
 ### Plantilla de políticas
@@ -114,24 +114,24 @@ Las funciones `public.check_rate_limit`, `issue_email_token`, `consume_email_tok
 
 ### Tablas
 
-| Tabla | Qué guarda | Quién la ve |
-|---|---|---|
-| `public.foods` | Alimentos del catálogo (`user_id` nulo, `origin = 'imported'`) y alimentos propios (`origin = 'own'`, con dueño) | El catálogo, cualquier cuenta con sesión vigente; lo propio, solo su dueño |
-| `public.food_portions` | Porciones de consumo de cada alimento, aparte de los valores por 100 g/ml | Igual que su alimento |
-| `public.food_sources` | Fuentes con licencia, atribución, fecha de la última importación y cantidad | Cualquier cuenta con sesión (solo lectura) |
-| `private.import_runs` | Informe de cada carga | Solo `service_role` |
+| Tabla                  | Qué guarda                                                                                                       | Quién la ve                                                                |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| `public.foods`         | Alimentos del catálogo (`user_id` nulo, `origin = 'imported'`) y alimentos propios (`origin = 'own'`, con dueño) | El catálogo, cualquier cuenta con sesión vigente; lo propio, solo su dueño |
+| `public.food_portions` | Porciones de consumo de cada alimento, aparte de los valores por 100 g/ml                                        | Igual que su alimento                                                      |
+| `public.food_sources`  | Fuentes con licencia, atribución, fecha de la última importación y cantidad                                      | Cualquier cuenta con sesión (solo lectura)                                 |
+| `private.import_runs`  | Informe de cada carga                                                                                            | Solo `service_role`                                                        |
 
 `food_sources` es una **tabla de referencia** sin `user_id`: está en la lista explícita de `tests/rls_guardrail.test.sql`. Agregar otra requiere justificarlo allí.
 
 ### Funciones
 
-| Función | Quién la ejecuta | Qué hace |
-|---|---|---|
-| `search_foods(q, scope, page_size, page_offset)` | Cuentas con sesión | Búsqueda sin acentos ni mayúsculas, por palabras parciales, ordenada por relevancia, con tandas |
-| `create_food(food, portions, request_id)` | Cuentas con sesión | Crea un alimento propio con sus porciones, atómico e idempotente |
-| `update_food(id, food, portions)` | Cuentas con sesión | Edita un alimento propio y reemplaza sus porciones; el catálogo da `not_found` |
-| `copy_food(id, request_id)` | Cuentas con sesión | Crea una copia propia (`based_on_food_id`) de un alimento visible |
-| `import_foods(source_slug, items)` · `finish_import(source_slug, report)` | **Solo `service_role`** | Cargan y cierran la carga del catálogo; nunca tocan alimentos propios ni copias |
+| Función                                                                   | Quién la ejecuta        | Qué hace                                                                                        |
+| ------------------------------------------------------------------------- | ----------------------- | ----------------------------------------------------------------------------------------------- |
+| `search_foods(q, scope, page_size, page_offset)`                          | Cuentas con sesión      | Búsqueda sin acentos ni mayúsculas, por palabras parciales, ordenada por relevancia, con tandas |
+| `create_food(food, portions, request_id)`                                 | Cuentas con sesión      | Crea un alimento propio con sus porciones, atómico e idempotente                                |
+| `update_food(id, food, portions)`                                         | Cuentas con sesión      | Edita un alimento propio y reemplaza sus porciones; el catálogo da `not_found`                  |
+| `copy_food(id, request_id)`                                               | Cuentas con sesión      | Crea una copia propia (`based_on_food_id`) de un alimento visible                               |
+| `import_foods(source_slug, items)` · `finish_import(source_slug, report)` | **Solo `service_role`** | Cargan y cierran la carga del catálogo; nunca tocan alimentos propios ni copias                 |
 
 Los errores de validación tienen la forma `invalid_food:<motivo>:<campo>`.
 
@@ -165,11 +165,11 @@ npm run import:usda -- --dry-run            # valida y cuenta sin escribir nada
 
 ### Procedencia de cada dato
 
-| Dato | Fuente | Licencia |
-|---|---|---|
-| Productos de marca de Argentina | Open Food Facts | ODbL 1.0 (contenidos DbCL 1.0): atribución obligatoria |
-| Alimentos genéricos | USDA FoodData Central (Foundation Foods y SR Legacy) | CC0 1.0 |
-| Alimentos propios y copias | La persona usuaria | Privados de cada cuenta |
+| Dato                            | Fuente                                               | Licencia                                               |
+| ------------------------------- | ---------------------------------------------------- | ------------------------------------------------------ |
+| Productos de marca de Argentina | Open Food Facts                                      | ODbL 1.0 (contenidos DbCL 1.0): atribución obligatoria |
+| Alimentos genéricos             | USDA FoodData Central (Foundation Foods y SR Legacy) | CC0 1.0                                                |
+| Alimentos propios y copias      | La persona usuaria                                   | Privados de cada cuenta                                |
 
 Detalle y texto de atribución en [`Documentacion/fuentes-datos.md`](../Documentacion/fuentes-datos.md); la aplicación los muestra en `/fuentes`.
 
@@ -177,11 +177,11 @@ Detalle y texto de atribución en [`Documentacion/fuentes-datos.md`](../Document
 
 ### Tablas
 
-| Tabla | Qué guarda | Quién la ve y qué puede hacer |
-|---|---|---|
-| `public.meal_entries` | Ítems registrados: comida, día, origen (`manual`, `catalog`, y `estimated`/`confirmed` reservados para la spec 009), cantidad y una **instantánea** de los valores nutricionales | Solo su dueño. El cliente lee (`select`) y borra (`delete`); **no inserta ni modifica**: eso lo hacen las funciones |
-| `public.log_day_starts` | Marca de «empecé a registrar este día», que cierra el día anterior para imputar comidas | Solo su dueño, lectura; la escribe `start_log_day` |
-| `public.meal_photos` | Una foto como máximo por (cuenta, día, comida): ruta en el bucket, medidas y peso | Solo su dueño, **solo lectura**; la escribe la función `meal-photo` |
+| Tabla                   | Qué guarda                                                                                                                                                                       | Quién la ve y qué puede hacer                                                                                       |
+| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `public.meal_entries`   | Ítems registrados: comida, día, origen (`manual`, `catalog`, y `estimated`/`confirmed` reservados para la spec 009), cantidad y una **instantánea** de los valores nutricionales | Solo su dueño. El cliente lee (`select`) y borra (`delete`); **no inserta ni modifica**: eso lo hacen las funciones |
+| `public.log_day_starts` | Marca de «empecé a registrar este día», que cierra el día anterior para imputar comidas                                                                                          | Solo su dueño, lectura; la escribe `start_log_day`                                                                  |
+| `public.meal_photos`    | Una foto como máximo por (cuenta, día, comida): ruta en el bucket, medidas y peso                                                                                                | Solo su dueño, **solo lectura**; la escribe la función `meal-photo`                                                 |
 
 La instantánea (`energy_kcal`, `protein_g`...) la calcula un disparador (`private.prepare_meal_entry`) a partir del alimento visible para esa cuenta y la cantidad; el cliente nunca envía valores calculados de un ítem del catálogo. Editar o borrar después el alimento no cambia lo registrado.
 
@@ -189,15 +189,22 @@ La instantánea (`energy_kcal`, `protein_g`...) la calcula un disparador (`priva
 
 Todas verifican `auth.uid()` y `private.is_session_fresh()`. Las que escriben son `security definer` (con `search_path` vacío) porque el cliente no tiene permisos de escritura sobre las tablas.
 
-| Función | Qué hace |
-|---|---|
-| `add_meal_entry(entry, request_id)` | Agrega un ítem del catálogo o manual; idempotente por `request_id` |
-| `update_meal_entry(id, changes)` | Cambia cantidad, comida, día o los valores de un ítem manual; recalcula la instantánea de un ítem del catálogo; un ítem ajeno da `not_found` |
-| `recent_meal_items(max_items)` | Alimentos usados hace poco con su última cantidad |
-| `log_day_status(client_timezone)` · `start_log_day(day, client_timezone)` | Regla del día: cuál es «hoy», qué día se propone y si el anterior sigue cerrándose; `start_log_day` solo acepta el «hoy» de la cuenta |
+| Función                                                                                                         | Qué hace                                                                                                                                                              |
+| --------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `add_meal_entry(entry, request_id)`                                                                             | Agrega un ítem del catálogo o manual; idempotente por `request_id`                                                                                                    |
+| `update_meal_entry(id, changes)`                                                                                | Cambia cantidad, comida, día o los valores de un ítem manual; recalcula la instantánea de un ítem del catálogo; un ítem ajeno da `not_found`                          |
+| `recent_meal_items(max_items)`                                                                                  | Alimentos usados hace poco con su última cantidad                                                                                                                     |
+| `log_day_status(client_timezone)` · `start_log_day(day, client_timezone)`                                       | Regla del día: cuál es «hoy», qué día se propone y si el anterior sigue cerrándose; `start_log_day` solo acepta el «hoy» de la cuenta                                 |
 | `preview_repeat_meal(from_date, from_meal)` · `repeat_meal(from_date, from_meal, to_date, to_meal, request_id)` | Cuenta y copia una comida de otro día; los ítems del catálogo se recalculan con el alimento actual y los manuales o con el alimento ya borrado se copian; idempotente |
 
 La zona horaria para el corte del día es la del perfil; si no hay, la del navegador (si es válida); si no, UTC. `private.log_day_status_at(usuario, ahora, zona)` recibe la hora como parámetro para poder probarla con hora simulada y no tiene permiso para el cliente.
+
+### Fotos de progreso (bucket `progress-photos` y función `progress-photo`, spec 019)
+
+- `public.progress_photos`: varias fotos por cuenta (hasta 200), con fecha de la toma y pose opcional. El navegador solo **lee** lo propio (RLS y sesión vigente); inserta y borra únicamente la función `progress-photo` (con la clave de servicio) y la fecha y la pose se corrigen con `update_progress_photo`, sin tocar el archivo.
+- La función reutiliza la limpieza de `_shared/jpeg.ts` (la misma de `meal-photo`), limita a **30 fotos por hora** por cuenta y no registra persona, ruta, fecha ni pose. El contrato está en `specs/019-fotos-de-progreso/contracts/progress-photo.md`.
+- Pruebas: `tests/progress_photos.test.sql` (pgTAP) y `functions/progress-photo/index.test.ts` (Deno).
+- **Pendiente (Principio I):** eliminar una cuenta no borra los archivos de `progress-photos/<user_id>/`; ver spec 011.
 
 ### Fotos (bucket `meal-photos` y función `meal-photo`)
 
@@ -218,8 +225,8 @@ La zona horaria para el corte del día es la del perfil; si no hay, la del naveg
 
 ### Tabla
 
-| Tabla | Qué guarda | Quién la ve y qué puede hacer |
-|---|---|---|
+| Tabla                 | Qué guarda                                                                                                                                                                                                                                      | Quién la ve y qué puede hacer                                                      |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
 | `public.energy_goals` | Historial de **solo altas** del objetivo: una fila por cambio (`kcal` de 1.000 a 6.000, o nulo = se quitó el objetivo), el día desde el que rige (`effective_from`), la hora en que se guardó (`created_at`) y el identificador de la solicitud | Solo su dueño, **solo lectura**; la escribe `set_energy_goal`. Es un dato de salud |
 
 Nunca se actualiza ni se borra una fila (salvo la cascada al eliminar la cuenta, FR-028): cambiar o quitar el objetivo agrega otra, así un cambio no reescribe lo que regía en un día pasado (Principio II).
@@ -232,8 +239,8 @@ El objetivo de un día `D` es el `kcal` de la fila de `created_at` **más recien
 
 ### Función
 
-| Función | Qué hace |
-|---|---|
+| Función                                              | Qué hace                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `set_energy_goal(kcal, request_id, client_timezone)` | Fija, cambia o quita (`kcal` nulo) el objetivo. Devuelve `{effective_from, kcal}`. Idempotente por `request_id`, también ante un reintento tardío (devuelve la fila original y no pisa un cambio posterior). El día de vigencia lo fija el servidor con el «hoy» de la persona (la columna `today` de `private.log_day_status_at`), aunque esté registrando el día que se cierra. Errores: `session_expired`, `invalid_goal:out_of_range:kcal`, `invalid_goal:request_required:request_id` |
 
 `private.set_energy_goal_at(usuario, kcal, request_id, ahora, zona)` recibe la hora y la zona como parámetros para probarla con hora simulada y no tiene permiso para el cliente. Ningún registro técnico contiene el valor del objetivo.
@@ -246,11 +253,11 @@ El objetivo de un día `D` es el `kcal` de la fila de `created_at` **más recien
 
 ### Tablas
 
-| Tabla | Qué guarda | Quién la ve y qué puede hacer |
-|---|---|---|
-| `public.exercises` | Ejercicios del catálogo (`user_id` nulo, `origin = 'imported'`) y ejercicios propios (`origin = 'own'`, con dueño; incluye las copias, con `based_on_exercise_id`) | El catálogo, cualquier cuenta con sesión vigente (solo lectura); lo propio, solo su dueño, que puede leerlo y borrarlo. **Nadie inserta ni actualiza directamente**: se hace por las funciones |
-| `public.exercise_sources` | Fuentes con licencia, atribución, fecha de la última importación y cantidad | Cualquier cuenta con sesión (solo lectura) |
-| `private.exercise_import_runs` | Informe de cada carga | Solo `service_role` |
+| Tabla                          | Qué guarda                                                                                                                                                         | Quién la ve y qué puede hacer                                                                                                                                                                  |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `public.exercises`             | Ejercicios del catálogo (`user_id` nulo, `origin = 'imported'`) y ejercicios propios (`origin = 'own'`, con dueño; incluye las copias, con `based_on_exercise_id`) | El catálogo, cualquier cuenta con sesión vigente (solo lectura); lo propio, solo su dueño, que puede leerlo y borrarlo. **Nadie inserta ni actualiza directamente**: se hace por las funciones |
+| `public.exercise_sources`      | Fuentes con licencia, atribución, fecha de la última importación y cantidad                                                                                        | Cualquier cuenta con sesión (solo lectura)                                                                                                                                                     |
+| `private.exercise_import_runs` | Informe de cada carga                                                                                                                                              | Solo `service_role`                                                                                                                                                                            |
 
 `exercise_sources` es una **tabla de referencia** sin `user_id`: está en la lista explícita de `tests/rls_guardrail.test.sql`. El identificador `exercises.id` (uuid) no cambia nunca y es el que referenciará la spec 006: el origen, el dueño, la fuente y la fecha de importación están protegidos por un disparador (`exercises_protect_identity`).
 
@@ -258,24 +265,24 @@ El objetivo de un día `D` es el `kcal` de la fila de `created_at` **más recien
 
 Se imponen con `check` en la tabla, se repiten en las funciones para dar un motivo claro, y el cliente tiene la misma lista en `app/src/features/exercises/exerciseLists.ts` (y la carga en `supabase/import/exercise-lists.ts`); una prueba verifica que las tres coinciden.
 
-| Dato | Valores o límite |
-|---|---|
-| Tipo de medición (`measurement_type`) | `reps_weight`, `reps_bodyweight`, `duration`, `distance_duration` |
-| Músculos (18) | `abdominals`, `abductors`, `adductors`, `biceps`, `calves`, `chest`, `forearms`, `glutes`, `hamstrings`, `lats`, `lower back`, `middle back`, `neck`, `quadriceps`, `shoulders`, `traps`, `triceps`, `full_body` |
-| Equipamiento (12) | `body only`, `barbell`, `dumbbell`, `cable`, `machine`, `e-z curl bar`, `kettlebells`, `bands`, `medicine ball`, `exercise ball`, `foam roll`, `other` (o sin dato) |
-| Músculos principales / secundarios | hasta 5 / hasta 10, sin repetir ni estar en ambos |
-| Nombre / otro nombre / otros nombres | 1 a 120 caracteres / hasta 80 / hasta 10 (el formulario ofrece 5) |
-| Descripción | hasta 4.000 caracteres |
+| Dato                                  | Valores o límite                                                                                                                                                                                                 |
+| ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Tipo de medición (`measurement_type`) | `reps_weight`, `reps_bodyweight`, `duration`, `distance_duration`                                                                                                                                                |
+| Músculos (18)                         | `abdominals`, `abductors`, `adductors`, `biceps`, `calves`, `chest`, `forearms`, `glutes`, `hamstrings`, `lats`, `lower back`, `middle back`, `neck`, `quadriceps`, `shoulders`, `traps`, `triceps`, `full_body` |
+| Equipamiento (12)                     | `body only`, `barbell`, `dumbbell`, `cable`, `machine`, `e-z curl bar`, `kettlebells`, `bands`, `medicine ball`, `exercise ball`, `foam roll`, `other` (o sin dato)                                              |
+| Músculos principales / secundarios    | hasta 5 / hasta 10, sin repetir ni estar en ambos                                                                                                                                                                |
+| Nombre / otro nombre / otros nombres  | 1 a 120 caracteres / hasta 80 / hasta 10 (el formulario ofrece 5)                                                                                                                                                |
+| Descripción                           | hasta 4.000 caracteres                                                                                                                                                                                           |
 
 ### Funciones
 
-| Función | Quién la ejecuta | Qué hace |
-|---|---|---|
-| `search_exercises(q, scope, muscle_filter, equipment_filter, page_size, page_offset)` | Cuentas con sesión | Búsqueda sin acentos ni mayúsculas, por palabras parciales y por nombre original o sinónimo; filtro por músculo (principal o secundario) y por equipamiento; ordenada por relevancia, con tandas de hasta 50 |
-| `create_exercise(exercise, request_id)` | Cuentas con sesión | Crea un ejercicio propio, atómico e idempotente |
-| `update_exercise(id, exercise)` | Cuentas con sesión | Edita un ejercicio **propio** (incluidas las copias); el catálogo y lo ajeno dan `not_found` |
-| `copy_exercise(id, request_id)` | Cuentas con sesión | Crea una copia propia y editable de un ejercicio visible (`based_on_exercise_id`); los textos pasan a `original` |
-| `import_exercises(source_slug, items, drop_descriptions)` · `finish_exercise_import(source_slug, report)` | **Solo `service_role`** | Cargan y cierran la carga del catálogo; nunca tocan ejercicios propios ni copias |
+| Función                                                                                                   | Quién la ejecuta        | Qué hace                                                                                                                                                                                                     |
+| --------------------------------------------------------------------------------------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `search_exercises(q, scope, muscle_filter, equipment_filter, page_size, page_offset)`                     | Cuentas con sesión      | Búsqueda sin acentos ni mayúsculas, por palabras parciales y por nombre original o sinónimo; filtro por músculo (principal o secundario) y por equipamiento; ordenada por relevancia, con tandas de hasta 50 |
+| `create_exercise(exercise, request_id)`                                                                   | Cuentas con sesión      | Crea un ejercicio propio, atómico e idempotente                                                                                                                                                              |
+| `update_exercise(id, exercise)`                                                                           | Cuentas con sesión      | Edita un ejercicio **propio** (incluidas las copias); el catálogo y lo ajeno dan `not_found`                                                                                                                 |
+| `copy_exercise(id, request_id)`                                                                           | Cuentas con sesión      | Crea una copia propia y editable de un ejercicio visible (`based_on_exercise_id`); los textos pasan a `original`                                                                                             |
+| `import_exercises(source_slug, items, drop_descriptions)` · `finish_exercise_import(source_slug, report)` | **Solo `service_role`** | Cargan y cierran la carga del catálogo; nunca tocan ejercicios propios ni copias                                                                                                                             |
 
 Las funciones del cliente son `security definer` con `search_path` vacío: verifican `auth.uid()` y la sesión vigente, y toman el dueño de la sesión. Los errores de validación tienen la forma `invalid_exercise:<motivo>:<campo>`. Borrar un ejercicio propio es un `delete` directo (lo permite RLS solo sobre lo propio); sus copias quedan intactas, con `based_on_exercise_id` nulo.
 
@@ -319,13 +326,13 @@ Todo es privado de cada cuenta. Ninguna tabla admite `insert` ni `update` desde 
 
 ### Tablas
 
-| Tabla | Qué guarda |
-|---|---|
-| `routines`, `routine_exercises` | El catálogo de rutinas de la persona (sin días asignados). Cada ítem guarda una copia del nombre y del tipo de medición del ejercicio, sus series y objetivos opcionales. |
-| `workout_sessions` | Una sesión: fecha, fecha original, estado, rutina de origen y su nombre, nota, marcas, revisión y solicitud de creación. |
-| `session_plan_items` | El plan de la sesión (lo que se pensaba hacer): copia de los ítems de la rutina al crearla. Nunca se mezcla con lo realizado. |
-| `session_exercises`, `session_sets` | Lo realizado: ejercicios (con su copia del nombre y del tipo de medición, esfuerzo percibido y nota) y sus series. |
-| `session_date_changes` | El recorrido de fechas de una sesión que se reprogramó. |
+| Tabla                               | Qué guarda                                                                                                                                                                |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `routines`, `routine_exercises`     | El catálogo de rutinas de la persona (sin días asignados). Cada ítem guarda una copia del nombre y del tipo de medición del ejercicio, sus series y objetivos opcionales. |
+| `workout_sessions`                  | Una sesión: fecha, fecha original, estado, rutina de origen y su nombre, nota, marcas, revisión y solicitud de creación.                                                  |
+| `session_plan_items`                | El plan de la sesión (lo que se pensaba hacer): copia de los ítems de la rutina al crearla. Nunca se mezcla con lo realizado.                                             |
+| `session_exercises`, `session_sets` | Lo realizado: ejercicios (con su copia del nombre y del tipo de medición, esfuerzo percibido y nota) y sus series.                                                        |
+| `session_date_changes`              | El recorrido de fechas de una sesión que se reprogramó.                                                                                                                   |
 
 `exercise_id` es una clave foránea `on delete set null` en las tres tablas que lo guardan: eliminar un ejercicio propio nunca borra ni cambia lo registrado. Los disparadores impiden cambiar las copias de nombre y tipo, el plan, el dueño y la fecha original.
 

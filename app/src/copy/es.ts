@@ -403,6 +403,92 @@ export const es = {
       not_found: 'No encontramos este registro.',
     },
   },
+  progressPhotos: {
+    navLink: 'Fotos',
+    title: 'Fotos de progreso',
+    subtitle: 'Para seguir tu propio camino, a tu ritmo.',
+    privacy:
+      'Las fotos son privadas: solo las ves tú. Antes de guardarlas se les quitan los datos ocultos, como la ubicación, y nunca se envían a servicios externos ni a inteligencia artificial.',
+    poses: { front: 'Frente', side: 'Perfil', back: 'Espalda', other: 'Otra' },
+    poseNone: 'Sin indicar',
+    upload: {
+      title: 'Subir una foto',
+      file: 'Foto',
+      fileHint: 'Elige una imagen de tu galería o saca una con la cámara.',
+      date: 'Fecha de la foto',
+      pose: 'Pose (opcional)',
+      poseHint: 'Indicar la pose ayuda a comparar fotos parecidas.',
+      submit: 'Subir foto',
+      sending: 'Subiendo la foto…',
+      saved: 'Foto guardada',
+      chooseFile: 'Elige una foto para subir.',
+      dateInvalid: 'Esa fecha no es válida o es posterior a hoy.',
+      limitReached:
+        'Llegaste al máximo de 200 fotos. Elimina alguna para subir otra; no borramos nada por ti.',
+    },
+    list: {
+      title: 'Tus fotos',
+      count: (n: number) => (n === 1 ? '1 foto' : `${n} fotos`),
+      loading: 'Cargando tus fotos…',
+      loadError: 'No pudimos cargar tus fotos.',
+      retry: 'Reintentar',
+      emptyTitle: 'Todavía no hay fotos',
+      emptyBody:
+        'Cuando quieras, sube la primera. Se ordenan por fecha y puedes compararlas de a dos.',
+      open: 'Abrir',
+      openLabel: (day: string, pose: string) => `Abrir la foto del ${day}, ${pose}`,
+      compare: 'Comparar',
+      compareLabel: (day: string, pose: string) =>
+        `Elegir para comparar la foto del ${day}, ${pose}`,
+      compareFull: 'Ya elegiste dos fotos. Quita una para elegir otra.',
+      imageLoading: 'Cargando la foto…',
+      imageError: 'No pudimos mostrar la foto.',
+      alt: (day: string, pose: string) => `Foto de progreso del ${day}, ${pose}`,
+    },
+    viewer: {
+      title: 'Foto abierta',
+      close: 'Cerrar',
+      editTitle: 'Corregir fecha y pose',
+      save: 'Guardar cambios',
+      saved: 'Cambios guardados',
+      saveFailed: 'No pudimos guardar los cambios. No se guardó nada.',
+      noChanges: 'No hay cambios para guardar.',
+      delete: 'Eliminar foto',
+      deleteTitle: '¿Eliminar la foto?',
+      deleteBody: 'Se elimina la foto y su registro. Esto no se puede deshacer.',
+      confirmDelete: 'Sí, eliminar',
+      cancel: 'Cancelar',
+      removed: 'Foto eliminada',
+      deleteFailed: 'No pudimos eliminar la foto.',
+      gone: 'Esa foto ya no está.',
+    },
+    compare: {
+      title: 'Comparación',
+      pickOther: 'Elige otra foto de tu lista para compararla con la que elegiste.',
+      before: 'Anterior',
+      after: 'Posterior',
+      daysApart: (n: number) =>
+        n === 0
+          ? 'Son del mismo día.'
+          : n === 1
+            ? 'Entre las dos pasó 1 día.'
+            : `Entre las dos pasaron ${n} días.`,
+      differentPose:
+        'Las fotos tienen poses distintas o falta indicar alguna; la comparación puede no ser pareja.',
+      note: 'Son fotos para tu propio seguimiento. La luz, el ángulo y la postura cambian lo que se ve, y no es una medición.',
+      clear: 'Cerrar comparación',
+    },
+    errors: {
+      notImage: 'Elige una imagen (JPEG, PNG o WebP).',
+      tooBig: 'La foto pesa más de 15 MB. Elige una más chica.',
+      heic: 'Este navegador no puede leer fotos HEIC. Elige una foto en JPEG o PNG, o activa el formato "Más compatible" de la cámara.',
+      unreadable: 'No pudimos leer esa imagen. Prueba con otra.',
+      tooLarge: 'La foto es demasiado grande. Prueba con otra.',
+      rateLimited: 'Subiste muchas fotos en poco tiempo. Espera un rato y vuelve a intentarlo.',
+      failed: 'No pudimos guardar la foto. No se guardó nada.',
+    },
+  },
+
   measures: {
     navLink: 'Medidas',
     title: 'Peso y medidas',

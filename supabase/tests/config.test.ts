@@ -69,3 +69,16 @@ Deno.test('FR-030: la función meal-photo verifica la sesión ella misma', () =>
   // Está configurada (y su verificación automática apagada porque el preflight de CORS no lleva sesión).
   assertEquals(functions['meal-photo']?.verify_jwt, false)
 })
+
+// Spec 019 (FR-005, FR-006): las fotos de progreso.
+const progressBucket = (storage.buckets?.['progress-photos'] ?? {}) as Toml
+
+Deno.test('FR-005: el bucket de fotos de progreso es privado, solo JPEG y de hasta 3 MiB', () => {
+  assertEquals(progressBucket.public, false)
+  assertEquals(progressBucket.file_size_limit, '3MiB')
+  assertEquals(progressBucket.allowed_mime_types, ['image/jpeg'])
+})
+
+Deno.test('FR-006: la función progress-photo verifica la sesión ella misma', () => {
+  assertEquals(functions['progress-photo']?.verify_jwt, false)
+})

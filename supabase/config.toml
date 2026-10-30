@@ -449,3 +449,15 @@ allowed_mime_types = ["image/jpeg"]
 # siga vigente; por eso la verificación automática del gateway queda apagada, como en las funciones públicas.
 [functions.meal-photo]
 verify_jwt = false
+
+# --- Fotos de progreso (spec 019) ---
+# Bucket privado, solo JPEG y como mucho 3 MiB. Lo sube `progress-photo` ya reducido y sin metadatos.
+# En producción el bucket lo crea la migración 20261030000100.
+[storage.buckets.progress-photos]
+public = false
+file_size_limit = "3MiB"
+allowed_mime_types = ["image/jpeg"]
+
+# Igual que `meal-photo`: verifica el token ella misma y exige la sesión vigente.
+[functions.progress-photo]
+verify_jwt = false

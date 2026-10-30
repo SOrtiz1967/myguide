@@ -1,6 +1,6 @@
 # Roadmap de specs — Fitness Tracking App
 
-Basado en la Constitution v1.2.1. Este documento define el corte y el contenido previsto de cada spec. Las specs 001 a 008, 013, 014, 015 y 016 están implementadas; el resto está pendiente (ver la tabla de estado del `README.md`).
+Basado en la Constitution v1.2.1. Este documento define el corte y el contenido previsto de cada spec. Las specs 001 a 008, 013 a 019 están implementadas; el resto está pendiente (ver la tabla de estado del `README.md`).
 
 **Contexto del MVP:** el MVP lo usa solo el autor. Las reglas de privacidad y autenticación de la Constitution se mantienen igual. Lo que se pospone es el trabajo orientado a usuarios externos (ver spec 011).
 
@@ -109,6 +109,7 @@ Basado en la Constitution v1.2.1. Este documento define el corte y el contenido 
 - Exportación, eliminación de registros y de cuenta, retención de copias de seguridad.
 - Plazo de retención de logs y herramienta de monitoreo.
 - Decisiones pendientes #7 y #9.
+- La eliminación de cuenta debe borrar también las carpetas `meal-photos/<user_id>/` y `progress-photos/<user_id>/` (spec 019).
 - Obligatoria antes de publicar con usuarios reales; no bloquea el uso personal del MVP.
 - Principios: I, IX.
 
@@ -165,6 +166,7 @@ Nacen de la primera prueba de uso del autor (2026-10-28). Las notas originales y
 - Límite a vigilar: el almacenamiento del plan gratuito de Supabase (ver `despliegue.md`).
 - Principios: I, V, VI.
 - Origen: pedido de fotos del autor (2026-10-28) y la spec 008.
+- **Estado (2026-10-30): implementada** (`specs/019-fotos-de-progreso/`): bucket privado `progress-photos`, función `progress-photo`, pantalla `/fotos` con subida, lista por fecha, corrección de fecha y pose, eliminación y comparación de dos fotos. Tope de 200 fotos por cuenta. Falta la corrida completa de Playwright.
 
 ### 020 — Evolución del peso
 
