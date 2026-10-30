@@ -82,7 +82,7 @@ test('la semana muestra el estado de cada día y el panel cambia con el día ele
 
   // el panel del día elegido dice que no es hoy y muestra sus datos
   await page.getByRole('button', { name: /por debajo del rango/ }).click()
-  const panel = page.getByRole('complementary', { name: /de .*/ })
+  const panel = page.locator('section[aria-labelledby="panel-dia-titulo"]')
   await expect(panel.getByText(w.panel.notToday)).toBeVisible()
   await expect(panel.getByText(es.goal.registered(1000, false))).toBeVisible()
   await expect(panel.getByText('75,7 kg')).toBeVisible()
