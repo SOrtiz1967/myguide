@@ -494,6 +494,67 @@ export const es = {
     title: 'Peso y medidas',
     intro:
       'Anota tu peso y tus medidas cuando quieras. Son solo datos: no hay metas ni comparaciones.',
+    fasting: {
+      label: 'Lo medí en ayunas',
+      hint: 'Es opcional. Si no la marcas, el registro queda sin indicar.',
+      tag: 'En ayunas',
+    },
+    evolution: {
+      title: 'Evolución del peso',
+      intro:
+        'Cada punto es un peso que anotaste. La línea es el promedio de los 7 días que terminan en cada registro, y solo aparece cuando hay al menos 3 registros en esos días. Son solo datos para tu seguimiento.',
+      periodLabel: 'Período',
+      periods: {
+        '30d': '30 días',
+        '90d': '90 días',
+        '6m': '6 meses',
+        '1y': '1 año',
+        all: 'Todo',
+      },
+      filterLabel: 'Pesos que se muestran',
+      filter: { all: 'Todos los pesos', fasting: 'Solo en ayunas' },
+      excluded: (n: number) =>
+        n === 1
+          ? 'Hay 1 registro del período sin indicar si fue en ayunas; no se muestra.'
+          : `Hay ${n} registros del período sin indicar si fueron en ayunas; no se muestran.`,
+      loading: 'Cargando la evolución…',
+      loadError: 'No pudimos cargar tu evolución.',
+      emptyTitle: 'No hay pesos en este período',
+      emptyBody: 'Anota un peso con el formulario de abajo y aparecerá aquí.',
+      emptyOlder: 'Hay pesos anteriores: elige «Todo» para verlos.',
+      emptyFasting: 'Ninguno está marcado en ayunas: elige «Todos los pesos» para verlos.',
+      oneRecord: 'Un solo registro no alcanza para ver una evolución.',
+      fewRecords:
+        'Donde hay menos de 3 registros en 7 días no se muestra el promedio, para no sacar conclusiones de pocos datos.',
+      axisNote: 'El eje vertical no empieza en cero: se ajusta a tus datos.',
+      chartLabel: (count: number, from: string, to: string) =>
+        `Gráfico del peso en kilogramos, ${count} registros entre ${from} y ${to}. Usa las flechas para recorrer los registros.`,
+      legend: 'Leyenda del gráfico',
+      legendWeight: 'Peso registrado',
+      legendAverage: 'Promedio de 7 días',
+      reading: (date: string, value: string, average: string | null) =>
+        average
+          ? `${date}: ${value}. Promedio de 7 días: ${average}.`
+          : `${date}: ${value}. Sin promedio de 7 días.`,
+      readingHint: 'Pasa el puntero o usa las flechas para leer un registro.',
+      stats: {
+        title: 'Cifras del período',
+        count: 'Registros',
+        last: 'Último peso',
+        average: 'Promedio de 7 días',
+        noAverage: 'Sin dato: faltan registros en los últimos 7 días.',
+        min: 'Peso más bajo',
+        max: 'Peso más alto',
+        on: (value: string, date: string) => `${value} (${date})`,
+      },
+      table: {
+        summary: 'Ver los valores en una tabla',
+        date: 'Fecha',
+        weight: 'Peso',
+        average: 'Promedio de 7 días',
+        none: 'Sin promedio',
+      },
+    },
     kinds: {
       weight: 'Peso',
       waist: 'Cintura',

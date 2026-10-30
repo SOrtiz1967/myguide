@@ -9,6 +9,7 @@ import {
   deleteMeasurement,
   fetchHistory,
   fetchLatest,
+  fetchWeightsBetween,
   saveMeasurement,
   updateMeasurement,
   type Measurement,
@@ -20,6 +21,7 @@ vi.mock('../../src/features/measures/api', async (importOriginal) => ({
   ...(await importOriginal<typeof import('../../src/features/measures/api')>()),
   fetchLatest: vi.fn(),
   fetchHistory: vi.fn(),
+  fetchWeightsBetween: vi.fn(),
   saveMeasurement: vi.fn(),
   updateMeasurement: vi.fn(),
   deleteMeasurement: vi.fn(),
@@ -37,6 +39,7 @@ const weight = (over: Partial<Measurement> = {}): Measurement => ({
   value: 72.4,
   measured_on: '2026-10-20',
   note: null,
+  fasting: false,
   ...over,
 })
 const none = { weight: null, waist: null, hips: null, chest: null, arm: null, thigh: null }
@@ -55,6 +58,7 @@ function renderPage() {
 beforeEach(() => {
   localStorage.clear()
   vi.mocked(fetchLatest).mockResolvedValue(none)
+  vi.mocked(fetchWeightsBetween).mockResolvedValue([])
   vi.mocked(fetchHistory).mockResolvedValue({ rows: [], hasMore: false })
 })
 afterEach(() => vi.clearAllMocks())
@@ -88,7 +92,7 @@ describe('peso y medidas', () => {
     await user.type(await screen.findByLabelText(/^Valor \(kg\)/), '72,4')
     await user.click(screen.getByRole('button', { name: m.form.save }))
     expect(saveMeasurement).toHaveBeenCalledWith(
-      { kind: 'weight', value: 72.4, measuredOn: today, note: '' },
+      { kind: 'weight', value: 72.4, measuredOn: today, note: '', fasting: false },
       expect.any(String),
     )
     expect(await screen.findByText(m.form.saved)).toBeInTheDocument()
@@ -141,6 +145,7 @@ describe('peso y medidas', () => {
       value: 72,
       measuredOn: '2026-10-20',
       note: '',
+      fasting: false,
     })
     expect(await screen.findByText(m.form.corrected)).toBeInTheDocument()
   })

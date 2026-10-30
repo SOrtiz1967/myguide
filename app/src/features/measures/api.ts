@@ -12,9 +12,11 @@ export interface Measurement {
   value: number
   measured_on: string
   note: string | null
+  /** Solo el peso: medido en ayunas. Falso es «sin indicar», no «no en ayunas». */
+  fasting: boolean
 }
 
-const COLUMNS = 'id, kind, value, measured_on, note'
+const COLUMNS = 'id, kind, value, measured_on, note, fasting'
 export const HISTORY_PAGE_SIZE = 20
 
 /** Mensajes seguros para los errores conocidos del servidor; nunca se muestra su texto crudo. */
@@ -95,7 +97,7 @@ export async function fetchHistory(
 
 /** Guarda (o reemplaza) el valor de una medida en un día. Idempotente por `requestId`. */
 export function saveMeasurement(
-  input: { kind: MeasureKind; value: number; measuredOn: string; note: string },
+  input: { kind: MeasureKind; value: number; measuredOn: string; note: string; fasting?: boolean },
   requestId: string,
 ): Promise<Measurement> {
   return saveRemotely(async () => {
@@ -106,6 +108,7 @@ export function saveMeasurement(
       note: input.note.trim() === '' ? null : input.note.trim(),
       request_id: requestId,
       client_timezone: detectDeviceTimezone(),
+      fasting: input.fasting ?? false,
     })
     if (error) throw error
     return toMeasurement(data)
@@ -115,7 +118,7 @@ export function saveMeasurement(
 /** Corrige el valor, la fecha y la nota de un registro. */
 export function updateMeasurement(
   id: string,
-  input: { value: number; measuredOn: string; note: string },
+  input: { value: number; measuredOn: string; note: string; fasting?: boolean },
 ): Promise<Measurement> {
   return saveRemotely(async () => {
     const { data, error } = await supabase.rpc('update_measurement', {
@@ -124,6 +127,7 @@ export function updateMeasurement(
       measured_on: input.measuredOn,
       note: input.note.trim() === '' ? null : input.note.trim(),
       client_timezone: detectDeviceTimezone(),
+      fasting: input.fasting ?? false,
     })
     if (error) throw error
     return toMeasurement(data)

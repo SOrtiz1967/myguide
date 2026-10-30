@@ -130,8 +130,8 @@ select throws_ilike(
 );
 select tests.clear_authentication();
 select ok(
-  not has_function_privilege('anon', 'public.save_measurement(text, numeric, date, text, uuid, text)', 'execute')
-  and has_function_privilege('authenticated', 'public.save_measurement(text, numeric, date, text, uuid, text)', 'execute'),
+  not has_function_privilege('anon', 'public.save_measurement(text, numeric, date, text, uuid, text, boolean)', 'execute')
+  and has_function_privilege('authenticated', 'public.save_measurement(text, numeric, date, text, uuid, text, boolean)', 'execute'),
   'anon no puede guardar y authenticated sí'
 );
 

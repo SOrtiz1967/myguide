@@ -1,6 +1,6 @@
 # Roadmap de specs — Fitness Tracking App
 
-Basado en la Constitution v1.2.1. Este documento define el corte y el contenido previsto de cada spec. Las specs 001 a 008, 013 a 019 están implementadas; el resto está pendiente (ver la tabla de estado del `README.md`).
+Basado en la Constitution v1.2.1. Este documento define el corte y el contenido previsto de cada spec. Las specs 001 a 008 y 013 a 020 están implementadas; el resto está pendiente (ver la tabla de estado del `README.md`).
 
 **Contexto del MVP:** el MVP lo usa solo el autor. Las reglas de privacidad y autenticación de la Constitution se mantienen igual. Lo que se pospone es el trabajo orientado a usuarios externos (ver spec 011).
 
@@ -175,6 +175,7 @@ Nacen de la primera prueba de uso del autor (2026-10-28). Las notas originales y
 - Sin conclusiones a partir de pocos puntos; datos faltantes como faltantes (Principio V).
 - Depende de la 008. Comparte el lenguaje visual con los gráficos de las specs 010 y 012. Principios: IV, V.
 - Origen: guía de diseño del autor (2026-10-27).
+- **Estado (2026-10-30): implementada** (`specs/020-evolucion-del-peso/`): bloque «Evolución del peso» en `/medidas` con gráfico SVG propio, períodos (30 días a Todo), promedio de 7 días (mínimo 3 registros, sin interpolar), cifras descriptivas y casilla opcional «en ayunas» con el filtro «Todos / Solo en ayunas» (preferencia del navegador). Falta la corrida completa de Playwright.
 
 ### 021 — Recordatorios y notificaciones configurables
 

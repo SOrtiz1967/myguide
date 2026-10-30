@@ -73,6 +73,10 @@ describe('contraste de los tokens del sistema (WCAG AA)', () => {
     ['line', 'tone-calorie'],
     ['line', 'tone-training'],
     ['line', 'tone-body'],
+    // Spec 020: las marcas del gráfico del peso (punto, línea del promedio y punto activo) sobre la superficie.
+    ['mark', 'surface'],
+    ['accent', 'surface'],
+    ['ink', 'surface'],
   ]
   it.each(edgePairs)('contorno %s sobre %s: 3:1 o más', (fg, bg) => {
     expect(ratio(color(fg), color(bg))).toBeGreaterThanOrEqual(3)

@@ -1,6 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { useEffect, useState, type FormEvent } from 'react'
 import { z } from 'zod'
+import { CheckboxField } from '../../components/CheckboxField'
 import { ConfirmDialog } from '../../components/ConfirmDialog'
 import { ErrorState } from '../../components/ErrorState'
 import { Field } from '../../components/Field'
@@ -26,6 +27,7 @@ import {
   type MeasureKind,
 } from './measures'
 import { measuresKey, useLatestMeasures, useMeasureHistory } from './useMeasures'
+import { WeightEvolution } from './WeightEvolution'
 
 const m = es.measures
 const FORM_ID = 'measure'
@@ -50,6 +52,7 @@ export function MeasuresPage() {
       </div>
       {message ? <SuccessMessage>{message}</SuccessMessage> : null}
       <LatestCards selected={kind} onSelect={setKind} />
+      {kind === 'weight' ? <WeightEvolution /> : null}
       <MeasureForm
         key={editing?.id ?? 'new'}
         kind={kind}
@@ -141,6 +144,7 @@ function MeasureForm({ kind, editing, onKind, onDone, onCancel }: FormProps) {
   )
   const [date, setDate] = useState(editing?.measured_on ?? useDraftNow?.date ?? today)
   const [note, setNote] = useState(editing?.note ?? useDraftNow?.note ?? '')
+  const [fasting, setFasting] = useState(editing?.fasting ?? false)
   const [errors, setErrors] = useState<{ value?: string; date?: string; note?: string }>({})
   const [failure, setFailure] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
@@ -176,12 +180,23 @@ function MeasureForm({ kind, editing, onKind, onDone, onCancel }: FormProps) {
 
     setBusy(true)
     try {
-      if (editing) await updateMeasurement(editing.id, { value: parsed, measuredOn: date, note })
-      else await saveMeasurement({ kind, value: parsed, measuredOn: date, note }, requestId)
+      if (editing)
+        await updateMeasurement(editing.id, {
+          value: parsed,
+          measuredOn: date,
+          note,
+          fasting: kind === 'weight' && fasting,
+        })
+      else
+        await saveMeasurement(
+          { kind, value: parsed, measuredOn: date, note, fasting: kind === 'weight' && fasting },
+          requestId,
+        )
       if (!editing) {
         discardDraft(userId, FORM_ID)
         setValue('')
         setNote('')
+        setFasting(false)
         // Una intención nueva (otro valor) no puede reutilizar la solicitud ya cumplida.
         setRequestId(newRequestId())
       }
@@ -274,6 +289,17 @@ function MeasureForm({ kind, editing, onKind, onDone, onCancel }: FormProps) {
         onChange={(event) => setNote(event.target.value)}
         error={errors.note}
       />
+      {kind === 'weight' ? (
+        <div className="flex flex-col gap-1">
+          <CheckboxField
+            label={m.fasting.label}
+            checked={fasting}
+            disabled={busy}
+            onChange={(event) => setFasting(event.target.checked)}
+          />
+          <p className="text-sm text-muted">{m.fasting.hint}</p>
+        </div>
+      ) : null}
 
       {failure ? <ErrorState message={`${m.form.notSaved} ${failure}`} /> : null}
 
@@ -346,6 +372,7 @@ function History({
                 <p className="font-medium">
                   {m.history.row(formatMeasure(row.kind, row.value), formatDate(row.measured_on))}
                 </p>
+                {row.fasting ? <p className="text-sm text-muted">{m.fasting.tag}</p> : null}
                 {row.note ? <p className="break-words text-sm text-muted">{row.note}</p> : null}
               </div>
               <span className="flex gap-2">
