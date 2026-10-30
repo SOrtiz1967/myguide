@@ -1,6 +1,6 @@
 # Roadmap de specs — Fitness Tracking App
 
-Basado en la Constitution v1.2.1. Este documento define el corte y el contenido previsto de cada spec. Las specs 001 a 008 y 013 a 020 están implementadas; el resto está pendiente (ver la tabla de estado del `README.md`).
+Basado en la Constitution v1.2.1. Este documento define el corte y el contenido previsto de cada spec. Las specs 001 a 008 y 013 a 020 y la 022 están implementadas; el resto está pendiente (ver la tabla de estado del `README.md`).
 
 **Contexto del MVP:** el MVP lo usa solo el autor. Las reglas de privacidad y autenticación de la Constitution se mantienen igual. Lo que se pospone es el trabajo orientado a usuarios externos (ver spec 011).
 
@@ -195,6 +195,7 @@ Nacen de la primera prueba de uso del autor (2026-10-28). Las notas originales y
 - La app no recomienda suplementos, dosis, horarios ni combinaciones, ni afirma efectos (Principio IV y límites de alcance). Un día sin marca es «sin registro», no «olvidado».
 - Principios: I, IV, VI.
 - Origen: nota 8.
+- **Estado (2026-10-30): implementada** (`specs/022-suplementacion/`), antes que la 021 porque los recordatorios la necesitan: pantalla `/suplementos` (lista propia con nombre y dosis en texto libre, archivar, restaurar, eliminar; tope de 30) y bloque «Suplementos» en el panel del día del inicio con «Tomado» o «Sin registro». Falta la corrida completa de Playwright.
 
 ### 023 — Ampliación del catálogo de alimentos
 

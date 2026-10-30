@@ -6,6 +6,7 @@ export type NavIconName =
   | 'more'
   | 'ruler'
   | 'camera'
+  | 'pill'
   | 'food'
   | 'bolt'
   | 'steps'
@@ -20,6 +21,7 @@ const PATHS: Record<NavIconName, string> = {
   more: 'M5 12h.01M12 12h.01M19 12h.01',
   ruler: 'M3 15 15 3l6 6L9 21zM7.5 10.5l2 2M10.5 7.5l2 2M13.5 4.5l2 2',
   camera: 'M4 8h3l1.5-2.5h7L17 8h3v11H4zM12 16.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z',
+  pill: 'M8.5 15.5 15.5 8.5M9 3.5a5 5 0 0 1 7.07 7.07l-5.5 5.5a5 5 0 0 1-7.07-7.07zM11.5 10l2.5 2.5',
   food: 'M12 7c-2-2.5-6-1.5-6 3 0 4 3 9 6 9s6-5 6-9c0-4.5-4-5.5-6-3zM12 7c0-2 .8-3 2-3.5',
   bolt: 'M13 3 5 13.5h6L10 21l8-10.5h-6z',
   steps: 'M4 20h4v-5h4v-5h4V5h4',

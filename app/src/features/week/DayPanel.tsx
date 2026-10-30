@@ -10,6 +10,7 @@ import { formatDay } from '../meals/meals'
 import { fetchWeightsBetween } from '../measures/api'
 import { formatMeasure } from '../measures/measures'
 import { useProfile } from '../profile/useProfile'
+import { DaySupplements } from '../supplements/DaySupplements'
 import { useDaySessions } from '../training/useCalendar'
 import { statusLabel } from '../training/trainingText'
 import { WorkoutDayActions } from '../training/WorkoutDayActions'
@@ -118,6 +119,7 @@ export function DayPanel({ date, today }: { date: string; today: string }) {
             </li>
           </ul>
         </HomeSection>
+        <DaySupplements date={date} today={today} />
       </div>
     </section>
   )
