@@ -20,7 +20,6 @@ const complete: Profile = {
   timezone: 'America/Argentina/Buenos_Aires',
   unit_system: 'metric',
   onboarding_completed_at: '2026-10-20T00:00:00Z',
-  weight_reminder: false,
   goal_type: null,
   experience: null,
   job_activity: null,

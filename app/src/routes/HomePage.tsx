@@ -7,6 +7,7 @@ import { VerifyEmailBanner } from '../features/auth/VerifyEmailBanner'
 import { LastRecords } from '../features/home/LastRecords'
 import { useDayStatus } from '../features/meals/useDayStatus'
 import { useToday } from '../features/meals/useToday'
+import { ReminderCards } from '../features/reminders/ReminderCards'
 import { isProfileComplete } from '../features/profile/profileValues'
 import { useProfile } from '../features/profile/useProfile'
 import { DayPanel } from '../features/week/DayPanel'
@@ -51,6 +52,7 @@ export function HomePage() {
 
       {online ? (
         <div className="flex flex-col gap-4">
+          <ReminderCards today={today} />
           <WeekStrip
             anchor={shownAnchor}
             today={today}

@@ -9,7 +9,6 @@ import { TrainingBlock } from '../home/TrainingBlock'
 import { formatDay } from '../meals/meals'
 import { fetchWeightsBetween } from '../measures/api'
 import { formatMeasure } from '../measures/measures'
-import { useProfile } from '../profile/useProfile'
 import { DaySupplements } from '../supplements/DaySupplements'
 import { useDaySessions } from '../training/useCalendar'
 import { statusLabel } from '../training/trainingText'
@@ -17,8 +16,7 @@ import { WorkoutDayActions } from '../training/WorkoutDayActions'
 
 const p = es.week.panel
 
-function WeightRow({ date, isToday }: { date: string; isToday: boolean }) {
-  const { data: profile } = useProfile()
+function WeightRow({ date }: { date: string }) {
   const weight = useQuery({
     queryKey: ['measures', 'day', date],
     queryFn: () => fetchWeightsBetween(date, date),
@@ -37,14 +35,6 @@ function WeightRow({ date, isToday }: { date: string; isToday: boolean }) {
         </p>
       ) : null}
       {weight.isSuccess && !value ? <p className="text-muted">{p.noWeight}</p> : null}
-      {weight.isSuccess && !value && isToday && profile?.weight_reminder ? (
-        <p role="note" className="flex flex-wrap items-center gap-x-3 text-sm">
-          <span>{p.reminder}</span>
-          <Link to="/medidas" className="underline">
-            {p.reminderAction}
-          </Link>
-        </p>
-      ) : null}
     </HomeSection>
   )
 }
@@ -99,7 +89,7 @@ export function DayPanel({ date, today }: { date: string; today: string }) {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
         <CaloriesBlock date={date} />
         {isToday ? <TrainingBlock /> : <DaySessions date={date} today={today} />}
-        <WeightRow date={date} isToday={isToday} />
+        <WeightRow date={date} />
         <HomeSection title={p.actionsTitle} className="md:col-span-2 lg:col-span-3">
           <ul className="grid grid-cols-1 gap-2 sm:grid-cols-3">
             <li>

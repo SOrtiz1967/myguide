@@ -44,20 +44,22 @@ test('la semana muestra el estado de cada día y el panel cambia con el día ele
   const foodId = dbQuery(
     `select tests.create_food(${user}, 'Arroz propio e2e', null, 100, '100g', 1, 1, 1)`,
   )
-  // Una semana completa hacia atrás: por debajo, en rango, por encima y sin registro.
+  // La semana anterior completa (de lunes a domingo), sea cual sea el día de hoy: por debajo, en rango, por encima y sin
+  // registro. Los desfases fijos (-7, -6…) caían en la semana en curso de viernes a domingo.
+  const monday = -(((new Date().getDay() + 6) % 7) + 7)
   for (const [offset, kcal] of [
-    [-7, 1000],
-    [-6, 2000],
-    [-5, 2600],
+    [monday, 1000],
+    [monday + 1, 2000],
+    [monday + 2, 2600],
   ] as const) {
     dbQuery(
       `select tests.create_meal_entry(${user}, '${iso(offset)}', 'lunch', '${foodId}', ${kcal})`,
     )
   }
-  dbQuery(`select tests.create_session(${user}, date '${iso(-7)}', 'completed', null, false)`)
-  dbQuery(`select tests.create_session(${user}, date '${iso(-4)}', 'planned', null, false)`)
+  dbQuery(`select tests.create_session(${user}, date '${iso(monday)}', 'completed', null, false)`)
+  dbQuery(`select tests.create_session(${user}, date '${iso(monday + 3)}', 'planned', null, false)`)
   dbQuery(
-    `insert into public.body_measurements (user_id, kind, value, measured_on, client_request_id) values (${user}, 'weight', 75.7, '${iso(-7)}', gen_random_uuid())`,
+    `insert into public.body_measurements (user_id, kind, value, measured_on, client_request_id) values (${user}, 'weight', 75.7, '${iso(monday)}', gen_random_uuid())`,
   )
 
   await page.goto('/')
@@ -86,45 +88,13 @@ test('la semana muestra el estado de cada día y el panel cambia con el día ele
   await expect(panel.getByText('75,7 kg')).toBeVisible()
   await expect(panel.getByRole('link', { name: es.home.calories.register })).toHaveAttribute(
     'href',
-    `/comidas/${iso(-7)}/agregar`,
+    `/comidas/${iso(monday)}/agregar`,
   )
 
   // volver a esta semana
   await page.getByRole('button', { name: w.current }).click()
   await expect(page.getByText(w.panel.today, { exact: true })).toBeVisible()
   await expect(page.getByRole('button', { name: w.current })).toHaveCount(0)
-})
-
-test('el recordatorio de peso es una preferencia: apagado no avisa, encendido avisa solo sin peso de hoy', async ({
-  page,
-}) => {
-  const email = uniqueEmail('wk')
-  await register(page, email)
-  await page.goto('/')
-  await expect(page.getByText(w.panel.noWeight)).toBeVisible()
-  await expect(page.getByText(w.panel.reminder)).toHaveCount(0)
-
-  await page.goto('/perfil')
-  await page.getByLabel(es.profile.goalForm.weightReminder).check()
-  await page.getByRole('radio', { name: es.onboarding.goal.options.recomposition.label }).check()
-  await page.getByRole('radio', { name: es.onboarding.activity.experienceOptions.beginner }).check()
-  await page.getByRole('radio', { name: es.onboarding.activity.jobOptions.mixed }).check()
-  await page.getByLabel(es.onboarding.activity.days).selectOption('2')
-  await page.getByRole('button', { name: es.profile.goalForm.save }).click()
-  await expect(page.getByText(es.profile.goalForm.saved)).toBeVisible()
-  expect(
-    dbQuery(
-      `select weight_reminder, goal_type from public.profiles where user_id = ${userOf(email)}`,
-    ),
-  ).toBe('t|recomposition')
-
-  await page.goto('/')
-  await expect(page.getByText(w.panel.reminder)).toBeVisible()
-  dbQuery(
-    `insert into public.body_measurements (user_id, kind, value, measured_on, client_request_id) values (${userOf(email)}, 'weight', 70, '${iso(0)}', gen_random_uuid())`,
-  )
-  await page.reload()
-  await expect(page.getByText(w.panel.reminder)).toHaveCount(0)
 })
 
 test('menú: lateral en escritorio y barra inferior con «Más» en celular, sin desbordes', async ({

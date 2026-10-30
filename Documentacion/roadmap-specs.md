@@ -1,6 +1,6 @@
 # Roadmap de specs — Fitness Tracking App
 
-Basado en la Constitution v1.2.1. Este documento define el corte y el contenido previsto de cada spec. Las specs 001 a 008 y 013 a 020 y la 022 están implementadas; el resto está pendiente (ver la tabla de estado del `README.md`).
+Basado en la Constitution v1.2.1. Este documento define el corte y el contenido previsto de cada spec. Las specs 001 a 008 y 013 a 022 están implementadas; el resto está pendiente (ver la tabla de estado del `README.md`).
 
 **Contexto del MVP:** el MVP lo usa solo el autor. Las reglas de privacidad y autenticación de la Constitution se mantienen igual. Lo que se pospone es el trabajo orientado a usuarios externos (ver spec 011).
 
@@ -186,6 +186,7 @@ Nacen de la primera prueba de uso del autor (2026-10-28). Las notas originales y
 - **Aviso dentro de la app:** tarjeta en el inicio cuando toca cargar algo. No necesita servicios externos ni permisos. No avisa con la app cerrada, y esa limitación es la razón del feature futuro 024.
 - Depende de la 019 y la 022. Principios: I, IV, VI, VII.
 - Origen: nota 3.
+- **Estado (2026-10-30): implementada** (`specs/021-recordatorios/`), después de la 022 que necesita: tabla `reminders` (peso, fotos y suplementos; todos los días, cada tantos días o ciertos días), sección «Recordatorios» en el perfil y tarjetas en el inicio con «Más tarde» (hasta mañana, guardado en la cuenta) y «Desactivar». Reemplaza la casilla de la spec 016 y elimina `profiles.weight_reminder` (lo activado pasa a un recordatorio diario de peso). El aviso es solo dentro de la app; la configuración queda lista para la 024. Falta la corrida completa de Playwright.
 
 ### 022 — Suplementación
 

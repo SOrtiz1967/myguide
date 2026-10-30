@@ -146,8 +146,6 @@ export const es = {
       addWeight: 'Registrar peso',
       addWorkout: 'Registrar entreno',
       addSleep: 'Registrar sueño o pasos',
-      reminder: 'Hoy todavía no registraste tu peso. Es opcional.',
-      reminderAction: 'Registrar peso',
     },
   },
   nav: {
@@ -403,6 +401,56 @@ export const es = {
       not_found: 'No encontramos este registro.',
     },
   },
+  reminders: {
+    title: 'Recordatorios',
+    intro:
+      'Elige si quieres un aviso dentro de la aplicación y cada cuánto. Es opcional y puedes cambiarlo o apagarlo cuando quieras.',
+    names: { weight: 'Peso', photos: 'Fotos de progreso', supplements: 'Suplementos' },
+    enable: {
+      weight: 'Avisarme para registrar mi peso',
+      photos: 'Avisarme para subir una foto de progreso',
+      supplements: 'Avisarme para marcar mis suplementos',
+    },
+    frequencyLabel: 'Con qué frecuencia',
+    frequencies: {
+      daily: 'Todos los días',
+      every_n_days: 'Cada tantos días',
+      weekdays: 'Ciertos días de la semana',
+    },
+    everyN: 'Cada cuántos días',
+    everyNHint: (min: number, max: number) => `Un número de ${min} a ${max}.`,
+    weekdaysLabel: 'Días de la semana',
+    save: (name: string) => `Guardar recordatorio de ${name.toLowerCase()}`,
+    saving: 'Guardando…',
+    saved: (name: string) => `Recordatorio de ${name.toLowerCase()} guardado`,
+    notSaved: 'No se guardó nada.',
+    loadError: 'No pudimos cargar tus recordatorios.',
+    limitNote:
+      'Los avisos aparecen en el inicio cuando abres la aplicación. Con la aplicación cerrada no te avisan.',
+    card: {
+      region: 'Recordatorios de hoy',
+      names: { weight: 'Peso', photos: 'Fotos de progreso', supplements: 'Suplementos' },
+      text: {
+        weight: 'Según tu recordatorio, hoy puedes registrar tu peso. Es opcional.',
+        photos: 'Según tu recordatorio, hoy puedes subir una foto de progreso. Es opcional.',
+        supplements:
+          'Según tu recordatorio, hoy puedes marcar tus suplementos en el bloque «Suplementos» de abajo. Es opcional.',
+      },
+      weightAction: 'Registrar peso',
+      photosAction: 'Subir foto',
+      later: 'Más tarde',
+      disable: 'Desactivar',
+    },
+    errors: {
+      generic: 'No pudimos guardar. Revisa los datos e inténtalo de nuevo.',
+      kind_invalid: 'Ese recordatorio no existe.',
+      frequency_invalid: 'Elige una frecuencia válida.',
+      every_n_invalid: 'Escribe un número de días entre 2 y 30.',
+      weekdays_invalid: 'Elige al menos un día de la semana.',
+      not_found: 'Ese recordatorio todavía no está configurado.',
+    },
+  },
+
   supplements: {
     navLink: 'Suplementos',
     title: 'Suplementos',
@@ -770,9 +818,6 @@ export const es = {
       saved: 'Objetivo y actividad guardados',
       incomplete: 'Elige una opción en cada campo.',
       recalculate: 'Recalcular mi objetivo calórico',
-      weightReminder: 'Recordarme pesarme',
-      weightReminderHint:
-        'Si lo activas, el inicio te avisa de forma discreta cuando hoy no hay peso. Es opcional y sin notificaciones.',
     },
     emptyTitle: 'Todavía no completaste tu perfil',
     emptyBody:

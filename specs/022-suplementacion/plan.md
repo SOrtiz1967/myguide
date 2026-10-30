@@ -9,7 +9,7 @@ Dos tablas chicas (`supplements` y `supplement_marks`) con lectura propia por RL
 ## Contexto técnico
 
 - Base de datos: `supabase/migrations/20261030000300_supplements.sql`: tablas con RLS, nombre único entre los no archivados (índice parcial sobre `lower(name)`), funciones `create_supplement` (idempotente por `request_id`, tope de 30), `update_supplement`, `set_supplement_archived`, `set_supplement_taken` (marca o quita, sin días futuros) y borrado directo con política propia (las marcas caen en cascada).
-- Aplicación: `features/supplements/` con `api.ts`, `useSupplements.ts`, `SupplementsPage.tsx`, `SupplementForm.tsx`, `DaySupplements.tsx` (bloque del inicio) y `supplementText.ts`; ruta `/suplementos`, ícono y entrada en «Más»; bloque en `features/week/DayPanel.tsx`.
+- Aplicación: `features/supplements/` con `api.ts`, `useSupplements.ts`, `SupplementsPage.tsx`, `SupplementForm.tsx` y `DaySupplements.tsx` (bloque del inicio); ruta `/suplementos`, ícono y entrada en «Más»; bloque en `features/week/DayPanel.tsx`.
 - Pruebas: pgTAP, Vitest (componentes), Playwright (recorrido, aislamiento y accesibilidad).
 
 ## Revisión de la Constitution

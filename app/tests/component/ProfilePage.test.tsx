@@ -10,6 +10,11 @@ import { ProfilePage } from '../../src/features/profile/ProfilePage'
 import { detectDeviceTimezone } from '../../src/lib/timezone'
 
 vi.mock('../../src/features/profile/api', () => ({ fetchProfile: vi.fn(), updateProfile: vi.fn() }))
+// La sección «Recordatorios» (spec 021) vive en el perfil y no es lo que se prueba aquí.
+vi.mock('../../src/features/reminders/api', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('../../src/features/reminders/api')>()),
+  fetchReminders: vi.fn().mockResolvedValue([]),
+}))
 vi.mock('../../src/lib/timezone', async (importOriginal) => ({
   ...(await importOriginal<typeof import('../../src/lib/timezone')>()),
   detectDeviceTimezone: vi.fn(),
@@ -30,7 +35,6 @@ function profile(overrides: Partial<Profile> = {}): Profile {
     timezone: BA,
     unit_system: 'metric',
     onboarding_completed_at: '2026-10-20T00:00:00Z',
-    weight_reminder: false,
     goal_type: null,
     experience: null,
     job_activity: null,

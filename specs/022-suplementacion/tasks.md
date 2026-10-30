@@ -11,7 +11,7 @@
 
 - [x] T003 [US1] `app/src/features/supplements/api.ts` y `useSupplements.ts`: leer, crear, corregir, archivar, eliminar y marcar, con errores seguros.
 - [x] T004 [US1] Copy `supplements` en `app/src/copy/es.ts`, neutral y con tuteo.
-- [x] T005 [US1] `SupplementForm.tsx` y `SupplementsPage.tsx`: alta con borrador, lista, corrección, archivar, restaurar y eliminar con confirmación, estados vacío, de carga y de error.
+- [x] T005 [US1] `SupplementForm.tsx` y `SupplementsPage.tsx`: alta, lista, corrección, archivar, restaurar y eliminar con confirmación, estados vacío, de carga y de error.
 - [x] T006 [US1] Ruta `/suplementos`, ícono «pill» y entrada en «Más».
 
 ## Fase 3: Historia 2 — Marcar en el inicio

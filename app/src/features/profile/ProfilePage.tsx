@@ -6,6 +6,7 @@ import { es } from '../../copy/es'
 import { discardDraft } from '../../lib/drafts'
 import { detectDeviceTimezone, isValidTimezone } from '../../lib/timezone'
 import { ChangePasswordForm } from '../auth/ChangePasswordForm'
+import { RemindersSection } from '../reminders/RemindersSection'
 import { GoalProfileForm } from './GoalProfileForm'
 import { ProfileForm } from './ProfileForm'
 import { toProfileUpdate } from './profileValues'
@@ -55,6 +56,8 @@ export function ProfilePage() {
       {confirmed ? <SuccessMessage>{es.profile.saved}</SuccessMessage> : null}
 
       <GoalProfileForm profile={profile} />
+
+      <RemindersSection />
 
       <section aria-labelledby="cambiar-contrasena" className="card flex flex-col gap-4">
         <h2 id="cambiar-contrasena" className="text-base font-bold">
