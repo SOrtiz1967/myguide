@@ -82,3 +82,8 @@ Deno.test('FR-005: el bucket de fotos de progreso es privado, solo JPEG y de has
 Deno.test('FR-006: la función progress-photo verifica la sesión ella misma', () => {
   assertEquals(functions['progress-photo']?.verify_jwt, false)
 })
+
+// Spec 009 (FR-009, FR-015): la estimación con IA.
+Deno.test('FR-015: la función estimate-meal verifica la sesión ella misma', () => {
+  assertEquals(functions['estimate-meal']?.verify_jwt, false)
+})

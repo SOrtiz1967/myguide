@@ -461,3 +461,8 @@ allowed_mime_types = ["image/jpeg"]
 # Igual que `meal-photo`: verifica el token ella misma y exige la sesión vigente.
 [functions.progress-photo]
 verify_jwt = false
+
+# --- Estimación de comidas con IA (spec 009) ---
+# Verifica el token ella misma y exige la sesión vigente. La clave de Gemini es un secreto de servidor.
+[functions.estimate-meal]
+verify_jwt = false
