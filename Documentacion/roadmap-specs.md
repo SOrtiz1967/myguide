@@ -204,6 +204,7 @@ Nacen de la primera prueba de uso del autor (2026-10-28). Las notas originales y
 ### 023 — Ampliación del catálogo de alimentos
 
 - Empieza con una investigación de fuentes antes de importar nada: cobertura medida para Argentina, licencia, atribución y costo de limpiar los nombres.
+- **Investigación hecha (2026-11-02)**, en `research_notes/Ampliación del catálogo de alimentos/fuentes_alimentos.md`. El catálogo local solo tiene la muestra de desarrollo y producción no tiene nada cargado: lo que más lo amplía es terminar las cargas ya programadas de Open Food Facts (unos 7.000 productos de Argentina con calorías) y USDA (unos 8.000 genéricos en inglés), que dependen de los issues 02, 04 y 05. Ninguna fuente nueva aporta datos argentinos con licencia clara; ARGENFOODS es la única candidata y exige permiso escrito de la Universidad Nacional de Luján (issue 09). Lo que queda por construir, si el autor lo quiere, es una capa de sinónimos argentinos en la búsqueda, que solo tiene sentido con USDA cargado. Sin spec de implementación hasta que el autor decida.
 - Candidatas a evaluar (sin verificar): carga completa de USDA FoodData Central (hoy pendiente, issue 02 del autor), mayor volumen de Open Food Facts de Argentina, tablas argentinas de composición de alimentos y otras fuentes que surjan. Cada fuente nueva exige su licencia y atribución en `fuentes-datos.md` (Principio X).
 - Complementa la spec 009: el catálogo reduce los alimentos que hay que estimar con IA.
 - Principios: II, X.

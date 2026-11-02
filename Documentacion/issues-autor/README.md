@@ -2,16 +2,17 @@
 
 Cada archivo `NN-*.md` es un issue listo para publicar en GitHub: la primera línea (`# ...`) es el título y el resto es la descripción. Son las tareas que solo puede hacer el autor (cuentas, claves, decisiones legales); ninguna bloquea el desarrollo de las próximas specs.
 
-| #   | Tarea                                                               | Bloquea                                                  |
-| --- | ------------------------------------------------------------------- | -------------------------------------------------------- |
-| 01  | Subir el repositorio a GitHub y publicar estos issues               | Nada (es el primer paso para tener los issues en GitHub) |
-| 02  | Descargar los datos de USDA para los alimentos genéricos            | Que el catálogo tenga genéricos (arroz, pollo, manzana…) |
-| 03  | Probar el envío real de correos con Brevo                           | El despliegue (04)                                       |
-| 04  | Despliegue inicial en producción                                    | La carga del catálogo en producción (05)                 |
-| 05  | Cargar el catálogo de alimentos en producción                       | Usar el catálogo en la app publicada                     |
-| 06  | Revisión legal de la licencia de Open Food Facts (ODbL)             | Abrir la app a otras personas                            |
-| 07  | (Opcional) Instalar las skills de fitness                           | Nada                                                     |
-| 08  | Revisar las licencias y las traducciones del catálogo de ejercicios | Abrir la app a otras personas (no bloquea el desarrollo) |
+| #   | Tarea                                                                 | Bloquea                                                  |
+| --- | --------------------------------------------------------------------- | -------------------------------------------------------- |
+| 01  | Subir el repositorio a GitHub y publicar estos issues                 | Nada (es el primer paso para tener los issues en GitHub) |
+| 02  | Descargar los datos de USDA para los alimentos genéricos              | Que el catálogo tenga genéricos (arroz, pollo, manzana…) |
+| 03  | Probar el envío real de correos con Brevo                             | El despliegue (04)                                       |
+| 04  | Despliegue inicial en producción                                      | La carga del catálogo en producción (05)                 |
+| 05  | Cargar el catálogo de alimentos en producción                         | Usar el catálogo en la app publicada                     |
+| 06  | Revisión legal de la licencia de Open Food Facts (ODbL)               | Abrir la app a otras personas                            |
+| 07  | (Opcional) Instalar las skills de fitness                             | Nada                                                     |
+| 08  | Revisar las licencias y las traducciones del catálogo de ejercicios   | Abrir la app a otras personas (no bloquea el desarrollo) |
+| 09  | Pedir permiso a la Universidad Nacional de Luján para usar ARGENFOODS | Sumar alimentos argentinos al catálogo (spec 023)        |
 
 ## Publicarlos como issues
 

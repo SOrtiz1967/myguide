@@ -30,7 +30,7 @@ Desarrollada con **Spec-Driven Development** (Spec Kit). Los principios del proy
 | 020 Evolución del peso                      | Implementada: gráfico del peso con promedio de 7 días, períodos y peso en ayunas opcional en `/medidas`; falta la corrida completa de e2e                                                                   |
 | 021 Recordatorios configurables             | Implementada: avisos dentro de la app para peso, fotos y suplementos, con frecuencia configurable; falta la corrida completa de e2e                                                                         |
 | 022 Suplementación                          | Implementada: lista propia, marcas «Tomado» / «Sin registro» en el inicio; falta la corrida completa de e2e                                                                                                 |
-| 023 Ampliación del catálogo de alimentos    | Pendiente; empieza con una investigación de fuentes                                                                                                                                                         |
+| 023 Ampliación del catálogo de alimentos    | Investigación de fuentes hecha: ninguna fuente nueva con licencia clara; falta terminar las cargas (issues 02, 04, 05) y pedir permiso a ARGENFOODS (issue 09)                                              |
 | 024 Notificaciones push                     | Feature futuro; depende de la 021                                                                                                                                                                           |
 
 ## Stack

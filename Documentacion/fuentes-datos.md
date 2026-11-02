@@ -46,13 +46,14 @@ La ODbL exige que una **base de datos derivada que se distribuya o se ponga a di
 
 ## Fuentes evaluadas y no usadas
 
-| Fuente                                            | Motivo                                                                                                                       |
-| ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| APIs comerciales (FatSecret, Nutritionix, Edamam) | Limitan o prohíben guardar los datos; chocan con el Principio X (copia local)                                                |
-| ARGENFOODS (Universidad Nacional de Luján)        | Referencia local, pero no se encontraron términos de descarga ni licencia; se contactará a la universidad como mejora futura |
-| Tabla de composición del INTA                     | Sin datos abiertos ni licencia verificada                                                                                    |
-| BEDCA (España) y tablas de Chile                  | Nombres en español, pero licencia sin verificar                                                                              |
-| Branded Foods de USDA                             | Productos de Estados Unidos; no aportan para Argentina                                                                       |
+| Fuente                                                               | Motivo                                                                                                                                                                                                                   |
+| -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| APIs comerciales (FatSecret, Nutritionix, Edamam)                    | Limitan o prohíben guardar los datos; chocan con el Principio X (copia local)                                                                                                                                            |
+| ARGENFOODS (Universidad Nacional de Luján)                           | Referencia local (capítulo nacional de INFOODS), pero el sitio no indica descarga, licencia ni permiso (revisado el 2026-11-02). Pedir autorización por escrito a la universidad (issue 09); hasta tenerla no se importa |
+| Tabla de composición del INTA                                        | Sin datos abiertos ni licencia verificada                                                                                                                                                                                |
+| BEDCA (España) y tablas de Chile                                     | Nombres en español, pero licencia sin verificar                                                                                                                                                                          |
+| Branded Foods y FNDDS de USDA                                        | Productos y consumos de Estados Unidos, en inglés; no aportan para Argentina                                                                                                                                             |
+| CoFID (Reino Unido), AFCD (Australia), BDA (Italia), NCC (Minnesota) | No son argentinas ni están en español; sus licencias añaden obligaciones (redistribuir con los mismos términos, derechos de autor o pago) sin ganancia clara. Revisado el 2026-11-02                                     |
 
 ## Cómo se aplica en la aplicación
 
