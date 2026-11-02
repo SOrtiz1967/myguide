@@ -87,3 +87,8 @@ Deno.test('FR-006: la función progress-photo verifica la sesión ella misma', (
 Deno.test('FR-015: la función estimate-meal verifica la sesión ella misma', () => {
   assertEquals(functions['estimate-meal']?.verify_jwt, false)
 })
+
+// Spec 011 (FR-007, FR-010): la eliminación de cuenta.
+Deno.test('FR-010: la función delete-account verifica la sesión ella misma', () => {
+  assertEquals(functions['delete-account']?.verify_jwt, false)
+})

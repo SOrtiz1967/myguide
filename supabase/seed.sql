@@ -7,7 +7,7 @@ create schema if not exists tests;
 -- (a menos que se pase NULL, para probar el rechazo). Devuelve su id.
 create or replace function tests.create_user(
   p_email text,
-  p_privacy_version text default '2026-10-16'
+  p_privacy_version text default '2026-11-01'
 ) returns uuid
 language plpgsql
 as $$

@@ -466,3 +466,8 @@ verify_jwt = false
 # Verifica el token ella misma y exige la sesión vigente. La clave de Gemini es un secreto de servidor.
 [functions.estimate-meal]
 verify_jwt = false
+
+# --- Eliminacion de cuenta (spec 011) ---
+# Verifica el token y la contrasena ella misma; borra los archivos y despues la cuenta.
+[functions.delete-account]
+verify_jwt = false

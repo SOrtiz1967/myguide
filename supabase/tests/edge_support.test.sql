@@ -60,7 +60,7 @@ select is(
 );
 
 -- aviso de privacidad vigente ----------------------------------------------------------------
-select is(public.is_privacy_notice_current('2026-10-16'), true, 'FR-029: la version vigente se acepta');
+select is(public.is_privacy_notice_current('2026-11-01'), true, 'FR-029: la version vigente se acepta');
 select is(public.is_privacy_notice_current('1999-01-01'), false, 'FR-029: una version desconocida se rechaza');
 
 -- permisos ---------------------------------------------------------------------------------------

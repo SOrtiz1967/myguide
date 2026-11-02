@@ -24,7 +24,7 @@ select is(
 
 select is(
   (select privacy_notice_version from public.profiles where user_id = :'uid'),
-  '2026-10-16',
+  '2026-11-01',
   'FR-029: el perfil guarda la version del aviso aceptada'
 );
 

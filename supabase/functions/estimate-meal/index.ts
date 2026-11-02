@@ -48,9 +48,9 @@ Deno.serve((req) =>
         return Array.isArray(items) ? items : null
       },
       put: async (userId, requestId, kind, items) => {
-        // Se borran los resultados vencidos de la cuenta y se guarda el nuevo (reemplaza uno vencido de la misma solicitud).
+        // Se borran los resultados vencidos de todas las cuentas (no se conservan más de 24 horas) y se guarda el nuevo (reemplaza uno vencido de la misma solicitud).
         const since = new Date(Date.now() - CACHE_HOURS * 3600 * 1000).toISOString()
-        await admin.from('ai_estimates').delete().eq('user_id', userId).lt('created_at', since)
+        await admin.from('ai_estimates').delete().lt('created_at', since)
         const { error } = await admin.from('ai_estimates').upsert({
           user_id: userId,
           request_id: requestId,
