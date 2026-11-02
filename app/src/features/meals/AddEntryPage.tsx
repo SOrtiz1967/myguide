@@ -8,6 +8,7 @@ import { useDraft } from '../../lib/useDraft'
 import { useAuth } from '../auth/useAuth'
 import type { FoodSummary } from '../foods/api'
 import type { RecentItem } from './api'
+import { EstimateFlow } from './ai/EstimateFlow'
 import { FoodChooser } from './FoodChooser'
 import { formatDay, isMeal, MEALS, mealLabel, parseDate, suggestMeal, type Meal } from './meals'
 import { ManualEntryForm } from './ManualEntryForm'
@@ -102,6 +103,8 @@ function AddEntryForm({ date }: { date: string }) {
       : null,
   )
   const [restored, setRestored] = useState(draft.restored)
+  // «Describir con IA» (spec 009): una pantalla aparte que no guarda nada hasta que la persona confirma.
+  const [ai, setAi] = useState(false)
 
   // Escribir a mano: se abre solo si había un borrador a medias (FR-037) o al repetir un reciente manual.
   const manualDraftId = `meal-manual-${date}-${meal}`
@@ -194,13 +197,28 @@ function AddEntryForm({ date }: { date: string }) {
         </div>
       ) : null}
 
-      {manual ? (
+      {ai ? (
+        <EstimateFlow
+          userId={userId}
+          date={date}
+          meal={meal}
+          onCancel={() => setAi(false)}
+          onManual={() => {
+            setAi(false)
+            setManual({})
+          }}
+          onAdded={() =>
+            void navigate(`/comidas/${date}`, { state: { added: es.meals.addedTo[meal] } })
+          }
+        />
+      ) : manual ? (
         <ManualEntryForm
           userId={userId}
           date={date}
           meal={meal}
           draftId={manualId}
           initial={manual.initial}
+          allowAi
           onCancel={() => setManual(null)}
           onAdded={() =>
             void navigate(`/comidas/${date}`, { state: { added: es.meals.addedTo[meal] } })
@@ -224,9 +242,12 @@ function AddEntryForm({ date }: { date: string }) {
         />
       ) : (
         <div className="flex flex-col gap-6">
-          <div>
+          <div className="flex flex-wrap gap-3">
             <button type="button" className="btn-secondary" onClick={() => setManual({})}>
               {es.meals.add.manual}
+            </button>
+            <button type="button" className="btn-secondary" onClick={() => setAi(true)}>
+              {es.meals.ai.open}
             </button>
           </div>
           <FoodChooser

@@ -222,7 +222,7 @@ select throws_ilike(
 
 -- permisos ---------------------------------------------------------------------------------------------------------------------
 select tests.authenticate_as(:'uid_b');
-select throws_ilike(format($$ select public.plan_workout(date '2026-10-30', %L, gen_random_uuid(), null) $$, :'r1'), '%not_found%', 'otra cuenta no puede usar una rutina ajena');
+select throws_ilike(format($$ select public.plan_workout(current_date + 30, %L, gen_random_uuid(), null) $$, :'r1'), '%not_found%', 'otra cuenta no puede usar una rutina ajena');
 select tests.clear_authentication();
 update public.profiles set last_active_at = now() - interval '31 days' where user_id = :'uid_b';
 select tests.authenticate_as(:'uid_b');

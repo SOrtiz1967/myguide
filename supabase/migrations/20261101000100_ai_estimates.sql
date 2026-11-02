@@ -21,6 +21,12 @@ alter table public.ai_estimates enable row level security;
 revoke all on public.ai_estimates from anon, authenticated;
 grant all on public.ai_estimates to service_role;
 
+-- La convención del proyecto exige una política de lectura propia en toda tabla de `public` (guardián de RLS).
+-- Sin permiso de `select` para `authenticated`, la política no concede acceso: queda como segunda barrera.
+create policy ai_estimates_select_own on public.ai_estimates
+  for select to authenticated
+  using (user_id = (select auth.uid()) and (select private.is_session_fresh()));
+
 -- Ítems estimados confirmados --------------------------------------------------------------------------
 -- Cada ítem queda como comida con origen «estimado» y estado confirmado. Se valida con las mismas reglas
 -- que el alta manual. Una sola transacción: o se guardan todos o ninguno. El identificador de cada ítem

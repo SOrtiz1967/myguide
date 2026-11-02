@@ -35,6 +35,8 @@ type EntryForFood = Pick<
 
 interface SaveAsFoodPanelProps {
   entry: EntryForFood
+  /** El ítem partió de una estimación de IA (spec 009): se avisa que sus valores no son una medición. */
+  estimated?: boolean
   onClose: () => void
   onSaved?: (foodId: string) => void
 }
@@ -52,7 +54,7 @@ function describeIssue(path: PropertyKey | undefined, message: string): string {
  * describe el ítem, calcula los valores por 100 y crea el alimento con esa cantidad como porción.
  * El ítem registrado no cambia.
  */
-export function SaveAsFoodPanel({ entry, onClose, onSaved }: SaveAsFoodPanelProps) {
+export function SaveAsFoodPanel({ entry, estimated, onClose, onSaved }: SaveAsFoodPanelProps) {
   const queryClient = useQueryClient()
   const [basis, setBasis] = useState<ReferenceBasis>('100g')
   const [amountText, setAmountText] = useState('')
@@ -122,6 +124,7 @@ export function SaveAsFoodPanel({ entry, onClose, onSaved }: SaveAsFoodPanelProp
     >
       <h3 className="text-base font-bold">{es.meals.saveAsFood.title}</h3>
       <p className="text-muted">{es.meals.saveAsFood.intro}</p>
+      {estimated ? <p className="text-sm text-muted">{es.meals.ai.savedAsFoodNote}</p> : null}
 
       <fieldset className="flex flex-col gap-1">
         <legend className="font-medium">{es.meals.saveAsFood.basisLegend}</legend>

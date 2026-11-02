@@ -16,20 +16,20 @@
 
 ## Fase 3: Historias 1, 2 y 4 — Texto, corrección y fallos
 
-- [ ] T007 [US1] `app/src/features/meals/ai/{api,estimate,useEstimate}.ts` y copy `es.meals.ai`.
-- [ ] T008 [US1] `EstimatePanel.tsx`: texto, espera anunciada, cancelar, errores específicos y conservar lo escrito.
-- [ ] T009 [US2] `EstimateReview.tsx`: ítems editables, quitar, agregar, destino y confirmar con idempotencia.
-- [ ] T010 [US1] Integrar «Describir con IA» en `AddEntryPage.tsx`; etiqueta «Estimado por IA».
+- [x] T007 [US1] `app/src/features/meals/ai/{api,estimate,useEstimate}.ts` y copy `es.meals.ai`.
+- [x] T008 [US1] `EstimatePanel.tsx`: texto, espera anunciada, cancelar, errores específicos y conservar lo escrito.
+- [x] T009 [US2] `EstimateReview.tsx`: ítems editables, quitar, agregar, destino y confirmar con idempotencia.
+- [x] T010 [US1] Integrar «Describir con IA» en `AddEntryPage.tsx`; etiqueta «Estimado por IA».
 
 ## Fase 4: Historia 3 — Un alimento a mano
 
-- [ ] T011 [US3] «Calcular con IA» en `ManualEntryForm.tsx` y guardado como estimado; extender «guardar como alimento propio» a ítems estimados.
+- [x] T011 [US3] «Calcular con IA» en `ManualEntryForm.tsx` y guardado como estimado; extender «guardar como alimento propio» a ítems estimados.
 
 ## Fase 5: Pruebas
 
-- [ ] T012 Pruebas unitarias y de componentes (`app/tests/unit/estimate.test.ts`, `app/tests/component/EstimateMeal.test.tsx`).
-- [ ] T013 Prueba e2e `app/tests/e2e/estimate-meal.spec.ts` (recorrido, caída de la IA y accesibilidad a 375 y 1280 px) con la IA simulada.
-- [ ] T014 Correr pgTAP, Deno, lint, formato, typecheck y Vitest completos; leer el resultado.
+- [x] T012 Pruebas unitarias y de componentes (`app/tests/unit/estimate.test.ts`, `app/tests/component/EstimateMeal.test.tsx`).
+- [ ] T013 Prueba e2e `app/tests/e2e/estimate-meal.spec.ts` (recorrido, caída de la IA, cálculo en la carga a mano y accesibilidad a 375 y 1280 px) con la respuesta de la función simulada en el navegador. Escrita; falta correrla (necesita la base, `functions serve` por el registro y el preview).
+- [x] T014 Correr pgTAP, Deno, lint, formato, typecheck y Vitest completos; leer el resultado.
 
 ## Fase 6: Historia 6 — Foto del plato
 

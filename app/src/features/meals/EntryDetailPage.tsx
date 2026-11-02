@@ -167,10 +167,11 @@ function Detail({ entry }: { entry: MealEntry }) {
         />
       )}
 
-      {entry.origin === 'manual' ? (
+      {entry.origin === 'manual' || entry.origin === 'estimated' ? (
         saving ? (
           <SaveAsFoodPanel
             entry={entry}
+            estimated={entry.origin === 'estimated'}
             onClose={() => {
               setSaving(false)
               void queryClient.invalidateQueries({ queryKey: ['foods'] })
