@@ -90,6 +90,9 @@ export function LastRecords() {
           <SleepRow />
         </li>
       </ul>
+      <Link to="/tendencias" className="inline-flex min-h-11 items-center underline">
+        {es.trends.homeLink}
+      </Link>
     </HomeSection>
   )
 }

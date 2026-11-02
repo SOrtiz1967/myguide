@@ -1545,6 +1545,116 @@ export const es = {
         'No hay datos suficientes para comparar: se necesitan al menos 2 sesiones con dato en cada período.',
     },
   },
+  trends: {
+    navLink: 'Tendencias',
+    title: 'Tendencias',
+    intro:
+      'Tus datos por semana, tal como los registraste. Son números con su fecha y su unidad: sin metas, sin puntajes y sin conclusiones.',
+    homeLink: 'Ver tendencias',
+    periodLabel: 'Período',
+    periods: { '4w': '4 semanas', '12w': '12 semanas', '6m': '6 meses', '1y': '1 año' },
+    currentWeek: 'en curso',
+    weekLabel: (from: string, to: string) => `Semana del ${from} al ${to}`,
+    noData: 'Sin dato',
+    loadError: 'No pudimos cargar esta sección.',
+    offline: 'No hay conexión. Cuando vuelva, podrás ver esta sección.',
+    nutrition: {
+      title: 'Alimentación',
+      intro:
+        'Promedio por día de los días en que registraste comidas. Un día sin registro queda como «sin dato»: no cuenta como cero.',
+      listLabel: 'Alimentación por semana',
+      empty: 'Todavía no hay comidas en este período',
+      emptyBody: 'Cuando registres comidas, aquí verás cómo viene cada semana.',
+      energy: (kcal: string) => `${kcal} por día`,
+      recordedDays: (count: number) =>
+        count === 1 ? '1 día con registro' : `${count} días con registro`,
+      noRecord: 'Sin días con registro',
+      goal: (text: string) => `Objetivo: ${text}`,
+      goalBetween: (low: string, high: string) => `entre ${low} y ${high}`,
+      noGoal: 'Sin objetivo calórico en estos días',
+      inRange: (inside: number, total: number) =>
+        `${inside} de ${total} ${total === 1 ? 'día con registro' : 'días con registro'} dentro del rango de ±10 % del objetivo`,
+      macros: { protein_g: 'Proteína', carbs_g: 'Carbohidratos', fat_g: 'Grasas' },
+      macroLine: (label: string, value: string, days: number, recorded: number) =>
+        days < recorded
+          ? `${label}: ${value} por día (${days} de ${recorded} días con dato)`
+          : `${label}: ${value} por día`,
+      protein: {
+        title: 'Proteína por kilo',
+        value: (grams: string) => `${grams} g por kg`,
+        detail: (protein: string, days: number, weight: string, date: string) =>
+          `Promedio de ${protein} de proteína por día (${days} ${days === 1 ? 'día' : 'días'} con dato) sobre ${weight}, tu último peso registrado hasta el final del período (${date}).`,
+        noWeight: 'Sin dato: no tienes un peso registrado.',
+        noProtein: 'Sin dato: no hay proteína registrada en este período.',
+        addWeight: 'Registrar el peso',
+      },
+    },
+    maintenance: {
+      title: 'Mantenimiento estimado',
+      intro:
+        'Una estimación de las calorías con las que tu peso se mantuvo, calculada solo con lo que registraste.',
+      range: (low: string, high: string) => `Entre ${low} y ${high} por día`,
+      label: 'Es una estimación de lo que registraste, no tu gasto real.',
+      window: (from: string, to: string) => `Ventana: del ${from} al ${to}`,
+      basedOn: (days: number, weighIns: number) =>
+        `${days} días con calorías y ${weighIns} pesajes`,
+      weights: (start: string, end: string) =>
+        `Promedio de tus pesajes: ${start} la primera semana y ${end} la última`,
+      averageKcal: (kcal: string) => `Calorías registradas: ${kcal} por día en promedio`,
+      missingTitle: 'Todavía no hay datos suficientes',
+      progress: (days: number, weighIns: number) =>
+        `Tienes ${days} de 14 días con calorías y ${weighIns} de 4 pesajes en los últimos 21 días.`,
+      missingDays: (count: number) =>
+        `Faltan ${count} ${count === 1 ? 'día' : 'días'} con calorías registradas.`,
+      missingWeighIns: (count: number) =>
+        `Falta${count === 1 ? '' : 'n'} ${count} ${count === 1 ? 'pesaje' : 'pesajes'}.`,
+      missingStart: (from: string, to: string) => `Falta un pesaje entre el ${from} y el ${to}.`,
+      missingEnd: (from: string, to: string) => `Falta un pesaje entre el ${from} y el ${to}.`,
+      methodSummary: 'Cómo se calcula',
+      method: [
+        'Se toman los 21 días anteriores a hoy. Se promedian las calorías de los días con registro y se compara el promedio de tus pesajes de la primera semana con el de la última.',
+        'Si tu peso cambió, esa diferencia se convierte en calorías por día con 7.700 kcal por kilo. Es una convención: la equivalencia real varía con el tiempo, sobre todo al comienzo de un cambio de peso.',
+        'El rango sale de suponer que un pesaje puede variar unos 0,5 kg por agua, sal o comida. Cuantos más pesajes tengas, más angosto es.',
+      ],
+      biasesTitle: 'Qué puede alterar el resultado',
+      biases: [
+        'Las comidas que no registraste bajan el promedio de calorías y, con él, la estimación.',
+        'El peso cambia de un día a otro por agua y sal, sin relación con lo que comiste.',
+        'Esta estimación no cambia tu objetivo calórico: eso lo decides tú.',
+      ],
+      goalLink: 'Ir al objetivo calórico',
+    },
+    training: {
+      title: 'Entrenamiento y sueño',
+      intro:
+        'Dos series separadas, con las mismas semanas en el eje horizontal y una debajo de la otra para que las mires juntas. La aplicación no calcula ni sugiere ninguna relación entre ellas.',
+      groupLabel: 'Grupo muscular',
+      all: 'Todos los grupos',
+      noGroup: 'Sin grupo',
+      groupNote:
+        'Cada serie cuenta una vez en cada músculo principal de su ejercicio, según el catálogo de hoy; si el catálogo cambia, las semanas pasadas también. «Todos los grupos» cuenta cada serie una sola vez.',
+      setsPanel: 'Series registradas por semana',
+      sleepPanel: 'Sueño: promedio por noche',
+      sets: (count: number) => (count === 1 ? '1 serie' : `${count} series`),
+      sleep: (text: string, nights: number) =>
+        `${text} por noche (${nights} ${nights === 1 ? 'noche' : 'noches'} con dato)`,
+      chartLabel: (weeks: number, from: string, to: string) =>
+        `Series y sueño por semana: ${weeks} semanas, del ${from} al ${to}`,
+      readingHint: 'Recorre las semanas con las flechas del teclado o con el puntero.',
+      reading: (week: string, sets: string, sleep: string) => `${week}: ${sets}. Sueño: ${sleep}.`,
+      table: {
+        summary: 'Ver los valores en una tabla',
+        week: 'Semana',
+        sets: 'Series',
+        sleep: 'Sueño por noche',
+        nights: 'Noches con dato',
+      },
+      emptyTraining:
+        'No hay series registradas en este período. Cuando completes un entrenamiento, aparecerán aquí.',
+      emptySleep: 'No hay sueño registrado en este período.',
+      addSleep: 'Registrar el sueño',
+    },
+  },
   trainingActivity: {
     title: 'Resumen de actividad',
     intro: 'Cuántas sesiones realizadas tuviste. Solo cuentan las que registraste como realizadas.',

@@ -11,6 +11,7 @@ import { ExerciseSearchPage } from '../features/exercises/ExerciseSearchPage'
 import { ExerciseHistoryPage } from '../features/training/ExerciseHistoryPage'
 import { MeasuresPage } from '../features/measures/MeasuresPage'
 import { PrivacyPage } from '../features/privacy/PrivacyPage'
+import { TrendsPage } from '../features/trends/TrendsPage'
 import { ActivitySummaryPage } from '../features/training/progress/ActivitySummaryPage'
 import { ExerciseProgressPage } from '../features/training/progress/ExerciseProgressPage'
 import { SupplementsPage } from '../features/supplements/SupplementsPage'
@@ -86,6 +87,7 @@ export const routes: RouteObject[] = [
               { path: '/fotos', element: <ProgressPhotosPage /> },
               { path: '/suplementos', element: <SupplementsPage /> },
               { path: '/privacidad', element: <PrivacyPage /> },
+              { path: '/tendencias', element: <TrendsPage /> },
               { path: '/actividad', element: <ActivityPage /> },
               { path: '/entrenamiento', element: <TrainingHomePage /> },
               { path: '/entrenamiento/dia/:fecha', element: <TrainingDayPage /> },

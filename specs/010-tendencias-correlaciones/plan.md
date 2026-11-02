@@ -41,15 +41,15 @@ Una pantalla nueva, `/tendencias`, con tres secciones. Dos funciones de lectura 
 
 ## Revisión de la Constitution
 
-| Principio                      | Resultado                                                                                                                                          |
-| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| I (privacidad)                 | Se cumple: funciones filtradas por `auth.uid()` y sesión vigente; sin datos personales en logs.                                                    |
-| II (integridad)                | Se cumple: solo lectura; no se modifica nada. Excepción declarada: los grupos musculares siguen al catálogo (asunción de la spec).                  |
-| III (estimaciones)             | Se cumple: la estimación de mantenimiento declara método, convención, incertidumbre y sesgos, y se llama «estimación de lo que registraste».       |
-| IV (sin juicios)               | Se cumple: sin metas, adherencia, «déficit/superávit», recomendaciones, ni rojo y verde de juicio; el objetivo solo lo cambia la persona.          |
-| V (datos, no conclusiones)     | Se cumple: umbrales de datos para el mantenimiento, «sin dato» en vez de cero, sin correlaciones ni causalidad, series separadas con eje común.    |
-| VI (accesible)                 | Se cumple: tabla equivalente, teclado, forma además de color, axe a 375 y 1280 px.                                                                 |
-| VII (arquitectura)             | Se cumple: lógica pura separada de la presentación y de la lectura; sin dependencias nuevas.                                                       |
+| Principio                  | Resultado                                                                                                                                       |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| I (privacidad)             | Se cumple: funciones filtradas por `auth.uid()` y sesión vigente; sin datos personales en logs.                                                 |
+| II (integridad)            | Se cumple: solo lectura; no se modifica nada. Excepción declarada: los grupos musculares siguen al catálogo (asunción de la spec).              |
+| III (estimaciones)         | Se cumple: la estimación de mantenimiento declara método, convención, incertidumbre y sesgos, y se llama «estimación de lo que registraste».    |
+| IV (sin juicios)           | Se cumple: sin metas, adherencia, «déficit/superávit», recomendaciones, ni rojo y verde de juicio; el objetivo solo lo cambia la persona.       |
+| V (datos, no conclusiones) | Se cumple: umbrales de datos para el mantenimiento, «sin dato» en vez de cero, sin correlaciones ni causalidad, series separadas con eje común. |
+| VI (accesible)             | Se cumple: tabla equivalente, teclado, forma además de color, axe a 375 y 1280 px.                                                              |
+| VII (arquitectura)         | Se cumple: lógica pura separada de la presentación y de la lectura; sin dependencias nuevas.                                                    |
 
 No hay violaciones que justificar.
 

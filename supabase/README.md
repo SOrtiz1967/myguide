@@ -204,6 +204,13 @@ La zona horaria para el corte del día es la del perfil; si no hay, la del naveg
 - `public.exercise_progress(exercise_id)` devuelve, en orden cronológico, una fila por ejercicio de cada sesión **realizada** (`completed`) de la cuenta, con el nombre y el tipo de medición guardados en la sesión, el esfuerzo percibido y las series sin los datos faltantes (nunca cero). Solo lee. Las medidas, los períodos y la comparación se calculan en la aplicación (`app/src/features/training/progress/`) para poder probarlos contra valores calculados a mano. Tope: las 2.000 sesiones más recientes.
 - Pruebas: `tests/exercise_progress.test.sql` (pgTAP).
 
+### Tendencias (`trends_nutrition` y `trends_training_sets`, spec 010)
+
+- `public.trends_nutrition(from_date, to_date)` devuelve una fila por día con entradas **confirmadas** (las pendientes de la spec 009 no cuentan): cantidad de entradas, suma de calorías, proteína, carbohidratos y grasas, y cuántas entradas informan cada nutriente (un nutriente que ninguna informa queda nulo, nunca cero). Rango máximo: 400 días.
+- `public.trends_training_sets(from_date, to_date)` devuelve una fila por semana (lunes) con el total de series de sesiones **realizadas** y un `jsonb` con las series por grupo muscular principal del catálogo actual (`sin_grupo` para ejercicios sin músculo o ya borrados). Una serie cuenta una vez en cada músculo principal y una vez en el total.
+- Ambas son de solo lectura, `security definer`, exigen sesión vigente y filtran por `auth.uid()`. Los promedios, el rango de ±10 %, la proteína por kilo y el mantenimiento se calculan en la aplicación (`app/src/features/trends/`) para poder probarlos contra valores calculados a mano. Contrato: `specs/010-tendencias-correlaciones/contracts/trends.md`.
+- Pruebas: `tests/trends.test.sql` (pgTAP).
+
 ### Privacidad y ciclo de vida (`export_my_data` y función `delete-account`, spec 011)
 
 - `public.export_my_data()` devuelve en un JSON las filas de la cuenta de una lista fija de tablas (contrato en `specs/011-privacidad-ciclo-de-vida/contracts/privacy.md`). `privacy_lifecycle.test.sql` falla si una tabla con `user_id` no está en la lista o no borra en cascada con la cuenta.

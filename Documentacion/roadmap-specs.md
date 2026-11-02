@@ -1,6 +1,6 @@
 # Roadmap de specs — Fitness Tracking App
 
-Basado en la Constitution v1.2.1. Este documento define el corte y el contenido previsto de cada spec. Las specs 001 a 009 y 011 a 022 están implementadas; el resto está pendiente (ver la tabla de estado del `README.md`).
+Basado en la Constitution v1.2.1. Este documento define el corte y el contenido previsto de cada spec. Las specs 001 a 009 y 010 a 022 están implementadas; el resto está pendiente (ver la tabla de estado del `README.md`).
 
 **Contexto del MVP:** el MVP lo usa solo el autor. Las reglas de privacidad y autenticación de la Constitution se mantienen igual. Lo que se pospone es el trabajo orientado a usuarios externos (ver spec 011).
 
@@ -98,6 +98,7 @@ Basado en la Constitution v1.2.1. Este documento define el corte y el contenido 
 
 ### 010 — Tendencias, mantenimiento y correlaciones
 
+- **Estado (2026-11-01): implementada** (`specs/010-tendencias-correlaciones/`): pantalla `/tendencias` con tres secciones. Alimentación por semana (promedio de los días con registro, objetivo de cada día, días dentro de ±10 % como conteo y proteína por kilo con el peso usado y su fecha). Mantenimiento estimado como rango de una ventana de 21 días, solo con 14 días con calorías y 4 pesajes repartidos, con 7.700 kcal por kilo declarado, método y sesgos a la vista y sin recomendar cambiar el objetivo. Entrenamiento (series por semana y grupo muscular principal del catálogo actual) y sueño en dos paneles con las mismas semanas, sin coeficientes ni frases causales. Investigación en `research_notes/Análisis de datos de progreso/`. Falta la corrida de Playwright (`tests/e2e/trends.spec.ts`).
 - Gráficos comparativos con unidades y fechas.
 - Calorías de mantenimiento con umbral mínimo de datos y método explicado.
 - Patrones entre sueño, rendimiento y alimentación, sin causalidad.

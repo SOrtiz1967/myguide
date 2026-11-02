@@ -4,7 +4,7 @@
 
 **Created**: 2026-11-01
 
-**Status**: Draft
+**Status**: Implementada (2026-11-01); falta la corrida de e2e
 
 **Input**: User description: "Pantalla «Tendencias» con tres secciones calculadas desde datos que ya existen. (1) Alimentación: promedio semanal de calorías y macros de los días con registro frente al objetivo calórico, cantidad de días con registro, días dentro del rango de ±10 % del objetivo (sin porcentaje de adherencia) y proteína por kilo con el último peso registrado y su fecha. (2) Mantenimiento estimado: a partir de la tendencia del peso y el promedio de calorías registradas, con 7.700 kcal/kg declarado, mostrado como rango y solo con al menos 14 días con calorías y 4 pesajes en una ventana de 21 días, con el método explicado, sus sesgos y sin recomendar cambiar el objetivo. (3) Entrenamiento y sueño: series registradas por grupo muscular principal y semana, y sueño, apilados con un eje de fechas común y una tabla equivalente, sin coeficientes de correlación ni frases causales. Todo con unidades, fechas y cantidad de datos, datos faltantes como «sin dato», sin metas, rachas ni rojo y verde de juicio. Investigación previa: `research_notes/Análisis de datos de progreso/analisis_datos.md`."
 

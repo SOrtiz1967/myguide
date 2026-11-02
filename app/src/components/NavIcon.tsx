@@ -13,6 +13,7 @@ export type NavIconName =
   | 'target'
   | 'user'
   | 'shield'
+  | 'trend'
 
 const PATHS: Record<NavIconName, string> = {
   home: 'M3 11.5 12 4l9 7.5M5.5 10v9.5h13V10',
@@ -21,6 +22,7 @@ const PATHS: Record<NavIconName, string> = {
   meal: 'M7 3v8M4.5 3v5a2.5 2.5 0 0 0 5 0V3M7 11v10M17 21V3c-2.2 1.2-3 3.7-3 7 0 2 1 3 3 3',
   more: 'M5 12h.01M12 12h.01M19 12h.01',
   shield: 'M12 3 5 6v5.5c0 4.2 3 7.6 7 9.5 4-1.9 7-5.3 7-9.5V6zM9.5 12l2 2 3.5-4',
+  trend: 'M4 19V5M4 19h16M7.5 15l3.5-4 3 2.5 4.5-6',
   ruler: 'M3 15 15 3l6 6L9 21zM7.5 10.5l2 2M10.5 7.5l2 2M13.5 4.5l2 2',
   camera: 'M4 8h3l1.5-2.5h7L17 8h3v11H4zM12 16.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z',
   pill: 'M8.5 15.5 15.5 8.5M9 3.5a5 5 0 0 1 7.07 7.07l-5.5 5.5a5 5 0 0 1-7.07-7.07zM11.5 10l2.5 2.5',

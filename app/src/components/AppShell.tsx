@@ -52,6 +52,7 @@ const SECONDARY: NavItem[] = [
     active: (path) => path.startsWith('/objetivo') || path.startsWith('/plan'),
   },
   { to: '/perfil', label: es.nav.profile, icon: 'user', active: starts('/perfil') },
+  { to: '/tendencias', label: es.trends.navLink, icon: 'trend', active: starts('/tendencias') },
   { to: '/privacidad', label: es.privacy.navLink, icon: 'shield', active: starts('/privacidad') },
 ]
 
