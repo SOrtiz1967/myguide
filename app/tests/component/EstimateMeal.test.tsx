@@ -8,20 +8,29 @@ import {
   confirmEstimate,
   EstimateError,
   estimateMeal,
+  estimateMealPhoto,
   type EstimatedItem,
 } from '../../src/features/meals/ai/api'
 import { EstimateFlow } from '../../src/features/meals/ai/EstimateFlow'
 import { addEntry } from '../../src/features/meals/api'
+import { PhotoError, preparePhoto } from '../../src/features/meals/photo'
 import { ManualEntryForm } from '../../src/features/meals/ManualEntryForm'
 
 vi.mock('../../src/features/meals/ai/api', async (importOriginal) => ({
   ...(await importOriginal<typeof import('../../src/features/meals/ai/api')>()),
   estimateMeal: vi.fn(),
+  estimateMealPhoto: vi.fn(),
   confirmEstimate: vi.fn(),
+}))
+vi.mock('../../src/features/meals/photo', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('../../src/features/meals/photo')>()),
+  preparePhoto: vi.fn(),
 }))
 vi.mock('../../src/features/meals/api', () => ({ addEntry: vi.fn() }))
 
 const mockedEstimate = vi.mocked(estimateMeal)
+const mockedPhoto = vi.mocked(estimateMealPhoto)
+const mockedPrepare = vi.mocked(preparePhoto)
 const mockedConfirm = vi.mocked(confirmEstimate)
 const mockedAdd = vi.mocked(addEntry)
 const ai = es.meals.ai
@@ -84,6 +93,8 @@ async function estimateText(text = '2 milanesas al horno con puré y una manzana
 beforeEach(() => {
   mockedEstimate.mockReset().mockResolvedValue(ITEMS)
   mockedConfirm.mockReset().mockResolvedValue(['e1', 'e2', 'e3'])
+  mockedPhoto.mockReset().mockResolvedValue(ITEMS)
+  mockedPrepare.mockReset().mockResolvedValue(new Blob(['jpeg'], { type: 'image/jpeg' }))
   mockedAdd.mockReset().mockResolvedValue('entry-1')
 })
 
@@ -203,6 +214,48 @@ describe('Describir con IA: escribir y estimar', () => {
     await userEvent.click(estimateButton())
     await waitFor(() => expect(mockedEstimate).toHaveBeenCalledTimes(3))
     expect(mockedEstimate.mock.calls[2]![1]).not.toBe(mockedEstimate.mock.calls[0]![1])
+  })
+})
+
+describe('Describir con IA: desde la foto del plato', () => {
+  const picker = () => screen.getByLabelText(ai.photo.action, { selector: 'input' })
+  const photo = () => new File(['x'], 'plato.jpg', { type: 'image/jpeg' })
+
+  it('FR-020: prepara la foto, la manda con un identificador y muestra la misma propuesta', async () => {
+    renderFlow()
+    await userEvent.upload(picker(), photo())
+
+    expect(await screen.findByRole('heading', { name: ai.review.title })).toBeInTheDocument()
+    expect(mockedPrepare).toHaveBeenCalledTimes(1)
+    expect(mockedPhoto).toHaveBeenCalledTimes(1)
+    const [blob, requestId] = mockedPhoto.mock.calls[0]!
+    expect(blob).toBeInstanceOf(Blob)
+    expect(requestId).toMatch(/^[0-9a-f-]{36}$/)
+    expect(mockedEstimate).not.toHaveBeenCalled()
+    expect(mockedConfirm).not.toHaveBeenCalled()
+    expect(screen.getAllByText(ai.review.status)).toHaveLength(3)
+  })
+
+  it('una foto que no se puede leer se explica y no se envía nada', async () => {
+    mockedPrepare.mockRejectedValue(new PhotoError('heic'))
+    renderFlow()
+    await userEvent.upload(picker(), photo())
+    expect(await screen.findByRole('alert')).toHaveTextContent(es.meals.photo.errors.heic)
+    expect(mockedPhoto).not.toHaveBeenCalled()
+  })
+
+  it('si la IA falla con la foto, el motivo se explica y se puede escribir a mano', async () => {
+    mockedPhoto.mockRejectedValue(new EstimateError('invalid_image'))
+    const { onManual } = renderFlow()
+    await userEvent.upload(picker(), photo())
+    expect(await screen.findByRole('alert')).toHaveTextContent(ai.errors.invalid_image)
+    await userEvent.click(screen.getByRole('button', { name: ai.writeByHand }))
+    expect(onManual).toHaveBeenCalledTimes(1)
+  })
+
+  it('el aviso aclara que no se envía la ubicación ni se guarda la foto', () => {
+    renderFlow()
+    expect(screen.getByText(ai.photo.hint)).toBeInTheDocument()
   })
 })
 

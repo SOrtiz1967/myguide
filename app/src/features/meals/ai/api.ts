@@ -53,6 +53,20 @@ export async function estimateMeal(text: string, requestId: string): Promise<Est
   return data.items
 }
 
+/** Igual que `estimateMeal`, pero desde la foto de un plato (ya reducida en el navegador). Nunca fotos de progreso. */
+export async function estimateMealPhoto(photo: Blob, requestId: string): Promise<EstimatedItem[]> {
+  const body = new FormData()
+  body.append('request_id', requestId)
+  body.append('photo', photo, 'foto.jpg')
+  const { data, error } = await supabase.functions.invoke<{ items: EstimatedItem[] }>(
+    'estimate-meal',
+    { method: 'POST', body },
+  )
+  if (error) throw await failure(error)
+  if (!data || !Array.isArray(data.items)) throw new EstimateError('unknown')
+  return data.items
+}
+
 /** Guarda de una vez los ítems revisados y confirmados. Idempotente por `requestId`. */
 export async function confirmEstimate(
   input: { log_date: string; meal: Meal; items: ManualPayload[] },

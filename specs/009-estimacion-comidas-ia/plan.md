@@ -27,15 +27,15 @@ Una Edge Function nueva, `estimate-meal`, recibe el texto de la comida, llama a 
 
 ## Revisión de la Constitution
 
-| Principio                           | Resultado                                                                                                                                                                  |
-| ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Principio                           | Resultado                                                                                                                                                                      |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | I (privacidad)                      | Se cumple: al proveedor solo va el texto (o la foto de la comida); sin identificadores ni perfil; clave solo en el servidor; resultados privados con RLS y borrado en cascada. |
-| II (procedencia e integridad)       | Se cumple: origen «estimado» persistido; la estimación no pisa valores escritos; confirmación explícita; operaciones idempotentes.                                           |
-| III (estimaciones transparentes)    | Se cumple: marcadas en texto, corregibles antes de guardar, no suman hasta confirmar; el fallo de la IA no impide la carga manual.                                           |
-| IV (sin culpa ni juicios)           | Se cumple: textos neutrales, sin valorar la comida ni sugerir cantidades.                                                                                                    |
-| VI (accesible y adaptable)          | Se cumple: espera anunciada, formularios operables por teclado, axe a 375 y 1280 px.                                                                                         |
-| VII (arquitectura y pruebas con IA) | Se cumple: adaptador desacoplado, esquema estricto en ejecución y pruebas con respuestas simuladas, incluidas las malformadas.                                              |
-| IX (observabilidad)                 | Se cumple: registros estructurados de resultado, duración y motivo, sin contenido; conteo agregado de uso.                                                                   |
+| II (procedencia e integridad)       | Se cumple: origen «estimado» persistido; la estimación no pisa valores escritos; confirmación explícita; operaciones idempotentes.                                             |
+| III (estimaciones transparentes)    | Se cumple: marcadas en texto, corregibles antes de guardar, no suman hasta confirmar; el fallo de la IA no impide la carga manual.                                             |
+| IV (sin culpa ni juicios)           | Se cumple: textos neutrales, sin valorar la comida ni sugerir cantidades.                                                                                                      |
+| VI (accesible y adaptable)          | Se cumple: espera anunciada, formularios operables por teclado, axe a 375 y 1280 px.                                                                                           |
+| VII (arquitectura y pruebas con IA) | Se cumple: adaptador desacoplado, esquema estricto en ejecución y pruebas con respuestas simuladas, incluidas las malformadas.                                                 |
+| IX (observabilidad)                 | Se cumple: registros estructurados de resultado, duración y motivo, sin contenido; conteo agregado de uso.                                                                     |
 
 No hay violaciones que justificar.
 

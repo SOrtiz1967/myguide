@@ -2,7 +2,7 @@
 import { assert, assertEquals, assertFalse } from '@std/assert'
 import type { EstimatedItem } from '../_shared/estimate.ts'
 import { AiError, type AiErrorKind, type MealInput } from '../_shared/gemini.ts'
-import { type EstimateDeps, handleEstimateMeal, MAX_TEXT } from './handler.ts'
+import { type EstimateDeps, handleEstimateMeal, MAX_PHOTO_BYTES, MAX_TEXT } from './handler.ts'
 
 const USER = '11111111-1111-1111-1111-111111111111'
 const REQUEST = '22222222-2222-4222-8222-222222222222'
@@ -280,4 +280,114 @@ Deno.test('los registros no contienen el texto, los ítems, los valores ni la pe
   }
   assert(all.includes('"result":"ok"') && all.includes('"result":"cached"'))
   assert(failing.state.logs.join('').includes('"result":"quota_exhausted"'))
+})
+
+// Historia 6: la foto del plato ------------------------------------------------------------------------------------
+
+const readFixture = (name: string) =>
+  Deno.readFile(new URL(`../meal-photo/fixtures/${name}`, import.meta.url))
+const latin1 = (bytes: Uint8Array) => new TextDecoder('latin1').decode(bytes)
+
+function photoForm(fields: Record<string, string | Uint8Array | null>): FormData {
+  const data = new FormData()
+  for (const [key, value] of Object.entries(fields)) {
+    if (value === null) continue
+    if (typeof value === 'string') data.append(key, value)
+    else data.append(key, new File([value as BlobPart], 'foto.jpg', { type: 'image/jpeg' }))
+  }
+  return data
+}
+
+function postPhoto(body: FormData, headers: Record<string, string> = {}): Request {
+  return new Request('http://localhost/functions/v1/estimate-meal', {
+    method: 'POST',
+    headers: { authorization: 'Bearer token-valido', origin: 'http://localhost:5173', ...headers },
+    body,
+  })
+}
+
+Deno.test('foto: estima desde una foto limpia de metadatos y no guarda la foto', async () => {
+  const original = await readFixture('con-gps.jpg')
+  const { deps, state } = makeDeps()
+  const response = await handleEstimateMeal(
+    postPhoto(photoForm({ request_id: REQUEST, photo: original })),
+    deps,
+  )
+  assertEquals(response.status, 200)
+  assertEquals((await json(response)).items, ITEMS)
+  assertEquals(state.calls.length, 1)
+  const sent = state.calls[0]
+  assert('image' in sent)
+  assert(sent.image.length > 0 && sent.image.length <= original.length)
+  assertFalse(latin1(sent.image).includes('Exif'), 'la foto enviada no lleva EXIF ni GPS')
+  assertEquals(state.cache.size, 1)
+  assert(state.logs.join('').includes('"kind":"photo"'))
+})
+
+Deno.test('foto: rechaza lo que no es una foto válida antes de consultar', async () => {
+  const cases: [string, Uint8Array, number, string][] = [
+    ['imagen.png', await readFixture('imagen.png'), 415, 'unsupported_type'],
+    ['no-es-imagen.txt', await readFixture('no-es-imagen.txt'), 415, 'unsupported_type'],
+    ['truncado.jpg', await readFixture('truncado.jpg'), 422, 'invalid_image'],
+    ['grande', new Uint8Array(MAX_PHOTO_BYTES + 1), 413, 'too_large'],
+  ]
+  for (const [name, bytes, status, code] of cases) {
+    const { deps, state } = makeDeps()
+    const response = await handleEstimateMeal(
+      postPhoto(photoForm({ request_id: REQUEST, photo: bytes })),
+      deps,
+    )
+    assertEquals(response.status, status, name)
+    assertEquals((await json(response)).code, code, name)
+    assertEquals(state.calls.length, 0)
+    assertEquals(state.minuteHits, 0)
+  }
+})
+
+Deno.test('foto: falta la foto o el identificador, o el cuerpo declarado es enorme', async () => {
+  const photo = await readFixture('sin-metadatos.jpg')
+  for (
+    const form of [
+      photoForm({ request_id: REQUEST }),
+      photoForm({ photo }),
+      photoForm({ request_id: 'no-es-uuid', photo }),
+    ]
+  ) {
+    const { deps } = makeDeps()
+    const response = await handleEstimateMeal(postPhoto(form), deps)
+    assertEquals(response.status, 400)
+  }
+  const { deps, state } = makeDeps()
+  const huge = await handleEstimateMeal(
+    postPhoto(photoForm({ request_id: REQUEST, photo }), {
+      'content-length': String(MAX_PHOTO_BYTES + 1024 * 1024),
+    }),
+    deps,
+  )
+  assertEquals(huge.status, 413)
+  assertEquals(state.calls.length, 0)
+})
+
+Deno.test('foto: repetir la solicitud devuelve lo guardado sin otra consulta', async () => {
+  const photo = await readFixture('sin-metadatos.jpg')
+  const { deps, state } = makeDeps()
+  await handleEstimateMeal(postPhoto(photoForm({ request_id: REQUEST, photo })), deps)
+  const again = await handleEstimateMeal(
+    postPhoto(photoForm({ request_id: REQUEST, photo })),
+    deps,
+  )
+  assertEquals((await json(again)).cached, true)
+  assertEquals(state.calls.length, 1)
+})
+
+Deno.test('foto: el registro no contiene la foto ni sus bytes', async () => {
+  const { deps, state } = makeDeps()
+  await handleEstimateMeal(
+    postPhoto(photoForm({ request_id: REQUEST, photo: await readFixture('con-gps.jpg') })),
+    deps,
+  )
+  const all = state.logs.join('\n')
+  for (const forbidden of [REQUEST, USER, 'Exif', 'Milanesa']) {
+    assertFalse(all.includes(forbidden), `el registro no debe contener ${forbidden}`)
+  }
 })

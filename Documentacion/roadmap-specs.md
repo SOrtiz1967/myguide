@@ -1,6 +1,6 @@
 # Roadmap de specs — Fitness Tracking App
 
-Basado en la Constitution v1.2.1. Este documento define el corte y el contenido previsto de cada spec. Las specs 001 a 008 y 013 a 022 están implementadas; el resto está pendiente (ver la tabla de estado del `README.md`).
+Basado en la Constitution v1.2.1. Este documento define el corte y el contenido previsto de cada spec. Las specs 001 a 009 y 013 a 022 están implementadas; el resto está pendiente (ver la tabla de estado del `README.md`).
 
 **Contexto del MVP:** el MVP lo usa solo el autor. Las reglas de privacidad y autenticación de la Constitution se mantienen igual. Lo que se pospone es el trabajo orientado a usuarios externos (ver spec 011).
 
@@ -85,6 +85,7 @@ Basado en la Constitution v1.2.1. Este documento define el corte y el contenido 
 
 ### 009 — Estimación de comidas con IA
 
+- **Estado (2026-11-01): implementada** (`specs/009-estimacion-comidas-ia/`): «Describir con IA» en Agregar comida (texto → ítems con calorías y macros, revisión, corrección y confirmación), «Calcular con IA» en la carga a mano y estimación desde la foto del plato. Cierra las decisiones #3 (Gemini, modelo por configuración, detrás de un adaptador) y #6 (5 consultas por minuto y 30 por día por cuenta; resultado conservado 24 horas para que reintentar no gaste cuota). La propuesta no se guarda hasta confirmar. Falta la corrida de Playwright (`tests/e2e/estimate-meal.spec.ts`) y probar con una clave real de Gemini.
 - **Flujo principal (aclarado el 2026-10-28): cargar una comida escribiéndola y que la IA calcule las calorías.** La persona escribe en lenguaje natural lo que comió, por ejemplo «2 milanesas al horno con puré y una manzana». La IA separa el texto en ítems (alimento, cantidad) y propone para cada uno calorías y macronutrientes. Cada ítem aparece marcado como «estimado por IA, sin confirmar», con su valor editable; la persona corrige lo que no le cierre, quita o agrega ítems y recién al confirmar se guarda en la comida elegida (hoy, desayuno, almuerzo, etc.). Hasta confirmar no suma al total del día.
 - **Alimento escrito a mano que no está en el catálogo:** es el mismo caso en pequeño. Si la persona escribe solo el nombre y la cantidad, la IA propone las calorías y los macros, con la misma marca de estimación y la misma corrección antes de guardar. Decisión del autor (2026-10-28): el alimento calculado por IA vale solo para esa comida; se guarda como alimento propio «estimado por IA» únicamente si la persona lo pide.
 - **Siempre queda el camino manual:** si la IA falla, tarda, no está configurada (sin clave) o se agotó la cuota, la persona carga las calorías a mano como hoy (spec 003); el registro nunca depende de la IA (Principio III). Un ítem estimado y corregido por la persona pasa a «confirmado».

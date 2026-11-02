@@ -2,12 +2,20 @@ import { useRef, useState } from 'react'
 import { ErrorState } from '../../../components/ErrorState'
 import { es } from '../../../copy/es'
 import { newRequestId } from '../../../lib/ids'
-import { type EstimatedItem, estimateMeal } from './api'
+import { PhotoError, preparePhoto } from '../photo'
+import { type EstimatedItem, estimateMeal, estimateMealPhoto } from './api'
 import { EstimateReview } from './EstimateReview'
 import { estimateErrorMessage, MAX_TEXT } from './estimate'
 import type { Meal } from '../meals'
 
 const copy = es.meals.ai
+
+const PHOTO_MESSAGES = {
+  not_image: 'notImage',
+  too_big: 'tooBig',
+  heic: 'heic',
+  unreadable: 'unreadable',
+} as const
 
 interface EstimateFlowProps {
   userId: string
@@ -34,6 +42,7 @@ export function EstimateFlow({ date, meal, onCancel, onManual, onAdded }: Estima
   const [fieldError, setFieldError] = useState<string | null>(null)
   // Cada espera tiene su marca: si la persona la cancela, una respuesta tardía se ignora.
   const attempt = useRef(0)
+  const photoInput = useRef<HTMLInputElement>(null)
 
   async function estimate() {
     if (waiting) return
@@ -47,19 +56,35 @@ export function EstimateFlow({ date, meal, onCancel, onManual, onAdded }: Estima
       return
     }
     setFieldError(null)
+    await run(() => estimateMeal(trimmed, requestId))
+  }
+
+  /** Lanza una consulta (texto o foto). Si la persona cancela la espera, una respuesta tardía se ignora. */
+  async function run(request: () => Promise<EstimatedItem[]>) {
     setError(null)
     setWaiting(true)
     const mine = ++attempt.current
     try {
-      const result = await estimateMeal(trimmed, requestId)
+      const result = await request()
       if (mine !== attempt.current) return
       setItems(result)
     } catch (e) {
       if (mine !== attempt.current) return
-      setError(estimateErrorMessage(e))
+      setError(
+        e instanceof PhotoError
+          ? es.meals.photo.errors[PHOTO_MESSAGES[e.code]]
+          : estimateErrorMessage(e),
+      )
     } finally {
       if (mine === attempt.current) setWaiting(false)
     }
+  }
+
+  async function pickPhoto(file: File | undefined) {
+    if (!file || waiting) return
+    setFieldError(null)
+    await run(async () => estimateMealPhoto(await preparePhoto(file), newRequestId()))
+    if (photoInput.current) photoInput.current.value = ''
   }
 
   function cancelWait() {
@@ -153,6 +178,23 @@ export function EstimateFlow({ date, meal, onCancel, onManual, onAdded }: Estima
         <button type="button" className="btn-secondary" onClick={onManual}>
           {copy.writeByHand}
         </button>
+      </div>
+
+      <div className="flex flex-col gap-1.5 border-t border-line/25 pt-4">
+        <label
+          className={`btn-secondary w-fit cursor-pointer focus-within:outline-2 focus-within:outline-offset-2 ${waiting ? 'pointer-events-none opacity-60' : ''}`}
+        >
+          {copy.photo.action}
+          <input
+            ref={photoInput}
+            type="file"
+            accept="image/*"
+            className="sr-only"
+            disabled={waiting}
+            onChange={(event) => void pickPhoto(event.target.files?.[0])}
+          />
+        </label>
+        <p className="text-sm text-muted">{copy.photo.hint}</p>
       </div>
     </section>
   )

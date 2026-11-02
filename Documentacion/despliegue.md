@@ -10,7 +10,7 @@ Cubre el despliegue de las specs 001 a 016. Las specs 004 a 008 y la 013 a 016 n
 | Cloudflare Pages     | Frontend (PWA)                                                           | Free                      | 500 compilaciones al mes, 20 min por compilación; ancho de banda estático sin límite documentado.                                                                                                                                                             |
 | Brevo                | Correo transaccional (SMTP)                                              | Free                      | Alrededor de 300 correos por día (confirmar la cuota vigente).                                                                                                                                                                                                |
 | Cloudflare Turnstile | Captcha en registro y recuperación                                       | Free                      | Sin costo.                                                                                                                                                                                                                                                    |
-| Google Gemini API    | Estimación de comidas con IA (spec 009)                                  | Free (con límites de uso) | Opcional: sin clave la IA queda desactivada y se carga a mano. Los límites del plan gratuito se confirman en el plan de la spec 009.                                                                                                                          |
+| Google Gemini API    | Estimación de comidas con IA (spec 009)                                  | Free (con límites de uso) | Opcional: sin clave la IA queda desactivada y se carga a mano. Cada cuenta tiene 5 consultas por minuto y 30 por día (spec 009); si Google agota su cuota la app lo informa y se carga a mano.                                                                |
 
 ## 1. Supabase (producción)
 
@@ -42,6 +42,8 @@ Cubre el despliegue de las specs 001 a 016. Las specs 004 a 008 y la 013 a 016 n
 2. Local: pegarla en `GEMINI_API_KEY` de `supabase/.env.local` (no se sube a Git) y reiniciar `npx supabase functions serve --env-file supabase/.env.local`.
 3. Producción: ponerla en `GEMINI_API_KEY` de `supabase/.env` y ejecutar `npx supabase secrets set --env-file supabase/.env`.
 4. Nunca va en `app/`, en variables `VITE_*` ni en el chat. Las fotos de progreso no se envían a la IA.
+5. Desplegar la función: `npx supabase functions deploy estimate-meal` (ya tiene `verify_jwt = false` en `config.toml`, verifica la sesión ella misma). Aplicar la migración `20261101000100_ai_estimates.sql` con `db push`.
+6. Solo se envía el texto de la comida o la foto de un plato (sin metadatos); nunca datos del perfil.
 
 ## 2. Turnstile
 

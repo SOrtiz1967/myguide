@@ -33,9 +33,9 @@
 
 ## Fase 6: Historia 6 — Foto del plato
 
-- [ ] T015 [US6] Soporte de foto en `estimate-meal` y en el adaptador, con prueba.
-- [ ] T016 [US6] «Estimar desde una foto» en la pantalla y prueba.
+- [x] T015 [US6] Soporte de foto en `estimate-meal` y en el adaptador, con prueba.
+- [x] T016 [US6] «Estimar desde una foto» en la pantalla y prueba.
 
 ## Fase 7: Cierre
 
-- [ ] T017 Actualizar `Documentacion/roadmap-specs.md`, `README.md`, `supabase/README.md` y `Documentacion/despliegue.md`.
+- [x] T017 Actualizar `Documentacion/roadmap-specs.md`, `README.md`, `supabase/README.md` y `Documentacion/despliegue.md`.

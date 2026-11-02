@@ -4,13 +4,13 @@ Backend de MyGuide como código: migraciones, funciones de borde (Edge Functions
 
 ## Estructura
 
-| Carpeta       | Contenido                                                                                                                                                                                                                                        |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `migrations/` | Esquema, RLS, funciones y disparadores. Una migración por cambio lógico, en orden cronológico.                                                                                                                                                   |
-| `functions/`  | Edge Functions (Deno): `register`, `request-password-reset`, `send-verification`, `confirm-email`, `meal-photo`, `progress-photo` y utilidades en `_shared/`. Cada una separa la lógica probada (`handler.ts`) de su conexión real (`index.ts`). |
-| `tests/`      | Pruebas pgTAP (`*.test.sql`) y la prueba de invariantes de configuración (`config.test.ts`).                                                                                                                                                     |
-| `seed.sql`    | Ayudantes de prueba en el esquema `tests`. **Solo local**: no se aplica a producción.                                                                                                                                                            |
-| `config.toml` | Configuración de Auth y de las funciones. Las decisiones de seguridad están comentadas al final.                                                                                                                                                 |
+| Carpeta       | Contenido                                                                                                                                                                                                                                                         |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `migrations/` | Esquema, RLS, funciones y disparadores. Una migración por cambio lógico, en orden cronológico.                                                                                                                                                                    |
+| `functions/`  | Edge Functions (Deno): `register`, `request-password-reset`, `send-verification`, `confirm-email`, `meal-photo`, `progress-photo`, `estimate-meal` y utilidades en `_shared/`. Cada una separa la lógica probada (`handler.ts`) de su conexión real (`index.ts`). |
+| `tests/`      | Pruebas pgTAP (`*.test.sql`) y la prueba de invariantes de configuración (`config.test.ts`).                                                                                                                                                                      |
+| `seed.sql`    | Ayudantes de prueba en el esquema `tests`. **Solo local**: no se aplica a producción.                                                                                                                                                                             |
+| `config.toml` | Configuración de Auth y de las funciones. Las decisiones de seguridad están comentadas al final.                                                                                                                                                                  |
 
 ## Entorno local
 
@@ -198,6 +198,14 @@ Todas verifican `auth.uid()` y `private.is_session_fresh()`. Las que escriben so
 | `preview_repeat_meal(from_date, from_meal)` · `repeat_meal(from_date, from_meal, to_date, to_meal, request_id)` | Cuenta y copia una comida de otro día; los ítems del catálogo se recalculan con el alimento actual y los manuales o con el alimento ya borrado se copian; idempotente |
 
 La zona horaria para el corte del día es la del perfil; si no hay, la del navegador (si es válida); si no, UTC. `private.log_day_status_at(usuario, ahora, zona)` recibe la hora como parámetro para poder probarla con hora simulada y no tiene permiso para el cliente.
+
+### Estimación de comidas con IA (función `estimate-meal`, spec 009)
+
+- La función recibe el texto de una comida (o la foto de un plato), llama a Gemini a través de `_shared/gemini.ts` y devuelve ítems validados con `_shared/estimate.ts` (esquema estricto: lo inválido se descarta entero). La clave va en `GEMINI_API_KEY` y el modelo en `GEMINI_MODEL`; sin clave responde `ai_unavailable` y la carga manual sigue igual.
+- Límites: 5 consultas por minuto y 30 por día por cuenta (`check_rate_limit`). `public.ai_estimates` guarda 24 horas el resultado por cuenta y `request_id`, así reintentar no llama de nuevo al proveedor ni gasta cuota; solo la usa el rol de servicio.
+- Los ítems **no** se guardan al estimar. Al confirmar, `add_estimated_entries(entries, request_id)` los inserta todos juntos como comidas con origen `estimated` y estado `confirmed` (idempotente por posición).
+- Los registros técnicos no incluyen el texto, la foto, los ítems ni los valores. Contrato en `specs/009-estimacion-comidas-ia/contracts/estimate-meal.md`.
+- Pruebas: `tests/ai_estimates.test.sql` (pgTAP), `functions/estimate-meal/index.test.ts`, `_shared/estimate.test.ts` y `_shared/gemini.test.ts` (Deno).
 
 ### Fotos de progreso (bucket `progress-photos` y función `progress-photo`, spec 019)
 

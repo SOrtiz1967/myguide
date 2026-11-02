@@ -1582,6 +1582,10 @@ export const es = {
       cancelWait: 'Cancelar la espera',
       cancel: 'Volver',
       writeByHand: 'Escribir a mano',
+      photo: {
+        action: 'Estimar desde una foto',
+        hint: 'Se envía solo la foto del plato, sin datos de ubicación, y no se guarda. Puedes corregir todo antes de confirmar.',
+      },
       errors: {
         textRequired: 'Escribe qué comiste.',
         textTooLong: (max: number) => `El texto puede tener hasta ${max} caracteres.`,
@@ -1595,6 +1599,9 @@ export const es = {
           'Llegaste al máximo de estimaciones de hoy. Puedes cargar la comida a mano o intentar mañana.',
         quota_exhausted:
           'El servicio de estimación no está disponible por ahora. Puedes cargar la comida a mano.',
+        too_large: 'La foto es demasiado grande. Prueba con otra o escribe qué comiste.',
+        unsupported_type: 'No pudimos leer esa foto. Prueba con otra o escribe qué comiste.',
+        invalid_image: 'No pudimos leer esa foto. Prueba con otra o escribe qué comiste.',
         ai_unavailable: 'La estimación con IA no está disponible. Puedes cargar la comida a mano.',
         ai_timeout: 'La estimación tardó demasiado. Puedes reintentar o cargar la comida a mano.',
         ai_failed: 'No pudimos calcular la estimación ahora. Puedes reintentar o cargar a mano.',

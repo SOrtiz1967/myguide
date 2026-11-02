@@ -4,9 +4,14 @@ import { isAllowedOrigin, jsonResponse } from '../_shared/cors.ts'
 import type { EstimatedItem } from '../_shared/estimate.ts'
 import { AiError, type MealInput } from '../_shared/gemini.ts'
 import type { LogFn } from '../_shared/log.ts'
+import { cleanJpeg, InvalidImageError } from '../_shared/jpeg.ts'
 import { methodNotAllowed, preflight, readJsonObject } from '../_shared/request.ts'
 
 export const MAX_TEXT = 500
+/** Foto del plato (historia 6): el mismo tope que la foto de una comida. */
+export const MAX_PHOTO_BYTES = 3 * 1024 * 1024
+/** Margen del cuerpo multipart sobre el archivo (campos y cabeceras de las partes). */
+const MULTIPART_OVERHEAD = 64 * 1024
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
 export interface EstimateDeps {
@@ -34,6 +39,9 @@ export interface EstimateDeps {
   log: LogFn
 }
 
+const startsAsJpeg = (bytes: Uint8Array) =>
+  bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff
+
 const AI_ERRORS: Record<AiError['kind'], { status: number; code: string }> = {
   quota: { status: 429, code: 'quota_exhausted' },
   timeout: { status: 504, code: 'ai_timeout' },
@@ -48,6 +56,7 @@ export async function handleEstimateMeal(req: Request, deps: EstimateDeps): Prom
 
   const logId = deps.newId()
   const started = performance.now()
+  let kind: 'text' | 'photo' = 'text'
   const finish = (
     response: Response,
     result: string,
@@ -60,7 +69,7 @@ export async function handleEstimateMeal(req: Request, deps: EstimateDeps): Prom
       status: response.status,
       result,
       ms: Math.round(performance.now() - started),
-      kind: 'text',
+      kind,
       ...extra,
     })
     return response
@@ -75,11 +84,47 @@ export async function handleEstimateMeal(req: Request, deps: EstimateDeps): Prom
   const userId = jwt ? await deps.authenticate(jwt) : null
   if (!userId) return fail(401, 'unauthorized')
 
-  const body = await readJsonObject(req)
-  const requestId = typeof body?.request_id === 'string' ? body.request_id : ''
-  const text = typeof body?.text === 'string' ? body.text.trim() : ''
-  if (!UUID_PATTERN.test(requestId) || text === '' || text.length > MAX_TEXT) {
-    return fail(400, 'invalid_request')
+  let requestId = ''
+  let input: MealInput
+  const isPhoto = (req.headers.get('content-type') ?? '').toLowerCase().startsWith(
+    'multipart/form-data',
+  )
+  if (isPhoto) {
+    kind = 'photo'
+    const declared = Number(req.headers.get('content-length'))
+    if (Number.isFinite(declared) && declared > MAX_PHOTO_BYTES + MULTIPART_OVERHEAD) {
+      return fail(413, 'too_large')
+    }
+    let form: FormData
+    try {
+      form = await req.formData()
+    } catch {
+      return fail(400, 'invalid_request')
+    }
+    const rawId = form.get('request_id')
+    const photo = form.get('photo')
+    requestId = typeof rawId === 'string' ? rawId : ''
+    if (!UUID_PATTERN.test(requestId) || !(photo instanceof File)) {
+      return fail(400, 'invalid_request')
+    }
+    if (photo.size > MAX_PHOTO_BYTES) return fail(413, 'too_large')
+    const original = new Uint8Array(await photo.arrayBuffer())
+    if (!startsAsJpeg(original)) return fail(415, 'unsupported_type')
+    try {
+      // Se quitan ubicación y demás metadatos antes de que la foto salga del servidor (FR-020).
+      input = { image: cleanJpeg(original).bytes }
+    } catch (error) {
+      if (error instanceof InvalidImageError) return fail(422, 'invalid_image')
+      throw error
+    }
+  } else {
+    const body = await readJsonObject(req)
+    requestId = typeof body?.request_id === 'string' ? body.request_id : ''
+    const text = typeof body?.text === 'string' ? body.text.trim() : ''
+    if (!UUID_PATTERN.test(requestId) || text === '' || text.length > MAX_TEXT) {
+      return fail(400, 'invalid_request')
+    }
+    input = { text }
   }
 
   // Un reintento con la misma solicitud devuelve lo que ya se calculó: sin proveedor y sin gastar cuota.
@@ -102,7 +147,7 @@ export async function handleEstimateMeal(req: Request, deps: EstimateDeps): Prom
 
   let items: EstimatedItem[]
   try {
-    items = await deps.estimate({ text })
+    items = await deps.estimate(input)
   } catch (error) {
     const mapped = error instanceof AiError ? AI_ERRORS[error.kind] : AI_ERRORS.failed
     return fail(mapped.status, mapped.code)
@@ -111,7 +156,7 @@ export async function handleEstimateMeal(req: Request, deps: EstimateDeps): Prom
   if (items.length === 0) return fail(422, 'no_items')
 
   try {
-    await deps.cache.put(userId, requestId, 'text', items)
+    await deps.cache.put(userId, requestId, kind, items)
   } catch {
     // No se pudo conservar el resultado: la persona igual lo recibe.
   }

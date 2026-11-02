@@ -9,7 +9,10 @@
 `Content-Type: application/json`
 
 ```json
-{ "request_id": "uuid v4", "text": "2 milanesas al horno con puré y una manzana" }
+{
+  "request_id": "uuid v4",
+  "text": "2 milanesas al horno con puré y una manzana"
+}
 ```
 
 - `request_id`: identifica el intento. Un mismo `request_id` con el mismo texto devuelve el mismo resultado durante 24 horas sin llamar al proveedor ni contar cuota.
@@ -44,21 +47,22 @@
 
 Cuerpo `{ "code": "<motivo>" }`.
 
-| HTTP | `code`             | Cuándo                                                                     |
-| ---- | ------------------ | -------------------------------------------------------------------------- |
-| 400  | `invalid_request`  | Cuerpo mal formado, `request_id` inválido o texto vacío o de más de 500.   |
-| 401  | `unauthorized`     | Sin token, token inválido o sesión vencida.                                |
-| 403  | `forbidden_origin` | Origen no permitido.                                                       |
-| 413  | `too_large`        | Foto de más de 3 MiB.                                                      |
-| 415  | `unsupported_type` | La foto no es JPEG.                                                        |
-| 422  | `no_items`         | La IA no encontró ningún alimento en el texto.                             |
-| 429  | `rate_limited`     | Más de 5 consultas por minuto.                                             |
-| 429  | `daily_limit`      | Más de 30 consultas en 24 horas.                                           |
-| 429  | `quota_exhausted`  | El proveedor informó que su cuota se agotó.                                |
+| HTTP | `code`             | Cuándo                                                                       |
+| ---- | ------------------ | ---------------------------------------------------------------------------- |
+| 400  | `invalid_request`  | Cuerpo mal formado, `request_id` inválido o texto vacío o de más de 500.     |
+| 401  | `unauthorized`     | Sin token, token inválido o sesión vencida.                                  |
+| 403  | `forbidden_origin` | Origen no permitido.                                                         |
+| 413  | `too_large`        | Foto de más de 3 MiB.                                                        |
+| 415  | `unsupported_type` | La foto no es JPEG.                                                          |
+| 422  | `no_items`         | La IA no encontró ningún alimento en el texto.                               |
+| 422  | `invalid_image`    | La foto está dañada o truncada.                                              |
+| 429  | `rate_limited`     | Más de 5 consultas por minuto.                                               |
+| 429  | `daily_limit`      | Más de 30 consultas en 24 horas.                                             |
+| 429  | `quota_exhausted`  | El proveedor informó que su cuota se agotó.                                  |
 | 502  | `ai_invalid`       | La respuesta del proveedor no cumplió el esquema o los rangos (se descarta). |
-| 502  | `ai_failed`        | Error del proveedor o de red.                                              |
-| 503  | `ai_unavailable`   | No hay clave configurada.                                                  |
-| 504  | `ai_timeout`       | El proveedor tardó más de 20 segundos.                                     |
+| 502  | `ai_failed`        | Error del proveedor o de red.                                                |
+| 503  | `ai_unavailable`   | No hay clave configurada.                                                    |
+| 504  | `ai_timeout`       | El proveedor tardó más de 20 segundos.                                       |
 
 Los errores `rate_limited`, `daily_limit`, `quota_exhausted`, `ai_failed`, `ai_invalid` y `ai_timeout` no se guardan en el resultado: un reintento con el mismo `request_id` vuelve a consultar.
 
