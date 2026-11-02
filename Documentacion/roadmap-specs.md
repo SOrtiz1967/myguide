@@ -1,6 +1,6 @@
 # Roadmap de specs — Fitness Tracking App
 
-Basado en la Constitution v1.2.1. Este documento define el corte y el contenido previsto de cada spec. Las specs 001 a 009, 011 y 013 a 022 están implementadas; el resto está pendiente (ver la tabla de estado del `README.md`).
+Basado en la Constitution v1.2.1. Este documento define el corte y el contenido previsto de cada spec. Las specs 001 a 009 y 011 a 022 están implementadas; el resto está pendiente (ver la tabla de estado del `README.md`).
 
 **Contexto del MVP:** el MVP lo usa solo el autor. Las reglas de privacidad y autenticación de la Constitution se mantienen igual. Lo que se pospone es el trabajo orientado a usuarios externos (ver spec 011).
 
@@ -123,7 +123,7 @@ Basado en la Constitution v1.2.1. Este documento define el corte y el contenido 
 - Se amplía con la investigación de análisis de datos pedida el 2026-10-28 (ver `notas-de-prueba-2026-10-28.md`). El gráfico del peso con promedio móvil va en la spec 020.
 - Depende de la 006. Comparte lenguaje visual con los gráficos de la 010, pero esta spec solo trata de entrenamiento.
 - Principios: II, IV, V, VI.
-- **Estado (2026-10-21): especificada (`specs/012-graficos-progreso-entrenamiento/spec.md`) y dejada para después**, sin rama ni plan.
+- **Estado (2026-11-01): implementada** (`specs/012-graficos-progreso-entrenamiento/`): evolución de un ejercicio en `/ejercicios/:id/evolucion` (medidas según el tipo de medición, períodos, esfuerzo percibido, tabla equivalente y comparación con el período anterior por promedio por sesión) y resumen de sesiones realizadas por semana y por mes en `/entrenamiento/resumen`. Tendencia solo con 3 o más sesiones con dato, comparación con 2 o más por período, sin récords ni rachas. Falta la corrida de Playwright (`tests/e2e/training-progress.spec.ts`).
 
 ### 013 — Inicio «Hoy»
 

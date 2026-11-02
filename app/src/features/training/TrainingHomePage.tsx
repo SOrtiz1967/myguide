@@ -100,9 +100,14 @@ export function TrainingHomePage() {
       <PageHeader
         title={t.title}
         action={
-          <Link to="/entrenamiento/rutinas" className="btn-secondary">
-            {t.routines.title}
-          </Link>
+          <div className="flex flex-wrap gap-3">
+            <Link to="/entrenamiento/resumen" className="btn-secondary">
+              {es.trainingProgress.seeSummary}
+            </Link>
+            <Link to="/entrenamiento/rutinas" className="btn-secondary">
+              {t.routines.title}
+            </Link>
+          </div>
         }
       />
 

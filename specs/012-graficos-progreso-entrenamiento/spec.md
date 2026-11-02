@@ -1,14 +1,14 @@
 # Feature Specification: Gráficos de progreso de entrenamiento
 
-**Feature Branch**: `012-graficos-progreso-entrenamiento` (todavía sin rama: spec redactada y pendiente de desarrollo)
+**Feature Branch**: `012-graficos-entrenamiento`
 
 **Created**: 2026-10-21
 
-**Status**: Draft — redactada y dejada para después. Depende de la spec 006 (rutinas, calendario y sesiones) y no se desarrolla hasta que ella esté implementada.
+**Status**: En desarrollo (2026-11-01). Depende de la spec 006, ya implementada.
 
 **Input**: User description: "Gráficos de progreso de entrenamiento de MyGuide (Principios II, V y VI). A partir de las sesiones realizadas que registra la spec 006, la persona ve cómo evoluciona un ejercicio en el tiempo (por ejemplo, la carga máxima, el volumen, las repeticiones, el tiempo o la distancia, según el tipo de medición del ejercicio), puede elegir el período y comparar un período con otro, y ve cuánto entrenó por semana y por mes. Todo con unidades, fechas y contexto suficiente para interpretar la tendencia, sin conclusiones firmes a partir de una sola sesión, mostrando como faltantes los datos que faltan y sin completarlos con supuestos. Sin recomendaciones, metas ni valoraciones del rendimiento. Privado de cada cuenta, accesible, responsive y en español."
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Ver la evolución de un ejercicio (Priority: P1)
 
@@ -98,7 +98,7 @@ Cuando la persona indicó un esfuerzo percibido en un ejercicio, el gráfico lo 
 - Sin conexión no se pueden consultar los gráficos; se informa y no se muestra nada desactualizado como si fuera actual.
 - El lenguaje es siempre neutral: no hay "récord", "mejoraste", "retrocediste", rachas ni metas.
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -146,7 +146,7 @@ Cuando la persona indicó un esfuerzo percibido en un ejercicio, el gráfico lo 
 - **FR-025**: Sin conexión, la aplicación MUST informarlo y MUST NOT mostrar datos desactualizados como si fueran actuales.
 - **FR-026**: Los registros técnicos (logs) MUST NOT contener datos que identifiquen a la persona ni el contenido de sus sesiones.
 
-### Key Entities *(include if feature involves data)*
+### Key Entities _(include if feature involves data)_
 
 - **Gráfico de un ejercicio**: vista derivada de las sesiones realizadas donde se registró un ejercicio. No guarda datos propios. Atributos mostrados: ejercicio, medida elegida, período, puntos (fecha, valor, unidad, esfuerzo percibido opcional), cantidad de sesiones usadas y cantidad de series excluidas por no tener el dato.
 - **Medida**: una forma de resumir una sesión de un ejercicio con su unidad (peso máximo, volumen, repeticiones totales, mayor número de repeticiones en una serie, tiempo total, serie más larga, distancia total). Cada tipo de medición admite un conjunto fijo de medidas.
@@ -154,7 +154,7 @@ Cuando la persona indicó un esfuerzo percibido en un ejercicio, el gráfico lo 
 - **Resumen de actividad**: vista derivada de la cantidad de sesiones realizadas por semana y por mes.
 - **Sesión y serie**: las de la spec 006; esta spec solo las lee.
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

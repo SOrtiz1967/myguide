@@ -24,6 +24,6 @@
 ## Fase 4: Pruebas y cierre
 
 - [x] T011 Pruebas de componentes `app/tests/component/Privacy.test.tsx`.
-- [x] T012 Prueba e2e `app/tests/e2e/privacy.spec.ts` (exportación, eliminación con fotos, aislamiento y accesibilidad a 375 y 1280 px).
+- [ ] T012 Prueba e2e `app/tests/e2e/privacy.spec.ts` (exportación, eliminación con fotos, aislamiento y accesibilidad a 375 y 1280 px). Escrita; falta correrla.
 - [x] T013 `Documentacion/privacidad.md`, `Documentacion/despliegue.md`, `supabase/README.md`, `README.md` y roadmap.
 - [ ] T014 Correr pgTAP, Deno, lint, formato, typecheck y Vitest completos; leer el resultado.

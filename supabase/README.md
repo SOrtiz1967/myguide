@@ -199,6 +199,11 @@ Todas verifican `auth.uid()` y `private.is_session_fresh()`. Las que escriben so
 
 La zona horaria para el corte del día es la del perfil; si no hay, la del navegador (si es válida); si no, UTC. `private.log_day_status_at(usuario, ahora, zona)` recibe la hora como parámetro para poder probarla con hora simulada y no tiene permiso para el cliente.
 
+### Progreso de entrenamiento (`exercise_progress`, spec 012)
+
+- `public.exercise_progress(exercise_id)` devuelve, en orden cronológico, una fila por ejercicio de cada sesión **realizada** (`completed`) de la cuenta, con el nombre y el tipo de medición guardados en la sesión, el esfuerzo percibido y las series sin los datos faltantes (nunca cero). Solo lee. Las medidas, los períodos y la comparación se calculan en la aplicación (`app/src/features/training/progress/`) para poder probarlos contra valores calculados a mano. Tope: las 2.000 sesiones más recientes.
+- Pruebas: `tests/exercise_progress.test.sql` (pgTAP).
+
 ### Privacidad y ciclo de vida (`export_my_data` y función `delete-account`, spec 011)
 
 - `public.export_my_data()` devuelve en un JSON las filas de la cuenta de una lista fija de tablas (contrato en `specs/011-privacidad-ciclo-de-vida/contracts/privacy.md`). `privacy_lifecycle.test.sql` falla si una tabla con `user_id` no está en la lista o no borra en cascada con la cuenta.

@@ -1462,6 +1462,112 @@ export const es = {
       },
     },
   },
+  // Spec 012 (gráficos de progreso de entrenamiento). Solo describe los datos: sin récords, rachas ni metas (Principio IV).
+  trainingProgress: {
+    seeProgress: 'Ver evolución',
+    seeSummary: 'Resumen de actividad',
+    title: 'Evolución',
+    back: 'Volver a la historia',
+    loadError: 'No pudimos cargar la evolución.',
+    offline: 'No hay conexión. No pudimos cargar la evolución.',
+    empty: 'Todavía no lo registraste',
+    emptyBody:
+      'Cuando hagas este ejercicio en una sesión realizada, acá vas a ver cómo evoluciona.',
+    emptyPeriod: 'No hay sesiones de este ejercicio en el período elegido.',
+    measureLabel: 'Qué mostrar',
+    periodLabel: 'Período',
+    periods: {
+      '4w': 'Últimas 4 semanas',
+      '12w': 'Últimas 12 semanas',
+      '6m': 'Últimos 6 meses',
+      '1y': 'Último año',
+      all: 'Todo el historial',
+    },
+    measures: {
+      max_weight: 'Peso máximo de la sesión',
+      volume: 'Volumen',
+      total_reps: 'Repeticiones totales',
+      max_reps: 'Mayor número de repeticiones en una serie',
+      total_time: 'Tiempo total',
+      longest_set: 'Serie más larga',
+      total_distance: 'Distancia total',
+    },
+    howCalculated: {
+      max_weight: 'El mayor peso que usaste en una serie de esa sesión.',
+      volume:
+        'La suma, serie por serie, de repeticiones por peso. Solo cuentan las series con ambos datos.',
+      total_reps: 'La suma de las repeticiones de todas las series de esa sesión.',
+      max_reps: 'La mayor cantidad de repeticiones en una sola serie de esa sesión.',
+      total_time: 'La suma del tiempo de todas las series de esa sesión.',
+      longest_set: 'La serie más larga de esa sesión.',
+      total_distance: 'La suma de la distancia de todas las series de esa sesión.',
+    },
+    summary: (sessions: number, from: string, to: string) =>
+      `${sessions} ${sessions === 1 ? 'sesión' : 'sesiones'} del ${from} al ${to}`,
+    summaryAll: (sessions: number) =>
+      `${sessions} ${sessions === 1 ? 'sesión' : 'sesiones'} en todo el historial`,
+    notEnough:
+      'Con menos de 3 sesiones con dato no se puede hablar de una evolución. Se muestran los puntos que hay, sin línea.',
+    excluded: (count: number) =>
+      `${count} ${count === 1 ? 'serie quedó fuera' : 'series quedaron fuera'} por no tener el dato que esta medida necesita.`,
+    noDataTitle: 'Sesiones sin dato para esta medida',
+    noData: 'Sin dato',
+    legend: 'Cómo leer el gráfico',
+    legendPoint: 'Una sesión',
+    legendLine: 'Une las sesiones en orden de fecha',
+    chartLabel: (count: number, from: string, to: string) =>
+      `Gráfico de ${count} ${count === 1 ? 'sesión' : 'sesiones'} del ${from} al ${to}. Usa las flechas para recorrer los puntos.`,
+    reading: (date: string, value: string, effort: string) =>
+      `${date}: ${value}. Esfuerzo percibido: ${effort}.`,
+    readingHint: 'Pasa el cursor o usa las flechas para ver cada sesión.',
+    effort: (value: number) => `${value} de 10`,
+    effortNone: 'sin dato',
+    table: {
+      summary: 'Ver como tabla',
+      date: 'Fecha',
+      value: 'Valor',
+      effort: 'Esfuerzo percibido',
+      sets: 'Series usadas',
+    },
+    compare: {
+      title: 'Comparar con el período anterior',
+      intro:
+        'Compara el promedio por sesión de este período con el anterior, del mismo largo. Es un número, no una valoración.',
+      unavailable: 'Para comparar elige un período con fecha de inicio, no «Todo el historial».',
+      current: 'Este período',
+      previous: 'Período anterior',
+      sessions: (count: number) => `${count} ${count === 1 ? 'sesión' : 'sesiones'} con dato`,
+      average: 'Promedio por sesión',
+      dates: (from: string, to: string) => `Del ${from} al ${to}`,
+      noAverage: 'sin dato',
+      difference: 'Diferencia',
+      notEnough:
+        'No hay datos suficientes para comparar: se necesitan al menos 2 sesiones con dato en cada período.',
+    },
+  },
+  trainingActivity: {
+    title: 'Resumen de actividad',
+    intro: 'Cuántas sesiones realizadas tuviste. Solo cuentan las que registraste como realizadas.',
+    back: 'Volver al entrenamiento',
+    periodLabel: 'Período',
+    groupingLabel: 'Agrupar por',
+    groupings: { week: 'Semana', month: 'Mes' },
+    loadError: 'No pudimos cargar el resumen.',
+    offline: 'No hay conexión. No pudimos cargar el resumen.',
+    empty: 'Todavía no hay sesiones realizadas',
+    emptyBody: 'Cuando registres una sesión como realizada, la vas a ver acá.',
+    emptyPeriod: 'No hay sesiones realizadas en el período elegido.',
+    total: (count: number) =>
+      `${count} ${count === 1 ? 'sesión realizada' : 'sesiones realizadas'} en el período`,
+    chartLabel: 'Sesiones realizadas por tramo',
+    weekLabel: (from: string, to: string) => `Semana del ${from} al ${to}`,
+    monthLabel: (name: string) => name,
+    sessions: (count: number) => `${count} ${count === 1 ? 'sesión' : 'sesiones'}`,
+    none: '0 sesiones registradas',
+    tableSummary: 'Ver como tabla',
+    tablePeriod: 'Tramo',
+    tableCount: 'Sesiones realizadas',
+  },
   // Spec 011 (privacidad y ciclo de vida). Lenguaje claro y neutral; sin presión para quedarse (Principio IV).
   privacy: {
     navLink: 'Tus datos',

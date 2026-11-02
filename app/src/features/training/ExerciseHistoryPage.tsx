@@ -27,6 +27,13 @@ export function ExerciseHistoryPage() {
         <h1 className="text-2xl font-extrabold tracking-tight">{h.title}</h1>
         {exercise.data ? <p className="break-words text-muted">{exercise.data.name}</p> : null}
       </header>
+      {history.isSuccess && entries.length > 0 ? (
+        <div>
+          <Link to={`/ejercicios/${id}/evolucion`} className="btn-secondary">
+            {es.trainingProgress.seeProgress}
+          </Link>
+        </div>
+      ) : null}
 
       {history.isPending ? <LoadingState /> : null}
       {history.isError ? (
