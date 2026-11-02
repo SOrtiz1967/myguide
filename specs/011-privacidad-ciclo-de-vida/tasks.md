@@ -15,15 +15,15 @@
 
 ## Fase 3: Aplicación
 
-- [ ] T006 [US1] `app/src/features/privacy/zip.ts` y `exportData.ts` con sus pruebas unitarias.
-- [ ] T007 [US1] `app/src/features/privacy/api.ts` y `ExportSection.tsx`: JSON, ZIP de fotos, avance, cancelar y errores.
-- [ ] T008 [US2] `DeleteAccountSection.tsx`: contraseña, frase, errores y cierre de sesión.
-- [ ] T009 [US3] `PrivacySummary.tsx`, `PrivacyPage.tsx`, ruta `/privacidad`, entrada en «Más» y enlace en el perfil; copy `es.privacy`.
-- [ ] T010 [US3] Aviso de privacidad `2026-11-01` en `app/src/copy/privacy-notice.ts`.
+- [x] T006 [US1] `app/src/features/privacy/zip.ts` y `exportData.ts` con sus pruebas unitarias.
+- [x] T007 [US1] `app/src/features/privacy/api.ts` y `ExportSection.tsx`: JSON, ZIP de fotos, avance, cancelar y errores.
+- [x] T008 [US2] `DeleteAccountSection.tsx`: contraseña, frase, errores y cierre de sesión.
+- [x] T009 [US3] `PrivacySummary.tsx`, `PrivacyPage.tsx`, ruta `/privacidad`, entrada en «Más» y enlace en el perfil; copy `es.privacy`.
+- [x] T010 [US3] Aviso de privacidad `2026-11-01` en `app/src/copy/privacy-notice.ts`.
 
 ## Fase 4: Pruebas y cierre
 
-- [ ] T011 Pruebas de componentes `app/tests/component/Privacy.test.tsx`.
-- [ ] T012 Prueba e2e `app/tests/e2e/privacy.spec.ts` (exportación, eliminación con fotos, aislamiento y accesibilidad a 375 y 1280 px).
-- [ ] T013 `Documentacion/privacidad.md`, `Documentacion/despliegue.md`, `supabase/README.md`, `README.md` y roadmap.
+- [x] T011 Pruebas de componentes `app/tests/component/Privacy.test.tsx`.
+- [x] T012 Prueba e2e `app/tests/e2e/privacy.spec.ts` (exportación, eliminación con fotos, aislamiento y accesibilidad a 375 y 1280 px).
+- [x] T013 `Documentacion/privacidad.md`, `Documentacion/despliegue.md`, `supabase/README.md`, `README.md` y roadmap.
 - [ ] T014 Correr pgTAP, Deno, lint, formato, typecheck y Vitest completos; leer el resultado.

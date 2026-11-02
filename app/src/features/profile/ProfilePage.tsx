@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router'
 import { ErrorState } from '../../components/ErrorState'
 import { LoadingState } from '../../components/LoadingState'
 import { SuccessMessage } from '../../components/SuccessMessage'
@@ -65,6 +66,12 @@ export function ProfilePage() {
         </h2>
         <ChangePasswordForm />
       </section>
+
+      <p>
+        <Link to="/privacidad" className="inline-flex min-h-11 items-center underline">
+          {es.privacy.profileLink}
+        </Link>
+      </p>
     </div>
   )
 }

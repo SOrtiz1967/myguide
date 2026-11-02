@@ -66,6 +66,7 @@ export const es = {
     currentPasswordWrong: 'La contraseña actual no es correcta.',
     passwordChanged: 'Contraseña actualizada. Cerramos tus otras sesiones.',
     passwordReset: 'Contraseña actualizada. Ya puedes ingresar con la nueva.',
+    accountDeleted: 'Tu cuenta y todos tus datos fueron eliminados.',
     resetLinkInvalid: 'El enlace no es válido o venció. Pide uno nuevo.',
     sessionExpired: 'Tu sesión venció por inactividad. Ingresa de nuevo.',
     verifyBanner: 'Confirma tu correo para poder recuperar tu contraseña si la olvidas.',
@@ -1458,6 +1459,81 @@ export const es = {
       },
       plan: {
         weekday_invalid: 'Ese día de la semana no es válido.',
+      },
+    },
+  },
+  // Spec 011 (privacidad y ciclo de vida). Lenguaje claro y neutral; sin presión para quedarse (Principio IV).
+  privacy: {
+    navLink: 'Tus datos',
+    title: 'Tus datos',
+    intro:
+      'Acá ves qué guardamos, con quién se comparte, cuánto se conserva y cómo descargar o eliminar todo.',
+    profileLink: 'Privacidad y tus datos',
+    summary: {
+      title: 'Qué guardamos y con quién',
+      stored:
+        'Tu correo y lo que cargues: perfil, comidas, entrenamientos, sueño, actividad, medidas, suplementos, recordatorios y fotos. Son datos personales de salud: solo tú los ves con tu cuenta; no los publicamos ni los usamos para publicidad.',
+      servicesTitle: 'Servicios que participan',
+      services: [
+        'Supabase: guarda tu cuenta, tus registros y tus fotos (en privado).',
+        'Brevo: envía los correos de confirmación y de recuperación de contraseña.',
+        'Cloudflare Turnstile: comprueba que eres una persona al registrarte o recuperar la contraseña.',
+        'Google Gemini: solo si usas «Describir con IA», recibe el texto o la foto de esa comida. Nunca recibe fotos de progreso, medidas ni datos de tu perfil.',
+      ],
+      retentionTitle: 'Cuánto se conserva',
+      retention: [
+        'Tus registros: hasta que los elimines o elimines tu cuenta.',
+        'Resultados temporales de la IA: 24 horas.',
+        'Registros técnicos de las funciones: no incluyen datos personales y se conservan lo que permite el panel del proveedor (hasta 7 días).',
+        'Copias de seguridad del proveedor: lo que elimines puede permanecer en ellas hasta 30 días y no se usa para nada más.',
+      ],
+      notMedical:
+        'MyGuide es una herramienta de seguimiento personal: no es un dispositivo médico ni reemplaza el consejo de profesionales.',
+    },
+    export: {
+      title: 'Descargar tus datos',
+      intro:
+        'Descarga un archivo con todo lo que registraste y, aparte, un ZIP con tus fotos. Se arman en tu dispositivo.',
+      data: 'Descargar mis datos (JSON)',
+      photos: 'Descargar mis fotos (ZIP)',
+      working: 'Preparando…',
+      progress: (done: number, total: number) => `Descargando fotos: ${done} de ${total}`,
+      cancel: 'Cancelar',
+      cancelled: 'Cancelaste la descarga. No se guardó ningún archivo.',
+      dataReady: 'Listo: se descargó el archivo con tus datos.',
+      photosReady: (count: number) => `Listo: se descargó el ZIP con ${count} fotos.`,
+      photosPartial: (count: number, missing: number) =>
+        `Se descargó el ZIP con ${count} fotos, pero ${missing} no se pudieron leer. Puedes volver a intentarlo.`,
+      noPhotos: 'No tienes fotos guardadas.',
+      error:
+        'No pudimos preparar la descarga. No se guardó ningún archivo. Puedes volver a intentarlo.',
+      photosError:
+        'No pudimos leer ninguna de tus fotos. No se guardó ningún archivo. Puedes volver a intentarlo.',
+      offline: 'No hay conexión. Vuelve a intentarlo cuando vuelva.',
+    },
+    delete: {
+      title: 'Eliminar tu cuenta',
+      intro:
+        'Se borran tu cuenta, todos tus registros y todas tus fotos. Es definitivo y no se puede deshacer. Lo que elimines puede permanecer en las copias de seguridad del proveedor hasta 30 días.',
+      suggestion: 'Si quieres conservar algo, descárgalo antes.',
+      open: 'Eliminar mi cuenta',
+      password: 'Tu contraseña actual',
+      confirmLabel: (phrase: string) => `Escribe «${phrase}» para confirmar`,
+      phrase: 'eliminar mi cuenta',
+      submit: 'Eliminar mi cuenta definitivamente',
+      submitting: 'Eliminando…',
+      cancel: 'Cancelar',
+      errors: {
+        password: 'Escribe tu contraseña actual.',
+        phrase: 'Escribe la frase tal como aparece para confirmar.',
+        invalid_password: 'La contraseña no es correcta. No se eliminó nada.',
+        rate_limited: 'Hiciste varios intentos seguidos. Espera un rato y vuelve a intentarlo.',
+        unauthorized: 'Tu sesión venció o la cuenta ya no existe. Vuelve a ingresar.',
+        storage_error:
+          'No pudimos borrar tus fotos. No se eliminó nada. Puedes volver a intentarlo.',
+        delete_failed: 'No pudimos eliminar la cuenta. Puedes volver a intentarlo.',
+        offline: 'No hay conexión. No se eliminó nada.',
+        generic: 'No pudimos eliminar la cuenta. No se eliminó nada. Puedes volver a intentarlo.',
       },
     },
   },

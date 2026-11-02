@@ -7,7 +7,7 @@
 Los datos de productos de marca vienen de Open Food Facts, con licencia **ODbL 1.0**. Esa licencia exige:
 
 1. **Atribución:** mencionar a Open Food Facts y la licencia. ✅ Ya se cumple en la pantalla `/fuentes` y en la procedencia de cada alimento.
-2. **Compartir bajo la misma licencia (*share-alike*):** si una **base de datos derivada** se distribuye o se pone a disposición del público, hay que publicarla bajo la ODbL.
+2. **Compartir bajo la misma licencia (_share-alike_):** si una **base de datos derivada** se distribuye o se pone a disposición del público, hay que publicarla bajo la ODbL.
 
 La duda es si ofrecer la app a otras personas cuenta como "poner a disposición" la base derivada, o si es solo una "obra producida", que requiere atribución pero no publicar la base.
 

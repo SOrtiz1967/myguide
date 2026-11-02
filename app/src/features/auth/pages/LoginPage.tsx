@@ -5,7 +5,7 @@ import { LoginForm } from '../LoginForm'
 interface LoginLocationState {
   from?: string
   expired?: boolean
-  notice?: 'passwordReset'
+  notice?: 'passwordReset' | 'accountDeleted'
 }
 
 export function LoginPage() {
@@ -23,6 +23,11 @@ export function LoginPage() {
       {state.notice === 'passwordReset' ? (
         <p role="status" className="card-inset px-4 py-3">
           {es.auth.passwordReset}
+        </p>
+      ) : null}
+      {state.notice === 'accountDeleted' ? (
+        <p role="status" className="card-inset px-4 py-3">
+          {es.auth.accountDeleted}
         </p>
       ) : null}
       <LoginForm onSignedIn={() => navigate(state.from ?? '/', { replace: true })} />

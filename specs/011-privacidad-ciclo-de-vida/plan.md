@@ -21,13 +21,13 @@ Una pantalla `/privacidad` («Tus datos») con tres bloques: resumen de privacid
 
 ## Revisión de la Constitution
 
-| Principio                 | Resultado                                                                                                                                                  |
-| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Principio                 | Resultado                                                                                                                                                    |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | I (privacidad)            | Se cumple: exportación y eliminación completa definidas e implementadas, archivos incluidos; informa qué queda en copias de seguridad; secretos en servidor. |
-| II (integridad)           | Se cumple: la eliminación es idempotente y no deja cuentas a medias.                                                                                       |
-| IV (sin culpa ni presión) | Se cumple: textos neutrales; eliminar no se presenta como castigo ni se insiste en retener.                                                                |
-| VI (accesible)            | Se cumple: formularios, diálogos y avance operables por teclado; axe a 375 y 1280 px.                                                                      |
-| IX (observabilidad)       | Se cumple: registros sin datos personales; plazos y herramienta de monitoreo documentados.                                                                 |
+| II (integridad)           | Se cumple: la eliminación es idempotente y no deja cuentas a medias.                                                                                         |
+| IV (sin culpa ni presión) | Se cumple: textos neutrales; eliminar no se presenta como castigo ni se insiste en retener.                                                                  |
+| VI (accesible)            | Se cumple: formularios, diálogos y avance operables por teclado; axe a 375 y 1280 px.                                                                        |
+| IX (observabilidad)       | Se cumple: registros sin datos personales; plazos y herramienta de monitoreo documentados.                                                                   |
 
 No hay violaciones que justificar.
 

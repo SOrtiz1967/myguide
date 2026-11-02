@@ -1,6 +1,6 @@
 # Roadmap de specs — Fitness Tracking App
 
-Basado en la Constitution v1.2.1. Este documento define el corte y el contenido previsto de cada spec. Las specs 001 a 009 y 013 a 022 están implementadas; el resto está pendiente (ver la tabla de estado del `README.md`).
+Basado en la Constitution v1.2.1. Este documento define el corte y el contenido previsto de cada spec. Las specs 001 a 009, 011 y 013 a 022 están implementadas; el resto está pendiente (ver la tabla de estado del `README.md`).
 
 **Contexto del MVP:** el MVP lo usa solo el autor. Las reglas de privacidad y autenticación de la Constitution se mantienen igual. Lo que se pospone es el trabajo orientado a usuarios externos (ver spec 011).
 
@@ -107,6 +107,7 @@ Basado en la Constitution v1.2.1. Este documento define el corte y el contenido 
 
 ### 011 — Privacidad y ciclo de vida de los datos
 
+- **Estado (2026-11-01): implementada** (`specs/011-privacidad-ciclo-de-vida/`): pantalla «Tus datos» (`/privacidad`) con descarga de todos los registros (JSON) y de las fotos (ZIP), eliminación de cuenta con contraseña (la función `delete-account` borra primero los archivos de `meal-photos/` y `progress-photos/` y después la cuenta, con cascada), aviso de privacidad `2026-11-01` y política en [`privacidad.md`](privacidad.md). Cierra las decisiones #7 (copias de seguridad: «hasta 30 días», a confirmar con el plan contratado) y #9 (registros sin datos personales; monitoreo con el panel de Supabase). Pruebas guardianas: toda tabla con `user_id` está en la exportación y borra en cascada. Falta la corrida de Playwright (`tests/e2e/privacy.spec.ts`).
 - Exportación, eliminación de registros y de cuenta, retención de copias de seguridad.
 - Plazo de retención de logs y herramienta de monitoreo.
 - Decisiones pendientes #7 y #9.

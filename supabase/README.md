@@ -4,13 +4,13 @@ Backend de MyGuide como código: migraciones, funciones de borde (Edge Functions
 
 ## Estructura
 
-| Carpeta       | Contenido                                                                                                                                                                                                                                                         |
-| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `migrations/` | Esquema, RLS, funciones y disparadores. Una migración por cambio lógico, en orden cronológico.                                                                                                                                                                    |
-| `functions/`  | Edge Functions (Deno): `register`, `request-password-reset`, `send-verification`, `confirm-email`, `meal-photo`, `progress-photo`, `estimate-meal` y utilidades en `_shared/`. Cada una separa la lógica probada (`handler.ts`) de su conexión real (`index.ts`). |
-| `tests/`      | Pruebas pgTAP (`*.test.sql`) y la prueba de invariantes de configuración (`config.test.ts`).                                                                                                                                                                      |
-| `seed.sql`    | Ayudantes de prueba en el esquema `tests`. **Solo local**: no se aplica a producción.                                                                                                                                                                             |
-| `config.toml` | Configuración de Auth y de las funciones. Las decisiones de seguridad están comentadas al final.                                                                                                                                                                  |
+| Carpeta       | Contenido                                                                                                                                                                                                                                                                           |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `migrations/` | Esquema, RLS, funciones y disparadores. Una migración por cambio lógico, en orden cronológico.                                                                                                                                                                                      |
+| `functions/`  | Edge Functions (Deno): `register`, `request-password-reset`, `send-verification`, `confirm-email`, `meal-photo`, `progress-photo`, `estimate-meal`, `delete-account` y utilidades en `_shared/`. Cada una separa la lógica probada (`handler.ts`) de su conexión real (`index.ts`). |
+| `tests/`      | Pruebas pgTAP (`*.test.sql`) y la prueba de invariantes de configuración (`config.test.ts`).                                                                                                                                                                                        |
+| `seed.sql`    | Ayudantes de prueba en el esquema `tests`. **Solo local**: no se aplica a producción.                                                                                                                                                                                               |
+| `config.toml` | Configuración de Auth y de las funciones. Las decisiones de seguridad están comentadas al final.                                                                                                                                                                                    |
 
 ## Entorno local
 
@@ -198,6 +198,11 @@ Todas verifican `auth.uid()` y `private.is_session_fresh()`. Las que escriben so
 | `preview_repeat_meal(from_date, from_meal)` · `repeat_meal(from_date, from_meal, to_date, to_meal, request_id)` | Cuenta y copia una comida de otro día; los ítems del catálogo se recalculan con el alimento actual y los manuales o con el alimento ya borrado se copian; idempotente |
 
 La zona horaria para el corte del día es la del perfil; si no hay, la del navegador (si es válida); si no, UTC. `private.log_day_status_at(usuario, ahora, zona)` recibe la hora como parámetro para poder probarla con hora simulada y no tiene permiso para el cliente.
+
+### Privacidad y ciclo de vida (`export_my_data` y función `delete-account`, spec 011)
+
+- `public.export_my_data()` devuelve en un JSON las filas de la cuenta de una lista fija de tablas (contrato en `specs/011-privacidad-ciclo-de-vida/contracts/privacy.md`). `privacy_lifecycle.test.sql` falla si una tabla con `user_id` no está en la lista o no borra en cascada con la cuenta.
+- `delete-account` verifica la sesión y la contraseña, limita a 5 intentos por hora, borra los archivos de `meal-photos/<id>/` y `progress-photos/<id>/` y después la cuenta (las filas se van por cascada). No registra persona, correo ni rutas. Política completa en `Documentacion/privacidad.md`.
 
 ### Estimación de comidas con IA (función `estimate-meal`, spec 009)
 

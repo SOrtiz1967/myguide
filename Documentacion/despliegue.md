@@ -81,3 +81,9 @@ El plan gratuito pausa los proyectos tras una semana sin actividad. Con uso diar
 - **Retención de logs (Principio IX):** aún no hay un plazo definido para los registros de las Edge Functions. Hasta la spec 011 rige el plazo por defecto del proveedor. Los registros no contienen correos, tokens ni contraseñas (los depura `functions/_shared/log.ts`).
 - **Bloqueo por cuenta en el inicio de sesión:** solo hay límite por IP; el bloqueo por cuenta requiere un plan superior.
 - **Confirmación de correo no bloqueante:** reevaluar si pasa a ser obligatoria antes de abrir la aplicación a otras personas. El registro es abierto, por lo que la **spec 011 es obligatoria** antes de publicar.
+
+## Privacidad y eliminación de cuenta (spec 011)
+
+1. Aplicar la migración `20261101000200_privacy_lifecycle.sql` con `npx supabase db push` (crea `export_my_data` y publica la versión `2026-11-01` del aviso).
+2. Desplegar la función: `npx supabase functions deploy delete-account` (`verify_jwt = false` en `config.toml`; verifica la sesión y la contraseña ella misma). Usa `SUPABASE_URL`, `SUPABASE_ANON_KEY` y `SUPABASE_SERVICE_ROLE_KEY`, que Supabase inyecta; no hay secretos nuevos.
+3. Confirmar en el panel el plazo de copias de seguridad y de registros del plan contratado y ajustar `Documentacion/privacidad.md` y `es.privacy` si difieren de «hasta 30 días» y «hasta 7 días».

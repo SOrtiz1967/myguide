@@ -28,15 +28,15 @@ Solicitud: `{ "password": "…" }`.
 
 Respuesta 200: `{ "deleted": true }`.
 
-| HTTP | `code`             | Cuándo                                                               |
-| ---- | ------------------ | -------------------------------------------------------------------- |
-| 400  | `invalid_request`  | Sin contraseña o cuerpo mal formado.                                 |
-| 401  | `unauthorized`     | Sin token, token inválido, sesión vencida o la cuenta ya no existe.  |
-| 403  | `forbidden_origin` | Origen no permitido.                                                 |
-| 403  | `invalid_password` | La contraseña no es la de la cuenta (no se borra nada).              |
-| 429  | `rate_limited`     | Más de 5 intentos por hora.                                          |
-| 500  | `storage_error`    | No se pudieron borrar los archivos; la cuenta sigue existiendo.      |
-| 500  | `delete_failed`    | No se pudo eliminar la cuenta; reintentar es seguro.                 |
+| HTTP | `code`             | Cuándo                                                              |
+| ---- | ------------------ | ------------------------------------------------------------------- |
+| 400  | `invalid_request`  | Sin contraseña o cuerpo mal formado.                                |
+| 401  | `unauthorized`     | Sin token, token inválido, sesión vencida o la cuenta ya no existe. |
+| 403  | `forbidden_origin` | Origen no permitido.                                                |
+| 403  | `invalid_password` | La contraseña no es la de la cuenta (no se borra nada).             |
+| 429  | `rate_limited`     | Más de 5 intentos por hora.                                         |
+| 500  | `storage_error`    | No se pudieron borrar los archivos; la cuenta sigue existiendo.     |
+| 500  | `delete_failed`    | No se pudo eliminar la cuenta; reintentar es seguro.                |
 
 Orden: archivos de `meal-photos/<id>/` y `progress-photos/<id>/` → cuenta (y con ella todas sus filas por cascada).
 

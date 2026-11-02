@@ -15,7 +15,7 @@
    npx supabase link --project-ref <ref-del-proyecto>
    npx supabase db push
    ```
-3. Cargar los secretos de las funciones (correo de Brevo y Turnstile) y desplegarlas, incluida `meal-photo` (fotos de comidas), que debe quedar con *Verify JWT* apagado. Ver la guía.
+3. Cargar los secretos de las funciones (correo de Brevo y Turnstile) y desplegarlas, incluida `meal-photo` (fotos de comidas), que debe quedar con _Verify JWT_ apagado. Ver la guía.
 4. En Authentication → URL Configuration, poner la dirección pública del sitio.
 
 ## 2. Turnstile
