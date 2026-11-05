@@ -105,7 +105,7 @@ test('describir, corregir, confirmar: nada se guarda hasta confirmar y queda com
   await page.goto(addUrl())
   await page.getByRole('button', { name: ai.open }).click()
   await page.getByLabel(ai.textLabel).fill('2 milanesas al horno con puré y una manzana')
-  await page.getByRole('button', { name: ai.estimate }).click()
+  await page.getByRole('button', { name: ai.estimate, exact: true }).click()
 
   await expect(page.getByRole('heading', { name: ai.review.title })).toBeVisible()
   expect(calls).toHaveLength(1)
@@ -139,7 +139,7 @@ test('si la IA no está disponible el texto se conserva y se carga a mano', asyn
   await page.goto(addUrl())
   await page.getByRole('button', { name: ai.open }).click()
   await page.getByLabel(ai.textLabel).fill('una tarta de verdura')
-  await page.getByRole('button', { name: ai.estimate }).click()
+  await page.getByRole('button', { name: ai.estimate, exact: true }).click()
 
   await expect(page.getByRole('alert')).toContainText(ai.errors.ai_unavailable)
   await expect(page.getByLabel(ai.textLabel)).toHaveValue('una tarta de verdura')
@@ -201,7 +201,7 @@ for (const [label, width, height] of [
     await expectNoHorizontalScroll(page, `texto (${label})`)
 
     await page.getByLabel(ai.textLabel).fill('2 milanesas al horno con puré y una manzana')
-    await page.getByRole('button', { name: ai.estimate }).click()
+    await page.getByRole('button', { name: ai.estimate, exact: true }).click()
     await expect(page.getByRole('heading', { name: ai.review.title })).toBeVisible()
     await expectNoViolations(page, `revisión (${label})`)
     await expectNoHorizontalScroll(page, `revisión (${label})`)

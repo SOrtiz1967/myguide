@@ -4,6 +4,7 @@ import { ErrorState } from '../../components/ErrorState'
 import { Field } from '../../components/Field'
 import { es } from '../../copy/es'
 import { isNetworkError } from '../../lib/errors'
+import { setLoginNotice } from '../../lib/loginNotice'
 import { useAuth } from '../auth/useAuth'
 import { deleteAccount, DeleteAccountError } from './api'
 
@@ -51,7 +52,9 @@ export function DeleteAccountSection() {
       setBusy(false)
       return
     }
-    // La cuenta ya no existe: se limpia lo local y se vuelve al ingreso.
+    // La cuenta ya no existe: se limpia lo local y se vuelve al ingreso. El aviso va en el almacenamiento de la sesión
+    // porque, al cerrar la sesión, `RequireAuth` redirige por su cuenta y pisaría el estado de la navegación.
+    setLoginNotice('accountDeleted')
     try {
       await signOut()
     } finally {

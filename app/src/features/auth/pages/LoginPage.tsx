@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import { es } from '../../../copy/es'
+import { clearLoginNotice, peekLoginNotice } from '../../../lib/loginNotice'
 import { LoginForm } from '../LoginForm'
 
 interface LoginLocationState {
@@ -11,6 +13,9 @@ interface LoginLocationState {
 export function LoginPage() {
   const navigate = useNavigate()
   const state = (useLocation().state ?? {}) as LoginLocationState
+  const [stored] = useState(peekLoginNotice)
+  const notice = state.notice ?? stored
+  useEffect(() => clearLoginNotice, [])
 
   return (
     <div className="flex flex-col gap-6">
@@ -20,12 +25,12 @@ export function LoginPage() {
           {es.auth.sessionExpired}
         </p>
       ) : null}
-      {state.notice === 'passwordReset' ? (
+      {notice === 'passwordReset' ? (
         <p role="status" className="card-inset px-4 py-3">
           {es.auth.passwordReset}
         </p>
       ) : null}
-      {state.notice === 'accountDeleted' ? (
+      {notice === 'accountDeleted' ? (
         <p role="status" className="card-inset px-4 py-3">
           {es.auth.accountDeleted}
         </p>

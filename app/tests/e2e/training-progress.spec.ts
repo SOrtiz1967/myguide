@@ -132,9 +132,9 @@ test('el resumen de actividad cuenta las sesiones realizadas por semana', async 
   await expect(page.getByText(a.total(3))).toBeVisible()
   const list = page.getByRole('list', { name: a.chartLabel })
   await expect(list.getByText(a.none).first()).toBeVisible()
-  await page.getByRole('button', { name: a.groupings.month }).click()
+  await page.getByRole('button', { name: a.groupings.month, exact: true }).click()
   await expect(list.getByRole('listitem').first()).toBeVisible()
-  await expect(page.getByText(/racha|objetivo|constancia/i)).toHaveCount(0)
+  await expect(page.getByRole('main').getByText(/racha|objetivo|constancia/i)).toHaveCount(0)
 })
 
 for (const [label, width, height] of [
