@@ -25,6 +25,8 @@ test('escenario 31: la cuenta B no ve datos de A en la misma pestaña, ni un ins
   await register(page, emailA)
   seedGoal(emailA, 2000, localDate(-2))
   seedEntry(emailA, { name: MARKER, energy: 777 })
+  // El objetivo y el ítem se sembraron directo en la base: la app ya había leído el historial vacío del inicio.
+  await page.reload()
 
   // La cuenta B se crea aparte (otro contexto) para tener sus credenciales.
   const other = await browser.newPage()

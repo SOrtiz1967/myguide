@@ -47,8 +47,8 @@ Formato: `- [ ] Txxx [P] [USn] descripción con ruta`. `[P]` marca tareas que se
 - [x] T024 Buscar estilos sueltos (hexadecimales y tamaños en píxeles fuera de `app/src/index.css`) en `app/src` y eliminarlos (SC-002).
 - [x] T025 [P] Prueba de accesibilidad con axe en `app/tests/e2e/a11y-system.spec.ts` sobre `/sistema`, inicio y una pantalla de formulario, a 375 px y a 200 % de zoom.
 - [x] T026 Correr lint, formato, typecheck y la suite completa de Vitest; leer el resultado.
-- [ ] T027 Correr Playwright una parte por vez y leer el resultado.
-- [ ] T028 Actualizar `Documentacion/roadmap-specs.md` y `README.md` con el estado de la spec 017 y commitear.
+- [x] T027 Correr Playwright una parte por vez y leer el resultado. Suite completa corrida el 2026-11-06: 292 de 292 pasan.
+- [x] T028 Actualizar `Documentacion/roadmap-specs.md` y `README.md` con el estado de la spec 017 y commitear.
 
 ## Dependencias
 

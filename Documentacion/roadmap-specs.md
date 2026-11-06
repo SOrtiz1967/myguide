@@ -98,7 +98,7 @@ Basado en la Constitution v1.2.1. Este documento define el corte y el contenido 
 
 ### 010 — Tendencias, mantenimiento y correlaciones
 
-- **Estado (2026-11-01): implementada** (`specs/010-tendencias-correlaciones/`): pantalla `/tendencias` con tres secciones. Alimentación por semana (promedio de los días con registro, objetivo de cada día, días dentro de ±10 % como conteo y proteína por kilo con el peso usado y su fecha). Mantenimiento estimado como rango de una ventana de 21 días, solo con 14 días con calorías y 4 pesajes repartidos, con 7.700 kcal por kilo declarado, método y sesgos a la vista y sin recomendar cambiar el objetivo. Entrenamiento (series por semana y grupo muscular principal del catálogo actual) y sueño en dos paneles con las mismas semanas, sin coeficientes ni frases causales. Investigación en `research_notes/Análisis de datos de progreso/`. Falta la corrida de Playwright (`tests/e2e/trends.spec.ts`).
+- **Estado (2026-11-01): implementada** (`specs/010-tendencias-correlaciones/`): pantalla `/tendencias` con tres secciones. Alimentación por semana (promedio de los días con registro, objetivo de cada día, días dentro de ±10 % como conteo y proteína por kilo con el peso usado y su fecha). Mantenimiento estimado como rango de una ventana de 21 días, solo con 14 días con calorías y 4 pesajes repartidos, con 7.700 kcal por kilo declarado, método y sesgos a la vista y sin recomendar cambiar el objetivo. Entrenamiento (series por semana y grupo muscular principal del catálogo actual) y sueño en dos paneles con las mismas semanas, sin coeficientes ni frases causales. Investigación en `research_notes/Análisis de datos de progreso/`. Los e2e pasan (292 de 292, 2026-11-06).
 - Gráficos comparativos con unidades y fechas.
 - Calorías de mantenimiento con umbral mínimo de datos y método explicado.
 - Patrones entre sueño, rendimiento y alimentación, sin causalidad.
@@ -108,7 +108,7 @@ Basado en la Constitution v1.2.1. Este documento define el corte y el contenido 
 
 ### 011 — Privacidad y ciclo de vida de los datos
 
-- **Estado (2026-11-01): implementada** (`specs/011-privacidad-ciclo-de-vida/`): pantalla «Tus datos» (`/privacidad`) con descarga de todos los registros (JSON) y de las fotos (ZIP), eliminación de cuenta con contraseña (la función `delete-account` borra primero los archivos de `meal-photos/` y `progress-photos/` y después la cuenta, con cascada), aviso de privacidad `2026-11-01` y política en [`privacidad.md`](privacidad.md). Cierra las decisiones #7 (copias de seguridad: «hasta 30 días», a confirmar con el plan contratado) y #9 (registros sin datos personales; monitoreo con el panel de Supabase). Pruebas guardianas: toda tabla con `user_id` está en la exportación y borra en cascada. Falta la corrida de Playwright (`tests/e2e/privacy.spec.ts`).
+- **Estado (2026-11-01): implementada** (`specs/011-privacidad-ciclo-de-vida/`): pantalla «Tus datos» (`/privacidad`) con descarga de todos los registros (JSON) y de las fotos (ZIP), eliminación de cuenta con contraseña (la función `delete-account` borra primero los archivos de `meal-photos/` y `progress-photos/` y después la cuenta, con cascada), aviso de privacidad `2026-11-01` y política en [`privacidad.md`](privacidad.md). Cierra las decisiones #7 (copias de seguridad: «hasta 30 días», a confirmar con el plan contratado) y #9 (registros sin datos personales; monitoreo con el panel de Supabase). Pruebas guardianas: toda tabla con `user_id` está en la exportación y borra en cascada. Los e2e pasan (292 de 292, 2026-11-06).
 - Exportación, eliminación de registros y de cuenta, retención de copias de seguridad.
 - Plazo de retención de logs y herramienta de monitoreo.
 - Decisiones pendientes #7 y #9.
@@ -124,7 +124,7 @@ Basado en la Constitution v1.2.1. Este documento define el corte y el contenido 
 - Se amplía con la investigación de análisis de datos pedida el 2026-10-28 (ver `notas-de-prueba-2026-10-28.md`). El gráfico del peso con promedio móvil va en la spec 020.
 - Depende de la 006. Comparte lenguaje visual con los gráficos de la 010, pero esta spec solo trata de entrenamiento.
 - Principios: II, IV, V, VI.
-- **Estado (2026-11-01): implementada** (`specs/012-graficos-progreso-entrenamiento/`): evolución de un ejercicio en `/ejercicios/:id/evolucion` (medidas según el tipo de medición, períodos, esfuerzo percibido, tabla equivalente y comparación con el período anterior por promedio por sesión) y resumen de sesiones realizadas por semana y por mes en `/entrenamiento/resumen`. Tendencia solo con 3 o más sesiones con dato, comparación con 2 o más por período, sin récords ni rachas. Falta la corrida de Playwright (`tests/e2e/training-progress.spec.ts`).
+- **Estado (2026-11-01): implementada** (`specs/012-graficos-progreso-entrenamiento/`): evolución de un ejercicio en `/ejercicios/:id/evolucion` (medidas según el tipo de medición, períodos, esfuerzo percibido, tabla equivalente y comparación con el período anterior por promedio por sesión) y resumen de sesiones realizadas por semana y por mes en `/entrenamiento/resumen`. Tendencia solo con 3 o más sesiones con dato, comparación con 2 o más por período, sin récords ni rachas. Los e2e pasan (292 de 292, 2026-11-06).
 
 ### 013 — Inicio «Hoy»
 
@@ -156,7 +156,7 @@ Nacen de la primera prueba de uso del autor (2026-10-28). Las notas originales y
 - **Pestaña Entrenamiento:** rehacer el frente completo (hoy desprolijo). Se conserva cómo se arma una rutina, que al autor le gusta.
 - **Relación con la spec 006:** revierte la decisión «rutinas sin días asignados». El plan es una entidad aparte; el catálogo de rutinas y las sesiones registradas no cambian. El estado de entrenamiento de la semana del inicio (spec 016) pasa a considerar el plan.
 - **Aclarado el 2026-10-28:** «marcar como completado» solo existe cuando el día tenía una rutina asignada; sin rutina asignada se carga el entrenamiento hecho. Resuelto en la spec: la sesión marcada guarda el plan de la rutina como planificado, sin series realizadas, y se muestra como «Marcada como completada, sin detalle»; una rutina por día de la semana; sin descanso explícito; el plan no genera sesiones.
-- **Estado:** implementada el 2026-10-28 (base de datos, aplicación y pruebas); falta la corrida completa de Playwright.
+- **Estado:** implementada el 2026-10-28 (base de datos, aplicación y pruebas); e2e completos pasan (292 de 292, 2026-11-06).
 - Depende de la 006 y la 016. Principios: II, V, VI.
 - Origen: nota 4.
 
@@ -169,7 +169,7 @@ Nacen de la primera prueba de uso del autor (2026-10-28). Las notas originales y
 - Límite a vigilar: el almacenamiento del plan gratuito de Supabase (ver `despliegue.md`).
 - Principios: I, V, VI.
 - Origen: pedido de fotos del autor (2026-10-28) y la spec 008.
-- **Estado (2026-10-30): implementada** (`specs/019-fotos-de-progreso/`): bucket privado `progress-photos`, función `progress-photo`, pantalla `/fotos` con subida, lista por fecha, corrección de fecha y pose, eliminación y comparación de dos fotos. Tope de 200 fotos por cuenta. Falta la corrida completa de Playwright.
+- **Estado (2026-10-30): implementada** (`specs/019-fotos-de-progreso/`): bucket privado `progress-photos`, función `progress-photo`, pantalla `/fotos` con subida, lista por fecha, corrección de fecha y pose, eliminación y comparación de dos fotos. Tope de 200 fotos por cuenta. Los e2e completos pasan (292 de 292, 2026-11-06).
 
 ### 020 — Evolución del peso
 
@@ -178,7 +178,7 @@ Nacen de la primera prueba de uso del autor (2026-10-28). Las notas originales y
 - Sin conclusiones a partir de pocos puntos; datos faltantes como faltantes (Principio V).
 - Depende de la 008. Comparte el lenguaje visual con los gráficos de las specs 010 y 012. Principios: IV, V.
 - Origen: guía de diseño del autor (2026-10-27).
-- **Estado (2026-10-30): implementada** (`specs/020-evolucion-del-peso/`): bloque «Evolución del peso» en `/medidas` con gráfico SVG propio, períodos (30 días a Todo), promedio de 7 días (mínimo 3 registros, sin interpolar), cifras descriptivas y casilla opcional «en ayunas» con el filtro «Todos / Solo en ayunas» (preferencia del navegador). Falta la corrida completa de Playwright.
+- **Estado (2026-10-30): implementada** (`specs/020-evolucion-del-peso/`): bloque «Evolución del peso» en `/medidas` con gráfico SVG propio, períodos (30 días a Todo), promedio de 7 días (mínimo 3 registros, sin interpolar), cifras descriptivas y casilla opcional «en ayunas» con el filtro «Todos / Solo en ayunas» (preferencia del navegador). Los e2e completos pasan (292 de 292, 2026-11-06).
 
 ### 021 — Recordatorios y notificaciones configurables
 
@@ -189,7 +189,7 @@ Nacen de la primera prueba de uso del autor (2026-10-28). Las notas originales y
 - **Aviso dentro de la app:** tarjeta en el inicio cuando toca cargar algo. No necesita servicios externos ni permisos. No avisa con la app cerrada, y esa limitación es la razón del feature futuro 024.
 - Depende de la 019 y la 022. Principios: I, IV, VI, VII.
 - Origen: nota 3.
-- **Estado (2026-10-30): implementada** (`specs/021-recordatorios/`), después de la 022 que necesita: tabla `reminders` (peso, fotos y suplementos; todos los días, cada tantos días o ciertos días), sección «Recordatorios» en el perfil y tarjetas en el inicio con «Más tarde» (hasta mañana, guardado en la cuenta) y «Desactivar». Reemplaza la casilla de la spec 016 y elimina `profiles.weight_reminder` (lo activado pasa a un recordatorio diario de peso). El aviso es solo dentro de la app; la configuración queda lista para la 024. Falta la corrida completa de Playwright.
+- **Estado (2026-10-30): implementada** (`specs/021-recordatorios/`), después de la 022 que necesita: tabla `reminders` (peso, fotos y suplementos; todos los días, cada tantos días o ciertos días), sección «Recordatorios» en el perfil y tarjetas en el inicio con «Más tarde» (hasta mañana, guardado en la cuenta) y «Desactivar». Reemplaza la casilla de la spec 016 y elimina `profiles.weight_reminder` (lo activado pasa a un recordatorio diario de peso). El aviso es solo dentro de la app; la configuración queda lista para la 024. Los e2e completos pasan (292 de 292, 2026-11-06).
 
 ### 022 — Suplementación
 
@@ -199,7 +199,7 @@ Nacen de la primera prueba de uso del autor (2026-10-28). Las notas originales y
 - La app no recomienda suplementos, dosis, horarios ni combinaciones, ni afirma efectos (Principio IV y límites de alcance). Un día sin marca es «sin registro», no «olvidado».
 - Principios: I, IV, VI.
 - Origen: nota 8.
-- **Estado (2026-10-30): implementada** (`specs/022-suplementacion/`), antes que la 021 porque los recordatorios la necesitan: pantalla `/suplementos` (lista propia con nombre y dosis en texto libre, archivar, restaurar, eliminar; tope de 30) y bloque «Suplementos» en el panel del día del inicio con «Tomado» o «Sin registro». Falta la corrida completa de Playwright.
+- **Estado (2026-10-30): implementada** (`specs/022-suplementacion/`), antes que la 021 porque los recordatorios la necesitan: pantalla `/suplementos` (lista propia con nombre y dosis en texto libre, archivar, restaurar, eliminar; tope de 30) y bloque «Suplementos» en el panel del día del inicio con «Tomado» o «Sin registro». Los e2e completos pasan (292 de 292, 2026-11-06).
 
 ### 023 — Ampliación del catálogo de alimentos
 

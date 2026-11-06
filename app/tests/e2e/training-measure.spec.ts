@@ -106,6 +106,8 @@ test('SC-001: empezar con una rutina y anotar la primera serie; una sesión de 3
   })
   await page.getByRole('button', { name: e.finish }).click()
   await page.goto('/entrenamiento')
+  // Hoy ya hay una sesión realizada: cargar otra se abre con «Cargar entrenamiento» (spec 018).
+  await click(page.getByRole('button', { name: t.today.load }).click())
   await click(page.getByRole('button', { name: t.home.startEmpty }).click())
   await expect(page.getByRole('button', { name: e.finish })).toBeVisible()
   for (const name of names) {

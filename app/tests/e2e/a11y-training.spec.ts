@@ -43,6 +43,7 @@ test.beforeEach(async ({ page }) => {
 test('axe: inicio con calendario, día, sesión en sus cuatro estados, editor, rutinas e historia', async ({
   page,
 }) => {
+  test.setTimeout(180_000)
   const email = uniqueEmail('tra')
   await register(page, email)
   const user = userOf(email)

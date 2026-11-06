@@ -28,7 +28,7 @@
 ## Fase 5: Pruebas
 
 - [x] T012 Pruebas unitarias y de componentes (`app/tests/unit/estimate.test.ts`, `app/tests/component/EstimateMeal.test.tsx`).
-- [ ] T013 Prueba e2e `app/tests/e2e/estimate-meal.spec.ts` (recorrido, caída de la IA, cálculo en la carga a mano y accesibilidad a 375 y 1280 px) con la respuesta de la función simulada en el navegador. Escrita; falta correrla (necesita la base, `functions serve` por el registro y el preview).
+- [x] T013 Prueba e2e `app/tests/e2e/estimate-meal.spec.ts` (recorrido, caída de la IA, cálculo en la carga a mano y accesibilidad a 375 y 1280 px) con la respuesta de la función simulada en el navegador. Corrida el 2026-11-06 con la base, `functions serve` y el preview: pasa.
 - [x] T014 Correr pgTAP, Deno, lint, formato, typecheck y Vitest completos; leer el resultado.
 
 ## Fase 6: Historia 6 — Foto del plato

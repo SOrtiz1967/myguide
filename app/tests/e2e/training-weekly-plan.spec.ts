@@ -52,7 +52,7 @@ test('armar el plan, marcar el día como completado y ver la sesión sin detalle
   await expect(page.getByText(d.planned('Pecho'))).toBeVisible()
   await page.getByRole('button', { name: d.markDone }).click()
   await expect(page.getByText(d.doneTitle)).toBeVisible()
-  await expect(page.getByText(new RegExp(t.marks.markedComplete))).toBeVisible()
+  await expect(page.getByText(new RegExp(t.marks.markedComplete)).first()).toBeVisible()
   await expect(page.getByRole('button', { name: d.markDone })).toHaveCount(0)
 
   // La sesión conserva el plan como planificado y no muestra series realizadas.

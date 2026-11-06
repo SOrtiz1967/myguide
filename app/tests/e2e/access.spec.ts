@@ -2,6 +2,7 @@
 import { readFileSync } from 'node:fs'
 import { expect, test, type APIRequestContext } from '@playwright/test'
 import { es } from '../../src/copy/es'
+import { PRIVACY_NOTICE_VERSION } from '../../src/copy/privacy-notice'
 import {
   PASSWORD,
   SUPABASE_URL,
@@ -32,7 +33,7 @@ async function createAccount(request: APIRequestContext, email: string) {
       email,
       password: PASSWORD,
       turnstileToken: 'token-e2e',
-      privacyNoticeVersion: '2026-10-16',
+      privacyNoticeVersion: PRIVACY_NOTICE_VERSION,
     },
   })
   expect(res.status()).toBe(201)

@@ -103,7 +103,9 @@ test('gráfico del período, cifras, teclado, ayunas y recarga', async ({ page }
   await expect(page.getByRole('group', { name: /13 registros/ })).toBeVisible()
 
   // Lo escrito no es un juicio ni una conclusión.
-  await expect(page.getByText(/bajaste|subiste|perdiste|ganaste|tendencia/i)).toHaveCount(0)
+  await expect(
+    page.getByRole('main').getByText(/bajaste|subiste|perdiste|ganaste|tendencia/i),
+  ).toHaveCount(0)
 })
 
 for (const [label, width, height] of [

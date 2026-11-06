@@ -25,6 +25,6 @@
 ## Fase 4: Pruebas y cierre
 
 - [x] T012 Pruebas de componentes `app/tests/component/Trends.test.tsx` (incluye que ningún texto contiene lenguaje de juicio, correlación ni causalidad).
-- [ ] T013 Prueba e2e `app/tests/e2e/trends.spec.ts` (recorrido y accesibilidad a 375 y 1280 px). Escrita; falta correrla (necesita la base, `functions serve` por el registro y el preview).
+- [x] T013 Prueba e2e `app/tests/e2e/trends.spec.ts` (recorrido y accesibilidad a 375 y 1280 px). Corrida el 2026-11-06 con la base, `functions serve` y el preview: pasa.
 - [x] T014 Actualizar `Documentacion/roadmap-specs.md`, `README.md`, `supabase/README.md` y `Documentacion/fuentes-datos.md` si aplica.
 - [x] T015 Correr pgTAP, lint, formato, typecheck y Vitest completos; leer el resultado.

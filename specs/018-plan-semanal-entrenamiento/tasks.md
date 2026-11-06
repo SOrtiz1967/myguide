@@ -32,5 +32,5 @@
 - [x] T011 Pruebas de componentes `WeeklyPlan.test.tsx`, de estado `weekPlanState.test.ts` y ajuste de las pruebas existentes de inicio, semana y entrenamiento.
 - [x] T012 Prueba e2e `app/tests/e2e/training-weekly-plan.spec.ts` y recorrido de las pruebas de entrenamiento existentes.
 - [x] T013 Correr pgTAP, lint, formato, typecheck y Vitest completos; leer el resultado.
-- [ ] T014 Corrida completa de Playwright (pendiente, junto con la de la spec 017).
+- [x] T014 Corrida completa de Playwright: 292 de 292 pasan (2026-11-06).
 - [x] T015 Actualizar `Documentacion/roadmap-specs.md` y `README.md`.
