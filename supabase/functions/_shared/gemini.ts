@@ -8,7 +8,7 @@ import {
   RESPONSE_SCHEMA,
 } from './estimate.ts'
 
-export const DEFAULT_MODEL = 'gemini-2.5-flash'
+export const DEFAULT_MODEL = 'gemini-3.5-flash'
 export const TIMEOUT_MS = 20_000
 const ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models'
 

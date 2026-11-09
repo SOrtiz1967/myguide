@@ -8,7 +8,7 @@ Una Edge Function nueva, `estimate-meal`, recibe el texto de la comida, llama a 
 
 ## Contexto técnico
 
-- **Proveedor (decisión #3):** Gemini, modelo `GEMINI_MODEL` (por omisión `gemini-2.5-flash`), clave `GEMINI_API_KEY` solo en el servidor. Salida estructurada por JSON Schema del propio proveedor (`responseMimeType: application/json` y `responseSchema`), que se vuelve a validar en la función. El adaptador (`supabase/functions/_shared/gemini.ts`) es lo único que conoce a Google: recibe `fetch` por inyección para probarlo con respuestas simuladas.
+- **Proveedor (decisión #3):** Gemini, modelo `GEMINI_MODEL` (por omisión `gemini-3.5-flash`), clave `GEMINI_API_KEY` solo en el servidor. Salida estructurada por JSON Schema del propio proveedor (`responseMimeType: application/json` y `responseSchema`), que se vuelve a validar en la función. El adaptador (`supabase/functions/_shared/gemini.ts`) es lo único que conoce a Google: recibe `fetch` por inyección para probarlo con respuestas simuladas.
 - **Cuota (decisión #6):** 5 consultas por minuto y 30 por día por cuenta con `check_rate_limit` (ventana máxima de un día, la que ya limpia la tabla). La cuota del proveedor agotada (HTTP 429 de Google) se mapea a `quota_exhausted`. Las consultas repetidas con el mismo `request_id` se resuelven desde el resultado guardado antes de contar.
 - **Base de datos:** `supabase/migrations/20261101000100_ai_estimates.sql`:
   - Tabla `ai_estimates (user_id, request_id, result jsonb, created_at)`, clave `(user_id, request_id)`, RLS activada sin políticas (solo la función con rol de servicio), `on delete cascade` con la cuenta. Los resultados de más de 24 horas se ignoran al leer y se borran al guardar uno nuevo.

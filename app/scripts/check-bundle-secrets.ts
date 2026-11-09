@@ -8,16 +8,20 @@ import { findSecrets, type Finding, type KnownSecret } from './secret-scan.ts'
 const appDir = process.cwd()
 const repoRoot = join(appDir, '..')
 
-/** Secretos reales del servidor (supabase/.env, que no se sube a Git), si existe. */
+/** Secretos reales del servidor (supabase/.env y supabase/.env.local, que no se suben a Git), si existen. */
 function knownSecrets(): KnownSecret[] {
-  const envFile = join(repoRoot, 'supabase', '.env')
-  if (!existsSync(envFile)) return []
   const secretNames = /(PASSWORD|SECRET|SERVICE_ROLE|API_KEY|TOKEN)/i
-  return readFileSync(envFile, 'utf8')
-    .split(/\r?\n/)
-    .map((line) => /^([A-Z0-9_]+)=(.*)$/.exec(line))
-    .filter((m): m is RegExpExecArray => m !== null && secretNames.test(m[1] ?? ''))
-    .map((m) => ({ name: m[1] ?? '', value: (m[2] ?? '').trim() }))
+  return (
+    ['.env', '.env.local']
+      .map((name) => join(repoRoot, 'supabase', name))
+      .filter((file) => existsSync(file))
+      .flatMap((file) => readFileSync(file, 'utf8').split(/\r?\n/))
+      .map((line) => /^([A-Z0-9_]+)=(.*)$/.exec(line))
+      .filter((m): m is RegExpExecArray => m !== null && secretNames.test(m[1] ?? ''))
+      .map((m) => ({ name: m[1] ?? '', value: (m[2] ?? '').trim() }))
+      // Las claves de prueba de Turnstile (1x0000…, 2x0000…, 3x0000…) son públicas y van en la documentación.
+      .filter((s) => s.value.length >= 8 && !/^[123]x0{10,}/.test(s.value))
+  )
 }
 
 function filesUnder(dir: string): string[] {

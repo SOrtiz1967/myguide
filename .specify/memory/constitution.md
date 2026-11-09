@@ -1,8 +1,8 @@
 # Constitution — Fitness Tracking App
 
-**Versión:** 1.2.1  
+**Versión:** 1.2.2  
 **Ratificada:** 2026-10-16  
-**Última modificación:** 2026-10-19  
+**Última modificación:** 2026-11-08  
 **Estado:** Ratificada para el MVP  
 **Metodología:** Spec-Driven Development (Spec Kit)  
 **Idioma del producto:** Español  
@@ -209,17 +209,12 @@ Esta Constitution define principios permanentes para todas las funcionalidades. 
 
 ## Reglas de decisión técnica
 
-Las siguientes decisiones están pendientes y NO se consideran fijadas por esta Constitution:
+Las siguientes decisiones siguen pendientes y NO se consideran fijadas por esta Constitution:
 
-1. Framework basado en React (por ejemplo, Vite o Next.js) y estructura de despliegue.
-2. Backend, autenticación, base de datos y estrategia de almacenamiento de fotos.
-3. Proveedor de IA para analizar fotos o descripciones de comidas.
-4. Fuentes del catálogo de ejercicios, su formato y proceso de importación, y estrategia de traducción al español, además del método para calcular calorías y macronutrientes de las estimaciones. Debe validarse licencia, cobertura y calidad de cada fuente (ver Principio X). Las fuentes del catálogo de alimentos ya están decididas (ver «Decisiones ya tomadas»).
-5. Cómo se obtienen los pasos y la actividad: registro manual, APIs del dispositivo o servicios de salud. Debe investigarse la viabilidad real en una PWA, ya que el acceso a sensores o a servicios de salud desde el navegador es limitado según la plataforma. Hasta que se decida, el registro manual es la vía de base.
-6. Estrategia de costos, límites de uso, cuotas, compresión de imágenes y comportamiento ante indisponibilidad de servicios.
-7. Política concreta de exportación, retención y eliminación de datos.
-8. Método concreto para estimar el gasto calórico y las calorías de mantenimiento, y los umbrales mínimos de datos para mostrarlos.
-9. Plazo de retención de logs y herramienta de monitoreo de errores.
+1. Cómo se obtienen los pasos, el sueño y la actividad de forma automática (APIs del dispositivo o servicios de salud). Debe investigarse la viabilidad real en una PWA, ya que el acceso a sensores o a servicios de salud desde el navegador es limitado según la plataforma. Hasta que se decida, el registro manual y opcional es la vía de base (spec 007).
+2. Notificaciones push con la aplicación cerrada (spec 024): requiere una decisión técnica documentada sobre suscripciones, claves y programador de envíos.
+
+Las decisiones técnicas que la versión 1.0 dejaba pendientes (framework, backend, proveedor de IA, fuentes de los catálogos, costos y cuotas, método de gasto y mantenimiento, exportación y eliminación de datos, retención de logs) ya están resueltas; ver «Decisiones ya tomadas».
 
 Cada decisión MUST documentarse en la especificación o plan técnico correspondiente, junto con alternativas evaluadas, razones de elección, riesgos y consecuencias.
 
@@ -232,6 +227,13 @@ Cada decisión MUST documentarse en la especificación o plan técnico correspon
 - Sistema métrico por defecto en el MVP (ver Principio VI).
 - Los catálogos de alimentos y de ejercicios son copias propias importadas, con alimentos y ejercicios creados por el usuario (ver Principio X).
 - Fuentes del catálogo de alimentos (spec 002), importadas a una copia local: **Open Food Facts** para productos de marca de Argentina (licencias ODbL 1.0 y DbCL 1.0; exige atribución visible, que la aplicación muestra en la pantalla de fuentes, y una revisión legal de la obligación de compartir bajo la misma licencia antes de abrir la aplicación a otras personas) y **USDA FoodData Central** para alimentos genéricos (CC0 1.0). Los nombres de USDA se traducen al español y quedan marcados como «sin revisar» o «revisada». Detalle, cobertura medida y obligaciones en `Documentacion/fuentes-datos.md` y en `specs/002-catalogo-de-alimentos/research.md`.
+- Stack (spec 001): Vite, React y TypeScript como PWA; Supabase (Auth, Postgres con RLS y Edge Functions) con almacenamiento privado de archivos; Cloudflare Pages para el frontend, Brevo para el correo y Cloudflare Turnstile contra abuso, todo en planes gratuitos. Detalle en `specs/001-cuentas-perfil-pwa/research.md`.
+- Fotos (specs 003 y 019): se comprimen en el navegador (JPEG, lado mayor de 1.600 px), el servidor verifica el formato y quita los metadatos, y se guardan en buckets privados (`meal-photos` y `progress-photos`) con cifrado en reposo del proveedor.
+- Fuentes del catálogo de ejercicios (spec 005): **free-exercise-db** (Unlicense, dominio público; traducción asistida y marcada «sin revisar» hasta que se revise) y **myguide-base**, ejercicios propios del proyecto bajo CC0 1.0. Queda pendiente que el autor confirme la procedencia de los pasos de free-exercise-db antes de abrir la aplicación a terceros (`Documentacion/issues-autor/08-ejercicios-licencias.md`).
+- Estimación con IA (spec 009): proveedor **Gemini** (Google), llamado solo desde la Edge Function `estimate-meal` detrás de un adaptador propio; la clave vive solo en el servidor (`GEMINI_API_KEY`) y el modelo se configura por `GEMINI_MODEL` (hoy `gemini-3.5-flash`, porque `gemini-2.5-flash` ya no está disponible para cuentas nuevas). La respuesta se valida contra un esquema y la propuesta no se guarda hasta que la persona la confirma. Límite de 5 consultas por minuto y 30 por día por cuenta, y resultado conservado 24 horas para que reintentar no gaste cuota. Sin clave, con cuota agotada o ante un fallo, queda el registro manual.
+- Objetivo y gasto calórico (specs 004, 014 y 015): el objetivo diario lo confirma la persona; el metabolismo en reposo se calcula con Mifflin-St Jeor más el gasto de los entrenos, con pisos y tope, y se propone sin imponerse.
+- Calorías de mantenimiento (spec 010): estimación como **rango** sobre una ventana de 21 días terminados, solo con 14 días con calorías y 4 pesajes repartidos, con 7.700 kcal por kilo declarado, método y sesgos a la vista y sin recomendar cambiar el objetivo.
+- Privacidad y ciclo de vida (spec 011): exportación de todos los registros en JSON y de las fotos en ZIP, y eliminación de cuenta con contraseña que borra primero los archivos y luego la cuenta, con cascada. Los registros técnicos no contienen datos personales y se conservan lo que dura el panel de Supabase (hasta 7 días en el plan gratuito); el monitoreo es el panel de Supabase, sin herramienta externa. Las copias de seguridad del proveedor pueden conservar lo eliminado hasta 30 días (a confirmar con el plan contratado). Política en `Documentacion/privacidad.md`.
 
 ## Fuera del alcance del MVP
 
@@ -270,6 +272,7 @@ La aplicación se orienta al seguimiento personal y a la educación sobre hábit
 
 | Versión | Fecha | Cambios |
 |---------|-------|---------|
+| 1.2.2 | 2026-11-08 | Se registran las decisiones técnicas tomadas por las specs 001 a 022 (stack, fotos, fuentes de ejercicios, proveedor y cuotas de IA, objetivo y mantenimiento calórico, exportación, eliminación y retención) y las decisiones pendientes quedan reducidas a las integraciones automáticas de sueño y pasos y a las notificaciones push. No cambia ningún principio. |
 | 1.2.1 | 2026-10-19 | Se registra la decisión sobre las fuentes del catálogo de alimentos (Open Food Facts y USDA FoodData Central, con su licencia y obligaciones) y la decisión técnica pendiente #4 queda solo para el catálogo de ejercicios. No cambia ningún principio. |
 | 1.2.0 | 2026-10-16 | Se agrega el Principio X (catálogos de referencia de alimentos y ejercicios): copia local importada, procedencia por ítem, licencias y atribución, ítems propios del usuario, valores normalizados por 100 g/ml y traducción al español revisable. Se amplía la decisión técnica pendiente #4 y se registra la decisión tomada sobre catálogos. |
 | 1.1.1 | 2026-10-16 | Corrección de redacción en el Principio I ("offrezca" → "ofrezca"). |
