@@ -51,7 +51,7 @@ La persona compara el volumen de la semana con el promedio de las últimas 4 sem
 ### Functional Requirements
 
 - **FR-001**: MUST calcularse por semana y grupo muscular: series directas, series indirectas, frecuencia (días con series del grupo) y volumen promedio por sesión.
-- **FR-002**: La asignación directa/indirecta MUST salir de los músculos primarios y secundarios del ejercicio del momento de la sesión (instantánea, spec 006) y la regla MUST mostrarse.
+- **FR-002**: La asignación directa/indirecta MUST salir de los músculos primarios y secundarios del ejercicio del momento de la sesión (instantánea) y la regla MUST mostrarse. La spec 006 todavía no guarda esa instantánea de músculos: esta spec la agrega (ver `plan.md`).
 - **FR-003**: Solo sesiones realizadas MUST contar.
 - **FR-004**: MUST permitir comparar con el promedio de las últimas 4 semanas y mostrar tendencia; con datos insuficientes MUST decirlo.
 - **FR-005**: Los textos MUST NOT afirmar cantidades «necesarias»; MUST informar el dato y sugerir revisarlo según el objetivo (Principio IV).
