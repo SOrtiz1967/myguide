@@ -60,6 +60,8 @@ La persona compara series planificadas y realizadas por semana y por ejercicio, 
 - **FR-008**: Con pocos datos MUST informarse y no sacar conclusiones.
 - **FR-009**: Cada persona ve solo sus datos (aislamiento por cuenta).
 - **FR-010**: Accesible por teclado y lector de pantalla, sin desplazamiento horizontal en 360 px.
+- **FR-011**: Cualquier corte de «buena adherencia» (por ejemplo 80 %) MUST ser opcional y declararse como convención de diseño; MUST mostrarse además la meta mínima de al menos 2 sesiones de fuerza por semana (OMS 2020).
+- **FR-012**: Una sesión cancelada MUST tratarse como evento neutro y reprogramable: sin rachas que se reinicien a cero, sin rankings competitivos por defecto y sin lenguaje de culpa.
 
 ### Key Entities
 
