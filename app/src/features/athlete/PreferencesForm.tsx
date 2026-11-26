@@ -2,6 +2,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useState, type FormEvent } from 'react'
 import { CheckboxField } from '../../components/CheckboxField'
 import { ErrorState } from '../../components/ErrorState'
+import { Field } from '../../components/Field'
 import { SuccessMessage } from '../../components/SuccessMessage'
 import { es } from '../../copy/es'
 import { newRequestId } from '../../lib/ids'
@@ -123,23 +124,17 @@ export function PreferencesForm({
         />
       </label>
 
-      <label className="flex flex-col gap-1.5">
-        <span className="text-sm font-semibold text-muted">{t.sleep}</span>
-        <input
-          type="number"
-          inputMode="decimal"
-          min={1}
-          max={16}
-          step={0.5}
-          className="control"
-          value={sleep}
-          onChange={(event) => setSleep(event.target.value)}
-          aria-describedby="athlete-sleep-hint"
-        />
-        <span id="athlete-sleep-hint" className="text-sm text-muted">
-          {t.sleepHint}
-        </span>
-      </label>
+      <Field
+        label={t.sleep}
+        hint={t.sleepHint}
+        type="number"
+        inputMode="decimal"
+        min={1}
+        max={16}
+        step={0.5}
+        value={sleep}
+        onChange={(event) => setSleep(event.target.value)}
+      />
 
       <label className="flex flex-col gap-1.5">
         <span className="text-sm font-semibold text-muted">{t.recovery}</span>

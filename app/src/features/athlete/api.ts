@@ -99,20 +99,20 @@ export async function fetchAthlete(): Promise<AthleteData> {
     items: (items.data ?? [])
       .filter((row) => row.exercise_id !== null || row.food_id !== null)
       .map((row) => {
-      const r = row as unknown as {
-        kind: ItemKind
-        exercise_id: string | null
-        food_id: string | null
-        exercises: { name: string } | null
-        foods: { name: string } | null
-      }
-      return {
-        kind: r.kind,
-        exercise_id: r.exercise_id,
-        food_id: r.food_id,
-        name: r.exercises?.name ?? r.foods?.name ?? '',
-      }
-    }),
+        const r = row as unknown as {
+          kind: ItemKind
+          exercise_id: string | null
+          food_id: string | null
+          exercises: { name: string } | null
+          foods: { name: string } | null
+        }
+        return {
+          kind: r.kind,
+          exercise_id: r.exercise_id,
+          food_id: r.food_id,
+          name: r.exercises?.name ?? r.foods?.name ?? '',
+        }
+      }),
   }
 }
 

@@ -3,6 +3,7 @@ import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router'
 import { CheckboxField } from '../../components/CheckboxField'
 import { ErrorState } from '../../components/ErrorState'
+import { Field } from '../../components/Field'
 import { SuccessMessage } from '../../components/SuccessMessage'
 import { es } from '../../copy/es'
 import { newRequestId } from '../../lib/ids'
@@ -195,19 +196,13 @@ export function GoalsForm({
         />
       ) : null}
 
-      <label className="flex flex-col gap-1.5">
-        <span className="text-sm font-semibold text-muted">{t.effectiveFrom}</span>
-        <input
-          type="date"
-          className="control"
-          value={from}
-          onChange={(event) => setFrom(event.target.value)}
-          aria-describedby="athlete-goals-from-hint"
-        />
-        <span id="athlete-goals-from-hint" className="text-sm text-muted">
-          {t.effectiveFromHint}
-        </span>
-      </label>
+      <Field
+        label={t.effectiveFrom}
+        hint={t.effectiveFromHint}
+        type="date"
+        value={from}
+        onChange={(event) => setFrom(event.target.value)}
+      />
 
       {error ? <ErrorState message={error} /> : null}
       {saved ? (

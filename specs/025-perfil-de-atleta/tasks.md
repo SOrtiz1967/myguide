@@ -27,7 +27,7 @@
 
 ## Fase 5: Pruebas y cierre
 
-- [ ] T012 Prueba de componentes `app/tests/component/AthleteProfile.test.tsx`.
+- [x] T012 Prueba de componentes `app/tests/component/AthleteProfile.test.tsx`.
 - [ ] T013 Prueba e2e `app/tests/e2e/athlete-profile.spec.ts` (recorrido, recarga, vigencia, aislamiento) y accesibilidad a 375 y 1280 px.
-- [ ] T014 Correr pgTAP, lint, formato, typecheck y Vitest completos; leer el resultado.
+- [x] T014 Correr pgTAP, lint, formato, typecheck y Vitest completos; leer el resultado.
 - [ ] T015 Playwright de perfil y accesibilidad; actualizar `Documentacion/roadmap-specs.md` y `README.md`.
