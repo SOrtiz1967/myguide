@@ -60,6 +60,7 @@ Junto al estancamiento, la persona ve factores observables del mismo período (v
 - **FR-008**: Con datos insuficientes MUST informarse y no marcar estancamiento.
 - **FR-009**: Cada persona ve solo sus datos (aislamiento por cuenta).
 - **FR-010**: Accesible por teclado y lector de pantalla, sin desplazamiento horizontal en 360 px.
+- **FR-011**: El mínimo de sesiones MUST declararse como criterio de producto (no hay definición científica de estancamiento) y MUST escalar con el nivel de experiencia; una variación menor al ruido de medición del 1RM (~4 %) MUST NOT contar como mejora ni como empeoramiento.
 
 ### Key Entities
 
