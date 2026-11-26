@@ -36,3 +36,14 @@ La base devuelve los 18 valores del catálogo; el cliente los agrupa. Cambiar la
 
 - Si «hombros» debe separarse en frontal, lateral y posterior (el catálogo solo tiene `shoulders`; no se puede sin ampliar el catálogo).
 - Cómo mostrar `full_body` (propuesta: contador aparte, sin sumar a ningún grupo).
+
+
+## Verificación científica (2026-11-25)
+
+Fuente: `Documentacion/investigacion/umbrales-cientificos.md` (rama `docs-nuevas-specs`). Las cifras se leyeron sobre todo en resúmenes; lo no verificado en fuente primaria queda marcado.
+
+- Dosis-respuesta graduada con rendimientos decrecientes (Schoenfeld 2017: +0,37 % por serie semanal extra; Pelland 2026, 67 estudios). Rango orientativo 10–20 series duras/músculo/semana (Baz-Valle 2022: 12–20, 7 ensayos). Sin techo duro.
+- MEV/MAV/MRV de Israetel/RP: sin artículo primario; no citarlos como científicos. Aviso suave bajo ~4–6 series (inferencia).
+- Series indirectas: ponderación 0,5 con mayor respaldo relativo (Pelland 2026; texto completo no leído). A confirmar.
+- Frecuencia: sin efecto a volumen igualado (Schoenfeld 2019; Grgic 2018): no penalizar 1 vez/semana.
+- Serie efectiva: Robinson/Pelland 2024 sugiere 0–5 RIR (solo nota de prensa); definir RIR ≤4 y excluir calentamiento es práctica común, no hallazgo.
