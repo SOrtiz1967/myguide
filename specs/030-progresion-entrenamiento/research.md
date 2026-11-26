@@ -37,3 +37,13 @@ Peso corporal: se progresa por repeticiones y, al superar el máximo, se sugiere
 
 - Rango por defecto según el objetivo del perfil de atleta (hipertrofia 8–12, fuerza 3–6, otros 8–15); depende de la spec 025.
 - Incremento por tipo de equipo (barra 2,5 kg; mancuernas 1–2 kg; máquinas según pila); propuesta: un incremento por ejercicio con el predeterminado de 2,5 kg.
+
+
+## Verificación científica (2026-11-25)
+
+Fuente: `Documentacion/investigacion/umbrales-cientificos.md` (rama `docs-nuevas-specs`). Las cifras se leyeron sobre todo en resúmenes; lo no verificado en fuente primaria queda marcado.
+
+- Regla de carga: subir 2–10 % cuando se logran 1–2 repeticiones sobre el objetivo (ACSM 2009). Confianza: verificado.
+- Doble progresión: sin ensayo propio (heurística). APRE (Mann 2010) con n = 23 y 6 semanas; la ventaja puede venir del ajuste constante de repeticiones, no de la autorregulación.
+- Incremento 2,5–5 % o el mínimo disponible; si el RIR real es menor al objetivo, mantener o bajar. Decisión de producto.
+- Historial mínimo para recomendar (p. ej. ≥3–4 sesiones por ejercicio): heurística propia, declararlo así.
