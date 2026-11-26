@@ -61,6 +61,7 @@ La persona elige RIR o RPE en su perfil; el historial del ejercicio (spec 006) y
 - **FR-008**: El guardado MUST ser idempotente y no mostrarse como hecho hasta que el servidor lo confirme.
 - **FR-009**: El esfuerzo y las notas son datos personales: aislamiento por cuenta, y entran en exportación y eliminación (spec 011).
 - **FR-010**: La carga de esfuerzo MUST ser usable en el gimnasio: máximo un toque adicional por serie, accesible por teclado y sin desplazamiento horizontal en 360 px.
+- **FR-011**: La pantalla MUST presentar RIR 0–4 (RPE 6–10) como rango principal; valores de RIR mayores a 4 MUST aceptarse pero mostrarse como esfuerzo ligero/aproximado. El texto de ayuda MUST indicar que el esfuerzo percibido tiene un margen de error de alrededor de ±1 repetición, y llegar al fallo MUST NOT ser requisito.
 
 ### Key Entities
 
