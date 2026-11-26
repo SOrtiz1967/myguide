@@ -41,3 +41,16 @@ Todo es determinista. La IA no interviene en ningún cálculo ni redacción de e
 
 - Si el rango de carbohidratos queda negativo en algún extremo (déficit con proteína y grasas altas), se fija en 0 y se informa que el objetivo es poco realista; verificar con casos extremos.
 - Valor por defecto de grasas por kilo para personas de IMC alto (propuesta: usar el peso de referencia, no el peso real, por encima de IMC 30).
+
+
+## Verificación científica (2026-11-25)
+
+Fuente: `Documentacion/investigacion/umbrales-cientificos.md` (rama `docs-nuevas-specs`). Las cifras se leyeron sobre todo en resúmenes; lo no verificado en fuente primaria queda marcado.
+
+- Proteína: default 1,6 g/kg con rango 1,4–2,0 (ISSN 2017; Morton 2018). Más de 2,2 solo opcional en déficit y entrenados (ISSN/Helms 2014: 2,3–3,1 g/kg magra). Mayores de 65: ≥1,0–1,2 (PROT-AGE 2013). Aviso por enfermedad renal. Confianza: verificado.
+- Grasa: Helms 2014 da 15–30 % de la energía; el piso del 20 % de la decisión actual no tiene fuente primaria hallada (el IOM da 20–35 %, pendiente de verificar). Tratar como rango informativo.
+- Hidratos: bandas 3–5, 5–7, 6–10 y 8–12 g/kg según horas de entrenamiento (posición conjunta AND/DC/ACSM 2016). La banda 10–12 no se confirmó.
+- Fibra 14 g/1000 kcal (IOM); sodio <2 g/día (OMS): rangos informativos, nunca objetivos que «fallan».
+- Peso: ±0,5 % es plausible sobre media móvil de 7 días (variación semanal media ~0,35 %, Turicchi 2020), pero ningún estudio fija ese número; exigir ≥4 pesajes en la ventana (decisión de producto). Orsama 2014: máximo domingo/lunes.
+- No usar 7700 kcal/kg como regla fija (Hall 2011 usa modelo dinámico). Mifflin-St Jeor por defecto con incertidumbre (22 % de casos con error >10 %); Cunningham/ten Haaf mejor en deportistas.
+- Tasas: pérdida 0,5–1 %/semana (Helms 2014; Garthe 2011); ganancia 0,25–0,5 %/semana solo novatos/intermedios (Iraki 2019).
