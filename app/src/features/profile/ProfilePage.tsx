@@ -58,6 +58,12 @@ export function ProfilePage() {
 
       <GoalProfileForm profile={profile} />
 
+      <p>
+        <Link to="/perfil/atleta" className="inline-flex min-h-11 items-center underline">
+          {es.athlete.link}
+        </Link>
+      </p>
+
       <RemindersSection />
 
       <section aria-labelledby="cambiar-contrasena" className="card flex flex-col gap-4">

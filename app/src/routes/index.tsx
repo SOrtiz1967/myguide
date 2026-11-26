@@ -14,6 +14,7 @@ import { PrivacyPage } from '../features/privacy/PrivacyPage'
 import { TrendsPage } from '../features/trends/TrendsPage'
 import { ActivitySummaryPage } from '../features/training/progress/ActivitySummaryPage'
 import { ExerciseProgressPage } from '../features/training/progress/ExerciseProgressPage'
+import { AthleteProfilePage } from '../features/athlete/AthleteProfilePage'
 import { SupplementsPage } from '../features/supplements/SupplementsPage'
 import { ProgressPhotosPage } from '../features/progress-photos/ProgressPhotosPage'
 import { OnboardingPage } from '../features/onboarding/OnboardingPage'
@@ -86,6 +87,7 @@ export const routes: RouteObject[] = [
               { path: '/medidas', element: <MeasuresPage /> },
               { path: '/fotos', element: <ProgressPhotosPage /> },
               { path: '/suplementos', element: <SupplementsPage /> },
+              { path: '/perfil/atleta', element: <AthleteProfilePage /> },
               { path: '/privacidad', element: <PrivacyPage /> },
               { path: '/tendencias', element: <TrendsPage /> },
               { path: '/actividad', element: <ActivityPage /> },

@@ -11,15 +11,15 @@
 
 ## Fase 2: Historia 1 — Completar mi contexto deportivo (P1)
 
-- [ ] T005 [US1] `app/src/features/athlete/athlete.ts`: tipos, validación y mapeo de objetivos (puro, determinista) con prueba `app/tests/unit/athlete.test.ts`.
-- [ ] T006 [US1] `app/src/features/athlete/api.ts` y `useAthlete.ts`: leer perfil vigente y llamar a las tres funciones con `client_request_id`, errores seguros y sin mostrar guardado hasta la confirmación del servidor.
-- [ ] T007 [US1] Copy `athlete` en `app/src/copy/es.ts`, neutral y con tuteo; cada bloque explica para qué se usa el dato.
-- [ ] T008 [US1] `GoalsForm.tsx`, `AvailabilityForm.tsx` y `PreferencesForm.tsx` con las piezas de la spec 014 (`Field`, `ChoiceGroup`, `Card`); selección de ejercicios y alimentos desde el catálogo; todo opcional; datos de la 014 de solo lectura con enlace a su edición.
-- [ ] T009 [US1] `AthleteProfilePage.tsx` y enlace desde `app/src/features/profile/ProfilePage.tsx`; estados vacío, de carga y de error; conserva lo escrito si el guardado falla.
+- [x] T005 [US1] `app/src/features/athlete/athlete.ts`: tipos, validación y mapeo de objetivos (puro, determinista) con prueba `app/tests/unit/athlete.test.ts`.
+- [x] T006 [US1] `app/src/features/athlete/api.ts` y `useAthlete.ts`: leer perfil vigente y llamar a las tres funciones con `client_request_id`, errores seguros y sin mostrar guardado hasta la confirmación del servidor.
+- [x] T007 [US1] Copy `athlete` en `app/src/copy/es.ts`, neutral y con tuteo; cada bloque explica para qué se usa el dato.
+- [x] T008 [US1] `GoalsForm.tsx`, `AvailabilityForm.tsx` y `PreferencesForm.tsx` con las piezas de la spec 014 (`Field`, `ChoiceGroup`, `Card`); selección de ejercicios y alimentos desde el catálogo; todo opcional; datos de la 014 de solo lectura con enlace a su edición.
+- [x] T009 [US1] `AthleteProfilePage.tsx` y enlace desde `app/src/features/profile/ProfilePage.tsx`; estados vacío, de carga y de error; conserva lo escrito si el guardado falla.
 
 ## Fase 3: Historia 2 — Cambiar mi perfil sin reescribir el pasado (P1)
 
-- [ ] T010 [US2] Historial en `AthleteProfilePage.tsx`: lista de objetivos y disponibilidad con su vigencia; fecha de vigencia no anterior a la última; aviso neutral que ofrece revisar el objetivo calórico sin cambiarlo (FR-009).
+- [x] T010 [US2] Historial en `AthleteProfilePage.tsx`: lista de objetivos y disponibilidad con su vigencia; fecha de vigencia no anterior a la última; aviso neutral que ofrece revisar el objetivo calórico sin cambiarlo (FR-009).
 
 ## Fase 4: Historia 3 — Ver y exportar (P2)
 
