@@ -59,6 +59,8 @@ Por ejercicio, la persona ve sus récords vigentes y su historia: mayor peso, m�
 - **FR-007**: Corregir o eliminar un registro MUST recalcular los récords afectados y conservar su historia.
 - **FR-008**: Cada persona ve solo sus récords (aislamiento por cuenta); entran en exportación y eliminación (spec 011).
 - **FR-009**: Accesible por teclado y lector de pantalla, sin desplazamiento horizontal en 360 px.
+- **FR-010**: La estimación de 1RM MUST mostrar su margen de incertidumbre, calcularse solo con series de hasta 10 repeticiones (mejor hasta 6), MUST NOT mostrarse con más de 12 repeticiones y, en peso muerto, MUST avisar que suele subestimarse.
+- **FR-011**: Un récord de peso real (mayor peso por repeticiones) MUST detectarse sin umbral. Un «progreso significativo» por 1RM estimado MUST exigir una mejora de al menos 4–5 % (5 % o más si la estimación viene de más de 5 repeticiones o el ejercicio es nuevo), porque la variación normal de la medición ronda el 4 %.
 
 ### Key Entities
 
