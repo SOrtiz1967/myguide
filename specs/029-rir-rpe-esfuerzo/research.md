@@ -31,3 +31,12 @@ Duplicar una sesión o crearla desde una rutina deja el esfuerzo vacío: es un d
 
 - Si el selector debe ofrecer medios puntos de RPE (propuesta: sí en RPE, no en RIR).
 - Valor por defecto del selector al abrirlo (propuesta: ninguno; recordar el último usado en la sesión).
+
+
+## Verificación científica (2026-11-25)
+
+Fuente: `Documentacion/investigacion/umbrales-cientificos.md` (rama `docs-nuevas-specs`). Las cifras se leyeron sobre todo en resúmenes; lo no verificado en fuente primaria queda marcado.
+
+- RPE = 10 − RIR validado contra velocidad de barra (Zourdos 2016, n = 29; r = −0,88 / −0,77). La tabla completa de la escala no se leyó.
+- Se subestima en promedio 0,95 repeticiones hasta el fallo; el error crece con la distancia al fallo y las series largas (Halperin 2022; Zourdos 2021: error 5,15 reps en RPE 5, 2,05 en RPE 9). Sin evidencia primaria para RIR 5–9.
+- **Decisión revisada**: aceptar RIR 0–9 al registrar (compatibilidad), pero presentar RIR 0–4 (RPE 6–10) como rango fiable; RIR >4 como «ligero/impreciso»; copy «±1 repetición»; el fallo es opcional (Refalo 2023: ventaja trivial, ES 0,19).
