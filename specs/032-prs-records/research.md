@@ -33,3 +33,12 @@ El récord es un dato objetivo (peso, repeticiones); el esfuerzo percibido se mu
 
 - Si conviene permitir ocultar los récords de un ejercicio (propuesta: no en esta spec).
 - Cómo tratar series por peso corporal con lastre (propuesta: considerar el lastre como peso si el ejercicio lo registra; si no, solo repeticiones).
+
+
+## Verificación científica (2026-11-25)
+
+Fuente: `Documentacion/investigacion/umbrales-cientificos.md` (rama `docs-nuevas-specs`). Las cifras se leyeron sobre todo en resúmenes; lo no verificado en fuente primaria queda marcado.
+
+- Epley (peso × (1 + reps/30)) y Brzycki (peso × 36/(37 − reps)): fórmulas NO verificadas en el original (Epley 1985, Brzycki 1993); comprobar antes de implementar.
+- Precisión mejor con 3–5 reps y se degrada hacia 10+ (Macarilla 2022). Mostrar e1RM solo con ≤10 reps (mejor ≤6), nunca >12, como estimación con ±5 % (2–5 reps) y ±5–10 % (6–10). Peso muerto se subestima 9–14 % en un estudio: aviso aparte.
+- **Decisión revisada**: PR real = cualquier superación del peso por repeticiones (sin umbral). «Progreso significativo» por e1RM: ≥~4–5 % (≥5 % si el e1RM viene de >5 reps o ejercicio nuevo), porque el CV mediano del 1RM es 4,2 % (Grgic 2020). El 2,5 % queda bajo el ruido.
