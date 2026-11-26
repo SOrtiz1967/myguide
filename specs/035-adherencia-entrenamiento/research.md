@@ -41,3 +41,12 @@ Los períodos `pause` de `training_periods` (spec 033) se excluyen del período 
 
 - Si conviene incluir rutinas con más de una sesión por día (propuesta: contar una por día planificado por simplicidad).
 - Cómo tratar planes cambiados el mismo día (propuesta: la última versión del día).
+
+
+## Verificación científica (2026-11-25)
+
+Fuente: `Documentacion/investigacion/umbrales-cientificos.md` (rama `docs-nuevas-specs`). Las cifras se leyeron sobre todo en resúmenes; lo no verificado en fuente primaria queda marcado.
+
+- Corte «≥80 %» sin fuente primaria: convención de diseño opcional. Asistencia en intervenciones de fuerza mayoritariamente >60 % (Van Roie 2025, calidad baja); 85 % agrupada en sarcopenia.
+- Meta mínima citable: ≥2 días de fuerza/semana (OMS 2020).
+- Cancelaciones como evento neutro y reprogramable: decisión de producto coherente con teoría (efecto de violación de la abstinencia; Teixeira 2012), sin ensayos de rachas. Sin racha que reinicie a cero; sin rankings competitivos por defecto.
