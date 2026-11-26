@@ -40,3 +40,13 @@ Los textos usan «ocurrieron después de», «el rendimiento promedio fue menor�
 
 - Si el chequeo previo debe poder hacerse la mañana del día de la sesión sin que la sesión exista (propuesta: no; se vincula a la sesión planificada o en curso).
 - Lista final de zonas de molestia (propuesta: cuello, hombro, codo, muñeca, espalda alta, espalda baja, cadera, rodilla, tobillo, otra).
+
+
+## Verificación científica (2026-11-25)
+
+Fuente: `Documentacion/investigacion/umbrales-cientificos.md` (rama `docs-nuevas-specs`). Las cifras se leyeron sobre todo en resúmenes; lo no verificado en fuente primaria queda marcado.
+
+- La ventana fija de 48–72 h no tiene estudio que la valide por músculo. La recuperación depende de volumen, cercanía al fallo y ejercicio (Sousa 2024, narrativa); el daño muscular se atenúa con exposición repetida (Damas 2016, n = 10).
+- Mostrar estimación con rango, nunca bloquear una sesión. Sobreentrenamiento: sin marcador único, diagnóstico por exclusión (Meeusen 2013): hablar de «posible fatiga acumulada».
+- Deload (Bell 2023 Delphi: sin cifras; Rogerson 2024: ~6,4 días cada ~5,6 semanas; Coleman 2024: una semana de parada total sin beneficio): sugerencia por señales, opcional.
+- Mínimo de 8 sesiones y 3 por grupo, y diferencia de medianas >5 %: heurísticas propias (el 5 % está bajo el ruido del 1RM, 4,2 %; considerar subirlo).
