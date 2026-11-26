@@ -38,3 +38,12 @@ Derivada, no persistida. Se suman cantidades de los planes confirmados de 1 a 14
 
 - Cuántos alimentos candidatos mínimos se necesitan para generar un plan útil (propuesta: 3 proteicos, 3 de carbohidrato y 2 grasos); con menos, se pide completar la lista de disponibles.
 - Si la comida «pre-entreno» necesita un tratamiento especial (propuesta: solo más carbohidratos y menos grasa).
+
+
+## Verificación científica (2026-11-25)
+
+Fuente: `Documentacion/investigacion/umbrales-cientificos.md` (rama `docs-nuevas-specs`). Las cifras se leyeron sobre todo en resúmenes; lo no verificado en fuente primaria queda marcado.
+
+- **Decisión revisada**: el +5 % de energía en días de entrenamiento NO tiene respaldo directo. Coste de una sesión de fuerza 3,5–6,0 MET (Compendium 2011) y la periodización por tipo de día se estudió sobre todo en resistencia (Impey 2018). Queda **desactivado por defecto**, opcional y etiquetado como heurística; no presentarlo como evidencia.
+- Proteína por comida: orientación suave 0,25–0,4 g/kg por toma en ≥4 tomas (Schoenfeld y Aragon 2018); la «ventana anabólica» estrecha carece de respaldo (Aragon y Schoenfeld 2013). Nunca como límite.
+- Tolerancias ±10 % y ±15 % por comida: decisión de producto, sin fuente.
