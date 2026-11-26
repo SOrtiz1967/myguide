@@ -53,7 +53,7 @@ La persona elige RIR o RPE en su perfil; el historial del ejercicio (spec 006) y
 
 - **FR-001**: Cada serie MUST poder tener un esfuerzo opcional, en RIR o RPE, y una nota opcional.
 - **FR-002**: La persona MUST poder elegir su escala preferida; internamente el esfuerzo MUST representarse de forma consistente para poder compararlo.
-- **FR-003**: MUST validarse el rango (RIR 0 a 10; RPE 1 a 10, con pasos de 0,5) en la base de datos y en la pantalla.
+- **FR-003**: MUST validarse el rango (RIR 0 a 9; RPE 1 a 10, con pasos de 0,5; RIR 10 equivaldría a RPE 0, sin esfuerzo) en la base de datos y en la pantalla.
 - **FR-004**: Una serie sin esfuerzo MUST seguir siendo válida y mostrarse como «sin dato».
 - **FR-005**: El historial y los gráficos MUST mostrar el esfuerzo junto al peso y las repeticiones, y MUST NOT tratar como equivalentes series con distinto esfuerzo.
 - **FR-006**: Las series ya registradas MUST conservarse sin cambios; no se completan con valores supuestos.
@@ -80,3 +80,4 @@ La persona elige RIR o RPE en su perfil; el historial del ejercicio (spec 006) y
 - La escala preferida vive en el perfil de atleta (spec 025); hasta que exista se usa un valor por defecto (RIR).
 - Fuera de alcance: interpretar el esfuerzo (specs 030 y 033) y fatiga previa/posterior a la sesión (spec 034).
 - Depende de las specs 006 y 012.
+- Ya existe un esfuerzo por **ejercicio** (spec 006, 1 a 10). Se conserva sin cambios; esta spec agrega el esfuerzo por **serie**.
