@@ -41,3 +41,12 @@ El contexto reúne lecturas ya implementadas en cada spec (sin duplicar su lógi
 
 - Dónde mostrarlas por defecto (propuesta: tarjeta en «Hoy» con enlace a la pantalla completa).
 - Si conviene un resumen semanal fijo («Esta semana») o recomendaciones continuas; propuesta inicial: continuas, con corte semanal para el resumen.
+
+
+## Verificación científica (2026-11-25)
+
+Fuente: `Documentacion/investigacion/umbrales-cientificos.md` (rama `docs-nuevas-specs`). Las cifras se leyeron sobre todo en resúmenes; lo no verificado en fuente primaria queda marcado.
+
+- Filtro de ruido: toda alerta basada en variación de e1RM o peso debe superar el ruido (CV del 1RM 4,2 %; peso ~0,35 % semanal) antes de mostrarse.
+- Declarar en cada regla su tipo: evidencia (rango citado), convención de práctica o decisión de producto.
+- Lenguaje en rangos, confirmación del usuario, opción de ocultar calorías y peso, aviso de no sustituir a un profesional (Levinson 2017; Simpson y Mazzeo 2017; ambos correlacionales).
