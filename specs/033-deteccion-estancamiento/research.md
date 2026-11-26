@@ -38,3 +38,12 @@ Todo es determinista y verificable con historiales de prueba.
 
 - Si el mínimo de 5 sesiones debe variar con la frecuencia semanal del ejercicio.
 - Cómo mostrar el aviso en ejercicios con rangos de repeticiones que cambiaron (propuesta: reiniciar la comparación desde el cambio, ver historial de la progresión de la spec 030).
+
+
+## Verificación científica (2026-11-25)
+
+Fuente: `Documentacion/investigacion/umbrales-cientificos.md` (rama `docs-nuevas-specs`). Las cifras se leyeron sobre todo en resúmenes; lo no verificado en fuente primaria queda marcado.
+
+- No existe definición de plateau en N sesiones/semanas en literatura revisada. «5 sesiones» es **heurística propia**; etiquetarla así.
+- Ruido del 1RM ~4,2 % (Grgic 2020): una variación menor no es señal. Escalar el mínimo por nivel (más sesiones en avanzados) y comparar con RIR comparable.
+- Lenguaje neutro: «sin progreso reciente», nunca diagnóstico. Marco por nivel del ACSM 2009; tasas por nivel (~40/20/10/2 %) sin verificar.
