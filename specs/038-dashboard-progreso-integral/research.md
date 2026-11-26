@@ -38,3 +38,11 @@ El dashboard no define metas ni muestra puntajes o niveles; muestra datos y comp
 
 - Si conviene comparar con el período anterior equivalente (propuesta: sí, como diferencia pequeña y neutral, solo cuando hay datos en ambos).
 - Dónde ubicar el acceso en el menú (propuesta: reemplazar o complementar «Tendencias»; se decide con la persona usuaria tras probarlo).
+
+
+## Verificación científica (2026-11-25)
+
+Fuente: `Documentacion/investigacion/umbrales-cientificos.md` (rama `docs-nuevas-specs`). Las cifras se leyeron sobre todo en resúmenes; lo no verificado en fuente primaria queda marcado.
+
+- «Peso estable ±0,5 %»: plausible sobre media móvil de 7 días (variación semanal ~0,35 %, Turicchi 2020); no evaluar con pesaje diario aislado. Ningún estudio fija el umbral.
+- Pesaje: la mayoría de las revisiones no halla daño psicológico en adultos con sobrepeso, pero Benn 2016 sí con pesaje diario; mantener opción de ocultar peso.
