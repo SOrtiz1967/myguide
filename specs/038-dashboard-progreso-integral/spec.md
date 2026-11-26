@@ -73,6 +73,7 @@ Cada métrica enlaza a su pantalla de detalle (Tendencias, Medidas, Evolución d
 - **FR-008**: Los textos MUST ser neutrales; las fotos y datos sensibles MUST NOT enviarse a servicios externos.
 - **FR-009**: Cada persona ve solo sus datos (aislamiento por cuenta).
 - **FR-010**: Accesible por teclado y lector de pantalla, gráficos con alternativa textual y sin desplazamiento horizontal en 360 px.
+- **FR-011**: «Peso estable» MUST evaluarse sobre el promedio móvil de 7 días con una banda de ±0,5 % y un mínimo de pesajes en la ventana, nunca con un pesaje diario aislado; la persona MUST poder ocultar el peso y las calorías.
 
 ### Key Entities
 
