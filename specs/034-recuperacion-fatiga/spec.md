@@ -73,6 +73,7 @@ Si la persona declara molestias o fatiga persistentes durante un período largo,
 - **FR-008**: Los registros MUST poder editarse y eliminarse; entran en exportación y eliminación de cuenta (spec 011).
 - **FR-009**: El chequeo MUST completarse en pocos toques y ser accesible por teclado y lector de pantalla, sin desplazamiento horizontal en 360 px.
 - **FR-010**: Cada persona ve solo sus registros (aislamiento por cuenta).
+- **FR-011**: Cualquier indicador de recuperación MUST mostrarse como estimación con rango, MUST NOT bloquear ni desaconsejar entrenar y MUST usar lenguaje como «posible fatiga acumulada», sin diagnosticar. Los mínimos de sesiones y la diferencia mínima entre medianas MUST declararse como criterios de producto; la diferencia mínima MUST superar el ruido de medición (~4 %).
 
 ### Key Entities
 
