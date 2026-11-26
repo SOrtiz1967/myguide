@@ -31,3 +31,11 @@ Calorías enteras y macros con un decimal como máximo, respetando el Principio 
 ## Preguntas que se resuelven al implementar
 
 - Si una comida solo tiene ítems sin fibra, se omite la fila de fibra en lugar de mostrar «sin dato» para evitar ruido (propuesta; se valida con la persona usuaria).
+
+
+## Verificación científica (2026-11-25)
+
+Fuente: `Documentacion/investigacion/umbrales-cientificos.md` (rama `docs-nuevas-specs`). Las cifras se leyeron sobre todo en resúmenes; lo no verificado en fuente primaria queda marcado.
+
+- Error de estimación de porciones por IA ~36–37 % (MAPE, preprint sin revisión por pares): respalda mostrar rangos y exigir confirmación. Confianza: parcial.
+- Lenguaje no coercitivo y opción de ocultar calorías: asociación correlacional entre apps de conteo y síntomas de TCA (Levinson 2017; Simpson y Mazzeo 2017). Confianza: parcial.
