@@ -4,10 +4,10 @@
 
 ## Fase 1: Base de datos
 
-- [ ] T001 Migración `supabase/migrations/20261126000100_athlete_profile.sql`: tablas `athlete_goals` y `athlete_availability` (historiales de filas que nunca se actualizan, `effective_from` no anterior a la última vigente), `athlete_preferences` (una fila por persona; `priority_muscles` hasta 5, `meals_per_day` 1–8, `usual_sleep_minutes` 60–960, `perceived_recovery` 1–5, `approx_steps` 0–100000, `effort_scale` `rir`|`rpe` por defecto `rir`) y `athlete_item_preferences` (`kind` ∈ `exercise_favorite`, `exercise_avoided`, `food_avoided`; exactamente uno de `exercise_id`/`food_id`, `on delete cascade`, único por usuario, tipo e ítem). Todas con `user_id`, RLS de lectura propia y sin escritura directa.
-- [ ] T002 En la misma migración, funciones `security definer` con `private.is_session_fresh()` e idempotencia por `client_request_id`: `save_athlete_goals` (1–3 objetivos, prioridades 1–3 sin repetir, `custom` con texto de 1–60 caracteres, `apply_to_profile` actualiza `profiles.goal_type` en la misma transacción solo si el objetivo 1 tiene equivalente), `save_athlete_availability` y `save_athlete_preferences` (reemplaza la lista de preferencias por ítem; un ejercicio no puede ser favorito y evitado). Errores `invalid_athlete:<motivo>:<campo>`.
-- [ ] T003 Migración `supabase/migrations/20261126000200_athlete_privacy.sql`: agrega las cuatro tablas a `export_my_data()` y verifica el borrado en cascada con la cuenta.
-- [ ] T004 Prueba pgTAP `supabase/tests/athlete_profile.test.sql`: esquema, RLS (aislamiento entre cuentas), rangos, idempotencia, vigencia no retroactiva, mapeo a `goal_type`, exportación y borrado; el guardián de RLS existente debe seguir en verde.
+- [x] T001 Migración `supabase/migrations/20261126000100_athlete_profile.sql`: tablas `athlete_goals` y `athlete_availability` (historiales de filas que nunca se actualizan, `effective_from` no anterior a la última vigente), `athlete_preferences` (una fila por persona; `priority_muscles` hasta 5, `meals_per_day` 1–8, `usual_sleep_minutes` 60–960, `perceived_recovery` 1–5, `approx_steps` 0–100000, `effort_scale` `rir`|`rpe` por defecto `rir`) y `athlete_item_preferences` (`kind` ∈ `exercise_favorite`, `exercise_avoided`, `food_avoided`; exactamente uno de `exercise_id`/`food_id`, `on delete cascade`, único por usuario, tipo e ítem). Todas con `user_id`, RLS de lectura propia y sin escritura directa.
+- [x] T002 En la misma migración, funciones `security definer` con `private.is_session_fresh()` e idempotencia por `client_request_id`: `save_athlete_goals` (1–3 objetivos, prioridades 1–3 sin repetir, `custom` con texto de 1–60 caracteres, `apply_to_profile` actualiza `profiles.goal_type` en la misma transacción solo si el objetivo 1 tiene equivalente), `save_athlete_availability` y `save_athlete_preferences` (reemplaza la lista de preferencias por ítem; un ejercicio no puede ser favorito y evitado). Errores `invalid_athlete:<motivo>:<campo>`.
+- [x] T003 Migración `supabase/migrations/20261126000200_athlete_privacy.sql`: agrega las cuatro tablas a `export_my_data()` y verifica el borrado en cascada con la cuenta.
+- [x] T004 Prueba pgTAP `supabase/tests/athlete_profile.test.sql`: esquema, RLS (aislamiento entre cuentas), rangos, idempotencia, vigencia no retroactiva, mapeo a `goal_type`, exportación y borrado; el guardián de RLS existente debe seguir en verde.
 
 ## Fase 2: Historia 1 — Completar mi contexto deportivo (P1)
 
@@ -23,7 +23,7 @@
 
 ## Fase 4: Historia 3 — Ver y exportar (P2)
 
-- [ ] T011 [US3] Resumen legible del perfil de atleta y verificación de que «Tus datos» (spec 011) lo descarga y la eliminación de cuenta lo borra.
+- [x] T011 [US3] Resumen legible del perfil de atleta y verificación de que «Tus datos» (spec 011) lo descarga y la eliminación de cuenta lo borra.
 
 ## Fase 5: Pruebas y cierre
 

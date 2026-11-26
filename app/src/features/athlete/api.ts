@@ -96,7 +96,9 @@ export async function fetchAthlete(): Promise<AthleteData> {
     goals: (goals.data ?? []) as unknown as GoalsEntry[],
     availability: (availability.data ?? []) as unknown as AvailabilityEntry[],
     preferences: (preferences.data ?? null) as AthletePreferences | null,
-    items: (items.data ?? []).map((row) => {
+    items: (items.data ?? [])
+      .filter((row) => row.exercise_id !== null || row.food_id !== null)
+      .map((row) => {
       const r = row as unknown as {
         kind: ItemKind
         exercise_id: string | null

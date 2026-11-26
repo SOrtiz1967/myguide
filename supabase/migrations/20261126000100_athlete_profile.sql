@@ -78,14 +78,16 @@ create table public.athlete_item_preferences (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users (id) on delete cascade,
   kind text not null,
-  exercise_id uuid references public.exercises (id) on delete cascade,
-  food_id uuid references public.foods (id) on delete cascade,
+  -- Eliminar un ejercicio o alimento nunca borra filas de otras tablas (Principio II): la referencia pasa a nula y la
+  -- preferencia queda huérfana; el cliente la ignora y la próxima vez que se guarda la lista se descarta.
+  exercise_id uuid references public.exercises (id) on delete set null,
+  food_id uuid references public.foods (id) on delete set null,
   created_at timestamptz not null default now(),
   constraint athlete_item_preferences_kind_check check (kind in ('exercise_favorite', 'exercise_avoided', 'food_avoided')),
-  -- Exactamente uno de los dos ítems, según el tipo.
+  -- A lo sumo el ítem que corresponde al tipo (nulo solo si el ítem se eliminó; las funciones exigen que exista).
   constraint athlete_item_preferences_item_check check (
-    (kind in ('exercise_favorite', 'exercise_avoided') and exercise_id is not null and food_id is null)
-    or (kind = 'food_avoided' and food_id is not null and exercise_id is null)
+    (kind in ('exercise_favorite', 'exercise_avoided') and food_id is null)
+    or (kind = 'food_avoided' and exercise_id is null)
   )
 );
 

@@ -1,6 +1,6 @@
 -- Spec 025 (perfil de atleta): esquema, RLS, rangos, idempotencia, vigencia y exportación.
 begin;
-select plan(38);
+select plan(40);
 
 select tests.create_user('a@test.local') as uid_a \gset
 select tests.create_user('b@test.local') as uid_b \gset
@@ -137,6 +137,16 @@ select is(
   'true', 'repetir la solicitud no vuelve a escribir'
 );
 select tests.clear_authentication();
+
+-- eliminar un ejercicio del catálogo propio no rompe el perfil ni borra otras filas (Principio II) ------------
+select tests.create_exercise(:'uid_a', 'Ejercicio que se elimina', 'reps_weight') as ex_gone \gset
+insert into public.athlete_item_preferences (user_id, kind, exercise_id) values (:'uid_a', 'exercise_avoided', :'ex_gone');
+delete from public.exercises where id = :'ex_gone';
+select is(
+  (select count(*) from public.athlete_item_preferences where user_id = :'uid_a' and kind = 'exercise_avoided' and exercise_id is null),
+  1::bigint, 'al eliminar el ejercicio la preferencia queda huérfana (referencia nula), no se borra en cascada'
+);
+select is((select effort_scale from public.athlete_preferences where user_id = :'uid_a'), 'rpe', 'y el resto del perfil sigue intacto');
 
 -- aislamiento y exportación ---------------------------------------------------------------------------------------------
 select tests.authenticate_as(:'uid_b');
