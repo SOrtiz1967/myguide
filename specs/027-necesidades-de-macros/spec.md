@@ -75,6 +75,8 @@ La propuesta evita extremos: no propone déficits agresivos, avisa si faltan dat
 - **FR-009**: Los textos son neutrales: sin «deberías», sin promesas de resultado.
 - **FR-010**: Cada persona accede solo a sus objetivos (aislamiento por cuenta); entran en exportación y eliminación (spec 011).
 - **FR-011**: El guardado es idempotente y no se muestra como hecho hasta la confirmación del servidor.
+- **FR-012**: Los rangos de proteína MUST basarse en fuentes citadas: 1,6 g/kg por defecto dentro de 1,4–2,0 g/kg; valores sobre 2,2 g/kg solo como opción en déficit con entrenamiento; para mayores de 65 años no menos de 1,0–1,2 g/kg; con aviso neutral de consultar a un profesional ante enfermedad renal. Grasa, hidratos, fibra y sodio MUST mostrarse como rangos informativos y no como objetivos que «fallan».
+- **FR-013**: La tendencia de peso MUST calcularse sobre un promedio móvil de 7 días y exigir un mínimo de pesajes en la ventana; «peso estable» se evalúa con una banda de ±0,5 % sobre ese promedio, declarada como criterio de producto (no hay estudio que fije el umbral).
 
 ### Key Entities
 
