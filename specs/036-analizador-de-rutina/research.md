@@ -42,3 +42,12 @@ Se guarda qué observación se ocultó y un hash de los datos de la rutina o del
 
 - Qué hacer cuando una rutina tiene ejercicios por duración o cardio (propuesta: se cuentan aparte en la duración y no en el volumen).
 - Si conviene analizar también la semana real realizada (no solo el plan); propuesta: no en esta spec, ver las specs 031 y 035.
+
+
+## Verificación científica (2026-11-25)
+
+Fuente: `Documentacion/investigacion/umbrales-cientificos.md` (rama `docs-nuevas-specs`). Las cifras se leyeron sobre todo en resúmenes; lo no verificado en fuente primaria queda marcado.
+
+- Equilibrio push/pull y duración máxima de sesión: sin evidencia primaria hallada; heurísticas.
+- Descanso entre series: ventaja pequeña >60 s y nula más allá de 90 s con IC que incluyen cero (Singer 2024); 3 min > 1 min en entrenados (Schoenfeld 2016).
+- No penalizar frecuencia 1 vez/semana por músculo si el volumen es adecuado (Schoenfeld 2019).
