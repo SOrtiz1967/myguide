@@ -76,6 +76,8 @@ La persona extiende el plan a la semana y convierte los planes confirmados en un
 - **FR-010**: Un plan confirmado MUST conservar nombres y valores nutricionales del momento (instantánea).
 - **FR-011**: Cada persona accede solo a sus planes (aislamiento por cuenta); entran en exportación y eliminación (spec 011).
 - **FR-012**: Si falla la IA o el servicio, la persona MUST poder armar el plan a mano.
+- **FR-013**: El ajuste de energía por tipo de día (+5 % en días de entrenamiento) MUST estar desactivado por defecto, ser opcional y mostrarse como una opción de planificación, sin presentarse como recomendación científica (no hay evidencia directa; ver `research.md`).
+- **FR-014**: La orientación de proteína por comida (0,25–0,4 g/kg por toma) MUST mostrarse como guía suave y nunca como límite ni como fallo.
 
 ### Key Entities
 
